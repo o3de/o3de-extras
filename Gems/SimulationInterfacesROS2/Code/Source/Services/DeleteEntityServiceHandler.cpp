@@ -31,6 +31,10 @@ namespace SimulationInterfacesROS2
             m_deleteEntityService.reset();
         }
     }
+    AZStd::unordered_set<AZ::u8> DeleteEntityServiceHandler::GetProvidedFeatures()
+    {
+        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::DELETING };
+    }
 
     void DeleteEntityServiceHandler::HandleServiceRequest(
         const ServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, const std::shared_ptr<Request> request)

@@ -20,4 +20,7 @@ namespace SimulationInterfacesROS2
     // The Editor Module by default is mutually exclusive with the Client Module
     // so they use the Same TypeId
     inline constexpr const char* SimulationInterfacesROS2EditorModuleTypeId = SimulationInterfacesROS2ModuleTypeId;
+
+    // API TypeIds
+    inline constexpr const char* SimulationInterfacesROS2RequestBusTypeId = "{00d08870-e329-4bd7-bb8c-f67fe369de92}";
 } // namespace SimulationInterfacesROS2

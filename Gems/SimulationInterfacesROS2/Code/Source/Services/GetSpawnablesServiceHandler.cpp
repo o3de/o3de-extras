@@ -30,6 +30,11 @@ namespace SimulationInterfacesROS2
         }
     }
 
+    AZStd::unordered_set<AZ::u8> GetSpawnablesServiceHandler::GetProvidedFeatures()
+    {
+        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::SPAWNABLES };
+    }
+
     GetSpawnablesServiceHandler::Response GetSpawnablesServiceHandler::HandleServiceRequest(const Request& request)
     {
         AZ::Outcome<SimulationInterfaces::SpawnableList, SimulationInterfaces::FailedResult> outcome;

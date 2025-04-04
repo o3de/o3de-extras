@@ -13,4 +13,6 @@ set(FILES
     Source/Clients/SimulationEntitiesManager.h
     Source/Clients/CommonUtilities.cpp
     Source/Clients/CommonUtilities.h
+    Source/Clients/SimulationFeaturesAggregator.cpp
+    Source/Clients/SimulationFeaturesAggregator.h
 )

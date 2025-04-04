@@ -15,16 +15,23 @@
 #include "Services/GetEntitiesServiceHandler.h"
 #include "Services/GetEntitiesStatesServiceHandler.h"
 #include "Services/GetEntityStateServiceHandler.h"
+#include "Services/GetSimulationFeaturesServiceHandler.h"
 #include "Services/GetSpawnablesServiceHandler.h"
+#include "Services/ROS2HandlerBaseClass.h"
 #include "Services/SetEntityStateServiceHandler.h"
 #include "Services/SpawnEntityServiceHandler.h"
+#include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
 #include "Utils/ServicesConfig.h"
+#include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/optional.h>
+#include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <AzCore/std/string/string.h>
 
 namespace SimulationInterfacesROS2
 {
     class SimulationInterfacesROS2SystemComponent
         : public AZ::Component
-        , public AzFramework::LevelSystemLifecycleNotificationBus::Handler
+        , public SimulationInterfacesROS2RequestBus::Handler
     {
     public:
         AZ_COMPONENT_DECL(SimulationInterfacesROS2SystemComponent);
@@ -45,18 +52,11 @@ namespace SimulationInterfacesROS2
         void Activate() override;
         void Deactivate() override;
 
-    private:
-        // LevelSystemLifecycleNotificationBus::Handler overrides
-        void OnLoadingComplete([[maybe_unused]] const char* levelName) override;
-        void OnUnloadComplete([[maybe_unused]] const char* levelName) override;
+        // SimulationInterfacesROS2RequestBus override
+        AZStd::unordered_set<AZ::u8> GetSimulationFeatures() override;
 
-        AZStd::optional<DeleteEntityServiceHandler> m_deleteEntityServiceHandler;
-        AZStd::optional<GetEntitiesServiceHandler> m_getEntitiesServiceHandler;
-        AZStd::optional<GetEntitiesStatesServiceHandler> m_getEntitiesStatesServiceHandler;
-        AZStd::optional<GetEntityStateServiceHandler> m_getEntityStateServiceHandler;
-        AZStd::optional<GetSpawnablesServiceHandler> m_getSpawnablesServiceHandler;
-        AZStd::optional<SetEntityStateServiceHandler> m_setEntityStateServiceHandler;
-        AZStd::optional<SpawnEntityServiceHandler> m_spawnEntityServiceHandler;
+    private:
+        AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<ROS2HandlerBase>> m_availableRos2Interface;
     };
 
 } // namespace SimulationInterfacesROS2

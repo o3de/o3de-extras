@@ -34,6 +34,11 @@ namespace SimulationInterfacesROS2
         }
     }
 
+    AZStd::unordered_set<AZ::u8> SpawnEntityServiceHandler::GetProvidedFeatures()
+    {
+        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::SPAWNING };
+    }
+
     void SpawnEntityServiceHandler::HandleServiceRequest(
         const ServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, const std::shared_ptr<Request> request)
     {

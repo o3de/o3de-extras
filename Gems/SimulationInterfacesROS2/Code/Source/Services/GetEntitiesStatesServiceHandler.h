@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Services/ROS2HandlerBaseClass.h"
 #include <AzCore/std/string/string_view.h>
 #include <rclcpp/rclcpp.hpp>
 #include <simulation_interfaces/srv/get_entities_states.hpp>
@@ -15,7 +16,7 @@
 namespace SimulationInterfacesROS2
 {
 
-    class GetEntitiesStatesServiceHandler
+    class GetEntitiesStatesServiceHandler : public ROS2HandlerBase
     {
     public:
         using ServiceType = simulation_interfaces::srv::GetEntitiesStates;
@@ -25,7 +26,7 @@ namespace SimulationInterfacesROS2
         GetEntitiesStatesServiceHandler() = delete;
         GetEntitiesStatesServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName);
         ~GetEntitiesStatesServiceHandler();
-
+        AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override;
         Response HandleServiceRequest(const Request& request);
 
     private:

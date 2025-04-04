@@ -34,6 +34,11 @@ namespace SimulationInterfacesROS2
         }
     }
 
+    AZStd::unordered_set<AZ::u8> GetEntityStateServiceHandler::GetProvidedFeatures()
+    {
+        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::ENTITY_STATE_GETTING };
+    }
+
     GetEntityStateServiceHandler::Response GetEntityStateServiceHandler::HandleServiceRequest(const Request& request)
     {
         AZStd::string entityName = request.entity.c_str();

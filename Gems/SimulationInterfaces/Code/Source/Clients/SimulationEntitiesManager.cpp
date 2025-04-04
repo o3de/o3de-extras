@@ -10,14 +10,18 @@
 
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
+#include "Clients/SimulationFeaturesAggregator.h"
 #include "CommonUtilities.h"
 #include "ConsoleCommands.inl"
+#include "SimulationInterfaces/SimulationFeatures.h"
+#include "SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h"
 #include <AzCore/Asset/AssetManager.h>
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Console/IConsole.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/regex.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
@@ -68,11 +72,13 @@ namespace SimulationInterfaces
     void SimulationEntitiesManager::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("AssetCatalogService"));
+        required.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
     }
 
     void SimulationEntitiesManager::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
         dependent.push_back(AZ_CRC_CE("PhysicsService"));
+        dependent.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
     }
 
     SimulationEntitiesManager::SimulationEntitiesManager()
@@ -199,6 +205,18 @@ namespace SimulationInterfaces
             physicsSystem->RegisterSceneRemovedEvent(m_sceneRemovedHandler);
             SimulationEntityManagerRequestBus::Handler::BusConnect();
         }
+
+        SimulationFeaturesAggregatorRequestBus::Broadcast(
+            &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
+            AZStd::unordered_set<SimulationFeatures>{ SimulationFeatures::ENTITY_TAGS,
+                                                      SimulationFeatures::ENTITY_BOUNDS_BOX,
+                                                      SimulationFeatures::ENTITY_BOUNDS_CONVEX,
+                                                      SimulationFeatures::ENTITY_CATEGORIES,
+                                                      SimulationFeatures::ENTITY_STATE_GETTING,
+                                                      SimulationFeatures::ENTITY_STATE_SETTING,
+                                                      SimulationFeatures::DELETING,
+                                                      SimulationFeatures::SPAWNABLES,
+                                                      SimulationFeatures::SPAWNING });
     }
 
     void SimulationEntitiesManager::Deactivate()
@@ -450,7 +468,7 @@ namespace SimulationInterfaces
         if (m_spawnedTickets.find(ticketId) != m_spawnedTickets.end())
         {
             // remove the ticket
-            //m_spawnedTickets.erase(ticketId);
+            // m_spawnedTickets.erase(ticketId);
             /// get spawner
             auto spawner = AZ::Interface<AzFramework::SpawnableEntitiesDefinition>::Get();
             AZ_Assert(spawner, "SpawnableEntitiesDefinition is not available.");
