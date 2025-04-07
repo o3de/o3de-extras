@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "Services/GetEntityStateServiceHandler.h"
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>

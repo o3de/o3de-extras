@@ -27,6 +27,5 @@ set(FILES
     Source/Services/GetSimulationFeaturesServiceHandler.h
     Source/Utils/RegistryUtils.cpp
     Source/Utils/RegistryUtils.h
-    Source/Utils/ServicesConfig.h
     Source/Utils/Utils.h    
 )

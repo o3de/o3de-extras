@@ -21,7 +21,6 @@
 #include "Services/SetEntityStateServiceHandler.h"
 #include "Services/SpawnEntityServiceHandler.h"
 #include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
-#include "Utils/ServicesConfig.h"
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/optional.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
@@ -56,7 +55,7 @@ namespace SimulationInterfacesROS2
         AZStd::unordered_set<AZ::u8> GetSimulationFeatures() override;
 
     private:
-        AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<ROS2HandlerBase>> m_availableRos2Interface;
+        AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<IROS2HandlerBase>> m_availableRos2Interface;
     };
 
 } // namespace SimulationInterfacesROS2

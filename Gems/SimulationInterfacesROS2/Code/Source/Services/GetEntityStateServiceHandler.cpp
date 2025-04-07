@@ -10,36 +10,17 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <std_msgs/msg/header.hpp>
 
 namespace SimulationInterfacesROS2
 {
-
-    GetEntityStateServiceHandler::GetEntityStateServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName)
-    {
-        const std::string serviceNameStr(std::string_view(serviceName.data(), serviceName.size()));
-        m_getEntityStateService = node->create_service<ServiceType>(
-            serviceNameStr,
-            [this](const Request::SharedPtr request, Response::SharedPtr response)
-            {
-                *response = HandleServiceRequest(*request);
-            });
-    }
-
-    GetEntityStateServiceHandler::~GetEntityStateServiceHandler()
-    {
-        if (m_getEntityStateService)
-        {
-            m_getEntityStateService.reset();
-        }
-    }
 
     AZStd::unordered_set<AZ::u8> GetEntityStateServiceHandler::GetProvidedFeatures()
     {
         return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::ENTITY_STATE_GETTING };
     }
 
-    GetEntityStateServiceHandler::Response GetEntityStateServiceHandler::HandleServiceRequest(const Request& request)
+    GetEntityStateServiceHandler::Response GetEntityStateServiceHandler::HandleServiceRequest(
+        const rmw_request_id_t& header, const Request& request)
     {
         AZStd::string entityName = request.entity.c_str();
         AZ::Outcome<SimulationInterfaces::EntityState, SimulationInterfaces::FailedResult> outcome;
@@ -59,10 +40,8 @@ namespace SimulationInterfacesROS2
 
         const auto& entityState = outcome.GetValue();
         simulation_interfaces::msg::EntityState entityStateMsg;
-        std_msgs::msg::Header header;
-        header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
-        header.frame_id = ROS2::ROS2Interface::Get()->GetNode()->get_name();
-        entityStateMsg.header = header;
+        entityStateMsg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+        entityStateMsg.header.frame_id = ROS2::ROS2Interface::Get()->GetNode()->get_name();
         entityStateMsg.pose = ROS2::ROS2Conversions::ToROS2Pose(entityState.m_pose);
         entityStateMsg.twist.linear = ROS2::ROS2Conversions::ToROS2Vector3(entityState.m_twist_linear);
         entityStateMsg.twist.angular = ROS2::ROS2Conversions::ToROS2Vector3(entityState.m_twist_angular);
@@ -71,4 +50,5 @@ namespace SimulationInterfacesROS2
         response.state = entityStateMsg;
         return response;
     }
+
 } // namespace SimulationInterfacesROS2

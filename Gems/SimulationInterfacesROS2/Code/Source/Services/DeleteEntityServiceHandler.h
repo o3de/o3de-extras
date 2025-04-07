@@ -16,23 +16,23 @@
 namespace SimulationInterfacesROS2
 {
 
-    class DeleteEntityServiceHandler : public ROS2HandlerBase
+    class DeleteEntityServiceHandler : public ROS2HandlerBase<simulation_interfaces::srv::DeleteEntity>
     {
     public:
-        using ServiceType = simulation_interfaces::srv::DeleteEntity;
-        using Request = ServiceType::Request;
-        using Response = ServiceType::Response;
-        using ServiceHandle = std::shared_ptr<rclcpp::Service<ServiceType>>;
+        AZStd::string_view GetTypeName() const override
+        {
+            return "DeleteEntity";
+        }
 
-        DeleteEntityServiceHandler() = delete;
-        DeleteEntityServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName);
-        ~DeleteEntityServiceHandler();
+        AZStd::string_view GetDefaultName() const override
+        {
+            return "delete_entity";
+        }
         AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override;
-        void HandleServiceRequest(
-            const ServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, const std::shared_ptr<Request> request);
+
+        Response HandleServiceRequest(const rmw_request_id_t& header, const Request& request) override;
 
     private:
-        rclcpp::Service<ServiceType>::SharedPtr m_deleteEntityService;
     };
 
 } // namespace SimulationInterfacesROS2

@@ -11,31 +11,14 @@
 
 namespace SimulationInterfacesROS2
 {
-    GetSpawnablesServiceHandler::GetSpawnablesServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName)
-    {
-        const std::string serviceNameStr(std::string_view(serviceName.data(), serviceName.size()));
-        m_getSpawnablesService = node->create_service<ServiceType>(
-            serviceNameStr,
-            [this](const Request::SharedPtr request, Response::SharedPtr response)
-            {
-                *response = HandleServiceRequest(*request);
-            });
-    }
-
-    GetSpawnablesServiceHandler::~GetSpawnablesServiceHandler()
-    {
-        if (m_getSpawnablesService)
-        {
-            m_getSpawnablesService.reset();
-        }
-    }
 
     AZStd::unordered_set<AZ::u8> GetSpawnablesServiceHandler::GetProvidedFeatures()
     {
         return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::SPAWNABLES };
     }
 
-    GetSpawnablesServiceHandler::Response GetSpawnablesServiceHandler::HandleServiceRequest(const Request& request)
+    GetSpawnablesServiceHandler::Response GetSpawnablesServiceHandler::HandleServiceRequest(
+        const rmw_request_id_t& header, const Request& request)
     {
         AZ::Outcome<SimulationInterfaces::SpawnableList, SimulationInterfaces::FailedResult> outcome;
         SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(

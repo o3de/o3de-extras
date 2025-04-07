@@ -15,24 +15,23 @@
 
 namespace SimulationInterfacesROS2
 {
-
-    class SpawnEntityServiceHandler : public ROS2HandlerBase
+    class SpawnEntityServiceHandler : public ROS2HandlerBase<simulation_interfaces::srv::SpawnEntity>
     {
     public:
-        using ServiceType = simulation_interfaces::srv::SpawnEntity;
-        using Request = ServiceType::Request;
-        using Response = ServiceType::Response;
-        using ServiceHandle = std::shared_ptr<rclcpp::Service<ServiceType>>;
+        AZStd::string_view GetTypeName() const override
+        {
+            return "SpawnEntity";
+        }
 
-        SpawnEntityServiceHandler() = delete;
-        SpawnEntityServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName);
-        ~SpawnEntityServiceHandler();
+        AZStd::string_view GetDefaultName() const override
+        {
+            return "spawn_entity";
+        }
         AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override;
-        void HandleServiceRequest(
-            const ServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, const std::shared_ptr<Request> request);
+
+        Response HandleServiceRequest(const rmw_request_id_t& header, const Request& request) override;
 
     private:
-        rclcpp::Service<ServiceType>::SharedPtr m_spawnEntityService;
     };
 
 } // namespace SimulationInterfacesROS2

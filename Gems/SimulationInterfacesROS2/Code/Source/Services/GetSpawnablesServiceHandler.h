@@ -16,21 +16,23 @@
 namespace SimulationInterfacesROS2
 {
 
-    class GetSpawnablesServiceHandler : public ROS2HandlerBase
+    class GetSpawnablesServiceHandler : public ROS2HandlerBase<simulation_interfaces::srv::GetSpawnables>
     {
     public:
-        using ServiceType = simulation_interfaces::srv::GetSpawnables;
-        using Request = ServiceType::Request;
-        using Response = ServiceType::Response;
+        AZStd::string_view GetTypeName() const override
+        {
+            return "GetSpawnables";
+        }
 
-        GetSpawnablesServiceHandler() = delete;
-        GetSpawnablesServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName);
-        ~GetSpawnablesServiceHandler();
+        AZStd::string_view GetDefaultName() const override
+        {
+            return "get_spawnables";
+        }
         AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override;
-        Response HandleServiceRequest(const Request& request);
+
+        Response HandleServiceRequest(const rmw_request_id_t& header, const Request& request) override;
 
     private:
-        rclcpp::Service<ServiceType>::SharedPtr m_getSpawnablesService;
     };
 
 } // namespace SimulationInterfacesROS2

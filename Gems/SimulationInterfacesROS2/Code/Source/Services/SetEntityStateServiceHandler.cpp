@@ -12,31 +12,14 @@
 
 namespace SimulationInterfacesROS2
 {
-    SetEntityStateServiceHandler::SetEntityStateServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName)
-    {
-        const std::string serviceNameStr(std::string_view(serviceName.data(), serviceName.size()));
-        m_setEntityStateService = node->create_service<ServiceType>(
-            serviceNameStr,
-            [this](const Request::SharedPtr request, Response::SharedPtr response)
-            {
-                *response = HandleServiceRequest(*request);
-            });
-    }
-
-    SetEntityStateServiceHandler::~SetEntityStateServiceHandler()
-    {
-        if (m_setEntityStateService)
-        {
-            m_setEntityStateService.reset();
-        }
-    }
 
     AZStd::unordered_set<AZ::u8> SetEntityStateServiceHandler::GetProvidedFeatures()
     {
         return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::ENTITY_STATE_SETTING };
     }
 
-    SetEntityStateServiceHandler::Response SetEntityStateServiceHandler::HandleServiceRequest(const Request& request)
+    SetEntityStateServiceHandler::Response SetEntityStateServiceHandler::HandleServiceRequest(
+        const rmw_request_id_t& header, const Request& request)
     {
         AZ::Outcome<void, SimulationInterfaces::FailedResult> outcome;
         AZStd::string entityName = request.entity.c_str();

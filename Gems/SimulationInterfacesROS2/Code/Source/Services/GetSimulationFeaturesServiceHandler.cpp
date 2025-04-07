@@ -16,32 +16,14 @@
 namespace SimulationInterfacesROS2
 {
 
-    GetSimulationFeaturesServiceHandler::GetSimulationFeaturesServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName)
-    {
-        const std::string serviceNameStr(std::string_view(serviceName.data(), serviceName.size()));
-        m_getSimulationFeaturesService = node->create_service<ServiceType>(
-            serviceNameStr,
-            [this](const Request::SharedPtr request, Response::SharedPtr response)
-            {
-                *response = HandleServiceRequest(*request);
-            });
-    }
-
-    GetSimulationFeaturesServiceHandler::~GetSimulationFeaturesServiceHandler()
-    {
-        if (m_getSimulationFeaturesService)
-        {
-            m_getSimulationFeaturesService.reset();
-        }
-    }
-
     AZStd::unordered_set<AZ::u8> GetSimulationFeaturesServiceHandler::GetProvidedFeatures()
     {
         // standard doesn't define specific feature id for this service
         return AZStd::unordered_set<AZ::u8>{};
     }
 
-    GetSimulationFeaturesServiceHandler::Response GetSimulationFeaturesServiceHandler::HandleServiceRequest(const Request& request)
+    GetSimulationFeaturesServiceHandler::Response GetSimulationFeaturesServiceHandler::HandleServiceRequest(
+        const rmw_request_id_t& header, const Request& request)
     {
         // call bus to get simulation features in SimulationInterfacesROS2 Gem side
         AZStd::unordered_set<AZ::u8> ros2Interfaces;

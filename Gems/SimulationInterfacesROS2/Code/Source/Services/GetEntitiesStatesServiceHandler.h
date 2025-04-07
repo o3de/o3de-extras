@@ -16,21 +16,23 @@
 namespace SimulationInterfacesROS2
 {
 
-    class GetEntitiesStatesServiceHandler : public ROS2HandlerBase
+    class GetEntitiesStatesServiceHandler : public ROS2HandlerBase<simulation_interfaces::srv::GetEntitiesStates>
     {
     public:
-        using ServiceType = simulation_interfaces::srv::GetEntitiesStates;
-        using Request = ServiceType::Request;
-        using Response = ServiceType::Response;
+        AZStd::string_view GetTypeName() const override
+        {
+            return "GetEntitiesStates";
+        }
 
-        GetEntitiesStatesServiceHandler() = delete;
-        GetEntitiesStatesServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName);
-        ~GetEntitiesStatesServiceHandler();
+        AZStd::string_view GetDefaultName() const override
+        {
+            return "get_entities_states";
+        }
         AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override;
-        Response HandleServiceRequest(const Request& request);
+
+        Response HandleServiceRequest(const rmw_request_id_t& header, const Request& request) override;
 
     private:
-        rclcpp::Service<ServiceType>::SharedPtr m_getEntitiesStatesService;
     };
 
 } // namespace SimulationInterfacesROS2

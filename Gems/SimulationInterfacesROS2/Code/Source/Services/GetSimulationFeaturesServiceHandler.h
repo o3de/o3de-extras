@@ -16,22 +16,23 @@
 namespace SimulationInterfacesROS2
 {
 
-    class GetSimulationFeaturesServiceHandler : public ROS2HandlerBase
+    class GetSimulationFeaturesServiceHandler : public ROS2HandlerBase<simulation_interfaces::srv::GetSimulatorFeatures>
     {
     public:
-        using ServiceType = simulation_interfaces::srv::GetSimulatorFeatures;
-        using Request = ServiceType::Request;
-        using Response = ServiceType::Response;
-        using ServiceHandle = std::shared_ptr<rclcpp::Service<ServiceType>>;
+        AZStd::string_view GetTypeName() const override
+        {
+            return "GetSimulationFeatures";
+        }
 
-        GetSimulationFeaturesServiceHandler() = delete;
-        GetSimulationFeaturesServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName);
-        ~GetSimulationFeaturesServiceHandler();
+        AZStd::string_view GetDefaultName() const override
+        {
+            return "get_simulation_features";
+        }
         AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override;
-        Response HandleServiceRequest(const Request& request);
+
+        Response HandleServiceRequest(const rmw_request_id_t& header, const Request& request) override;
 
     private:
-        rclcpp::Service<ServiceType>::SharedPtr m_getSimulationFeaturesService;
     };
 
 } // namespace SimulationInterfacesROS2
