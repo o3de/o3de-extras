@@ -48,6 +48,7 @@ namespace SimulationInterfacesROS2
                     const std::shared_ptr<rmw_request_id_t> header,
                     const std::shared_ptr<Request> request)
                 {
+                    m_lastRequestHeader = header;
                     auto response = HandleServiceRequest(header, *request);
                     // if no response passed it means, that handleServiceRequest will send response in defined callback after time consuming
                     // task, header needs to be cached
@@ -55,17 +56,14 @@ namespace SimulationInterfacesROS2
                     {
                         service_handle->send_response(*header, response.value());
                     }
-                    else
-                    {
-                        m_lastRequestHeader = header;
-                    }
                 });
         }
 
         void SendResponse(Response response)
         {
-            AZ_Assert(m_serviceHandle, "Failed to get last request header ptr")
-                m_serviceHandle->send_response(*m_lastRequestHeader, response);
+            AZ_Assert(m_serviceHandle, "Failed to get m_serviceHandle");
+            AZ_Assert(m_lastRequestHeader, "Failed to get last request header ptr");
+            m_serviceHandle->send_response(*m_lastRequestHeader, response);
         }
 
     protected:
