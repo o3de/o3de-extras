@@ -239,6 +239,16 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 BUILD_DEPENDENCIES
                     PRIVATE
                         AZ::AzTest
+                        AZ::AzTestShared
+                        AZ::AzToolsFramework
+                        Legacy::CryCommon
+                        Legacy::EditorCommon
+                        Legacy::Editor.Headers
+                        AZ::AzManipulatorTestFramework.Static
+                        Gem::${gem_name}.API
+                        Gem::${gem_name}.Editor.Private.Object
+                        Gem::SimulationInterfaces.API
+                        Gem::ROS2.Static
                         Gem::${gem_name}.Editor.Private.Object
             )
 

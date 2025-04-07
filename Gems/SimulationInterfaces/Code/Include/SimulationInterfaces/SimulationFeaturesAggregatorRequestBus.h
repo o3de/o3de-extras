@@ -29,7 +29,7 @@ namespace SimulationInterfaces
 
         //! Returns features available in the simulator, list follows definitions at
         //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
-        virtual const AZStd::unordered_set<SimulationFeatures>& GetSimulationFeatures() const = 0;
+        virtual const AZStd::unordered_set<SimulationFeatures> GetSimulationFeatures() const = 0;
 
         //! Method checks if feature with given id is available in the simulation
         //! Method is extenstion to standard defined in simulation_interfaces

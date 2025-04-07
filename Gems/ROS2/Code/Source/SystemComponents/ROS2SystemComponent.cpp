@@ -81,7 +81,6 @@ namespace ROS2
     void ROS2SystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC("AssetDatabaseService", 0x3abf5601));
-        required.push_back(AZ_CRC("RPISystem", 0xf2add773));
     }
 
     void ROS2SystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
