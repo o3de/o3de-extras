@@ -15,25 +15,6 @@
 
 namespace SimulationInterfacesROS2
 {
-    GetEntitiesStatesServiceHandler::GetEntitiesStatesServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName)
-    {
-        const std::string serviceNameStr(std::string_view(serviceName.data(), serviceName.size()));
-        m_getEntitiesStatesService = node->create_service<ServiceType>(
-            serviceNameStr,
-            [this](const Request::SharedPtr request, Response::SharedPtr response)
-            {
-                *response = HandleServiceRequest(*request);
-            });
-    }
-
-    GetEntitiesStatesServiceHandler::~GetEntitiesStatesServiceHandler()
-    {
-        if (m_getEntitiesStatesService)
-        {
-            m_getEntitiesStatesService.reset();
-        }
-    }
-
     AZStd::unordered_set<AZ::u8> GetEntitiesStatesServiceHandler::GetProvidedFeatures()
     {
         return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::ENTITY_TAGS,
@@ -43,7 +24,8 @@ namespace SimulationInterfacesROS2
                                              SimulationFeatures::ENTITY_STATE_GETTING };
     }
 
-    GetEntitiesStatesServiceHandler::Response GetEntitiesStatesServiceHandler::HandleServiceRequest(const Request& request)
+    AZStd::optional<GetEntitiesStatesServiceHandler::Response> GetEntitiesStatesServiceHandler::HandleServiceRequest(
+        const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
         AZ::Outcome<SimulationInterfaces::MultipleEntitiesStates, SimulationInterfaces::FailedResult> outcome;
 
