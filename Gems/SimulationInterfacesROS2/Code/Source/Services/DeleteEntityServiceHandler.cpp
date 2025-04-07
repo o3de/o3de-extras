@@ -27,7 +27,7 @@ namespace SimulationInterfacesROS2
         SimulationInterfaces::SimulationEntityManagerRequestBus::Broadcast(
             &SimulationInterfaces::SimulationEntityManagerRequests::DeleteEntity,
             entityName,
-            [this, &header](const AZ::Outcome<void, SimulationInterfaces::FailedResult>& outcome)
+            [this](const AZ::Outcome<void, SimulationInterfaces::FailedResult>& outcome)
             {
                 Response response;
                 if (outcome.IsSuccess())
@@ -40,7 +40,7 @@ namespace SimulationInterfacesROS2
                     response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
                     response.result.error_message = failedResult.error_string.c_str();
                 }
-                this->GetServiceHandle()->send_response(*header, response);
+                SendResponse(response);
             });
         return AZStd::nullopt;
     }

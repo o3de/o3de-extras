@@ -7,6 +7,7 @@
  */
 
 #include "SpawnEntityServiceHandler.h"
+#include "Services/ROS2HandlerBaseClass.h"
 #include <AzCore/std/optional.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
 #include <ROS2/ROS2Bus.h>
@@ -35,7 +36,7 @@ namespace SimulationInterfacesROS2
             uri,
             entityNamespace,
             initialPose,
-            [this, &header](const AZ::Outcome<AZStd::string, SimulationInterfaces::FailedResult>& outcome)
+            [this](const AZ::Outcome<AZStd::string, SimulationInterfaces::FailedResult>& outcome)
             {
                 Response response;
                 if (outcome.IsSuccess())
@@ -49,7 +50,7 @@ namespace SimulationInterfacesROS2
                     response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
                     response.result.error_message = failedResult.error_string.c_str();
                 }
-                this->GetServiceHandle()->send_response(*header, response);
+                SendResponse(response);
             });
         return AZStd::nullopt;
     }
