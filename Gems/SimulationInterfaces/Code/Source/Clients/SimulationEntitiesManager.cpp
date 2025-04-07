@@ -455,6 +455,7 @@ namespace SimulationInterfaces
         if (findIt == m_simulatedEntityToEntityIdMap.end())
         {
             completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "Entity not found")));
+            return;
         }
 
         const AZ::EntityId entityId = findIt->second;
@@ -463,6 +464,12 @@ namespace SimulationInterfaces
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
         AZ_Assert(entity, "Entity is not available.");
+        if (entity == nullptr)
+        {
+            AZ_Error("SimulationInterfaces", false, "Entity %s (%s) not found", name.c_str(), entityId.ToString().c_str());
+            completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "Entity not found")));
+            return;
+        }
         // check if entity is spawned by this component
         const auto ticketId = entity->GetEntitySpawnTicketId();
         if (m_spawnedTickets.find(ticketId) != m_spawnedTickets.end())
