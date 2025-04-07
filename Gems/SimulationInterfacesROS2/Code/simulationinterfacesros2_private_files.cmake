@@ -4,6 +4,7 @@ set(FILES
     Source/SimulationInterfacesROS2ModuleInterface.h
     Source/Clients/SimulationInterfacesROS2SystemComponent.cpp
     Source/Clients/SimulationInterfacesROS2SystemComponent.h
+    Source/Interfaces/IROS2HandlerBase.h
     Source/Services/ROS2HandlerBaseClass.h
     Source/Services/GetEntitiesServiceHandler.cpp
     Source/Services/GetEntitiesServiceHandler.h

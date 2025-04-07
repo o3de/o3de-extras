@@ -7,7 +7,7 @@
  */
 
 #include "DeleteEntityServiceHandler.h"
-#include "AzCore/std/optional.h"
+#include <AzCore/std/optional.h>
 #include <AzCore/std/string/string.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 

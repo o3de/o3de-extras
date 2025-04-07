@@ -8,24 +8,15 @@
 
 #pragma once
 
-#include "AzCore/std/optional.h"
+#include "Interfaces/IROS2HandlerBase.h"
 #include "Utils/RegistryUtils.h"
 #include <AzCore/std/containers/unordered_set.h>
+#include <AzCore/std/optional.h>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/service.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 namespace SimulationInterfacesROS2
 {
-    // common interface to store all feature handlers in common container
-    class IROS2HandlerBase
-    {
-    public:
-        virtual ~IROS2HandlerBase() = default;
-        virtual AZStd::unordered_set<AZ::u8> GetProvidedFeatures() = 0;
-        virtual AZStd::string_view GetTypeName() const = 0;
-        virtual AZStd::string_view GetDefaultName() const = 0;
-    };
-
     //! base for each ros2 service handler, forces declaration of features provided by the handler
     //! combined informations along all ROS 2 handlers gives information about simulation features
     //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg

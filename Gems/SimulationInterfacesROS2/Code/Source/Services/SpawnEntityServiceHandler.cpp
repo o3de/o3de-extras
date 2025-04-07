@@ -7,7 +7,7 @@
  */
 
 #include "SpawnEntityServiceHandler.h"
-#include "AzCore/std/optional.h"
+#include <AzCore/std/optional.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
