@@ -49,6 +49,16 @@ namespace UnitTest
         AZ_Assert(assetId.IsValid(), "Failed to get asset id for %s", TestSpawnable.c_str());
     }
 
+    int getNumberOfEntities()
+    {
+        using namespace SimulationInterfaces;
+        AZ::Outcome<EntityNameList, FailedResult> enitities;
+        SimulationEntityManagerRequestBus::BroadcastResult(
+            enitities, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
+        AZ_Assert(enitities.IsSuccess(), "Failed to get entities");
+        return enitities.GetValue().size();
+    }
+
     TEST_F(SimulationInterfaceTestFixture, SpawnAppTest)
     {
         // This is an integration test that runs the test application with the SimulationInterfaces gem enabled.
@@ -69,6 +79,7 @@ namespace UnitTest
         constexpr bool allowRename = false;
         SimulationEntityManagerRequestBus::Broadcast(
             &SimulationEntityManagerRequestBus::Events::SpawnEntity, entityName, uri, entityNamespace, initialPose, allowRename, completedCb);
+
         // entities are spawned asynchronously, so we need to tick the app to let the entity be spawned
         TickApp(100);
         EXPECT_TRUE(completed);
@@ -142,12 +153,34 @@ namespace UnitTest
             &SimulationEntityManagerRequestBus::Events::DeleteEntity, entityName, deletionCompletedCb);
         TickApp(100);
 
-        // list simulation entities after deletion, expect no simulation entities
-        AZ::Outcome<EntityNameList, FailedResult> entitiesAfterDeletion;
-        SimulationEntityManagerRequestBus::BroadcastResult(
-            entitiesAfterDeletion, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
-        ASSERT_TRUE(entitiesAfterDeletion.IsSuccess());
-        EXPECT_EQ(entitiesAfterDeletion.GetValue().size(), 0);
+        // check if the entity was deleted
+        EXPECT_EQ(getNumberOfEntities(), 0);
+
+        // spawn 3 entities of entities and despawn all of them
+        SpawnCompletedCb cb = [&](const AZ::Outcome<AZStd::string, FailedResult>& result){};
+        SimulationEntityManagerRequestBus::Broadcast(
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity1", uri, entityNamespace, initialPose, cb);
+        SimulationEntityManagerRequestBus::Broadcast(
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity2", uri, entityNamespace, initialPose, cb);
+        SimulationEntityManagerRequestBus::Broadcast(
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity3", uri, entityNamespace, initialPose, cb);
+        TickApp(100);
+        EXPECT_EQ(getNumberOfEntities(), 3);
+
+        // delete all entities
+        bool deletionWasCompleted = false;
+        DeletionCompletedCb deleteAllCompletion = [&deletionWasCompleted](const AZ::Outcome<void, FailedResult>& result)
+        {
+            deletionWasCompleted = true;
+            EXPECT_TRUE(result.IsSuccess());
+        };
+        SimulationEntityManagerRequestBus::Broadcast(
+            &SimulationEntityManagerRequestBus::Events::DeleteAllEntities, deleteAllCompletion);
+
+        TickApp(100);
+        EXPECT_TRUE(deletionWasCompleted);
+        EXPECT_EQ(getNumberOfEntities(), 0);
+
     }
 
 } // namespace UnitTest

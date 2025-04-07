@@ -514,6 +514,35 @@ namespace SimulationInterfaces
 #endif
     }
 
+    void SimulationEntitiesManager::DeleteAllEntities(DeletionCompletedCb completedCb)
+    {
+        if (m_spawnedTickets.empty())
+        {
+            // early return for empty scene
+            completedCb(AZ::Success());
+            return;
+        }
+        for (auto m_spawnedTicket : m_spawnedTickets)
+        {
+            auto spawner = AZ::Interface<AzFramework::SpawnableEntitiesDefinition>::Get();
+            AZ_Assert(spawner, "SpawnableEntitiesDefinition is not available.");
+            // get ticket
+            auto ticket = m_spawnedTickets[m_spawnedTicket.first];
+
+            // despawn
+            AzFramework::DespawnAllEntitiesOptionalArgs optionalArgs;
+            optionalArgs.m_completionCallback = [this, completedCb](AzFramework::EntitySpawnTicket::Id ticketId)
+            {
+                m_spawnedTickets.erase(ticketId);
+                if (completedCb && m_spawnedTickets.empty())
+                {
+                    completedCb(AZ::Success());
+                }
+            };
+            spawner->DespawnAllEntities(ticket, optionalArgs);
+        }
+    }
+
     AZ::Outcome<SpawnableList, FailedResult> SimulationEntitiesManager::GetSpawnables()
     {
         AZStd::vector<Spawnable> spawnables;

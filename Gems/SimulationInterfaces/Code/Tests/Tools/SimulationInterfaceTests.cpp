@@ -173,6 +173,21 @@ namespace UnitTest
         DeleteEntity(entityId1);
     }
 
+    TEST_F(SimulationInterfaceTestFixture, TestEntitySpawnedDeletionEmptyScene)
+    {
+        using namespace SimulationInterfaces;
+        bool deletionWasCompleted = false;
+        DeletionCompletedCb deleteAllCompletion = [&deletionWasCompleted](const AZ::Outcome<void, FailedResult>& result)
+        {
+            deletionWasCompleted = true;
+            EXPECT_TRUE(result.IsSuccess());
+        };
+        SimulationEntityManagerRequestBus::Broadcast(
+            &SimulationEntityManagerRequestBus::Events::DeleteAllEntities, deleteAllCompletion);
+
+        TickApp(100);
+        EXPECT_TRUE(deletionWasCompleted);
+    }
 } // namespace UnitTest
 
 // required to support running integration tests with Qt and PhysX

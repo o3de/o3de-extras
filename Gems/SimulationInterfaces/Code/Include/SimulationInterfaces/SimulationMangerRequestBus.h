@@ -21,8 +21,13 @@ namespace SimulationInterfaces
     class SimulationManagerRequests
     {
     public:
+
         AZ_RTTI(SimulationManagerRequests, SimulationManagerRequestsTypeId);
         virtual ~SimulationManagerRequests() = default;
+
+        //! Reload level and removal of all spawned simulation entities.
+        using ReloadLevelCallback = AZStd::function<void(void)>;
+        virtual void ReloadLevel(ReloadLevelCallback completionCallback) = 0;
 
         //! Set the simulation to paused or unpaused,
         //! expect always to succeed

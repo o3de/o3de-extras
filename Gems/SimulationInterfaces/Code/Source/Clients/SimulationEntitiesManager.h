@@ -42,6 +42,7 @@ namespace SimulationInterfaces
         AZ::Outcome<MultipleEntitiesStates, FailedResult> GetEntitiesStates(const EntityFilters& filter) override;
         AZ::Outcome<void, FailedResult> SetEntityState(const AZStd::string& name, const EntityState& state) override;
         void DeleteEntity(const AZStd::string& name, DeletionCompletedCb completedCb) override;
+        void DeleteAllEntities(DeletionCompletedCb completedCb) override;
         AZ::Outcome<SpawnableList, FailedResult> GetSpawnables() override;
         void SpawnEntity(
             const AZStd::string& name,

@@ -27,6 +27,8 @@ set(FILES
     Source/Services/GetSpawnablesServiceHandler.h
     Source/Services/SpawnEntityServiceHandler.cpp
     Source/Services/SpawnEntityServiceHandler.h
+    Source/Services/ResetSimulationServiceHandler.cpp
+    Source/Services/ResetSimulationServiceHandler.h
     Source/Services/GetSimulationFeaturesServiceHandler.cpp
     Source/Services/GetSimulationFeaturesServiceHandler.h
     Source/Utils/RegistryUtils.cpp

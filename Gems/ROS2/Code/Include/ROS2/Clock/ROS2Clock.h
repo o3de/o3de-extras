@@ -12,6 +12,8 @@
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <rclcpp/publisher.hpp>
 #include <rosgraph_msgs/msg/clock.hpp>
+#include <AzCore/Outcome/Outcome.h>
+#include <AzCore/std/string/string.h>
 
 namespace ROS2
 {
@@ -31,6 +33,8 @@ namespace ROS2
         void Deactivate();
 
         builtin_interfaces::msg::Time GetROSTimestamp() const;
+
+        AZ::Outcome<void, AZStd::string> AdjustTime(const builtin_interfaces::msg::Time & time) const;
 
         //! Update time in the ROS 2 ecosystem.
         //! This will publish current time to the ROS 2 `/clock` topic, if Clock is configured to do it.
