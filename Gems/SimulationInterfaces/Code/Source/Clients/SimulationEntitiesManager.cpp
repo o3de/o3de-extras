@@ -45,7 +45,7 @@ namespace SimulationInterfaces
         {
             // get transform
             AZ::Vector3 linearVelWorld = rigidBody->GetTransform().TransformVector(state.m_twist_linear);
-            rigidBody->SetAngularVelocity(linearVelWorld);
+            rigidBody->SetLinearVelocity(linearVelWorld);
         }
     }
 
