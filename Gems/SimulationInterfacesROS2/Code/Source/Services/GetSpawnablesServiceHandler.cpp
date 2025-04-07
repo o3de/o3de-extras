@@ -17,8 +17,8 @@ namespace SimulationInterfacesROS2
         return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::SPAWNABLES };
     }
 
-    GetSpawnablesServiceHandler::Response GetSpawnablesServiceHandler::HandleServiceRequest(
-        const rmw_request_id_t& header, const Request& request)
+    AZStd::optional<GetSpawnablesServiceHandler::Response> GetSpawnablesServiceHandler::HandleServiceRequest(
+        const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
         AZ::Outcome<SimulationInterfaces::SpawnableList, SimulationInterfaces::FailedResult> outcome;
         SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(

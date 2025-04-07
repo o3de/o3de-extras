@@ -24,8 +24,8 @@ namespace SimulationInterfacesROS2
                                              SimulationFeatures::ENTITY_STATE_GETTING };
     }
 
-    GetEntitiesStatesServiceHandler::Response GetEntitiesStatesServiceHandler::HandleServiceRequest(
-        const rmw_request_id_t& header, const Request& request)
+    AZStd::optional<GetEntitiesStatesServiceHandler::Response> GetEntitiesStatesServiceHandler::HandleServiceRequest(
+        const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
         AZ::Outcome<SimulationInterfaces::MultipleEntitiesStates, SimulationInterfaces::FailedResult> outcome;
 

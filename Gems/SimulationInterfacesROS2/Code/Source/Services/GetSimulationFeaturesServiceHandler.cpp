@@ -22,8 +22,8 @@ namespace SimulationInterfacesROS2
         return AZStd::unordered_set<AZ::u8>{};
     }
 
-    GetSimulationFeaturesServiceHandler::Response GetSimulationFeaturesServiceHandler::HandleServiceRequest(
-        const rmw_request_id_t& header, const Request& request)
+    AZStd::optional<GetSimulationFeaturesServiceHandler::Response> GetSimulationFeaturesServiceHandler::HandleServiceRequest(
+        const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
         // call bus to get simulation features in SimulationInterfacesROS2 Gem side
         AZStd::unordered_set<AZ::u8> ros2Interfaces;
@@ -40,22 +40,15 @@ namespace SimulationInterfacesROS2
         {
             commonFeatures.insert(static_cast<AZ::u8>(id));
         }
-
-        AZStd::vector<AZ::u8> idToRemove;
+        Response response;
         for (auto id : commonFeatures)
         {
-            if (!(ros2Interfaces.contains(id) && o3deInterfaces.contains(SimulationInterfaces::SimulationFeatures(id))))
+            if (ros2Interfaces.contains(id) && o3deInterfaces.contains(SimulationInterfaces::SimulationFeatures(id)))
             {
-                idToRemove.push_back(id);
+                response.features.features.emplace_back(id);
             }
         }
-        for (auto id : idToRemove)
-        {
-            commonFeatures.erase(id);
-        }
 
-        Response response;
-        response.features.features.insert(response.features.features.end(), commonFeatures.begin(), commonFeatures.end());
         return response;
     }
 } // namespace SimulationInterfacesROS2

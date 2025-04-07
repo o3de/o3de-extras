@@ -29,7 +29,7 @@ namespace SimulationInterfacesROS2
         }
         AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override;
 
-        Response HandleServiceRequest(const rmw_request_id_t& header, const Request& request) override;
+        AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) override;
 
     private:
     };

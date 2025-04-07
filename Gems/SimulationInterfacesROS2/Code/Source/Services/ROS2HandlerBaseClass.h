@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "AzCore/std/optional.h"
 #include "Utils/RegistryUtils.h"
 #include <AzCore/std/containers/unordered_set.h>
 #include <rclcpp/rclcpp.hpp>
@@ -15,7 +16,7 @@
 #include <simulation_interfaces/msg/simulator_features.hpp>
 namespace SimulationInterfacesROS2
 {
-    // common interface to store all features in common container
+    // common interface to store all feature handlers in common container
     class IROS2HandlerBase
     {
     public:
@@ -56,20 +57,27 @@ namespace SimulationInterfacesROS2
                     const std::shared_ptr<rmw_request_id_t> header,
                     const std::shared_ptr<Request> request)
                 {
-                    auto response = HandleServiceRequest(*header, *request);
-                    service_handle->send_response(*header, response);
+                    auto response = HandleServiceRequest(header, *request);
+                    // if no response passed it means, that handleServiceRequest will send response in defined callback after time consuming
+                    // task
+                    if (response.has_value())
+                    {
+                        service_handle->send_response(*header, response.value());
+                    }
                 });
+        }
+        [[nodiscard]] ServiceHandle& GetServiceHandle()
+        {
+            return m_serviceHandle;
         }
 
     protected:
         //! This function is called when a service request is received.
-        virtual Response HandleServiceRequest(const rmw_request_id_t& header, const Request& request) = 0;
+        virtual AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) = 0;
 
-        // virtual AZStd::string_view GetTypeName() const = 0;
-        // virtual AZStd::string_view GetDefaultName() const = 0;
         //! return features id defined by the handler, ids must follow the definition inside standard:
         //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
-        virtual AZStd::unordered_set<AZ::u8> GetProvidedFeatures()
+        AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override
         {
             return {};
         };

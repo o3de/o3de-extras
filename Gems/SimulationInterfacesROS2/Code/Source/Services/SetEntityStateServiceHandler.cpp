@@ -7,6 +7,7 @@
  */
 
 #include "SetEntityStateServiceHandler.h"
+#include "AzCore/std/optional.h"
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
@@ -18,8 +19,8 @@ namespace SimulationInterfacesROS2
         return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::ENTITY_STATE_SETTING };
     }
 
-    SetEntityStateServiceHandler::Response SetEntityStateServiceHandler::HandleServiceRequest(
-        const rmw_request_id_t& header, const Request& request)
+    AZStd::optional<SetEntityStateServiceHandler::Response> SetEntityStateServiceHandler::HandleServiceRequest(
+        const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
         AZ::Outcome<void, SimulationInterfaces::FailedResult> outcome;
         AZStd::string entityName = request.entity.c_str();

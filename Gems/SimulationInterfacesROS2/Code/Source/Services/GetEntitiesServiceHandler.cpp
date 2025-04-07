@@ -21,8 +21,8 @@ namespace SimulationInterfacesROS2
                                              SimulationFeatures::ENTITY_CATEGORIES };
     }
 
-    GetEntitiesServiceHandler::Response GetEntitiesServiceHandler::HandleServiceRequest(
-        const rmw_request_id_t& header, const Request& request)
+    AZStd::optional<GetEntitiesServiceHandler::Response> GetEntitiesServiceHandler::HandleServiceRequest(
+        const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
         AZ::Outcome<SimulationInterfaces::EntityNameList, SimulationInterfaces::FailedResult> outcome;
 

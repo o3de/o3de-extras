@@ -7,6 +7,7 @@
  */
 
 #include "DeleteEntityServiceHandler.h"
+#include "AzCore/std/optional.h"
 #include <AzCore/std/string/string.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
@@ -18,16 +19,17 @@ namespace SimulationInterfacesROS2
         return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::DELETING };
     }
 
-    DeleteEntityServiceHandler::Response DeleteEntityServiceHandler::HandleServiceRequest(
-        const rmw_request_id_t& header, const Request& request)
+    AZStd::optional<DeleteEntityServiceHandler::Response> DeleteEntityServiceHandler::HandleServiceRequest(
+        const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
         AZStd::string entityName = request.entity.c_str();
-        Response response;
+
         SimulationInterfaces::SimulationEntityManagerRequestBus::Broadcast(
             &SimulationInterfaces::SimulationEntityManagerRequests::DeleteEntity,
             entityName,
-            [&response](const AZ::Outcome<void, SimulationInterfaces::FailedResult>& outcome)
+            [this, &header](const AZ::Outcome<void, SimulationInterfaces::FailedResult>& outcome)
             {
+                Response response;
                 if (outcome.IsSuccess())
                 {
                     response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
@@ -38,7 +40,8 @@ namespace SimulationInterfacesROS2
                     response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
                     response.result.error_message = failedResult.error_string.c_str();
                 }
+                this->GetServiceHandle()->send_response(*header, response);
             });
-        return response;
+        return AZStd::nullopt;
     }
 } // namespace SimulationInterfacesROS2
