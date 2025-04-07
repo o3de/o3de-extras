@@ -88,6 +88,7 @@ namespace UnitTest
         {
             AZ::ComponentApplication* app = nullptr;
             AZ::ComponentApplicationBus::BroadcastResult(app, &AZ::ComponentApplicationBus::Events::GetApplication);
+            AZ_Assert(app, "Application pointer is not available.");
             for (int i = 0; i < 10; ++i)
             {
                 app->Tick();
@@ -98,7 +99,7 @@ namespace UnitTest
     //! Perform a smoke test to check if the ROS2 node is available from ROS2 gem
     TEST_F(SimulationInterfaceROS2TestFixture, TestIfROS2NodeIsAvailable)
     {
-        ASSERT_TRUE(GetRos2Node()) << "ROS2 node is not available.";
+        ASSERT_NE(GetRos2Node(),nullptr)  << "ROS2 node is not available.";
     }
 
     //! Perform a smoke test to check if the ROS2 domain is working
@@ -345,7 +346,7 @@ namespace UnitTest
         EXPECT_NE(response->result.result, simulation_interfaces::msg::Result::RESULT_OK);
     }
 
-    //! check if capabilities vector is empty when no features are provided by
+    //! check if capabilities vector is empty when no features are provided by SimulationInterfaces gem
     TEST_F(SimulationInterfaceROS2TestFixture, GetSimulationFeaturesNoFeaturesProvidedByGem)
     {
         using ::testing::_;
@@ -357,7 +358,7 @@ namespace UnitTest
         SpinAppSome();
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
-        EXPECT_EQ(response->features.features.size(), 0) << "Features vector is not empty.";
+        EXPECT_TRUE(response->features.features.empty()) << "Features vector is not empty.";
     }
 
     //! check if features are returned when the feature is provided by SimulationFeaturesAggregator
@@ -385,8 +386,8 @@ namespace UnitTest
         SpinAppSome();
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
-        ASSERT_FALSE(response->features.features.empty()) << "Features vector is not empty.";
-        EXPECT_EQ(response->features.features.size(), 1) << "Features vector is not empty.";
+        ASSERT_FALSE(response->features.features.empty()) << "Features vector is empty.";
+        EXPECT_EQ(response->features.features.size(), 1) << "Features vector should contain one feature only.";
         EXPECT_EQ(response->features.features[0], simulation_interfaces::msg::SimulatorFeatures::SPAWNING) << "Feature is not SPAWNING.";
     }
 
