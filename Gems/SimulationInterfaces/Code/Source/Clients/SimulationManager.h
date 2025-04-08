@@ -18,6 +18,7 @@
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
 #include <AzFramework/API/ApplicationAPI.h>
 
+
 namespace SimulationInterfaces
 {
     class SimulationManager
@@ -45,6 +46,7 @@ namespace SimulationInterfaces
 
     protected:
         // SimulationManagerRequestBus interface implementation
+        // SimulationManagerRequestBus overrides
         void SetSimulationPaused(bool paused) override;
         void StepSimulation(AZ::u64 steps) override;
         bool IsSimulationPaused() const override;
@@ -54,11 +56,14 @@ namespace SimulationInterfaces
 
         // LevelSystemLifecycleNotificationBus interface implementation
         void OnLoadingComplete( const char* levelName) override;
+        SimulationStates GetSimulationState() const override;
+        AZ::Outcome<void, FailedResult> SetSimulationState(SimulationStates stateToSet) override;
 
     private:
         bool m_isSimulationPaused = false;
         uint64_t m_numberOfPhysicsSteps = 0;
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_simulationFinishEvent;
         SimulationManagerRequests::ReloadLevelCallback m_reloadLevelCallback;
+        SimulationStates m_simulationState{ SimulationStates::STATE_STOPPED }; // default simulation state based on standard
     };
 } // namespace SimulationInterfaces

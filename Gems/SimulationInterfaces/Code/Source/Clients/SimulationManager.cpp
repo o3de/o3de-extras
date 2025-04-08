@@ -196,4 +196,57 @@ namespace SimulationInterfaces
         AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
     }
 
+    SimulationStates SimulationManager::GetSimulationState() const
+    {
+        return m_simulationState;
+    }
+
+    AZ::Outcome<void, FailedResult> SimulationManager::SetSimulationState(SimulationStates stateToSet)
+    {
+        // check if simulation is in desire state
+        if (m_simulationState == stateToSet)
+        {
+            return AZ::Failure(
+                FailedResult(ErrorCode::RESULT_ALREADY_IN_TARGET_STATE, "Simulation is already in requested state, transition unecessary"));
+        }
+
+        // requested state is different, apply handling
+        switch (stateToSet)
+        {
+        case SimulationStates::STATE_STOPPED:
+            {
+                // if playing/paused
+                // set paused, wait, reset ALL
+
+                break;
+            }
+        case SimulationStates::STATE_PLAYING:
+            {
+                SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
+                    &SimulationInterfaces::SimulationManagerRequests::SetSimulationPaused, false);
+                // check if in paused stopped
+                break;
+            }
+        case SimulationStates::STATE_PAUSED:
+            {
+                // if playing -> set paused
+                SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
+                    &SimulationInterfaces::SimulationManagerRequests::SetSimulationPaused, true);
+
+                // if stopped -> reset and start with paused.
+                break;
+            }
+        case SimulationStates::STATE_QUITTING:
+            {
+                // if playing/paused -> go to stopped -> kill the simulator.
+                break;
+            }
+        default:
+            {
+                break;
+            }
+        }
+        return AZ::Success();
+    }
+
 } // namespace SimulationInterfaces

@@ -21,6 +21,7 @@
 #include "Services/SetEntityStateServiceHandler.h"
 #include "Services/SpawnEntityServiceHandler.h"
 #include "Services/ResetSimulationServiceHandler.h"
+#include "Services/SetSimulationStateServiceHandler.h"
 #include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/optional.h>

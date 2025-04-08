@@ -31,6 +31,8 @@ set(FILES
     Source/Services/ResetSimulationServiceHandler.h
     Source/Services/GetSimulationFeaturesServiceHandler.cpp
     Source/Services/GetSimulationFeaturesServiceHandler.h
+    Source/Services/SetSimulationStateServiceHandler.cpp
+    Source/Services/SetSimulationStateServiceHandler.h
     Source/Utils/RegistryUtils.cpp
     Source/Utils/RegistryUtils.h
     Source/Utils/Utils.h
