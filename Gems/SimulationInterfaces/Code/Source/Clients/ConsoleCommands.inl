@@ -221,7 +221,7 @@ namespace SimulationInterfacesCommands
             AZ_Printf("SimulationInterfacesConsole", "Entity spawned and registered : %s\n", result.GetValue().c_str());
 
         };
-        SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::SpawnEntity, name, uri, entityNamespace, initialPose, completedCb);
+        SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::SpawnEntity, name, uri, entityNamespace, initialPose, true, completedCb);
         AZ_Printf("SimulationInterfacesConsole", "simulationinterface_Spawn %s %s\n", name.c_str(), uri.c_str());
     }
 

@@ -29,13 +29,13 @@ namespace SimulationInterfacesROS2
         const AZStd::string_view uri{ request.uri.c_str(), request.uri.size() };
         const AZStd::string_view entityNamespace{ request.entity_namespace.c_str(), request.entity_namespace.size() };
         const AZ::Transform initialPose = ROS2::ROS2Conversions::FromROS2Pose(request.initial_pose.pose);
-
         SimulationInterfaces::SimulationEntityManagerRequestBus::Broadcast(
             &SimulationInterfaces::SimulationEntityManagerRequests::SpawnEntity,
             name,
             uri,
             entityNamespace,
             initialPose,
+            request.allow_renaming,
             [this](const AZ::Outcome<AZStd::string, SimulationInterfaces::FailedResult>& outcome)
             {
                 Response response;

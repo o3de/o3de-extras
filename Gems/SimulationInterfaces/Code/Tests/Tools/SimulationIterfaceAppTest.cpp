@@ -67,11 +67,21 @@ namespace UnitTest
         };
 
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, entityName, uri, entityNamespace, initialPose, completedCb);
-
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity, entityName, uri, entityNamespace, initialPose, false, completedCb);
         // entities are spawned asynchronously, so we need to tick the app to let the entity be spawned
         TickApp(100);
         EXPECT_TRUE(completed);
+
+        // try to spawn entity with the same name, expect failure
+        AZStd::atomic_bool completed2 = false;
+        SpawnCompletedCb failedSpawnCompletedCb = [&](const AZ::Outcome<AZStd::string, FailedResult>& result)
+        {
+            EXPECT_FALSE(result.IsSuccess());
+            completed2 = true;
+        };
+        SimulationEntityManagerRequestBus::Broadcast(
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity, entityName, uri, entityNamespace, initialPose, false, failedSpawnCompletedCb);
+        EXPECT_TRUE(completed2);
 
         // list simulation entities
         AZ::Outcome<EntityNameList, FailedResult> entitiesResult;

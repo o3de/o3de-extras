@@ -541,12 +541,33 @@ namespace SimulationInterfaces
         const AZStd::string& uri,
         const AZStd::string& entityNamespace,
         const AZ::Transform& initialPose,
+        bool allowRename,
         SpawnCompletedCb completedCb)
     {
+
+        if (!allowRename)
+        {
+            // If API user does not allow renaming, check if name is unique
+            if (m_simulatedEntityToEntityIdMap.contains(name))
+            {
+                const auto msg = AZStd::string::format("Entity name %s is not unique", name.c_str());
+                completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_INCORRECT_STATE, msg)));
+                return;
+            }
+        }
+
+        if (!entityNamespace.empty())
+        {
+            // TODO: Mpelka - remove this error when ROS 2 namespace is implemented
+            AZ_Error("SimulationInterfaces", false, "ROS 2 namespace is not implemented yet in spawning");
+            completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "This feature is not implemented yet in spawning entities")));
+            return;
+        }
+
         // get rel path from uri
         const AZStd::string relPath = Utils::UriToRelPath(uri);
 
-        // create spawnnable
+        // create spawnable
         AZ::Data::AssetId assetId;
         AZ::Data::AssetCatalogRequestBus::BroadcastResult(
             assetId,
@@ -596,6 +617,7 @@ namespace SimulationInterfaces
             {
                 // TODO: Mpelka set ROS 2 namespace here
                 AZ_Error("SimulationInterfaces", false, "ROS 2 namespace is not implemented yet in spawning");
+                return;
             }
         };
         optionalArgs.m_completionCallback =
