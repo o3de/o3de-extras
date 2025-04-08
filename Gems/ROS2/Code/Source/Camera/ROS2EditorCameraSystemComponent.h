@@ -28,6 +28,7 @@ namespace ROS2
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
+        static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
