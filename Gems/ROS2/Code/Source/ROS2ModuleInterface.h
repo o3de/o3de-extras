@@ -74,7 +74,6 @@ namespace ROS2
                     ROS2WheelOdometryComponent::CreateDescriptor(),
                     ROS2FrameComponent::CreateDescriptor(),
                     ROS2RobotControlComponent::CreateDescriptor(),
-                    ROS2CameraSensorComponent::CreateDescriptor(),
                     ROS2ImageEncodingConversionComponent::CreateDescriptor(),
                     AckermannControlComponent::CreateDescriptor(),
                     RigidBodyTwistControlComponent::CreateDescriptor(),
