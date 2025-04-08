@@ -8,7 +8,7 @@
 
 #include "SimulationInterfacesROS2SystemComponent.h"
 
-#include "Actions/SimulateStepsServer.h"
+#include "Actions/SimulateStepsActionServerHandler.h"
 #include "Services/ROS2ServiceBaseClass.h"
 #include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
 #include <AzCore/std/string/string.h>
@@ -28,10 +28,10 @@ namespace SimulationInterfacesROS2
         void RegisterInterface(
             AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<IROS2HandlerBase>>& interfacesMap, rclcpp::Node::SharedPtr ros2Node)
         {
-            AZStd::shared_ptr service = AZStd::make_shared<T>();
-            service->Initialize(ros2Node);
-            interfacesMap[service->GetTypeName()] = AZStd::move(service);
-            service.reset();
+            AZStd::shared_ptr handler = AZStd::make_shared<T>();
+            handler->Initialize(ros2Node);
+            interfacesMap[handler->GetTypeName()] = AZStd::move(handler);
+            handler.reset();
         };
     } // namespace
 
@@ -86,25 +86,25 @@ namespace SimulationInterfacesROS2
         RegisterInterface<SetEntityStateServiceHandler>(m_availableRos2Interface, ros2Node);
         RegisterInterface<SpawnEntityServiceHandler>(m_availableRos2Interface, ros2Node);
         RegisterInterface<GetSimulationFeaturesServiceHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<SimulateStepsServer>(m_availableRos2Interface, ros2Node);
+        RegisterInterface<SimulateStepsActionServerHandler>(m_availableRos2Interface, ros2Node);
     }
 
     void SimulationInterfacesROS2SystemComponent::Deactivate()
     {
         SimulationInterfacesROS2RequestBus::Handler::BusDisconnect();
 
-        for (auto& [serviceType, service] : m_availableRos2Interface)
+        for (auto& [handlerType, handler] : m_availableRos2Interface)
         {
-            service.reset();
+            handler.reset();
         }
     }
 
     AZStd::unordered_set<AZ::u8> SimulationInterfacesROS2SystemComponent::GetSimulationFeatures()
     {
         AZStd::unordered_set<AZ::u8> result;
-        for (auto& [serviceType, serviceHandler] : m_availableRos2Interface)
+        for (auto& [handlerType, handler] : m_availableRos2Interface)
         {
-            auto features = serviceHandler->GetProvidedFeatures();
+            auto features = handler->GetProvidedFeatures();
             result.insert(features.begin(), features.end());
         }
         return result;

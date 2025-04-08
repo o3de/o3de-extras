@@ -121,7 +121,6 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         BUILD_DEPENDENCIES
             INTERFACE
                 AZ::AzToolsFramework
-                Gem::SimulationInterfaces.API
     )
 
     # The ${gem_name}.Editor.Private.Object target is an internal target
@@ -139,8 +138,6 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Include
                 Source
         BUILD_DEPENDENCIES
-            PRIVATE
-                Gem::SimulationInterfaces.API
             PUBLIC
                 AZ::AzToolsFramework
                 Gem::ROS2.API

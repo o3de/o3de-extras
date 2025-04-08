@@ -35,6 +35,25 @@ namespace SimulationInterfacesROS2
             CreateService(node);
         }
 
+        void SendResponse(Response response)
+        {
+            AZ_Assert(m_serviceHandle, "Failed to get m_serviceHandle");
+            AZ_Assert(m_lastRequestHeader, "Failed to get last request header ptr");
+            m_serviceHandle->send_response(*m_lastRequestHeader, response);
+        }
+
+    protected:
+        //! This function is called when a service request is received.
+        virtual AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) = 0;
+
+        //! return features id defined by the handler, ids must follow the definition inside standard:
+        //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
+        AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override
+        {
+            return {};
+        };
+
+    private:
         void CreateService(rclcpp::Node::SharedPtr& node)
         {
             // get the service name from the type name
@@ -65,25 +84,6 @@ namespace SimulationInterfacesROS2
                 });
         }
 
-        void SendResponse(Response response)
-        {
-            AZ_Assert(m_serviceHandle, "Failed to get m_serviceHandle");
-            AZ_Assert(m_lastRequestHeader, "Failed to get last request header ptr");
-            m_serviceHandle->send_response(*m_lastRequestHeader, response);
-        }
-
-    protected:
-        //! This function is called when a service request is received.
-        virtual AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) = 0;
-
-        //! return features id defined by the handler, ids must follow the definition inside standard:
-        //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
-        AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override
-        {
-            return {};
-        };
-
-    private:
         std::shared_ptr<rmw_request_id_t> m_lastRequestHeader = nullptr;
         ServiceHandle m_serviceHandle;
     };

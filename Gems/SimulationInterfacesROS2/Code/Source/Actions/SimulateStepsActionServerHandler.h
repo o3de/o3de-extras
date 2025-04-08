@@ -16,13 +16,13 @@
 namespace SimulationInterfacesROS2
 {
 
-    class SimulateStepsServer
+    class SimulateStepsActionServerHandler
         : public ROS2ActionBase<simulation_interfaces::action::SimulateSteps>
         , public AZ::TickBus::Handler
         , public SimulationInterfaces::SimulationManagerNotificationsBus::Handler
     {
     public:
-        ~SimulateStepsServer();
+        ~SimulateStepsActionServerHandler();
 
         // IROS2HandlerBase overrides
         AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override;

@@ -39,13 +39,13 @@ namespace SimulationInterfaces
         //! Cancel executing the simulation steps, if there still are remaining steps left
         virtual void CancelStepSimulation() = 0;
 
-        //! Check whether the StepSimulation request has been cancelled
+        //! Check if the StepSimulation request has been cancelled
         //! @return boolean value indicating the cancellation of the request
         virtual bool HasSimulationStepsBeenCancelled() const = 0;
 
-        //! Check whether the StepSimulation request has been finished
-        //! @return boolean value indicating the finish of the request
-        virtual bool HasSimulationStepsFinished() const = 0;
+        //! Check if the SimulationSteps is active
+        //! @return boolean value indicating if the SimulationSteps is active
+        virtual bool IsSimulationStepsActive() const = 0;
     };
 
     class SimulationMangerRequestBusTraits : public AZ::EBusTraits

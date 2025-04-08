@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
+
 #pragma once
 
 #include "Interfaces/IROS2HandlerBase.h"
@@ -30,26 +38,6 @@ namespace SimulationInterfacesROS2
             CreateAction(node);
         }
 
-        void CreateAction(rclcpp::Node::SharedPtr& node)
-        {
-            // Get the action name from the type name
-            AZStd::string actionName = RegistryUtilities::GetName(GetTypeName());
-
-            if (actionName.empty())
-            {
-                // if the action name is empty, use the default name
-                actionName = GetDefaultName();
-            }
-
-            const std::string actionNameStr{ actionName.c_str(), actionName.size() };
-            m_actionHandle = rclcpp_action::create_server<RosActionType>(
-                node,
-                actionNameStr,
-                AZStd::bind(&ROS2ActionBase::GoalReceivedCallback, this, AZStd::placeholders::_1, AZStd::placeholders::_2),
-                AZStd::bind(&ROS2ActionBase::GoalCancelledCallback, this, AZStd::placeholders::_1),
-                AZStd::bind(&ROS2ActionBase::GoalAcceptedCallback, this, AZStd::placeholders::_1));
-        }
-
     protected:
         //! This function is called when the action is cancelled
         virtual void CancelGoal(std::shared_ptr<Result> result)
@@ -58,6 +46,7 @@ namespace SimulationInterfacesROS2
             if (m_goalHandle && m_goalHandle->is_canceling())
             {
                 m_goalHandle->canceled(result);
+                m_goalHandle.reset();
             }
         }
 
@@ -68,6 +57,7 @@ namespace SimulationInterfacesROS2
             if (m_goalHandle && (m_goalHandle->is_executing() || m_goalHandle->is_canceling()))
             {
                 m_goalHandle->succeed(result);
+                m_goalHandle.reset();
             }
         }
 
@@ -81,16 +71,6 @@ namespace SimulationInterfacesROS2
             }
         }
 
-        //! This function checks if the server is busy
-        virtual bool IsGoalActiveState() const
-        {
-            if (!m_goalHandle)
-            {
-                return false;
-            }
-            return m_goalHandle->is_active() || m_goalHandle->is_executing() || m_goalHandle->is_canceling();
-        }
-
         //! This function check if the server is ready to handle new goal
         virtual bool IsReadyForExecution() const
         {
@@ -100,7 +80,7 @@ namespace SimulationInterfacesROS2
                 return true;
             }
             // Accept if the previous one is in a terminal state.
-            return IsGoalActiveState() == false;
+            return !(m_goalHandle->is_active() || m_goalHandle->is_executing() || m_goalHandle->is_canceling());
         }
 
         //! This function is called when the new goal receives
@@ -122,6 +102,26 @@ namespace SimulationInterfacesROS2
         std::shared_ptr<GoalHandle> m_goalHandle;
 
     private:
+        void CreateAction(rclcpp::Node::SharedPtr& node)
+        {
+            // Get the action name from the type name
+            AZStd::string actionName = RegistryUtilities::GetName(GetTypeName());
+
+            if (actionName.empty())
+            {
+                // if the action name is empty, use the default name
+                actionName = GetDefaultName();
+            }
+
+            const std::string actionNameStr{ actionName.c_str(), actionName.size() };
+            m_actionHandle = rclcpp_action::create_server<RosActionType>(
+                node,
+                actionNameStr,
+                AZStd::bind(&ROS2ActionBase::GoalReceivedCallback, this, AZStd::placeholders::_1, AZStd::placeholders::_2),
+                AZStd::bind(&ROS2ActionBase::GoalCancelledCallback, this, AZStd::placeholders::_1),
+                AZStd::bind(&ROS2ActionBase::GoalAcceptedCallback, this, AZStd::placeholders::_1));
+        }
+
         ActionHandle m_actionHandle;
     };
 } // namespace SimulationInterfacesROS2

@@ -6,42 +6,42 @@
  *
  */
 
-#include "SimulateStepsServer.h"
+#include "SimulateStepsActionServerHandler.h"
 
 namespace SimulationInterfacesROS2
 {
 
-    void SimulateStepsServer::Initialize(rclcpp::Node::SharedPtr& node)
+    void SimulateStepsActionServerHandler::Initialize(rclcpp::Node::SharedPtr& node)
     {
         ROS2ActionBase::Initialize(node);
         SimulationInterfaces::SimulationManagerNotificationsBus::Handler::BusConnect();
     }
 
-    SimulateStepsServer::~SimulateStepsServer()
+    SimulateStepsActionServerHandler::~SimulateStepsActionServerHandler()
     {
-        SimulationInterfaces::SimulationManagerNotificationsBus::Handler::BusDisconnect();
         if (AZ::TickBus::Handler::BusIsConnected())
         {
             AZ::TickBus::Handler::BusDisconnect();
         }
+        SimulationInterfaces::SimulationManagerNotificationsBus::Handler::BusDisconnect();
     }
 
-    AZStd::unordered_set<AZ::u8> SimulateStepsServer::GetProvidedFeatures()
+    AZStd::unordered_set<AZ::u8> SimulateStepsActionServerHandler::GetProvidedFeatures()
     {
         return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::STEP_SIMULATION_ACTION };
     }
 
-    AZStd::string_view SimulateStepsServer::GetTypeName() const
+    AZStd::string_view SimulateStepsActionServerHandler::GetTypeName() const
     {
         return "SimulateSteps";
     }
 
-    AZStd::string_view SimulateStepsServer::GetDefaultName() const
+    AZStd::string_view SimulateStepsActionServerHandler::GetDefaultName() const
     {
         return "simulate_steps";
     }
 
-    rclcpp_action::GoalResponse SimulateStepsServer::GoalReceivedCallback(
+    rclcpp_action::GoalResponse SimulateStepsActionServerHandler::GoalReceivedCallback(
         [[maybe_unused]] const rclcpp_action::GoalUUID& uuid, std::shared_ptr<const Goal> goal)
     {
         if (!IsReadyForExecution())
@@ -53,14 +53,15 @@ namespace SimulationInterfacesROS2
         return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
     }
 
-    rclcpp_action::CancelResponse SimulateStepsServer::GoalCancelledCallback([[maybe_unused]] const std::shared_ptr<GoalHandle> goal_handle)
+    rclcpp_action::CancelResponse SimulateStepsActionServerHandler::GoalCancelledCallback(
+        [[maybe_unused]] const std::shared_ptr<GoalHandle> goal_handle)
     {
         SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
             &SimulationInterfaces::SimulationManagerRequests::CancelStepSimulation);
         return rclcpp_action::CancelResponse::ACCEPT;
     }
 
-    void SimulateStepsServer::GoalAcceptedCallback(const std::shared_ptr<GoalHandle> goal_handle)
+    void SimulateStepsActionServerHandler::GoalAcceptedCallback(const std::shared_ptr<GoalHandle> goal_handle)
     {
         m_goalHandle = goal_handle;
 
@@ -76,6 +77,7 @@ namespace SimulationInterfacesROS2
             result->result.result = simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
             result->result.error_message = "Request cannot be processed - simulation has to be paused. Action will be aborted.";
             m_goalHandle->abort(result);
+            m_goalHandle.reset();
             return;
         }
         AZ::TickBus::Handler::BusConnect();
@@ -83,7 +85,7 @@ namespace SimulationInterfacesROS2
             &SimulationInterfaces::SimulationManagerRequests::StepSimulation, m_goalSteps);
     }
 
-    void SimulateStepsServer::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
+    void SimulateStepsActionServerHandler::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
         bool isCancelled = false;
         SimulationInterfaces::SimulationManagerRequestBus::BroadcastResult(
@@ -100,7 +102,7 @@ namespace SimulationInterfacesROS2
 
         bool isDone = false;
         SimulationInterfaces::SimulationManagerRequestBus::BroadcastResult(
-            isDone, &SimulationInterfaces::SimulationManagerRequests::HasSimulationStepsFinished);
+            isDone, &SimulationInterfaces::SimulationManagerRequests::IsSimulationStepsActive);
         if (isDone)
         {
             auto result = std::make_shared<Result>();
@@ -111,7 +113,7 @@ namespace SimulationInterfacesROS2
         }
     }
 
-    void SimulateStepsServer::OnSimulationStepFinish(const AZ::u64 remainingSteps)
+    void SimulateStepsActionServerHandler::OnSimulationStepFinish(const AZ::u64 remainingSteps)
     {
         auto feedback = std::make_shared<Feedback>();
         feedback->remaining_steps = remainingSteps;
