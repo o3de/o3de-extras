@@ -26,17 +26,20 @@
 #include "Clients/SimulationInterfacesROS2SystemComponent.h"
 #include "Mocks/SimulationEntityManagerMock.h"
 #include "Mocks/SimulationFeaturesAggregatorRequestsHandlerMock.h"
+#include "Mocks/SimulationManagerMock.h"
 #include <QApplication>
 #include <ROS2/ROS2Bus.h>
 #include <gtest/gtest.h>
 #include <memory>
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp_action/create_client.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <string>
 #include <string_view>
 #include <vector>
+#include <simulation_interfaces/action/simulate_steps.hpp>
 
 namespace UnitTest
 {
@@ -469,6 +472,115 @@ namespace UnitTest
         auto response = future.get();
         EXPECT_EQ(response->result.result, simulation_interfaces::srv::SpawnEntity::Response::NAMESPACE_INVALID) << "Service call should fail with invalid name.";
     }
+
+    TEST_F(SimulationInterfaceROS2TestFixture, SimulationStepsSuccess)
+    {
+        using ::testing::_;
+        auto node = GetRos2Node();
+        auto mock = std::make_shared<SimulationManagerMockedHandler>();
+        auto client = rclcpp_action::create_client<simulation_interfaces::action::SimulateSteps>(node, "/simulate_steps");
+        auto goal = std::make_shared<simulation_interfaces::action::SimulateSteps::Goal>();
+        constexpr AZ::u64 steps = 10;
+        goal->steps = steps;
+
+        ASSERT_TRUE(client->wait_for_action_server(std::chrono::seconds(0)) == true) << "Action server is unavailable";
+
+        EXPECT_CALL(*mock, IsSimulationPaused())
+            .WillOnce(::testing::Invoke(
+                []()
+                {
+                    return true;
+                }));
+
+        EXPECT_CALL(*mock, StepSimulation(steps));
+
+        EXPECT_CALL(*mock, IsSimulationStepsActive())
+            .WillOnce(::testing::Invoke(
+                []()
+                {
+                    return false;
+                }));
+
+        auto future = client->async_send_goal(*goal);
+        SpinAppSome();
+        ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
+        auto goalHandle = future.get();
+        ASSERT_NE(goalHandle, nullptr);
+        auto result = client->async_get_result(goalHandle);
+        SpinAppSome();
+        ASSERT_TRUE(result.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
+        EXPECT_EQ(result.get().result->result.result, simulation_interfaces::msg::Result::RESULT_OK);
+    }
+
+    TEST_F(SimulationInterfaceROS2TestFixture, SimulationStepsFailureSimulationIsNotPaused)
+    {
+        using ::testing::_;
+        auto node = GetRos2Node();
+        auto mock = std::make_shared<SimulationManagerMockedHandler>();
+        auto client = rclcpp_action::create_client<simulation_interfaces::action::SimulateSteps>(node, "/simulate_steps");
+        auto goal = std::make_shared<simulation_interfaces::action::SimulateSteps::Goal>();
+        goal->steps = 10;
+
+        ASSERT_TRUE(client->wait_for_action_server(std::chrono::seconds(0)) == true) << "Action server is unavailable";
+
+        EXPECT_CALL(*mock, IsSimulationPaused())
+            .WillOnce(::testing::Invoke(
+                []()
+                {
+                    return false;
+                }));
+
+        auto future = client->async_send_goal(*goal);
+        SpinAppSome();
+        ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
+        auto goalHandle = future.get();
+        ASSERT_NE(goalHandle, nullptr);
+        auto result = client->async_get_result(goalHandle);
+        SpinAppSome();
+        ASSERT_TRUE(result.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
+        EXPECT_EQ(result.get().result->result.result, simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED);
+    }
+
+    TEST_F(SimulationInterfaceROS2TestFixture, SimulationStepsCancelled)
+    {
+        using ::testing::_;
+        auto node = GetRos2Node();
+        auto mock = std::make_shared<SimulationManagerMockedHandler>();
+        auto client = rclcpp_action::create_client<simulation_interfaces::action::SimulateSteps>(node, "/simulate_steps");
+        auto goal = std::make_shared<simulation_interfaces::action::SimulateSteps::Goal>();
+        constexpr AZ::u64 steps = 10;
+        goal->steps = steps;
+
+        ASSERT_TRUE(client->wait_for_action_server(std::chrono::seconds(0)) == true) << "Action server is unavailable";
+
+        EXPECT_CALL(*mock, IsSimulationPaused())
+            .WillOnce(::testing::Invoke(
+                []()
+                {
+                    return true;
+                }));
+
+        EXPECT_CALL(*mock, StepSimulation(steps));
+
+        EXPECT_CALL(*mock, IsSimulationStepsActive())
+            .WillRepeatedly(::testing::Invoke(
+                []()
+                {
+                    return true;
+                }));
+
+        EXPECT_CALL(*mock, CancelStepSimulation());
+
+        auto future = client->async_send_goal(*goal);
+        SpinAppSome();
+        ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
+        auto goalHandle = future.get();
+        ASSERT_NE(goalHandle, nullptr);
+        auto cancelFeautre = client->async_cancel_goal(goalHandle);
+        SpinAppSome();
+        ASSERT_TRUE(cancelFeautre.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
+    }
+
 } // namespace UnitTest
 
 // required to support running integration tests with Qt and PhysX

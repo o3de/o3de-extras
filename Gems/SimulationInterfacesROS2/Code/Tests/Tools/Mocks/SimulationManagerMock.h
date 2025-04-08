@@ -1,0 +1,28 @@
+#pragma once
+
+#include <SimulationInterfaces/SimulationMangerRequestBus.h>
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+namespace UnitTest
+{
+    using namespace SimulationInterfaces;
+    class SimulationManagerMockedHandler : public SimulationInterfaces::SimulationManagerRequestBus::Handler
+    {
+    public:
+        SimulationManagerMockedHandler()
+        {
+            SimulationInterfaces::SimulationManagerRequestBus::Handler::BusConnect();
+        }
+        ~SimulationManagerMockedHandler()
+        {
+            SimulationInterfaces::SimulationManagerRequestBus::Handler::BusDisconnect();
+        }
+
+        MOCK_METHOD1(ReloadLevel, void(ReloadLevelCallback));
+        MOCK_METHOD1(SetSimulationPaused, void(bool));
+        MOCK_METHOD1(StepSimulation, void(AZ::u64));
+        MOCK_METHOD(bool, IsSimulationPaused, (), (const));
+        MOCK_METHOD0(CancelStepSimulation, void());
+        MOCK_METHOD(bool, IsSimulationStepsActive, (), (const));
+    };
+} // namespace UnitTest
