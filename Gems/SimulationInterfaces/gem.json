@@ -20,7 +20,7 @@
     "icon_path": "preview.png",
     "requirements": "",
     "documentation_url": "",
-    "dependencies": [],
+    "dependencies": ["ROS2"],
     "repo_uri": "",
     "compatible_engines": [],
     "engine_api_dependencies": [],

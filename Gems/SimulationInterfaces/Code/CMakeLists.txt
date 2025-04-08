@@ -56,6 +56,7 @@ ly_add_target(
             AZ::AzCore
             AZ::AzFramework
 )
+target_depends_on_ros2_packages(${gem_name}.Private.Object simulation_interfaces)
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
 ly_add_target(
