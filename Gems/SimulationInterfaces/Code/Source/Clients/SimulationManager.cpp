@@ -90,11 +90,6 @@ namespace SimulationInterfaces
         return m_isSimulationPaused;
     }
 
-    bool SimulationManager::HasSimulationStepsBeenCancelled() const
-    {
-        return m_hasBeenCancelled;
-    }
-
     bool SimulationManager::IsSimulationStepsActive() const
     {
         return !m_simulationFinishEvent.IsConnected();
@@ -107,7 +102,6 @@ namespace SimulationInterfaces
             m_simulationFinishEvent.Disconnect();
             SetSimulationPaused(true);
             m_numberOfPhysicsSteps = 0;
-            m_hasBeenCancelled = true;
         }
     }
 
@@ -135,7 +129,6 @@ namespace SimulationInterfaces
             return;
         }
         m_numberOfPhysicsSteps = steps;
-        m_hasBeenCancelled = false;
 
         // install handler
         m_simulationFinishEvent = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(

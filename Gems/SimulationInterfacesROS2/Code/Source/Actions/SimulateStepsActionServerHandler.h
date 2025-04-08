@@ -44,6 +44,7 @@ namespace SimulationInterfacesROS2
 
     private:
         AZ::u64 m_goalSteps{ 0 };
+        bool m_isCancelled{ false };
     };
 
 } // namespace SimulationInterfacesROS2

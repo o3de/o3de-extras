@@ -45,12 +45,10 @@ namespace SimulationInterfaces
         void StepSimulation(AZ::u64 steps) override;
         bool IsSimulationPaused() const override;
         void CancelStepSimulation() override;
-        bool HasSimulationStepsBeenCancelled() const override;
         bool IsSimulationStepsActive() const override;
 
         bool m_isSimulationPaused = false;
         uint64_t m_numberOfPhysicsSteps = 0;
-        bool m_hasBeenCancelled = false;
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_simulationFinishEvent;
     };
 } // namespace SimulationInterfaces
