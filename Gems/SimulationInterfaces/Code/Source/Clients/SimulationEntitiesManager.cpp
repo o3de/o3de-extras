@@ -548,22 +548,35 @@ namespace SimulationInterfaces
         SpawnCompletedCb completedCb)
     {
 
+
         if (!allowRename)
         {
             // If API user does not allow renaming, check if name is unique
             if (m_simulatedEntityToEntityIdMap.contains(name))
             {
                 const auto msg = AZStd::string::format("Entity name %s is not unique", name.c_str());
-                completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_INCORRECT_STATE, msg)));
+                completedCb(AZ::Failure(FailedResult(simulation_interfaces::srv::SpawnEntity::Response::NAME_NOT_UNIQUE, msg)));
                 return;
             }
+            if (name.empty())
+            {
+                const auto msg = AZStd::string::format("Entity name is empty");
+                completedCb(AZ::Failure(FailedResult(simulation_interfaces::srv::SpawnEntity::Response::NAME_INVALID, msg)));
+                return;
+            }
+        }
+        if (!initialPose.IsOrthogonal())
+        {
+            AZ_Warning("SimulationInterfaces", false, "Initial pose is not orthogonal");
+            completedCb(AZ::Failure(FailedResult(simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
+            return;
         }
 
         if (!entityNamespace.empty())
         {
             // TODO: Mpelka - remove this error when ROS 2 namespace is implemented
             AZ_Error("SimulationInterfaces", false, "ROS 2 namespace is not implemented yet in spawning");
-            completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "This feature is not implemented yet in spawning entities")));
+            completedCb(AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "This feature is not implemented yet in spawning entities")));
             return;
         }
 
