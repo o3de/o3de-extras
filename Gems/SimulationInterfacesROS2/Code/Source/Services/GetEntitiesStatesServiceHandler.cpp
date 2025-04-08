@@ -7,10 +7,10 @@
  */
 
 #include "GetEntitiesStatesServiceHandler.h"
-#include "Utils/Utils.h"
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
+#include <Utils/Utils.h>
 
 namespace SimulationInterfacesROS2
 {

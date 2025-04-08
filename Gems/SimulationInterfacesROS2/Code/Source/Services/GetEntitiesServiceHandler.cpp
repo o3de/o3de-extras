@@ -7,9 +7,9 @@
  */
 
 #include "GetEntitiesServiceHandler.h"
-#include "Utils/Utils.h"
 #include <AzFramework/Physics/ShapeConfiguration.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
+#include <Utils/Utils.h>
 
 namespace SimulationInterfacesROS2
 {

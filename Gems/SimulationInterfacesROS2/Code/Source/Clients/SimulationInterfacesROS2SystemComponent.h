@@ -17,7 +17,7 @@
 #include "Services/GetEntityStateServiceHandler.h"
 #include "Services/GetSimulationFeaturesServiceHandler.h"
 #include "Services/GetSpawnablesServiceHandler.h"
-#include "Services/ROS2ServiceBaseClass.h"
+#include "Services/ROS2ServiceBase.h"
 #include "Services/SetEntityStateServiceHandler.h"
 #include "Services/SpawnEntityServiceHandler.h"
 #include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"

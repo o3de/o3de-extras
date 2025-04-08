@@ -8,16 +8,17 @@
 
 #pragma once
 
-#include "Interfaces/IROS2HandlerBase.h"
-#include "Utils/RegistryUtils.h"
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/optional.h>
+#include <Interfaces/IROS2HandlerBase.h>
+#include <Utils/RegistryUtils.h>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/service.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
+
 namespace SimulationInterfacesROS2
 {
-    //! Base for each ROS2 service handler, forces declaration of features provided by the handler
+    //! Base for each ROS 2 service handler, forces declaration of features provided by the handler
     //! combined information along all ROS 2 handlers gives information about simulation features
     //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
     using SimulationFeatures = simulation_interfaces::msg::SimulatorFeatures;

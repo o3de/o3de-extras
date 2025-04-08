@@ -92,7 +92,7 @@ namespace SimulationInterfaces
 
     bool SimulationManager::IsSimulationStepsActive() const
     {
-        return !m_simulationFinishEvent.IsConnected();
+        return m_simulationFinishEvent.IsConnected();
     }
 
     void SimulationManager::CancelStepSimulation()

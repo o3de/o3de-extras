@@ -7,8 +7,8 @@ set(FILES
     Source/Interfaces/IROS2HandlerBase.h
     Source/Actions/SimulateStepsActionServerHandler.cpp
     Source/Actions/SimulateStepsActionServerHandler.h
-    Source/Actions/ROS2ActionBaseClass.h
-    Source/Services/ROS2ServiceBaseClass.h
+    Source/Actions/ROS2ActionBase.h
+    Source/Services/ROS2ServiceBase.h
     Source/Services/GetEntitiesServiceHandler.cpp
     Source/Services/GetEntitiesServiceHandler.h
     Source/Services/DeleteEntityServiceHandler.cpp

@@ -36,7 +36,7 @@ namespace SimulationInterfaces
         //! @return boolean value indicating the pause state of the simulation
         virtual bool IsSimulationPaused() const = 0;
 
-        //! Cancel executing the simulation steps, if there still are remaining steps left
+        //! Cancel executing the simulation steps, if there are remaining steps left
         virtual void CancelStepSimulation() = 0;
 
         //! Check if the SimulationSteps is active

@@ -8,16 +8,16 @@
 
 #pragma once
 
-#include "Interfaces/IROS2HandlerBase.h"
-#include "Utils/RegistryUtils.h"
 #include <AzCore/std/functional.h>
+#include <Interfaces/IROS2HandlerBase.h>
+#include <Utils/RegistryUtils.h>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 
 namespace SimulationInterfacesROS2
 {
-    //! Base for each ROS2 action server, forces declaration of features provided by the server
+    //! Base for each ROS 2 action server handler, forces declaration of features provided by the server
     //! combined information along all ROS 2 handlers gives information about simulation features
     //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
     using SimulationFeatures = simulation_interfaces::msg::SimulatorFeatures;

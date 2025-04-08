@@ -24,8 +24,8 @@
   "requirements": "ROS2, SimulationInterfaces",
   "documentation_url": "",
   "dependencies": [
-    "SimulationInterfaces",
-    "ROS2"
+    "SimulationInterfaces>=1.0.0",
+    "ROS2>=3.3.0"
   ],
   "repo_uri": "",
   "compatible_engines": [],

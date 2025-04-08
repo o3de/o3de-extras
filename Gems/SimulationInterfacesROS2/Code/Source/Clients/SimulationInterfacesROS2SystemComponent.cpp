@@ -8,10 +8,10 @@
 
 #include "SimulationInterfacesROS2SystemComponent.h"
 
-#include "Actions/SimulateStepsActionServerHandler.h"
-#include "Services/ROS2ServiceBaseClass.h"
-#include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
+#include <Actions/SimulateStepsActionServerHandler.h>
 #include <AzCore/std/string/string.h>
+#include <Services/ROS2ServiceBase.h>
+#include <SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h>
 
 #include <ROS2/ROS2Bus.h>
 #include <SimulationInterfacesROS2/SimulationInterfacesROS2TypeIds.h>

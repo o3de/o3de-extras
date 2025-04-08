@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "ROS2ActionBaseClass.h"
+#include "ROS2ActionBase.h"
 #include <AzCore/Component/TickBus.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
 #include <simulation_interfaces/action/simulate_steps.hpp>

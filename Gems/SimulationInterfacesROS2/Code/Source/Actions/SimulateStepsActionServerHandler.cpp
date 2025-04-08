@@ -19,10 +19,7 @@ namespace SimulationInterfacesROS2
 
     SimulateStepsActionServerHandler::~SimulateStepsActionServerHandler()
     {
-        if (AZ::TickBus::Handler::BusIsConnected())
-        {
-            AZ::TickBus::Handler::BusDisconnect();
-        }
+        AZ::TickBus::Handler::BusDisconnect();
         SimulationInterfaces::SimulationManagerNotificationsBus::Handler::BusDisconnect();
     }
 
@@ -99,10 +96,11 @@ namespace SimulationInterfacesROS2
             return;
         }
 
-        bool isDone = false;
+        // If SimulationSteps is active then it means that SimulationManagerRequestBus::Handler is busy now with a previous request
+        bool isActive = true;
         SimulationInterfaces::SimulationManagerRequestBus::BroadcastResult(
-            isDone, &SimulationInterfaces::SimulationManagerRequests::IsSimulationStepsActive);
-        if (isDone)
+            isActive, &SimulationInterfaces::SimulationManagerRequests::IsSimulationStepsActive);
+        if (!isActive)
         {
             auto result = std::make_shared<Result>();
             result->result.error_message = "Action finished.";
