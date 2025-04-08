@@ -11,7 +11,6 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <std_msgs/msg/header.hpp>
 
 namespace SimulationInterfacesROS2
 {
@@ -71,10 +70,8 @@ namespace SimulationInterfacesROS2
             {
                 const SimulationInterfaces::EntityState& entityState = pair.second;
                 simulation_interfaces::msg::EntityState simulationInterfacesEntityState;
-                std_msgs::msg::Header header;
-                header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
-                header.frame_id = ROS2::ROS2Interface::Get()->GetNode()->get_name();
-                simulationInterfacesEntityState.header = header;
+                simulationInterfacesEntityState.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+                simulationInterfacesEntityState.header.frame_id = ROS2::ROS2Interface::Get()->GetNode()->get_name();
                 simulationInterfacesEntityState.pose = ROS2::ROS2Conversions::ToROS2Pose(entityState.m_pose);
                 simulationInterfacesEntityState.twist.linear = ROS2::ROS2Conversions::ToROS2Vector3(entityState.m_twist_linear);
                 simulationInterfacesEntityState.twist.angular = ROS2::ROS2Conversions::ToROS2Vector3(entityState.m_twist_angular);

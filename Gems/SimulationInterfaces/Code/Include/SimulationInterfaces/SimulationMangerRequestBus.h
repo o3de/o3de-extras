@@ -32,7 +32,7 @@ namespace SimulationInterfaces
         //! expect always to succeed
         virtual void StepSimulation(AZ::u64 steps) = 0;
 
-        //! Check whether the simulation if paused or not
+        //! Check whether the simulation is paused or not
         //! @return boolean value indicating the pause state of the simulation
         virtual bool IsSimulationPaused() const = 0;
 

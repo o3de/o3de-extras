@@ -7,7 +7,6 @@
  */
 
 #include "SetEntityStateServiceHandler.h"
-#include <AzCore/std/optional.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 

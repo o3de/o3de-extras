@@ -10,7 +10,6 @@
 
 #include "Services/ROS2ServiceBaseClass.h"
 #include <AzCore/std/string/string_view.h>
-#include <rclcpp/rclcpp.hpp>
 #include <simulation_interfaces/srv/get_spawnables.hpp>
 
 namespace SimulationInterfacesROS2

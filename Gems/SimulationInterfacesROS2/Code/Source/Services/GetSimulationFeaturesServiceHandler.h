@@ -9,9 +9,7 @@
 #pragma once
 #include "Services/ROS2ServiceBaseClass.h"
 #include <AzCore/std/string/string_view.h>
-#include <rclcpp/rclcpp.hpp>
-#include <simulation_interfaces/srv/delete_entity.hpp>
-#include <simulation_interfaces/srv/detail/get_simulator_features__struct.hpp>
+#include <simulation_interfaces/srv/get_simulator_features.hpp>
 
 namespace SimulationInterfacesROS2
 {
