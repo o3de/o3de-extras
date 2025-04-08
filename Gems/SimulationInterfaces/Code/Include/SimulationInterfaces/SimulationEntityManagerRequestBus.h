@@ -86,12 +86,12 @@ namespace SimulationInterfaces
 
         //! Callback for when an entity has been spawned and registered. The string is the name of the entity in the simulation interface.
         //! Note : The names is empty, if the entity could not be registered (e.g. prefab has no simulated entities)
-
         virtual void SpawnEntity(
             const AZStd::string& name,
             const AZStd::string& uri,
             const AZStd::string& entityNamespace,
             const AZ::Transform& initialPose,
+            const bool allowRename,
             SpawnCompletedCb completedCb) = 0;
     };
 
