@@ -541,7 +541,7 @@ namespace SimulationInterfaces
         const AZStd::string& uri,
         const AZStd::string& entityNamespace,
         const AZ::Transform& initialPose,
-        bool allowRename,
+        const bool allowRename,
         SpawnCompletedCb completedCb)
     {
 
@@ -611,13 +611,6 @@ namespace SimulationInterfaces
             if (transformInterface)
             {
                 transformInterface->SetWorldTM(initialPose);
-            }
-
-            if (!entityNamespace.empty())
-            {
-                // TODO: Mpelka set ROS 2 namespace here
-                AZ_Error("SimulationInterfaces", false, "ROS 2 namespace is not implemented yet in spawning");
-                return;
             }
         };
         optionalArgs.m_completionCallback =

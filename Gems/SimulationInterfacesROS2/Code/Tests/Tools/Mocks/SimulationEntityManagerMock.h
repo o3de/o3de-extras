@@ -25,7 +25,7 @@ namespace UnitTest
         MOCK_METHOD0(GetSpawnables, AZ::Outcome<SpawnableList, FailedResult>());
         MOCK_METHOD6(
             SpawnEntity,
-            void(const AZStd::string& name, const AZStd::string& uri, const AZStd::string& entityNamespace, const AZ::Transform& initialPose, bool allowRename, SpawnCompletedCb completedCb));
+            void(const AZStd::string& name, const AZStd::string& uri, const AZStd::string& entityNamespace, const AZ::Transform& initialPose, const bool allowRename, SpawnCompletedCb completedCb));
 
     };
 }

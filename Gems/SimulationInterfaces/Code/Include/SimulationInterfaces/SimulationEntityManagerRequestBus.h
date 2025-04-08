@@ -91,7 +91,7 @@ namespace SimulationInterfaces
             const AZStd::string& uri,
             const AZStd::string& entityNamespace,
             const AZ::Transform& initialPose,
-            bool allowRename,
+            const bool allowRename,
             SpawnCompletedCb completedCb) = 0;
     };
 
