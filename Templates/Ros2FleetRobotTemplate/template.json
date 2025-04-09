@@ -32,6 +32,90 @@
             "isTemplated": false
         },
         {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/NOTICE",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/config/fleet_config.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_fleet_nav_launch.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_nav_launch.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_rviz_launch.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/maps/map_warehouse.pgm",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/maps/map_warehouse.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav/__init__.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav/robot_spawner.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/package.xml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble/nav2_multirobot_params.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble/nav2_params.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_multirobot_params.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_params.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/resource/o3de_fleet_nav",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/rviz/nav2_namespaced_view.rviz",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/setup.cfg",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/setup.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_copyright.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_flake8.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_pep257.py",
+            "isTemplated": false
+        },
+        {
             "file": "Gem/${Name}_files.cmake",
             "isTemplated": true
         },
@@ -49,11 +133,11 @@
         },
         {
             "file": "Gem/Platform/Linux/${Name}_linux_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Linux/${Name}_shared_linux_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Linux/PAL_linux.cmake",
@@ -61,11 +145,11 @@
         },
         {
             "file": "Gem/Platform/Mac/${Name}_mac_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Mac/${Name}_shared_mac_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Mac/PAL_mac.cmake",
@@ -73,11 +157,11 @@
         },
         {
             "file": "Gem/Platform/Windows/${Name}_shared_windows_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Windows/${Name}_windows_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Windows/PAL_windows.cmake",
@@ -109,7 +193,7 @@
         },
         {
             "file": "Platform/Linux/linux_project.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Platform/Linux/linux_project.json",
@@ -117,7 +201,7 @@
         },
         {
             "file": "Platform/Mac/mac_project.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Platform/Mac/mac_project.json",
@@ -125,10 +209,14 @@
         },
         {
             "file": "Platform/Windows/windows_project.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Platform/Windows/windows_project.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Prefabs/ProteusLaserScanner.prefab",
             "isTemplated": false
         },
         {
@@ -225,19 +313,15 @@
         },
         {
             "file": "ShaderLib/scenesrg.srgi",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "ShaderLib/viewsrg.srgi",
-            "isTemplated": true
-        },
-        {
-            "file": "Prefabs/ProteusLaserScanner.prefab",
             "isTemplated": false
         },
         {
             "file": "cmake/EngineFinder.cmake",
-            "isTemplated": false
+            "isTemplated": true
         },
         {
             "file": "game.cfg",
@@ -250,90 +334,6 @@
         {
             "file": "project.json",
             "isTemplated": true
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/maps/map_warehouse.yaml",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/maps/map_warehouse.pgm",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/resource/o3de_fleet_nav",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble/nav2_multirobot_params.yaml",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble/nav2_params.yaml",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_multirobot_params.yaml",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_params.yaml",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/setup.py",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/package.xml",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/NOTICE",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/config/fleet_config.yaml",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_rviz_launch.py",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_nav_launch.py",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_fleet_nav_launch.py",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav/__init__.py",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav/robot_spawner.py",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_pep257.py",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_flake8.py",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_copyright.py",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/setup.cfg",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/rviz/nav2_namespaced_view.rviz",
-            "isTemplated": false
         }
     ],
     "createDirectories": [
@@ -348,6 +348,48 @@
         },
         {
             "dir": "Config"
+        },
+        {
+            "dir": "Examples"
+        },
+        {
+            "dir": "Examples/ros2_ws"
+        },
+        {
+            "dir": "Examples/ros2_ws/src"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/config"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/launch"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/maps"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/params"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/resource"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/rviz"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/test"
         },
         {
             "dir": "Gem"
@@ -398,6 +440,9 @@
             "dir": "Platform/Windows"
         },
         {
+            "dir": "Prefabs"
+        },
+        {
             "dir": "Registry"
         },
         {
@@ -422,50 +467,11 @@
             "dir": "Shaders"
         },
         {
-            "dir": "Prefabs"
-        },
-        {
             "dir": "Shaders/ShaderResourceGroups"
         },
         {
             "dir": "cmake"
-        },
-        {
-            "dir": "Examples"
-        },
-        {
-            "dir": "Examples/ros2_ws"
-        },
-        {
-            "dir": "Examples/ros2_ws/src"
-        },
-        {
-            "dir": "Examples/ros2_ws/src/o3de_fleet_nav"
-        },
-        {
-            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/config"
-        },
-        {
-            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/launch"
-        },
-        {
-            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/maps"
-        },
-        {
-            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav"
-        },
-        {
-            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/params"
-        },
-        {
-            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/resource"
-        },
-        {
-            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/rviz"
-        },
-        {
-            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/test"
         }
     ],
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.0.3-template.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.1.0-template.zip"
 }
