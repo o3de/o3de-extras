@@ -6,6 +6,8 @@ This is an Asset Gem containing sample robots for the O3DE:
 - Proteus Robot
 - Husarion ROSbot XL
 
+> *Note:* This Gem superseded deprecated `ProteusRobot` and `RosRobotSample` Gems; versions `2.1.0` of both Gems were used as a base.
+
 ## Requirements
 - Any O3DE project with the [ROS 2 Gem](https://docs.o3de.org/docs/user-guide/interactivity/robotics/) enabled.
 
@@ -50,7 +52,7 @@ From left: `ROSbotXL.prefab`, `ROSBotXL_Slamtec.prefab`, and `ROSbotXL_Velodyne.
 ## Acknowledgments
 This work is licensed under [Apache License, Version 2.0][apache]. You may elect at your option to use the [MIT License][mit] instead. Contributions must be made under both licenses.
 
-Models were created based on STL and URDF files kindly shared by Husarion.
+Models of _Husarion ROSbot XL_ were created based on STL and URDF files kindly shared by [Husarion](https://husarion.com).
 
 [apache]: https://opensource.org/licenses/Apache-2.0
 [mit]: https://opensource.org/licenses/MIT
