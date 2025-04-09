@@ -255,7 +255,6 @@ namespace SimulationInterfaces
                 {
                     SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
                         &SimulationInterfaces::SimulationManagerRequests::SetSimulationPaused, true);
-                    //
                 };
                 ReloadLevel(cb);
                 break;
