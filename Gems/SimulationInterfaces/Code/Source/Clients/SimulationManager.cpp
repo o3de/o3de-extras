@@ -72,10 +72,7 @@ namespace SimulationInterfaces
 
     void SimulationManager::Activate()
     {
-        if (AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusIsConnected())
-        {
-            AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
-        }
+        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
         SimulationManagerRequestBus::Handler::BusConnect();
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,

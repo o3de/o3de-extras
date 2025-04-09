@@ -14,6 +14,7 @@
 #include <builtin_interfaces/msg/time.hpp>
 #include <ROS2/Clock/ROS2Clock.h>
 #include <ROS2/ROS2Bus.h>
+#include <AzCore/Component/ComponentApplicationBus.h>
 
 namespace SimulationInterfacesROS2
 {
@@ -29,16 +30,10 @@ namespace SimulationInterfacesROS2
     AZStd::optional<ResetSimulationServiceHandler::Response> ResetSimulationServiceHandler::HandleServiceRequest(
         const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
-        using simulation_interfaces::srv::ResetSimulation;
-
-        AZ::Outcome<SimulationInterfaces::SpawnableList, SimulationInterfaces::FailedResult> outcome;
-        SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
-            outcome, &SimulationInterfaces::SimulationEntityManagerRequests::GetSpawnables);
-
         if (request.scope == simulation_interfaces::srv::ResetSimulation::Request::SCOPE_STATE)
         {
             Response response;
-            response.result.result = simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
+            response.result.result = simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED;
             response.result.error_message = "Not implemented yet";
             return response;
         }
@@ -94,6 +89,16 @@ namespace SimulationInterfacesROS2
 
         if (request.scope == Request::SCOPE_ALL || request.scope == Request::SCOPE_DEFAULT)
         {
+            // check if we are in GameLauncher
+            AZ::ApplicationTypeQuery appType;
+            AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
+            if (appType.IsValid() && appType.IsEditor())
+            {
+                Response response;
+                response.result.result = simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED;
+                response.result.error_message = "Feature not supported in Editor.";
+                return response;
+            }
 
             auto levelReloadCompletion = [this]()
             {
