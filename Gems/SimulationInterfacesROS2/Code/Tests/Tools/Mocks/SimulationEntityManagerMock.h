@@ -22,6 +22,7 @@ namespace UnitTest
         MOCK_METHOD1(GetEntitiesStates, AZ::Outcome<MultipleEntitiesStates, FailedResult>(const EntityFilters& filter));
         MOCK_METHOD2(SetEntityState, AZ::Outcome<void, FailedResult>(const AZStd::string& name, const EntityState& state));
         MOCK_METHOD2(DeleteEntity, void(const AZStd::string& name, DeletionCompletedCb completedCb));
+        MOCK_METHOD1(DeleteAllEntities, void(DeletionCompletedCb completedCb));
         MOCK_METHOD0(GetSpawnables, AZ::Outcome<SpawnableList, FailedResult>());
         MOCK_METHOD6(
             SpawnEntity,

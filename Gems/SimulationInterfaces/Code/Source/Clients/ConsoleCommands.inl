@@ -226,6 +226,31 @@ namespace SimulationInterfacesCommands
         AZ_Printf("SimulationInterfacesConsole", "simulationinterface_Spawn %s %s\n", name.c_str(), uri.c_str());
     }
 
+    static void simulationinterfaces_ReloadLevel(const AZ::ConsoleCommandContainer& arguments)
+    {
+        SimulationManagerRequests::ReloadLevelCallback cb = []()
+        {
+            AZ_Printf("SimulationInterfacesConsole", "Reload level completed\n");
+        };
+        SimulationManagerRequestBus::Broadcast(&SimulationManagerRequestBus::Events::ReloadLevel, cb);
+    }
+
+    static void simulationinterfaces_DeleteAll(const AZ::ConsoleCommandContainer& arguments)
+    {
+        DeletionCompletedCb cb = [](const AZ::Outcome<void, FailedResult>& result)
+        {
+            if (result.IsSuccess())
+            {
+                AZ_Printf("SimulationInterfacesConsole", "All spawned entities deleted\n");
+            }
+            else
+            {
+                AZ_Printf("SimulationInterfacesConsole", "Failed to delete all spawned entities: %s\n", result.GetError().error_string.c_str());
+            }
+        };
+        SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::DeleteAllEntities, cb);
+    }
+
     AZ_CONSOLEFREEFUNC(
         simulationinterfaces_GetEntities, AZ::ConsoleFunctorFlags::DontReplicate, "Get all simulated entities in the scene.");
 
@@ -242,4 +267,7 @@ namespace SimulationInterfacesCommands
     AZ_CONSOLEFREEFUNC(
         simulationinterfaces_GetSpawnables, AZ::ConsoleFunctorFlags::DontReplicate, "Get all spawnable entities in the scene.");
     AZ_CONSOLEFREEFUNC(simulationinterfaces_Spawn, AZ::ConsoleFunctorFlags::DontReplicate, "Spawn entity.");
+    AZ_CONSOLEFREEFUNC(simulationinterfaces_ReloadLevel, AZ::ConsoleFunctorFlags::DontReplicate, "Reload level.");
+    AZ_CONSOLEFREEFUNC(simulationinterfaces_DeleteAll, AZ::ConsoleFunctorFlags::DontReplicate, "Remove all spawned entities.");
+
 } // namespace SimulationInterfacesCommands

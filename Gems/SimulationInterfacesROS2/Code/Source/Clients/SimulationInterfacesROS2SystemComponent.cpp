@@ -86,6 +86,7 @@ namespace SimulationInterfacesROS2
         RegisterInterface<SetEntityStateServiceHandler>(m_availableRos2Interface, ros2Node);
         RegisterInterface<SpawnEntityServiceHandler>(m_availableRos2Interface, ros2Node);
         RegisterInterface<GetSimulationFeaturesServiceHandler>(m_availableRos2Interface, ros2Node);
+        RegisterInterface<ResetSimulationServiceHandler>(m_availableRos2Interface, ros2Node);
         RegisterInterface<SimulateStepsActionServerHandler>(m_availableRos2Interface, ros2Node);
     }
 

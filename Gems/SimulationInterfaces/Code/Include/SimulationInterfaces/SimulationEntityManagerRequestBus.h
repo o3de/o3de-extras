@@ -80,6 +80,9 @@ namespace SimulationInterfaces
         //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/srv/DeleteEntity.srv">DeleteEntity.srv</a>
         virtual void DeleteEntity(const AZStd::string& name, DeletionCompletedCb completedCb) = 0;
 
+        //! Remove all previously spawned entity from the simulation.
+        virtual void DeleteAllEntities(DeletionCompletedCb completedCb) = 0;
+
         //! Get a list of spawnable entities.
         //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/srv/GetSpawnables.srv">GetSpawnables.srv</a>
         virtual AZ::Outcome<SpawnableList, FailedResult> GetSpawnables() = 0;

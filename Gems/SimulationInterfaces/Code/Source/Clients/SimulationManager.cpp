@@ -11,6 +11,7 @@
 
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzFramework/Components/ConsoleBus.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
@@ -71,13 +72,19 @@ namespace SimulationInterfaces
 
     void SimulationManager::Activate()
     {
+        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
         SimulationManagerRequestBus::Handler::BusConnect();
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
-            AZStd::unordered_set<SimulationFeatures>{ SimulationFeatures::SIMULATION_STATE_PAUSE,
-                                                      SimulationFeatures::STEP_SIMULATION_SINGLE,
-                                                      SimulationFeatures::STEP_SIMULATION_MULTIPLE,
-                                                      SimulationFeatures::STEP_SIMULATION_ACTION });
+            AZStd::unordered_set<SimulationFeatures>{
+                SimulationFeatures::SIMULATION_RESET,
+                SimulationFeatures::SIMULATION_RESET_TIME,
+                //SimulationFeatures::SIMULATION_RESET_STATE,
+                SimulationFeatures::SIMULATION_RESET_SPAWNED,
+                SimulationFeatures::SIMULATION_STATE_PAUSE,
+                SimulationFeatures::STEP_SIMULATION_SINGLE,
+                SimulationFeatures::STEP_SIMULATION_MULTIPLE,
+                SimulationFeatures::STEP_SIMULATION_ACTION});
     }
 
     void SimulationManager::Deactivate()
@@ -158,6 +165,36 @@ namespace SimulationInterfaces
         // install handler
         scene->RegisterSceneSimulationFinishHandler(m_simulationFinishEvent);
         SetSimulationPaused(false);
+    }
+
+    void SimulationManager::ReloadLevel(SimulationManagerRequests::ReloadLevelCallback completionCallback)
+    {
+        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusConnect();
+        m_reloadLevelCallback = completionCallback;
+
+        // We need to delete all entities before reloading the level
+        DeletionCompletedCb deleteAllCompletion = [](const AZ::Outcome<void, FailedResult>& result)
+        {
+            AZ_Trace("SimulationManager", "Delete all entities completed: %s, reload level", result.IsSuccess() ? "true" : "false");
+            const char* levelName = AZ::Interface<AzFramework::ILevelSystemLifecycle>::Get()->GetCurrentLevelName();
+            AzFramework::ConsoleRequestBus::Broadcast(&AzFramework::ConsoleRequests::ExecuteConsoleCommand, "UnloadLevel");
+            AZStd::string command = AZStd::string::format("LoadLevel %s", levelName);
+            AzFramework::ConsoleRequestBus::Broadcast(&AzFramework::ConsoleRequests::ExecuteConsoleCommand, command.c_str());
+        };
+
+        // delete spawned entities
+        SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequests::DeleteAllEntities, deleteAllCompletion);
+    }
+
+    void SimulationManager::OnLoadingComplete(const char* levelName)
+    {
+        AZ_Printf("SimulationManager", "Level loading started: %s", levelName);
+        if (m_reloadLevelCallback)
+        {
+            m_reloadLevelCallback();
+            m_reloadLevelCallback = nullptr;
+        }
+        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
     }
 
 } // namespace SimulationInterfaces

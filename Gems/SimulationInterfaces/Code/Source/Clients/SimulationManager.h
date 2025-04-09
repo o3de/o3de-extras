@@ -16,11 +16,14 @@
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
+#include <AzFramework/API/ApplicationAPI.h>
+
 namespace SimulationInterfaces
 {
     class SimulationManager
         : public AZ::Component
         , protected SimulationManagerRequestBus::Handler
+        , protected AzFramework::LevelSystemLifecycleNotificationBus::Handler
     {
     public:
         AZ_COMPONENT_DECL(SimulationManager);
@@ -41,14 +44,21 @@ namespace SimulationInterfaces
         void Deactivate() override;
 
     protected:
+        // SimulationManagerRequestBus interface implementation
         void SetSimulationPaused(bool paused) override;
         void StepSimulation(AZ::u64 steps) override;
         bool IsSimulationPaused() const override;
         void CancelStepSimulation() override;
         bool IsSimulationStepsActive() const override;
+        void ReloadLevel(SimulationManagerRequests::ReloadLevelCallback completionCallback) override;
 
+        // LevelSystemLifecycleNotificationBus interface implementation
+        void OnLoadingComplete( const char* levelName) override;
+
+    private:
         bool m_isSimulationPaused = false;
         uint64_t m_numberOfPhysicsSteps = 0;
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_simulationFinishEvent;
+        SimulationManagerRequests::ReloadLevelCallback m_reloadLevelCallback;
     };
 } // namespace SimulationInterfaces

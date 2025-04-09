@@ -25,6 +25,9 @@ namespace ROS2
         virtual void Activate() override {};
         virtual void Deactivate() override {};
 
+
+        virtual AZ::Outcome<void, AZStd::string> AdjustTime(const builtin_interfaces::msg::Time& time) override;
+
         //! Get simulation time as ROS 2 message.
         //! @see ROS2Requests::GetROSTimestamp() for more details.
         virtual builtin_interfaces::msg::Time GetROSTimestamp() const override;
