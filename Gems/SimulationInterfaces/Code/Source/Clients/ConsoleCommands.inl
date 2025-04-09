@@ -196,12 +196,11 @@ namespace SimulationInterfacesCommands
             AZ_Printf("SimulationInterfacesConsole", "simulationinterface_Spawn minimal :\n");
             AZ_Printf("SimulationInterfacesConsole", "     simulationinterface_Spawn <name> <uri>\n");
             AZ_Printf("SimulationInterfacesConsole", "simulationinterface_Spawn optional :\n");
-            AZ_Printf("SimulationInterfacesConsole", "     simulationinterface_Spawn <name> <uri> <namespace> <x> <y> <z> \n");
+            AZ_Printf("SimulationInterfacesConsole", "     simulationinterface_Spawn <name> <uri> <x> <y> <z> \n");
             return;
         }
         AZStd::string name = arguments[0];
         AZStd::string uri = arguments[1];
-        AZStd::string entityNamespace = arguments.size() > 2 ? arguments[2] : "";
         AZ::Transform initialPose = AZ::Transform::CreateIdentity();
         if (arguments.size() > 5)
         {
@@ -211,18 +210,18 @@ namespace SimulationInterfacesCommands
                     AZStd::stof(AZStd::string(arguments[4])),
                     AZStd::stof(AZStd::string(arguments[5]))));
         }
-        SpawnCompletedCb completedCb = [](const AZ::Outcome<AZStd::string, FailedResult>& result)
+        SpawnCompletedCb completedCb = [](const AZ::Outcome<SpawnedEntities, FailedResult>& result)
         {
             if (!result.IsSuccess())
             {
                 AZ_Printf("SimulationInterfacesConsole", "Failed to spawn entity: %s\n", result.GetError().error_string.c_str());
                 return;
             }
-            AZ_Printf("SimulationInterfacesConsole", "Entity spawned and registered : %s\n", result.GetValue().c_str());
+            AZ_Printf("SimulationInterfacesConsole", "Entity spawned and registered : %s\n", result.GetValue().m_name.c_str());
 
         };
         constexpr bool allowRename = true;
-        SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::SpawnEntity, name, uri, entityNamespace, initialPose, allowRename, completedCb);
+        SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::SpawnEntity, name, uri, initialPose, allowRename, completedCb);
         AZ_Printf("SimulationInterfacesConsole", "simulationinterface_Spawn %s %s\n", name.c_str(), uri.c_str());
     }
 

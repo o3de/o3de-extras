@@ -12,6 +12,8 @@
 #include <AzCore/std/string/string_view.h>
 #include <rclcpp/rclcpp.hpp>
 #include <simulation_interfaces/srv/spawn_entity.hpp>
+#include <AzCore/std/containers/unordered_set.h>
+#include <AzCore/Component/EntityId.h>
 
 namespace SimulationInterfacesROS2
 {
@@ -32,6 +34,8 @@ namespace SimulationInterfacesROS2
         AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) override;
 
     private:
+        void SetRos2Namespace(const AZStd::string& namespacePrefix, const AZStd::vector<AZ::EntityId>& entityIds);
+
     };
 
 } // namespace SimulationInterfacesROS2

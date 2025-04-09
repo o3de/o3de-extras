@@ -58,9 +58,8 @@ namespace UnitTest
         constexpr AZStd::string_view entityName = "MySuperDuperEntity";
         const AZ::Transform initialPose = AZ::Transform::CreateTranslation(AZ::Vector3(0.0f, 0.0f, 0.0f));
         constexpr AZStd::string_view uri = "product_asset:///sampleasset/testsimulationentity.spawnable";
-        constexpr AZStd::string_view entityNamespace = "";
         AZStd::atomic_bool completed = false;
-        SpawnCompletedCb completedCb = [&](const AZ::Outcome<AZStd::string, FailedResult>& result)
+        SpawnCompletedCb completedCb = [&](const AZ::Outcome<SpawnedEntities, FailedResult>& result)
         {
             EXPECT_TRUE(result.IsSuccess());
             completed = true;
@@ -68,20 +67,20 @@ namespace UnitTest
 
         constexpr bool allowRename = false;
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, entityName, uri, entityNamespace, initialPose, allowRename, completedCb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity, entityName, uri, initialPose, allowRename, completedCb);
         // entities are spawned asynchronously, so we need to tick the app to let the entity be spawned
         TickApp(100);
         EXPECT_TRUE(completed);
 
         // try to spawn entity with the same name, expect failure
         AZStd::atomic_bool completed2 = false;
-        SpawnCompletedCb failedSpawnCompletedCb = [&](const AZ::Outcome<AZStd::string, FailedResult>& result)
+        SpawnCompletedCb failedSpawnCompletedCb = [&](const AZ::Outcome<SpawnedEntities, FailedResult>& result)
         {
             EXPECT_FALSE(result.IsSuccess());
             completed2 = true;
         };
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, entityName, uri, entityNamespace, initialPose, allowRename, failedSpawnCompletedCb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity, entityName, uri, initialPose, allowRename, failedSpawnCompletedCb);
         EXPECT_TRUE(completed2);
 
         // list simulation entities

@@ -49,7 +49,13 @@ namespace SimulationInterfaces
     using MultipleEntitiesStates = AZStd::unordered_map<AZStd::string, EntityState>;
     using SpawnableList = AZStd::vector<Spawnable>;
     using DeletionCompletedCb = AZStd::function<void(const AZ::Outcome<void, FailedResult>&)>;
-    using SpawnCompletedCb = AZStd::function<void(const AZ::Outcome<AZStd::string, FailedResult>&)>;
+
+    struct SpawnedEntities {
+        AZStd::string m_name; //! The resulting name of spawnable
+        AZStd::vector<AZ::EntityId> m_entityIds; //! The list of entity ids that were spawned
+    };
+
+    using SpawnCompletedCb = AZStd::function<void(const AZ::Outcome<SpawnedEntities, FailedResult>&)>;
     class SimulationEntityManagerRequests
     {
     public:
@@ -89,7 +95,6 @@ namespace SimulationInterfaces
         virtual void SpawnEntity(
             const AZStd::string& name,
             const AZStd::string& uri,
-            const AZStd::string& entityNamespace,
             const AZ::Transform& initialPose,
             const bool allowRename,
             SpawnCompletedCb completedCb) = 0;

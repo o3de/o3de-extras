@@ -46,7 +46,6 @@ namespace SimulationInterfaces
         void SpawnEntity(
             const AZStd::string& name,
             const AZStd::string& uri,
-            const AZStd::string& entityNamespace,
             const AZ::Transform& initialPose,
             const bool allowRename,
             SpawnCompletedCb completedCb) override;
@@ -84,7 +83,9 @@ namespace SimulationInterfaces
 
         struct SpawnCompletedCbData
         {
+            bool m_wasRegistered = false; //! Flag to indicate if the entity was registered
             AZStd::string m_userProposedName; //! Name proposed by the User in spawn request
+            AZStd::string m_resultingEntityNames; //! Name of the entity that was registered
             SpawnCompletedCb m_completedCb; //! User callback to be called when the entity is registered
             AZ::ScriptTimePoint m_spawnCompletedTime; //! Time at which the entity was spawned
         };

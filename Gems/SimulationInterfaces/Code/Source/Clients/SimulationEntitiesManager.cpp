@@ -150,9 +150,8 @@ namespace SimulationInterfaces
                 // call the callback
                 if (spawnData != m_spawnCompletedCallbacks.end())
                 {
-                    // call and remove the callback
-                    spawnData->second.m_completedCb(AZ::Success(registeredName));
-                    m_spawnCompletedCallbacks.erase(spawnData);
+                    spawnData->second.m_resultingEntityNames = registeredName;
+                    spawnData->second.m_wasRegistered = true;
                 }
             });
         m_simulationBodyRemovedHandler = AzPhysics::SceneEvents::OnSimulationBodyRemoved::Handler(
@@ -539,7 +538,6 @@ namespace SimulationInterfaces
     void SimulationEntitiesManager::SpawnEntity(
         const AZStd::string& name,
         const AZStd::string& uri,
-        const AZStd::string& entityNamespace,
         const AZ::Transform& initialPose,
         const bool allowRename,
         SpawnCompletedCb completedCb)
@@ -565,12 +563,6 @@ namespace SimulationInterfaces
         {
             AZ_Warning("SimulationInterfaces", false, "Initial pose is not orthogonal");
             completedCb(AZ::Failure(FailedResult(ErrorCodeValue(109), "Initial pose is not orthogonal"))); //  INVALID_POSE
-            return;
-        }
-        if (!entityNamespace.empty())
-        {
-            AZ_Error("SimulationInterfaces", false, "ROS 2 namespace is not implemented yet in spawning");
-            completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_FEATURE_UNSUPPORTED, "This feature is not implemented yet in spawning entities")));
             return;
         }
 
@@ -602,7 +594,7 @@ namespace SimulationInterfaces
         auto ticket = AzFramework::EntitySpawnTicket(spawnableAsset);
         AzFramework::SpawnAllEntitiesOptionalArgs optionalArgs;
 
-        optionalArgs.m_preInsertionCallback = [initialPose, entityNamespace, name](auto id, auto view)
+        optionalArgs.m_preInsertionCallback = [initialPose, name](auto id, auto view)
         {
             if (view.empty())
             {
@@ -626,12 +618,24 @@ namespace SimulationInterfaces
         optionalArgs.m_completionCallback =
             [this, uri](AzFramework::EntitySpawnTicket::Id ticketId, AzFramework::SpawnableConstEntityContainerView view)
         {
-            // at this point the entities are spawned and should be registered in simulation interface and callback should be called
-            // if that is not a case, it means that the AZFramework::Physics::OnSimulationBodyAdded event was not called.
+
+            auto spawnData = m_spawnCompletedCallbacks.find(ticketId);
+            AZ_Assert(spawnData != m_spawnCompletedCallbacks.end(), "Spawn data not found for ticket id %d", ticketId);
+            if (spawnData == m_spawnCompletedCallbacks.end())
+            {
+                FailedResult failedResult(ErrorCode::RESULT_OPERATION_FAILED, "unexpected error - spawn data not found");
+                spawnData->second.m_completedCb(AZ::Failure(failedResult));
+                m_spawnCompletedCallbacks.erase(spawnData);
+                return;
+            }
+
+            const bool wasRegistered = spawnData->second.m_wasRegistered;
+
+            // at this point the entities are spawned and should be registered in simulation interface.
+            // If that is not a case, it means that the AZFramework::Physics::OnSimulationBodyAdded event was not called.
             // That means the prefab has no physics component or the physics component is not enabled - we need to call the callback here
             // and return the error.
-            auto spawnData = m_spawnCompletedCallbacks.find(ticketId);
-            if (spawnData != m_spawnCompletedCallbacks.end())
+            if (!wasRegistered)
             {
                 // call and remove the callback
                 const auto msg = AZStd::string::format(
@@ -643,9 +647,21 @@ namespace SimulationInterfaces
                     spawnData->second.m_userProposedName.c_str(),
                     uri.c_str());
                 AZ_Error("SimulationInterfaces", false, msg.c_str());
-                spawnData->second.m_completedCb(msg);
+                FailedResult failedResult(ErrorCode::RESULT_OPERATION_FAILED, msg);
+                spawnData->second.m_completedCb(AZ::Failure(failedResult));
                 m_spawnCompletedCallbacks.erase(spawnData);
             }
+            SimulationInterfaces::SpawnedEntities spawnedEntities;
+            spawnedEntities.m_name = spawnData->second.m_resultingEntityNames;
+            AZStd::ranges::transform(
+                view,
+                AZStd::back_inserter(spawnedEntities.m_entityIds),
+                [](const AZ::Entity* entity)
+                {
+                    return entity->GetId();
+                });
+            spawnData->second.m_completedCb(AZ::Success(spawnedEntities));
+            m_spawnCompletedCallbacks.erase(spawnData);
         };
 
         spawner->SpawnAllEntities(ticket, optionalArgs);
