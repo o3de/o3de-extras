@@ -142,6 +142,8 @@ namespace UnitTest
         EXPECT_NE(services.find("/set_entity_state"), services.end());
         EXPECT_NE(services.find("/spawn_entity"), services.end());
         EXPECT_NE(services.find("/get_simulation_features"), services.end());
+        EXPECT_NE(services.find("/step_simulation"), services.end());
+
     }
 
     //! Test if the service call succeeds when the entity is found
