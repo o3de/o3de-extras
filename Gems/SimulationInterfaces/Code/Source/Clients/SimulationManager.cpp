@@ -7,7 +7,6 @@
  */
 
 #include "SimulationManager.h"
-#include "SimulationInterfaces/SimulationFeatures.h"
 
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -15,6 +14,7 @@
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
+#include <simulation_interfaces/msg/simulator_features.hpp>
 
 namespace SimulationInterfaces
 {
@@ -76,15 +76,14 @@ namespace SimulationInterfaces
         SimulationManagerRequestBus::Handler::BusConnect();
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
-            AZStd::unordered_set<SimulationFeatures>{
-                SimulationFeatures::SIMULATION_RESET,
-                SimulationFeatures::SIMULATION_RESET_TIME,
-                //SimulationFeatures::SIMULATION_RESET_STATE,
-                SimulationFeatures::SIMULATION_RESET_SPAWNED,
-                SimulationFeatures::SIMULATION_STATE_PAUSE,
-                SimulationFeatures::STEP_SIMULATION_SINGLE,
-                SimulationFeatures::STEP_SIMULATION_MULTIPLE,
-                SimulationFeatures::STEP_SIMULATION_ACTION});
+            AZStd::unordered_set<SimulationFeatures>{ simulation_interfaces::msg::SimulatorFeatures::SIMULATION_RESET,
+                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_RESET_TIME,
+                                                      // simulation_interfaces::msg::SimulatorFeatures::SIMULATION_RESET_STATE,
+                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_RESET_SPAWNED,
+                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_PAUSE,
+                                                      simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_SINGLE,
+                                                      simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_MULTIPLE,
+                                                      simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_ACTION });
     }
 
     void SimulationManager::Deactivate()
@@ -111,7 +110,6 @@ namespace SimulationInterfaces
             m_numberOfPhysicsSteps = 0;
         }
     }
-
 
     void SimulationManager::SetSimulationPaused(bool paused)
     {
@@ -143,7 +141,8 @@ namespace SimulationInterfaces
             {
                 m_numberOfPhysicsSteps--;
                 AZ_Printf("SimulationManager", "Physics simulation step finished. Remaining steps: %d", m_numberOfPhysicsSteps);
-                SimulationManagerNotificationsBus::Broadcast(&SimulationManagerNotifications::OnSimulationStepFinish, m_numberOfPhysicsSteps);
+                SimulationManagerNotificationsBus::Broadcast(
+                    &SimulationManagerNotifications::OnSimulationStepFinish, m_numberOfPhysicsSteps);
                 if (m_numberOfPhysicsSteps <= 0)
                 {
                     SetSimulationPaused(true);

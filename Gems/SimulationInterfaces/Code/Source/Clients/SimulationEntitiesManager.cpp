@@ -13,7 +13,6 @@
 #include "Clients/SimulationFeaturesAggregator.h"
 #include "CommonUtilities.h"
 #include "ConsoleCommands.inl"
-#include "SimulationInterfaces/SimulationFeatures.h"
 #include "SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h"
 #include <AzCore/Asset/AssetManager.h>
 #include <AzCore/Asset/AssetManagerBus.h>
@@ -30,9 +29,10 @@
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
 
-#include <simulation_interfaces/msg/result.hpp>
-#include <simulation_interfaces/srv/spawn_entity.hpp>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <simulation_interfaces/msg/result.hpp>
+#include <simulation_interfaces/msg/simulator_features.hpp>
+#include <simulation_interfaces/srv/spawn_entity.hpp>
 namespace SimulationInterfaces
 {
     void SetRigidBodyVelocities(AzPhysics::RigidBody* rigidBody, const EntityState& state)
@@ -211,15 +211,15 @@ namespace SimulationInterfaces
 
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
-            AZStd::unordered_set<SimulationFeatures>{ SimulationFeatures::ENTITY_TAGS,
-                                                      SimulationFeatures::ENTITY_BOUNDS_BOX,
-                                                      SimulationFeatures::ENTITY_BOUNDS_CONVEX,
-                                                      SimulationFeatures::ENTITY_CATEGORIES,
-                                                      SimulationFeatures::ENTITY_STATE_GETTING,
-                                                      SimulationFeatures::ENTITY_STATE_SETTING,
-                                                      SimulationFeatures::DELETING,
-                                                      SimulationFeatures::SPAWNABLES,
-                                                      SimulationFeatures::SPAWNING });
+            AZStd::unordered_set<SimulationFeatures>{ simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
+                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_BOX,
+                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_CONVEX,
+                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
+                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_GETTING,
+                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_SETTING,
+                                                      simulation_interfaces::msg::SimulatorFeatures::DELETING,
+                                                      simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
+                                                      simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
     }
 
     void SimulationEntitiesManager::Deactivate()
@@ -280,7 +280,8 @@ namespace SimulationInterfaces
         if (!filter.m_tags_filter.m_tags.empty())
         {
             AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
-            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
+            return AZ::Failure(
+                FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
         }
 
         const bool reFilter = !filter.m_filter.empty();
@@ -307,7 +308,8 @@ namespace SimulationInterfaces
 
             if (m_physicsScenesHandle == AzPhysics::InvalidSceneHandle)
             {
-                return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Physics scene interface is not available."));
+                return AZ::Failure(
+                    FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Physics scene interface is not available."));
             }
 
             AzPhysics::OverlapRequest request;
@@ -379,7 +381,8 @@ namespace SimulationInterfaces
         if (!filter.m_tags_filter.m_tags.empty())
         {
             AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
-            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
+            return AZ::Failure(
+                FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
         }
         MultipleEntitiesStates entitiesStates;
         const auto& entities = GetEntities(filter);
@@ -576,8 +579,6 @@ namespace SimulationInterfaces
         const bool allowRename,
         SpawnCompletedCb completedCb)
     {
-
-
         if (!allowRename)
         {
             // If API user does not allow renaming, check if name is unique
@@ -597,7 +598,8 @@ namespace SimulationInterfaces
         if (!initialPose.IsOrthogonal())
         {
             AZ_Warning("SimulationInterfaces", false, "Initial pose is not orthogonal");
-            completedCb(AZ::Failure(FailedResult(simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
+            completedCb(AZ::Failure(FailedResult(
+                simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
             return;
         }
 
@@ -645,15 +647,14 @@ namespace SimulationInterfaces
                     const AZStd::string f = frameComponent->GetFrameID();
                     if (f.empty())
                     {
-                            frameComponent->SetFrameID(name);
+                        frameComponent->SetFrameID(name);
                     }
                     else
                     {
-                            frameComponent->SetFrameID(AZStd::string::format("%s/%s", entityNamespace.c_str(), f.c_str()));
+                        frameComponent->SetFrameID(AZStd::string::format("%s/%s", entityNamespace.c_str(), f.c_str()));
                     }
                 }
             }
-
 
             // change names for all entites
             for (auto* entity : view)
