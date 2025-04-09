@@ -30,6 +30,7 @@ ly_add_target(
     BUILD_DEPENDENCIES
         INTERFACE
            AZ::AzCore
+           Gem::SimulationInterfaces.API
 )
 
 # The ${gem_name}.Private.Object target is an internal target
@@ -55,7 +56,7 @@ ly_add_target(
             AZ::AzFramework
 )
 
-target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp std_msgs geometry_msgs simulation_interfaces)
+target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp std_msgs geometry_msgs simulation_interfaces rclcpp_action)
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
 ly_add_target(

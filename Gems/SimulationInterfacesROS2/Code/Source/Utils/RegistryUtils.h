@@ -16,5 +16,5 @@ namespace SimulationInterfacesROS2::RegistryUtilities
 
     //! Gets name of the service with defined type form settings registry
     //! @return string with service name, if setting registry doesn't exits returns empty string
-    [[nodiscard]] AZStd::string GetServiceName(AZStd::string serviceType);
+    [[nodiscard]] AZStd::string GetName(AZStd::string serviceType);
 } // namespace SimulationInterfacesROS2::RegistryUtilities

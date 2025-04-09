@@ -5,7 +5,10 @@ set(FILES
     Source/Clients/SimulationInterfacesROS2SystemComponent.cpp
     Source/Clients/SimulationInterfacesROS2SystemComponent.h
     Source/Interfaces/IROS2HandlerBase.h
-    Source/Services/ROS2HandlerBaseClass.h
+    Source/Actions/SimulateStepsActionServerHandler.cpp
+    Source/Actions/SimulateStepsActionServerHandler.h
+    Source/Actions/ROS2ActionBase.h
+    Source/Services/ROS2ServiceBase.h
     Source/Services/GetEntitiesServiceHandler.cpp
     Source/Services/GetEntitiesServiceHandler.h
     Source/Services/DeleteEntityServiceHandler.cpp
@@ -28,5 +31,5 @@ set(FILES
     Source/Services/GetSimulationFeaturesServiceHandler.h
     Source/Utils/RegistryUtils.cpp
     Source/Utils/RegistryUtils.h
-    Source/Utils/Utils.h    
+    Source/Utils/Utils.h
 )

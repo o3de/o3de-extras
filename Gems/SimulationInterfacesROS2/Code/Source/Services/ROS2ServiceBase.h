@@ -8,31 +8,57 @@
 
 #pragma once
 
-#include "Interfaces/IROS2HandlerBase.h"
-#include "Utils/RegistryUtils.h"
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/optional.h>
+#include <Interfaces/IROS2HandlerBase.h>
+#include <Utils/RegistryUtils.h>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/service.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
+
 namespace SimulationInterfacesROS2
 {
-    //! base for each ros2 service handler, forces declaration of features provided by the handler
-    //! combined informations along all ROS 2 handlers gives information about simulation features
+    //! Base for each ROS 2 service handler, forces declaration of features provided by the handler
+    //! combined information along all ROS 2 handlers gives information about simulation features
     //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
     using SimulationFeatures = simulation_interfaces::msg::SimulatorFeatures;
     template<typename RosServiceType>
-    class ROS2HandlerBase : public virtual IROS2HandlerBase
+    class ROS2ServiceBase : public virtual IROS2HandlerBase
     {
     public:
         using Request = typename RosServiceType::Request;
         using Response = typename RosServiceType::Response;
         using ServiceHandle = std::shared_ptr<rclcpp::Service<RosServiceType>>;
-        virtual ~ROS2HandlerBase() = default;
+        virtual ~ROS2ServiceBase() = default;
+
+        void Initialize(rclcpp::Node::SharedPtr& node) override
+        {
+            CreateService(node);
+        }
+
+        void SendResponse(Response response)
+        {
+            AZ_Assert(m_serviceHandle, "Failed to get m_serviceHandle");
+            AZ_Assert(m_lastRequestHeader, "Failed to get last request header ptr");
+            m_serviceHandle->send_response(*m_lastRequestHeader, response);
+        }
+
+    protected:
+        //! This function is called when a service request is received.
+        virtual AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) = 0;
+
+        //! return features id defined by the handler, ids must follow the definition inside standard:
+        //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
+        AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override
+        {
+            return {};
+        };
+
+    private:
         void CreateService(rclcpp::Node::SharedPtr& node)
         {
             // get the service name from the type name
-            AZStd::string serviceName = RegistryUtilities::GetServiceName(GetTypeName());
+            AZStd::string serviceName = RegistryUtilities::GetName(GetTypeName());
 
             if (serviceName.empty())
             {
@@ -59,25 +85,6 @@ namespace SimulationInterfacesROS2
                 });
         }
 
-        void SendResponse(Response response)
-        {
-            AZ_Assert(m_serviceHandle, "Failed to get m_serviceHandle");
-            AZ_Assert(m_lastRequestHeader, "Failed to get last request header ptr");
-            m_serviceHandle->send_response(*m_lastRequestHeader, response);
-        }
-
-    protected:
-        //! This function is called when a service request is received.
-        virtual AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) = 0;
-
-        //! return features id defined by the handler, ids must follow the definition inside standard:
-        //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
-        AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override
-        {
-            return {};
-        };
-
-    private:
         std::shared_ptr<rmw_request_id_t> m_lastRequestHeader = nullptr;
         ServiceHandle m_serviceHandle;
     };

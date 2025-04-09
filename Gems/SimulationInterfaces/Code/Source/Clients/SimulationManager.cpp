@@ -85,6 +85,27 @@ namespace SimulationInterfaces
         SimulationManagerRequestBus::Handler::BusDisconnect();
     }
 
+    bool SimulationManager::IsSimulationPaused() const
+    {
+        return m_isSimulationPaused;
+    }
+
+    bool SimulationManager::IsSimulationStepsActive() const
+    {
+        return m_simulationFinishEvent.IsConnected();
+    }
+
+    void SimulationManager::CancelStepSimulation()
+    {
+        if (m_simulationFinishEvent.IsConnected())
+        {
+            m_simulationFinishEvent.Disconnect();
+            SetSimulationPaused(true);
+            m_numberOfPhysicsSteps = 0;
+        }
+    }
+
+
     void SimulationManager::SetSimulationPaused(bool paused)
     {
         // get az physics system
@@ -97,11 +118,16 @@ namespace SimulationInterfaces
         {
             AZ_Assert(scene, "Physics scene is not available");
             scene->SetEnabled(!paused);
+            m_isSimulationPaused = paused;
         }
     }
 
-    void SimulationManager::StepSimulation(AZ::u32 steps)
+    void SimulationManager::StepSimulation(AZ::u64 steps)
     {
+        if (steps == 0)
+        {
+            return;
+        }
         m_numberOfPhysicsSteps = steps;
 
         // install handler
@@ -110,6 +136,7 @@ namespace SimulationInterfaces
             {
                 m_numberOfPhysicsSteps--;
                 AZ_Printf("SimulationManager", "Physics simulation step finished. Remaining steps: %d", m_numberOfPhysicsSteps);
+                SimulationManagerNotificationsBus::Broadcast(&SimulationManagerNotifications::OnSimulationStepFinish, m_numberOfPhysicsSteps);
                 if (m_numberOfPhysicsSteps <= 0)
                 {
                     SetSimulationPaused(true);

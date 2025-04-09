@@ -30,7 +30,18 @@ namespace SimulationInterfaces
 
         //! Step the simulation by a number of steps
         //! expect always to succeed
-        virtual void StepSimulation(AZ::u32 steps) = 0;
+        virtual void StepSimulation(AZ::u64 steps) = 0;
+
+        //! Check whether the simulation is paused or not
+        //! @return boolean value indicating the pause state of the simulation
+        virtual bool IsSimulationPaused() const = 0;
+
+        //! Cancel executing the simulation steps, if there are remaining steps left
+        virtual void CancelStepSimulation() = 0;
+
+        //! Check if the SimulationSteps is active
+        //! @return boolean value indicating if the SimulationSteps is active
+        virtual bool IsSimulationStepsActive() const = 0;
     };
 
     class SimulationMangerRequestBusTraits : public AZ::EBusTraits
@@ -45,5 +56,28 @@ namespace SimulationInterfaces
 
     using SimulationManagerRequestBus = AZ::EBus<SimulationManagerRequests, SimulationMangerRequestBusTraits>;
     using SimulationManagerRequestBusInterface = AZ::Interface<SimulationManagerRequests>;
+
+    class SimulationManagerNotifications
+    {
+    public:
+        AZ_RTTI(SimulationManagerNotifications, SimulationManagerNotificationsTypeId);
+        virtual ~SimulationManagerNotifications() = default;
+
+        //! Notify about simulation step finish
+        //! @param remainingSteps - remaining steps to pause simulation
+        virtual void OnSimulationStepFinish(const AZ::u64 remainingSteps) = 0;
+    };
+
+    class SimulationMangerNotificationsBusTraits : public AZ::EBusTraits
+    {
+    public:
+        //////////////////////////////////////////////////////////////////////////
+        // EBusTraits overrides
+        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
+        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
+        //////////////////////////////////////////////////////////////////////////
+    };
+
+    using SimulationManagerNotificationsBus = AZ::EBus<SimulationManagerNotifications, SimulationMangerNotificationsBusTraits>;
 
 } // namespace SimulationInterfaces

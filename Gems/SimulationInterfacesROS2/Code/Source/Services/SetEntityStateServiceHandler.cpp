@@ -7,7 +7,6 @@
  */
 
 #include "SetEntityStateServiceHandler.h"
-#include <AzCore/std/optional.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
@@ -39,7 +38,6 @@ namespace SimulationInterfacesROS2
             const auto& failedResult = outcome.GetError();
             response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
             response.result.error_message = failedResult.error_string.c_str();
-            return response;
         }
 
         return response;

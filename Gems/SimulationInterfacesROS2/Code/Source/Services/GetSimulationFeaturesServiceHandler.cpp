@@ -7,11 +7,10 @@
  */
 
 #include "GetSimulationFeaturesServiceHandler.h"
-#include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
 #include <AzCore/base.h>
 #include <AzCore/std/containers/unordered_set.h>
-#include <AzCore/std/containers/vector.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
+#include <SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h>
 
 namespace SimulationInterfacesROS2
 {
