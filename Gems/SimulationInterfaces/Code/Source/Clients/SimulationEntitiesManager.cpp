@@ -572,14 +572,6 @@ namespace SimulationInterfaces
             return;
         }
 
-//        if (!entityNamespace.empty())
-//        {
-//            // TODO: Mpelka - remove this error when ROS 2 namespace is implemented
-//            AZ_Error("SimulationInterfaces", false, "ROS 2 namespace is not implemented yet in spawning");
-//            completedCb(AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "This feature is not implemented yet in spawning entities")));
-//            return;
-//        }
-
         // get rel path from uri
         const AZStd::string relPath = Utils::UriToRelPath(uri);
 
@@ -628,7 +620,7 @@ namespace SimulationInterfaces
                     }
                     else
                     {
-                            frameComponent->SetFrameID(AZStd::string::format("%s/%s", name.c_str(), f.c_str()));
+                            frameComponent->SetFrameID(AZStd::string::format("%s/%s", entityNamespace.c_str(), f.c_str()));
                     }
                 }
             }
