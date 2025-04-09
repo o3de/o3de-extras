@@ -1,6 +1,6 @@
 {
     "template_name": "Ros2FleetRobotTemplate",
-    "version": "2.0.3",
+    "version": "2.1.0",
     "origin": "Open 3D Engine Extras",
     "origin_url": "https://github.com/o3de/o3de-extras",
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
@@ -17,6 +17,10 @@
     "copyFiles": [
         {
             "file": ".gitignore",
+            "isTemplated": false
+        },
+        {
+            "file": "AssetBundling/SeedLists/DefaultLevel.seed",
             "isTemplated": false
         },
         {
@@ -104,10 +108,6 @@
             "isTemplated": false
         },
         {
-            "file": "Levels/playground/playground.prefab",
-            "isTemplated": false
-        },
-        {
             "file": "Platform/Linux/linux_project.cmake",
             "isTemplated": true
         },
@@ -137,6 +137,10 @@
         },
         {
             "file": "Registry/awscoreconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/loadlevel.setreg",
             "isTemplated": false
         },
         {
@@ -228,31 +232,7 @@
             "isTemplated": true
         },
         {
-            "file": "Passes/ContrastAdaptiveSharpening.pass",
-            "isTemplated": false
-        },
-        {
-            "file": "Passes/MainRenderPipeline.azasset",
-            "isTemplated": false
-        },
-        {
-            "file": "Passes/PostProcessParent.pass",
-            "isTemplated": false
-        },
-        {
-            "file": "Passes/SMAAConfiguration.azasset",
-            "isTemplated": false
-        },
-        {
-            "file": "Passes/Taa.pass",
-            "isTemplated": false
-        },
-        {
             "file": "Prefabs/ProteusLaserScanner.prefab",
-            "isTemplated": false
-        },
-        {
-            "file": "autoexec.cfg",
             "isTemplated": false
         },
         {
@@ -358,6 +338,12 @@
     ],
     "createDirectories": [
         {
+            "dir": "AssetBundling"
+        },
+        {
+            "dir": "AssetBundling/SeedLists"
+        },
+        {
             "dir": "Assets"
         },
         {
@@ -395,18 +381,6 @@
         },
         {
             "dir": "Levels/Warehouse"
-        },
-        {
-            "dir": "Levels/playground"
-        },
-        {
-            "dir": "Levels/playground/_savebackup"
-        },
-        {
-            "dir": "Levels/playground/_savebackup/2023-02-21 [13.25.33]"
-        },
-        {
-            "dir": "Passes"
         },
         {
             "dir": "Platform"
