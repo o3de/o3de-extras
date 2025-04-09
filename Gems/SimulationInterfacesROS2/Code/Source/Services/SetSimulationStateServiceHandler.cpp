@@ -8,7 +8,6 @@
 
 #include "SetSimulationStateServiceHandler.h"
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
-#include <SimulationInterfaces/SimulationStates.h>
 #include <simulation_interfaces/msg/result.hpp>
 #include <simulation_interfaces/msg/simulation_state.hpp>
 
@@ -27,7 +26,7 @@ namespace SimulationInterfacesROS2
         SimulationInterfaces::SimulationManagerRequestBus::BroadcastResult(
             transitionResult,
             &SimulationInterfaces::SimulationManagerRequests::SetSimulationState,
-            SimulationInterfaces::SimulationStates(request.state.state));
+            SimulationInterfaces::SimulationState(request.state.state));
         if (transitionResult.IsSuccess())
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OK;

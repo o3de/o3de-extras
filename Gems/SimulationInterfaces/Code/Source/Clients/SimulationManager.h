@@ -8,19 +8,18 @@
 
 #pragma once
 
-#include "SimulationInterfaces/SimulationStates.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Script/ScriptTimePoint.h>
 #include <AzCore/std/containers/array.h>
 #include <AzCore/std/utility/pair.h>
+#include <AzFramework/API/ApplicationAPI.h>
 #include <AzFramework/Entity/EntityContextBus.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
-#include <AzFramework/API/ApplicationAPI.h>
-
+#include <simulation_interfaces/srv/set_simulation_state.hpp>
 
 namespace SimulationInterfaces
 {
@@ -49,33 +48,34 @@ namespace SimulationInterfaces
 
     protected:
         // SimulationManagerRequestBus interface implementation
-        // SimulationManagerRequestBus overrides
         void SetSimulationPaused(bool paused) override;
         void StepSimulation(AZ::u64 steps) override;
         bool IsSimulationPaused() const override;
         void CancelStepSimulation() override;
         bool IsSimulationStepsActive() const override;
         void ReloadLevel(SimulationManagerRequests::ReloadLevelCallback completionCallback) override;
+        SimulationState GetSimulationState() const override;
+        AZ::Outcome<void, FailedResult> SetSimulationState(SimulationState stateToSet) override;
 
         // LevelSystemLifecycleNotificationBus interface implementation
-        void OnLoadingComplete( const char* levelName) override;
-        SimulationStates GetSimulationState() const override;
-        AZ::Outcome<void, FailedResult> SetSimulationState(SimulationStates stateToSet) override;
+        void OnLoadingComplete(const char* levelName) override;
 
     private:
         bool m_isSimulationPaused = false;
         uint64_t m_numberOfPhysicsSteps = 0;
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_simulationFinishEvent;
         SimulationManagerRequests::ReloadLevelCallback m_reloadLevelCallback;
-        SimulationStates m_simulationState{ SimulationStates::STATE_STOPPED }; // default simulation state based on standard
+        SimulationState m_simulationState{
+            simulation_interfaces::msg::SimulationState::STATE_STOPPED
+        }; // default simulation state based on standard
     private:
-        bool IsTransitionForbidden(SimulationStates requestedState);
+        bool IsTransitionForbidden(SimulationState requestedState);
         // forbidden transition between state, first is current state, second is desire state
-        const AZStd::array<AZStd::pair<SimulationStates, SimulationStates>, 4> m_forbiddenStatesTransitions{ {
-            { SimulationStates::STATE_STOPPED, SimulationStates::STATE_PAUSED },
-            { SimulationStates::STATE_QUITTING, SimulationStates::STATE_STOPPED },
-            { SimulationStates::STATE_QUITTING, SimulationStates::STATE_PLAYING },
-            { SimulationStates::STATE_QUITTING, SimulationStates::STATE_PAUSED },
+        const AZStd::array<AZStd::pair<SimulationState, SimulationState>, 4> m_forbiddenStatesTransitions{ {
+            { simulation_interfaces::msg::SimulationState::STATE_STOPPED, simulation_interfaces::msg::SimulationState::STATE_PAUSED },
+            { simulation_interfaces::msg::SimulationState::STATE_QUITTING, simulation_interfaces::msg::SimulationState::STATE_STOPPED },
+            { simulation_interfaces::msg::SimulationState::STATE_QUITTING, simulation_interfaces::msg::SimulationState::STATE_PLAYING },
+            { simulation_interfaces::msg::SimulationState::STATE_QUITTING, simulation_interfaces::msg::SimulationState::STATE_PAUSED },
         } };
     };
 } // namespace SimulationInterfaces

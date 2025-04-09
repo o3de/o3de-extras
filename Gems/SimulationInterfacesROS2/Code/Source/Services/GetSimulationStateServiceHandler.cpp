@@ -8,7 +8,6 @@
 
 #include "GetSimulationStateServiceHandler.h"
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
-#include <SimulationInterfaces/SimulationStates.h>
 #include <simulation_interfaces/msg/result.hpp>
 #include <simulation_interfaces/msg/simulation_state.hpp>
 
@@ -23,11 +22,11 @@ namespace SimulationInterfacesROS2
         const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
         Response response;
-        SimulationInterfaces::SimulationStates currentState;
+        SimulationInterfaces::SimulationState currentState;
         SimulationInterfaces::SimulationManagerRequestBus::BroadcastResult(
             currentState, &SimulationInterfaces::SimulationManagerRequests::GetSimulationState);
         response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
-        response.state.state = aznumeric_cast<uint8_t>(currentState);
+        response.state.state = currentState;
         return response;
     }
 } // namespace SimulationInterfacesROS2

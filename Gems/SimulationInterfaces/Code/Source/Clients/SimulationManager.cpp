@@ -7,6 +7,7 @@
  */
 
 #include "SimulationManager.h"
+#include "SimulationInterfaces/SimulationMangerRequestBus.h"
 
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -109,7 +110,7 @@ namespace SimulationInterfaces
                 }
                 else
                 {
-                    SetSimulationState(SimulationStates::STATE_PLAYING);
+                    SetSimulationState(simulation_interfaces::msg::SimulationState::STATE_PLAYING);
                 }
             });
     }
@@ -224,57 +225,80 @@ namespace SimulationInterfaces
         AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
     }
 
-    SimulationStates SimulationManager::GetSimulationState() const
+    SimulationState SimulationManager::GetSimulationState() const
     {
         return m_simulationState;
     }
 
-    AZ::Outcome<void, FailedResult> SimulationManager::SetSimulationState(SimulationStates stateToSet)
+    AZ::Outcome<void, FailedResult> SimulationManager::SetSimulationState(SimulationState stateToSet)
     {
         // check if simulation is in desire state
         if (m_simulationState == stateToSet)
         {
-            return AZ::Failure(
-                FailedResult(ErrorCode::RESULT_ALREADY_IN_TARGET_STATE, "Simulation is already in requested state, transition unecessary"));
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::srv::SetSimulationState::Response::ALREADY_IN_TARGET_STATE,
+                "Simulation is already in requested state, transition unecessary"));
         }
 
-        // requested state is different, apply handling
+        if (IsTransitionForbidden(stateToSet))
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::srv::SetSimulationState::Response::INCORRECT_TRANSITION,
+                AZStd::string::format("Requested transition (%d -> %d) is forbidden", m_simulationState, stateToSet)));
+        }
+
         switch (stateToSet)
         {
-        case SimulationStates::STATE_STOPPED:
+        case simulation_interfaces::msg::SimulationState::STATE_STOPPED:
             {
-                // if playing/paused
-                // set paused, wait, reset ALL
+                SimulationManagerRequests::ReloadLevelCallback cb = []()
+                {
+                    SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
+                        &SimulationInterfaces::SimulationManagerRequests::SetSimulationPaused, true);
+                    //
+                };
+                ReloadLevel(cb);
+                break;
+            }
+        case simulation_interfaces::msg::SimulationState::STATE_PLAYING:
+            {
+                SetSimulationPaused(false);
+                break;
+            }
+        case simulation_interfaces::msg::SimulationState::STATE_PAUSED:
+            {
+                SetSimulationPaused(true);
+                break;
+            }
+        case simulation_interfaces::msg::SimulationState::STATE_QUITTING:
+            {
+                // stop simulation -> kill the simulator.
+                SetSimulationPaused(true);
 
-                break;
-            }
-        case SimulationStates::STATE_PLAYING:
-            {
-                SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
-                    &SimulationInterfaces::SimulationManagerRequests::SetSimulationPaused, false);
-                // check if in paused stopped
-                break;
-            }
-        case SimulationStates::STATE_PAUSED:
-            {
-                // if playing -> set paused
-                SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
-                    &SimulationInterfaces::SimulationManagerRequests::SetSimulationPaused, true);
-
-                // if stopped -> reset and start with paused.
-                break;
-            }
-        case SimulationStates::STATE_QUITTING:
-            {
-                // if playing/paused -> go to stopped -> kill the simulator.
+                // queue to allow status of this method to be returned, then start quitting
+                AZ::SystemTickBus::QueueFunction(
+                    []()
+                    {
+                        AzFramework::ConsoleRequestBus::Broadcast(&AzFramework::ConsoleRequests::ExecuteConsoleCommand, "quit");
+                    });
                 break;
             }
         default:
             {
+                return AZ::Failure(FailedResult(
+                    simulation_interfaces::srv::SetSimulationState::Response::INCORRECT_TRANSITION, "Requested state doesn't exists"));
                 break;
             }
         }
+        m_simulationState = stateToSet;
         return AZ::Success();
+    }
+
+    bool SimulationManager::IsTransitionForbidden(SimulationState requestedState)
+    {
+        AZStd::pair<SimulationState, SimulationState> desireTransition{ m_simulationState, requestedState };
+        auto it = AZStd::find(m_forbiddenStatesTransitions.begin(), m_forbiddenStatesTransitions.end(), desireTransition);
+        return it != m_forbiddenStatesTransitions.end();
     }
 
 } // namespace SimulationInterfaces
