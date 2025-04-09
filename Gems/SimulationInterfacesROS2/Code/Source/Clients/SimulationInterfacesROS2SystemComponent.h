@@ -16,12 +16,13 @@
 #include "Services/GetEntitiesStatesServiceHandler.h"
 #include "Services/GetEntityStateServiceHandler.h"
 #include "Services/GetSimulationFeaturesServiceHandler.h"
+#include "Services/GetSimulationStateServiceHandler.h"
 #include "Services/GetSpawnablesServiceHandler.h"
 #include "Services/ROS2ServiceBase.h"
 #include "Services/SetEntityStateServiceHandler.h"
-#include "Services/SpawnEntityServiceHandler.h"
 #include "Services/ResetSimulationServiceHandler.h"
 #include "Services/SetSimulationStateServiceHandler.h"
+#include "Services/SpawnEntityServiceHandler.h"
 #include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/optional.h>

@@ -7,7 +7,6 @@
  */
 
 #include "SetSimulationStateServiceHandler.h"
-#include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
 #include <SimulationInterfaces/SimulationStates.h>
 #include <simulation_interfaces/msg/result.hpp>

@@ -10,6 +10,7 @@
 
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 #include <AzFramework/Components/ConsoleBus.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
@@ -18,6 +19,19 @@
 
 namespace SimulationInterfaces
 {
+    namespace
+    {
+        constexpr AZStd::string_view StartInStoppedStateKey = "/SimulationInterfaces/StartInStoppedState";
+
+        bool StartInStoppedState()
+        {
+            AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get();
+            AZ_Assert(settingsRegistry, "Settings Registry is not available");
+            bool output = true;
+            settingsRegistry->Get(output, StartInStoppedStateKey);
+            return output;
+        }
+    } // namespace
 
     AZ_COMPONENT_IMPL(SimulationManager, "SimulationManager", SimulationManagerTypeId);
 
@@ -84,6 +98,20 @@ namespace SimulationInterfaces
                                                       simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_SINGLE,
                                                       simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_MULTIPLE,
                                                       simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_ACTION });
+        AZ::SystemTickBus::QueueFunction(
+            [this]()
+            {
+                // if start in stopped state, pause simulation. Default state for simulation by the standard is STOPPED and
+                // SetSimulationState has logic to prevent transition to the same state.
+                if (StartInStoppedState())
+                {
+                    SetSimulationPaused(true);
+                }
+                else
+                {
+                    SetSimulationState(SimulationStates::STATE_PLAYING);
+                }
+            });
     }
 
     void SimulationManager::Deactivate()

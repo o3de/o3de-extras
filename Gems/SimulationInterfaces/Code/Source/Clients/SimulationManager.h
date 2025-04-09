@@ -8,9 +8,12 @@
 
 #pragma once
 
+#include "SimulationInterfaces/SimulationStates.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Script/ScriptTimePoint.h>
+#include <AzCore/std/containers/array.h>
+#include <AzCore/std/utility/pair.h>
 #include <AzFramework/Entity/EntityContextBus.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
@@ -65,5 +68,14 @@ namespace SimulationInterfaces
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_simulationFinishEvent;
         SimulationManagerRequests::ReloadLevelCallback m_reloadLevelCallback;
         SimulationStates m_simulationState{ SimulationStates::STATE_STOPPED }; // default simulation state based on standard
+    private:
+        bool IsTransitionForbidden(SimulationStates requestedState);
+        // forbidden transition between state, first is current state, second is desire state
+        const AZStd::array<AZStd::pair<SimulationStates, SimulationStates>, 4> m_forbiddenStatesTransitions{ {
+            { SimulationStates::STATE_STOPPED, SimulationStates::STATE_PAUSED },
+            { SimulationStates::STATE_QUITTING, SimulationStates::STATE_STOPPED },
+            { SimulationStates::STATE_QUITTING, SimulationStates::STATE_PLAYING },
+            { SimulationStates::STATE_QUITTING, SimulationStates::STATE_PAUSED },
+        } };
     };
 } // namespace SimulationInterfaces
