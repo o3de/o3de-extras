@@ -10,7 +10,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2/Utilities/Controllers/PidConfiguration.h>
+#include <ROS2Controllers/Controllers/PidConfiguration.h>
 
 namespace ROS2::Controllers
 {

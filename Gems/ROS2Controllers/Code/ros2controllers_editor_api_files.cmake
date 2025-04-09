@@ -8,6 +8,7 @@
 
 set(FILES
     Include/ROS2Controllers/Controllers/PidConfiguration.h
+    Include/ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h
     Include/ROS2Controllers/Manipulation/JointInfo.h
     Include/ROS2Controllers/Manipulation/JointsManipulationRequests.h
     Include/ROS2Controllers/Manipulation/JointsTrajectoryRequests.h

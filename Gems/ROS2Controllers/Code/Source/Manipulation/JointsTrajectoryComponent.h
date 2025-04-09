@@ -12,8 +12,8 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/EntityBus.h>
 #include <AzCore/Component/TickBus.h>
-#include <ROS2/Manipulation/JointsManipulationRequests.h>
-#include <ROS2/Manipulation/JointsTrajectoryRequests.h>
+#include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
+#include <ROS2Controllers/Manipulation/JointsTrajectoryRequests.h>
 #include <control_msgs/action/follow_joint_trajectory.hpp>
 
 namespace ROS2

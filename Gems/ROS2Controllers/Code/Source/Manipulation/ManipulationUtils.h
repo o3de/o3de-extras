@@ -7,7 +7,7 @@
  */
 
 #pragma once
-#include <ROS2/Manipulation/JointInfo.h>
+#include <ROS2Controllers/Manipulation/JointInfo.h>
 
 namespace ROS2::Utils
 {

@@ -13,8 +13,8 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 
-#include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/ROS2GemUtilities.h>
+#include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
 #include <Utilities/ArticulationsUtilities.h>
 
 namespace ROS2
@@ -94,7 +94,7 @@ namespace ROS2
             return;
         }
 
-        for(int i=0; i<message.data.size(); i++)
+        for (int i = 0; i < message.data.size(); i++)
         {
             AZ::Outcome<void, AZStd::string> result;
             JointsManipulationRequestBus::EventResult(

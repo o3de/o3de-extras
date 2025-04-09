@@ -12,18 +12,20 @@
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <AzCore/RTTI/TypeInfoSimple.h>
 
-namespace ROS2Controllers {
-class ROS2ControllersModuleInterface : public AZ::Module {
-public:
-  AZ_TYPE_INFO_WITH_NAME_DECL(ROS2ControllersModuleInterface)
-  AZ_RTTI_NO_TYPE_INFO_DECL()
-  AZ_CLASS_ALLOCATOR_DECL
+namespace ROS2Controllers
+{
+    class ROS2ControllersModuleInterface : public AZ::Module
+    {
+    public:
+        AZ_TYPE_INFO_WITH_NAME_DECL(ROS2ControllersModuleInterface)
+        AZ_RTTI_NO_TYPE_INFO_DECL()
+        AZ_CLASS_ALLOCATOR_DECL
 
-  ROS2ControllersModuleInterface();
+        ROS2ControllersModuleInterface();
 
-  /**
-   * Add required SystemComponents to the SystemEntity.
-   */
-  AZ::ComponentTypeList GetRequiredSystemComponents() const override;
-};
+        /**
+         * Add required SystemComponents to the SystemEntity.
+         */
+        AZ::ComponentTypeList GetRequiredSystemComponents() const override;
+    };
 } // namespace ROS2Controllers

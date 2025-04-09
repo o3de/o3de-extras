@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include <ROS2/RobotControl/ControlSubscriptionHandler.h>
+#include <ROS2Controllers/RobotControl/ControlSubscriptionHandler.h>
 #include <std_msgs/msg/float64_multi_array.hpp>
 
 namespace ROS2

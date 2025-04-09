@@ -10,10 +10,10 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <PhysX/ArticulationJointBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
 
 namespace ROS2
 {

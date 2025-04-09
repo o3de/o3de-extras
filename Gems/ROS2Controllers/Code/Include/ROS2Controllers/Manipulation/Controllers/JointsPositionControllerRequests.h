@@ -10,7 +10,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/std/string/string.h>
-#include <ROS2/Manipulation/JointInfo.h>
+#include <ROS2Controllers/Manipulation/JointInfo.h>
 
 namespace ROS2
 {

@@ -16,13 +16,13 @@
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <Source/ArticulationLinkComponent.h>
 #include <Source/HingeJointComponent.h>
 #include <Source/PrismaticJointComponent.h>
 #include <Utilities/ArticulationsUtilities.h>
-#include <ROS2/Utilities/ROS2Conversions.h>
 
 namespace ROS2
 {
@@ -167,8 +167,7 @@ namespace ROS2
     }
 
     JointsManipulationComponent::JointsManipulationComponent(
-        const PublisherConfiguration& publisherConfiguration,
-        const AZStd::vector<AZStd::pair<AZStd::string, float>>& initialPositions)
+        const PublisherConfiguration& publisherConfiguration, const AZStd::vector<AZStd::pair<AZStd::string, float>>& initialPositions)
         : m_jointStatePublisherConfiguration(publisherConfiguration)
         , m_initialPositions(initialPositions)
     {

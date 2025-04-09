@@ -9,8 +9,8 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
-#include <ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h>
-#include <ROS2/Utilities/Controllers/PidConfiguration.h>
+#include <ROS2Controllers/Controllers/PidConfiguration.h>
+#include <ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h>
 
 namespace ROS2
 {

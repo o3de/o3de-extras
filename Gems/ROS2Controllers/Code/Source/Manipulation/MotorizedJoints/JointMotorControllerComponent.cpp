@@ -11,9 +11,9 @@
 #include <HingeJointComponent.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <PrismaticJointComponent.h>
-#include <ROS2/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
+#include <ROS2Controllers/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
 #include <imgui/imgui.h>
 
 namespace ROS2

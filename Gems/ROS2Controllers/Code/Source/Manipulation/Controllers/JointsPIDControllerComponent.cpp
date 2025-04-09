@@ -32,16 +32,14 @@ namespace ROS2
     }
 
     AZ::Outcome<void, AZStd::string> JointsPIDControllerComponent::PositionControl(
-        const AZStd::string& jointName,
-        JointInfo joint,
-        JointPosition currentPosition,
-        JointPosition targetPosition,
-        float deltaTime)
+        const AZStd::string& jointName, JointInfo joint, JointPosition currentPosition, JointPosition targetPosition, float deltaTime)
     {
         if (joint.m_isArticulation)
         {
-            return AZ::Failure(AZStd::string::format("Joint %s is articulation link, JointsPIDControllerComponent only handles classic Hinge joints. Use "
-                               "JointsArticulationControllerComponent instead", jointName.c_str()));
+            return AZ::Failure(AZStd::string::format(
+                "Joint %s is articulation link, JointsPIDControllerComponent only handles classic Hinge joints. Use "
+                "JointsArticulationControllerComponent instead",
+                jointName.c_str()));
         }
 
         bool jointPIDdefined = m_pidConfiguration.find(jointName) != m_pidConfiguration.end();

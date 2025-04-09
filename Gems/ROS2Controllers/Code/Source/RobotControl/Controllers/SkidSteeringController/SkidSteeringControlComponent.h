@@ -9,7 +9,7 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
-#include <ROS2/RobotControl/Twist/TwistBus.h>
+#include <ROS2Controllers/RobotControl/Twist/TwistBus.h>
 #include <VehicleDynamics/AxleConfiguration.h>
 #include <VehicleDynamics/Utilities.h>
 

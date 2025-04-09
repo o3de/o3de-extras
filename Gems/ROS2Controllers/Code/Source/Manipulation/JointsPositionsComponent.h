@@ -15,8 +15,8 @@
 #include <AzCore/std/string/string.h>
 
 #include <ROS2/Communication/TopicConfiguration.h>
-#include <ROS2/Manipulation/JointsManipulationRequests.h>
-#include <ROS2/RobotControl/ControlSubscriptionHandler.h>
+#include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
+#include <ROS2Controllers/RobotControl/ControlSubscriptionHandler.h>
 #include <std_msgs/msg/float64_multi_array.hpp>
 
 namespace ROS2

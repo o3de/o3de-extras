@@ -51,8 +51,8 @@ namespace ROS2
             AZ::TickBus::Handler::BusDisconnect();
         }
     }
-    
-    void RigidBodyTwistControlComponent::OnTick([[maybe_unused]]float deltaTime, [[maybe_unused]]AZ::ScriptTimePoint time)
+
+    void RigidBodyTwistControlComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
         AzPhysics::SceneInterface* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         AZ_Assert(sceneInterface, "No scene interface");
@@ -72,19 +72,19 @@ namespace ROS2
         }
         m_bodyHandle = rigidBody->m_bodyHandle;
         m_sceneFinishSimHandler = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
-                [this, sceneInterface]([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float fixedDeltaTime)
-                {
-                    auto* rigidBody = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
-                    AZ_Assert(sceneInterface, "No body found for previously given handle");
+            [this, sceneInterface]([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float fixedDeltaTime)
+            {
+                auto* rigidBody = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
+                AZ_Assert(sceneInterface, "No body found for previously given handle");
 
-                    // Convert local steering to world frame
-                    const AZ::Transform robotTransform = rigidBody->GetTransform();
-                    const auto linearVelocityGlobal = robotTransform.TransformVector(m_linearVelocityLocal);
-                    const auto angularVelocityGlobal = robotTransform.TransformVector(m_angularVelocityLocal);
-                    Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetLinearVelocity, linearVelocityGlobal);
-                    Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetAngularVelocity, angularVelocityGlobal);
-                },
-                aznumeric_cast<int32_t>(AzPhysics::SceneEvents::PhysicsStartFinishSimulationPriority::Components));
+                // Convert local steering to world frame
+                const AZ::Transform robotTransform = rigidBody->GetTransform();
+                const auto linearVelocityGlobal = robotTransform.TransformVector(m_linearVelocityLocal);
+                const auto angularVelocityGlobal = robotTransform.TransformVector(m_angularVelocityLocal);
+                Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetLinearVelocity, linearVelocityGlobal);
+                Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetAngularVelocity, angularVelocityGlobal);
+            },
+            aznumeric_cast<int32_t>(AzPhysics::SceneEvents::PhysicsStartFinishSimulationPriority::Components));
         sceneInterface->RegisterSceneSimulationFinishHandler(defaultSceneHandle, m_sceneFinishSimHandler);
         AZ::TickBus::Handler::BusDisconnect();
     }

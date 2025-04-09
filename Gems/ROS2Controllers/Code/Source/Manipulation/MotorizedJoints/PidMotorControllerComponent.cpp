@@ -10,7 +10,7 @@
 #include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
-#include <ROS2/Manipulation/MotorizedJoints/PidMotorControllerComponent.h>
+#include <ROS2Controllers/Manipulation/MotorizedJoints/PidMotorControllerComponent.h>
 #include <imgui/imgui.h>
 
 namespace ROS2

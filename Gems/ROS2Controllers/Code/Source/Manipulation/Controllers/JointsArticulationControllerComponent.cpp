@@ -31,8 +31,8 @@ namespace ROS2
     {
         if (!joint.m_isArticulation)
         {
-            return AZ::Failure(AZStd::string::format(
-                "Joint %s is not an articulation link, use JointsPIDControllerComponent instead", jointName.c_str()));
+            return AZ::Failure(
+                AZStd::string::format("Joint %s is not an articulation link, use JointsPIDControllerComponent instead", jointName.c_str()));
         }
 
         PhysX::ArticulationJointRequestBus::Event(
@@ -69,7 +69,8 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/JointsArticulationControllerComponent.svg")
-                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/JointsArticulationControllerComponent.svg");
+                    ->Attribute(
+                        AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/JointsArticulationControllerComponent.svg");
             }
         }
     }

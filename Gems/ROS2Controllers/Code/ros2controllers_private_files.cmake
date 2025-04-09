@@ -11,4 +11,44 @@ set(FILES
     Source/ROS2ControllersModuleInterface.h
     Source/Clients/ROS2ControllersSystemComponent.cpp
     Source/Clients/ROS2ControllersSystemComponent.h
+    Source/Manipulation/Controllers/JointsArticulationControllerComponent.cpp
+    Source/Manipulation/Controllers/JointsArticulationControllerComponent.h
+    Source/Manipulation/Controllers/JointsPIDControllerComponent.cpp
+    Source/Manipulation/Controllers/JointsPIDControllerComponent.h
+    Source/Manipulation/JointInfo.cpp
+    Source/Manipulation/JointStatePublisher.cpp
+    Source/Manipulation/JointStatePublisher.h
+    Source/Manipulation/JointPositionsSubscriptionHandler.cpp
+    Source/Manipulation/JointPositionsSubscriptionHandler.h
+    Source/Manipulation/JointsPositionsComponent.cpp
+    Source/Manipulation/JointsPositionsComponent.h
+    Source/Manipulation/JointsManipulationComponent.cpp
+    Source/Manipulation/JointsManipulationComponent.h
+    Source/Manipulation/JointsTrajectoryComponent.cpp
+    Source/Manipulation/JointsTrajectoryComponent.h
+    Source/Manipulation/FollowJointTrajectoryActionServer.cpp
+    Source/Manipulation/FollowJointTrajectoryActionServer.h
+    Source/Manipulation/ManipulationUtils.h
+    Source/Manipulation/ManipulationUtils.cpp
+    Source/Manipulation/MotorizedJoints/JointMotorControllerComponent.cpp
+    Source/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.cpp
+    Source/Manipulation/MotorizedJoints/ManualMotorControllerComponent.cpp
+    Source/Manipulation/MotorizedJoints/PidMotorControllerComponent.cpp
+    Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
+    Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
+    Source/RobotControl/ControlConfiguration.cpp
+    Source/RobotControl/Controllers/AckermannController/AckermannControlComponent.cpp
+    Source/RobotControl/Controllers/AckermannController/AckermannControlComponent.h
+    Source/RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.cpp
+    Source/RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.h
+    Source/RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.cpp
+    Source/RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h
+    Source/RobotControl/ROS2RobotControlComponent.cpp
+    Source/RobotControl/ROS2RobotControlComponent.h
+    Source/RobotControl/Twist/TwistSubscriptionHandler.cpp
+    Source/Utilities/ArticulationsUtilities.cpp
+    Source/Utilities/ArticulationsUtilities.h
+    Source/Utilities/JointUtilities.cpp
+    Source/Utilities/JointUtilities.h
+    Source/Utilities/Controllers/PidConfiguration.cpp
 )

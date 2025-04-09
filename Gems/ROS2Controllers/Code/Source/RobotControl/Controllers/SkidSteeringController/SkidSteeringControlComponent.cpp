@@ -13,7 +13,7 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
-#include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
+#include <ROS2Controllers/VehicleDynamics/VehicleInputControlBus.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
 
 namespace ROS2
