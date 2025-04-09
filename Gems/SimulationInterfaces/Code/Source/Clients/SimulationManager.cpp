@@ -98,7 +98,9 @@ namespace SimulationInterfaces
                                                       simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_PAUSE,
                                                       simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_SINGLE,
                                                       simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_MULTIPLE,
-                                                      simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_ACTION });
+                                                      simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_ACTION,
+                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_SETTING,
+                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_GETTING});
         AZ::SystemTickBus::QueueFunction(
             [this]()
             {
