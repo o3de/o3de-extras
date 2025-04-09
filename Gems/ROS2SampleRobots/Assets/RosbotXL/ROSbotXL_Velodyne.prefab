@@ -296,64 +296,6 @@
                                 },
                                 "Component Mode": {}
                             },
-                            "EditorInspectorComponent": {
-                                "$type": "EditorInspectorComponent",
-                                "Id": 14731963605998909410,
-                                "ComponentOrderEntryArray": [
-                                    {
-                                        "ComponentId": 13823668089967528270,
-                                        "SortIndex": 0
-                                    },
-                                    {
-                                        "ComponentId": 10398764927974514042,
-                                        "SortIndex": 1
-                                    },
-                                    {
-                                        "ComponentId": 14731963605998909410,
-                                        "SortIndex": 2
-                                    },
-                                    {
-                                        "ComponentId": 8659165872350439627,
-                                        "SortIndex": 3
-                                    },
-                                    {
-                                        "ComponentId": 15833557083549644820,
-                                        "SortIndex": 4
-                                    },
-                                    {
-                                        "ComponentId": 12221959046552877394,
-                                        "SortIndex": 5
-                                    },
-                                    {
-                                        "ComponentId": 9124468710033830604,
-                                        "SortIndex": 6
-                                    },
-                                    {
-                                        "ComponentId": 1326458056966829278,
-                                        "SortIndex": 7
-                                    },
-                                    {
-                                        "ComponentId": 6532855611535461336,
-                                        "SortIndex": 8
-                                    },
-                                    {
-                                        "ComponentId": 17512468621938055674,
-                                        "SortIndex": 9
-                                    },
-                                    {
-                                        "ComponentId": 5683252651632775966,
-                                        "SortIndex": 10
-                                    },
-                                    {
-                                        "ComponentId": 9188361864360229182,
-                                        "SortIndex": 11
-                                    },
-                                    {
-                                        "ComponentId": 11825588923887480335,
-                                        "SortIndex": 12
-                                    }
-                                ]
-                            },
                             "EditorLockComponent": {
                                 "$type": "EditorLockComponent",
                                 "Id": 12221959046552877394,
@@ -517,56 +459,6 @@
                                 "$type": "EditorEntitySortComponent",
                                 "Id": 7668530697178510261,
                                 "Child Entity Order": []
-                            },
-                            "EditorInspectorComponent": {
-                                "$type": "EditorInspectorComponent",
-                                "Id": 15799485728567052130,
-                                "ComponentOrderEntryArray": [
-                                    {
-                                        "ComponentId": 10324025846280462019,
-                                        "SortIndex": 0
-                                    },
-                                    {
-                                        "ComponentId": 7139247376574023086,
-                                        "SortIndex": 1
-                                    },
-                                    {
-                                        "ComponentId": 15799485728567052130,
-                                        "SortIndex": 2
-                                    },
-                                    {
-                                        "ComponentId": 7668530697178510261,
-                                        "SortIndex": 3
-                                    },
-                                    {
-                                        "ComponentId": 6056145116580678657,
-                                        "SortIndex": 4
-                                    },
-                                    {
-                                        "ComponentId": 11646251589982941495,
-                                        "SortIndex": 5
-                                    },
-                                    {
-                                        "ComponentId": 1222862428576899176,
-                                        "SortIndex": 6
-                                    },
-                                    {
-                                        "ComponentId": 11034415201163609422,
-                                        "SortIndex": 7
-                                    },
-                                    {
-                                        "ComponentId": 9997223080195196098,
-                                        "SortIndex": 8
-                                    },
-                                    {
-                                        "ComponentId": 18396442326868045181,
-                                        "SortIndex": 9
-                                    },
-                                    {
-                                        "ComponentId": 13214832828698258327,
-                                        "SortIndex": 10
-                                    }
-                                ]
                             },
                             "EditorLockComponent": {
                                 "$type": "EditorLockComponent",
@@ -746,56 +638,6 @@
                                 "$type": "EditorEntitySortComponent",
                                 "Id": 10320384200477498899,
                                 "Child Entity Order": []
-                            },
-                            "EditorInspectorComponent": {
-                                "$type": "EditorInspectorComponent",
-                                "Id": 17834282505711848218,
-                                "ComponentOrderEntryArray": [
-                                    {
-                                        "ComponentId": 18182308154738976179,
-                                        "SortIndex": 0
-                                    },
-                                    {
-                                        "ComponentId": 8511876103205280622,
-                                        "SortIndex": 1
-                                    },
-                                    {
-                                        "ComponentId": 17834282505711848218,
-                                        "SortIndex": 2
-                                    },
-                                    {
-                                        "ComponentId": 10320384200477498899,
-                                        "SortIndex": 3
-                                    },
-                                    {
-                                        "ComponentId": 7234248107007015217,
-                                        "SortIndex": 4
-                                    },
-                                    {
-                                        "ComponentId": 17854099279499829268,
-                                        "SortIndex": 5
-                                    },
-                                    {
-                                        "ComponentId": 16142531784796619038,
-                                        "SortIndex": 6
-                                    },
-                                    {
-                                        "ComponentId": 4895670341075036316,
-                                        "SortIndex": 7
-                                    },
-                                    {
-                                        "ComponentId": 3335243259488187731,
-                                        "SortIndex": 8
-                                    },
-                                    {
-                                        "ComponentId": 14542129736382376367,
-                                        "SortIndex": 9
-                                    },
-                                    {
-                                        "ComponentId": 3322443948818266055,
-                                        "SortIndex": 10
-                                    }
-                                ]
                             },
                             "EditorLockComponent": {
                                 "$type": "EditorLockComponent",

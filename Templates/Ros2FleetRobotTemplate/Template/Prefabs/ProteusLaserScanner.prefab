@@ -217,14 +217,6 @@
                     }
                 },
                 {
-                    "op": "add",
-                    "path": "/Entities/Entity_[4434522030989]/Components/Component_[10958950841723725778]/ComponentOrderEntryArray/10",
-                    "value": {
-                        "ComponentId": 13528859712737840985,
-                        "SortIndex": 10
-                    }
-                },
-                {
                     "op": "replace",
                     "path": "/Entities/Entity_[4434522030989]/Components/Component_[1828080485137528399]/Transform Data/Translate/0",
                     "value": 0.4650000333786011

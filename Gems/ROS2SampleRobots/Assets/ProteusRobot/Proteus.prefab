@@ -50,6 +50,56 @@
         }
     },
     "Entities": {
+        "Entity_[1794475592556]": {
+            "Id": "Entity_[1794475592556]",
+            "Name": "Chassis_inside_lights",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 5742448944358945687
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 3163916569066388056
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 5681940378062931524,
+                    "Child Entity Order": [
+                        "Entity_[4464586802061]",
+                        "Entity_[4486061638541]"
+                    ]
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 10939923991580771040
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 7774309825554175676
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 2454000530917506310
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 3872544791407234584
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 6839803348663270066,
+                    "Parent Entity": "Entity_[4460291834765]",
+                    "Transform Data": {
+                        "Rotate": [
+                            90.0,
+                            0.0,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
         "Entity_[4400162292621]": {
             "Id": "Entity_[4400162292621]",
             "Name": "Lift",
@@ -454,66 +504,6 @@
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 15009448308566145836
-                }
-            }
-        },
-        "Entity_[4421637129101]": {
-            "Id": "Entity_[4421637129101]",
-            "Name": "Chassis_inside_lights",
-            "Components": {
-                "Component_[13161866500099870035]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 13161866500099870035
-                },
-                "Component_[14431861058031353286]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 14431861058031353286,
-                    "Parent Entity": "Entity_[4460291834765]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.000578761100769043,
-                            -0.000545501708984375,
-                            -0.0010361671447753906
-                        ],
-                        "Rotate": [
-                            89.99852752685547,
-                            0.020194290205836296,
-                            0.0776541605591774
-                        ],
-                        "UniformScale": 100.0
-                    }
-                },
-                "Component_[15695646692627562149]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 15695646692627562149
-                },
-                "Component_[16004421179350716636]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 16004421179350716636
-                },
-                "Component_[18039169602061820460]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 18039169602061820460,
-                    "Child Entity Order": [
-                        "Entity_[4464586802061]",
-                        "Entity_[4486061638541]"
-                    ]
-                },
-                "Component_[2028603835080579927]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 2028603835080579927
-                },
-                "Component_[5266504162080927135]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 5266504162080927135
-                },
-                "Component_[5734509186756145397]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 5734509186756145397
-                },
-                "Component_[5881629558827321802]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 5881629558827321802
                 }
             }
         },
@@ -1399,7 +1389,7 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 4661506809947208287,
                     "Child Entity Order": [
-                        "Entity_[4421637129101]"
+                        "Entity_[1794475592556]"
                     ]
                 },
                 "Component_[4900351710492422465]": {
@@ -1434,19 +1424,18 @@
                 "Component_[10180472951405841434]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 10180472951405841434,
-                    "Parent Entity": "Entity_[4421637129101]",
+                    "Parent Entity": "Entity_[1794475592556]",
                     "Transform Data": {
                         "Translate": [
-                            -0.0005446784198284149,
-                            0.0012799110263586044,
-                            0.0027456134557724
+                            -0.0550464391708374,
+                            0.1269547939300537,
+                            0.27510738372802734
                         ],
                         "Rotate": [
-                            -89.99852752685547,
-                            0.07765364646911621,
-                            -0.020196275785565376
-                        ],
-                        "UniformScale": 0.009999999776482582
+                            -90.0,
+                            0.0,
+                            0.0
+                        ]
                     }
                 },
                 "Component_[11696808599658151424]": {
@@ -2018,19 +2007,18 @@
                 "Component_[17084897380522648437]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 17084897380522648437,
-                    "Parent Entity": "Entity_[4421637129101]",
+                    "Parent Entity": "Entity_[1794475592556]",
                     "Transform Data": {
                         "Translate": [
                             0.0,
-                            0.0008984692394733429,
-                            -0.00044715404510498047
+                            0.08880949020385742,
+                            -0.04417228698730469
                         ],
                         "Rotate": [
-                            -89.99857330322266,
-                            0.000002414865775790531,
-                            0.0000024148064312612405
-                        ],
-                        "UniformScale": 0.009999999776482582
+                            -90.0,
+                            0.0,
+                            0.0
+                        ]
                     }
                 },
                 "Component_[3024967457619286517]": {
