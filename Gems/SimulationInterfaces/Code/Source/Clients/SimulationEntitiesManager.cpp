@@ -30,6 +30,9 @@
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
 
+#include <simulation_interfaces/msg/result.hpp>
+#include <simulation_interfaces/srv/spawn_entity.hpp>
+#include <ROS2/Frame/ROS2FrameComponent.h>
 namespace SimulationInterfaces
 {
     void SetRigidBodyVelocities(AzPhysics::RigidBody* rigidBody, const EntityState& state)
@@ -277,7 +280,7 @@ namespace SimulationInterfaces
         if (!filter.m_tags_filter.m_tags.empty())
         {
             AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
-            return AZ::Failure(FailedResult(ErrorCode::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
         }
 
         const bool reFilter = !filter.m_filter.empty();
@@ -304,7 +307,7 @@ namespace SimulationInterfaces
 
             if (m_physicsScenesHandle == AzPhysics::InvalidSceneHandle)
             {
-                return AZ::Failure(FailedResult(ErrorCode::RESULT_OPERATION_FAILED, "Physics scene interface is not available."));
+                return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Physics scene interface is not available."));
             }
 
             AzPhysics::OverlapRequest request;
@@ -331,7 +334,7 @@ namespace SimulationInterfaces
             if (!regex.Valid())
             {
                 AZ_Warning("SimulationInterfaces", false, "Invalid regex filter");
-                return AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "Invalid regex filter"));
+                return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "Invalid regex filter"));
             }
             AZStd::ranges::copy_if(
                 prefilteredEntities,
@@ -350,7 +353,7 @@ namespace SimulationInterfaces
         if (findIt == m_simulatedEntityToEntityIdMap.end())
         {
             AZ_Warning("SimulationInterfaces", findIt != m_simulatedEntityToEntityIdMap.end(), "Entity %s not found", name.c_str());
-            return AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "Entity not found"));
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "Entity not found"));
         }
         EntityState entityState{};
         const AZ::EntityId entityId = findIt->second;
@@ -376,7 +379,7 @@ namespace SimulationInterfaces
         if (!filter.m_tags_filter.m_tags.empty())
         {
             AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
-            return AZ::Failure(FailedResult(ErrorCode::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
         }
         MultipleEntitiesStates entitiesStates;
         const auto& entities = GetEntities(filter);
@@ -402,7 +405,7 @@ namespace SimulationInterfaces
         if (findIt == m_simulatedEntityToEntityIdMap.end())
         {
             AZ_Warning("SimulationInterfaces", false, "Entity %s not found", name.c_str());
-            return AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "Entity not found"));
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "Entity not found"));
         }
 
         const AZ::EntityId entityId = findIt->second;
@@ -454,7 +457,7 @@ namespace SimulationInterfaces
 
         if (findIt == m_simulatedEntityToEntityIdMap.end())
         {
-            completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "Entity not found")));
+            completedCb(AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "Entity not found")));
             return;
         }
 
@@ -467,7 +470,7 @@ namespace SimulationInterfaces
         if (entity == nullptr)
         {
             AZ_Error("SimulationInterfaces", false, "Entity %s (%s) not found", name.c_str(), entityId.ToString().c_str());
-            completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "Entity not found")));
+            completedCb(AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "Entity not found")));
             return;
         }
         // check if entity is spawned by this component
@@ -493,7 +496,7 @@ namespace SimulationInterfaces
         else
         {
             const auto msg = AZStd::string::format("Entity %s was not spawned by this component, wont delete it", name.c_str());
-            completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_OPERATION_FAILED, msg)));
+            completedCb(AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, msg)));
         }
 #ifdef POTENTIALY_UNSAFE
         if (findIt != m_simulatedEntityToEntityIdMap.end())
@@ -574,22 +577,27 @@ namespace SimulationInterfaces
         SpawnCompletedCb completedCb)
     {
 
+
         if (!allowRename)
         {
             // If API user does not allow renaming, check if name is unique
             if (m_simulatedEntityToEntityIdMap.contains(name))
             {
                 const auto msg = AZStd::string::format("Entity name %s is not unique", name.c_str());
-                completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_INCORRECT_STATE, msg)));
+                completedCb(AZ::Failure(FailedResult(simulation_interfaces::srv::SpawnEntity::Response::NAME_NOT_UNIQUE, msg)));
+                return;
+            }
+            if (name.empty())
+            {
+                const auto msg = AZStd::string::format("Entity name is empty");
+                completedCb(AZ::Failure(FailedResult(simulation_interfaces::srv::SpawnEntity::Response::NAME_INVALID, msg)));
                 return;
             }
         }
-
-        if (!entityNamespace.empty())
+        if (!initialPose.IsOrthogonal())
         {
-            // TODO: Mpelka - remove this error when ROS 2 namespace is implemented
-            AZ_Error("SimulationInterfaces", false, "ROS 2 namespace is not implemented yet in spawning");
-            completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "This feature is not implemented yet in spawning entities")));
+            AZ_Warning("SimulationInterfaces", false, "Initial pose is not orthogonal");
+            completedCb(AZ::Failure(FailedResult(simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
             return;
         }
 
@@ -614,7 +622,7 @@ namespace SimulationInterfaces
         if (!spawnableAsset)
         {
             const auto msg = AZStd::string::format("Spawnable asset %s not found", uri.c_str());
-            completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, msg)));
+            completedCb(AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, msg)));
             return;
         }
 
@@ -628,6 +636,24 @@ namespace SimulationInterfaces
                 return;
             }
             const AZ::Entity* root = *view.begin();
+
+            for (auto* entity : view)
+            {
+                ROS2::ROS2FrameComponent* frameComponent = entity->template FindComponent<ROS2::ROS2FrameComponent>();
+                if (frameComponent)
+                {
+                    const AZStd::string f = frameComponent->GetFrameID();
+                    if (f.empty())
+                    {
+                            frameComponent->SetFrameID(name);
+                    }
+                    else
+                    {
+                            frameComponent->SetFrameID(AZStd::string::format("%s/%s", entityNamespace.c_str(), f.c_str()));
+                    }
+                }
+            }
+
 
             // change names for all entites
             for (auto* entity : view)

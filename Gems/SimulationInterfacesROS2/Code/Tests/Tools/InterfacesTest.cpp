@@ -189,7 +189,7 @@ namespace UnitTest
                 {
                     EXPECT_EQ(name, "test_entity");
                     FailedResult failedResult;
-                    failedResult.error_code = SimulationInterfaces::ErrorCode::RESULT_NOT_FOUND;
+                    failedResult.error_code = simulation_interfaces::msg::Result::RESULT_NOT_FOUND,
                     failedResult.error_string = "FooBar not found.";
                     completedCb(AZ::Failure(failedResult));
                 }));

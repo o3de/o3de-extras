@@ -13,24 +13,18 @@ namespace SimulationInterfaces
 {
     //! Result codes to be used in the Result message
     //!  @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/Result.msg">Result.msg</a>
-    enum class ErrorCode
-    {
-        RESULT_FEATURE_UNSUPPORTED = 0,
-        RESULT_NOT_FOUND = 2,
-        RESULT_INCORRECT_STATE = 3,
-        RESULT_OPERATION_FAILED = 4
-    };
+    using ErrorCodeValue = uint8_t;
 
     //! A message type to represent the result of a failed operation
     struct FailedResult
     {
         FailedResult() = default;
-        FailedResult(ErrorCode error_code, const AZStd::string& error_string)
+        FailedResult(ErrorCodeValue error_code, const AZStd::string& error_string)
             : error_code(error_code)
             , error_string(error_string)
         {
         }
-        ErrorCode error_code;
+        ErrorCodeValue error_code;
         AZStd::string error_string;
     };
 } // namespace SimulationInterfaces
