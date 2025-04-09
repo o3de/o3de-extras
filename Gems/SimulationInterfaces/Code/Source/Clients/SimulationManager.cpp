@@ -7,9 +7,11 @@
  */
 
 #include "SimulationManager.h"
+#include "SimulationInterfaces/SimulationMangerRequestBus.h"
 
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 #include <AzFramework/Components/ConsoleBus.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
@@ -18,6 +20,19 @@
 
 namespace SimulationInterfaces
 {
+    namespace
+    {
+        constexpr AZStd::string_view StartInStoppedStateKey = "/SimulationInterfaces/StartInStoppedState";
+
+        bool StartInStoppedState()
+        {
+            AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get();
+            AZ_Assert(settingsRegistry, "Settings Registry is not available");
+            bool output = true;
+            settingsRegistry->Get(output, StartInStoppedStateKey);
+            return output;
+        }
+    } // namespace
 
     AZ_COMPONENT_IMPL(SimulationManager, "SimulationManager", SimulationManagerTypeId);
 
@@ -84,6 +99,20 @@ namespace SimulationInterfaces
                                                       simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_SINGLE,
                                                       simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_MULTIPLE,
                                                       simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_ACTION });
+        AZ::SystemTickBus::QueueFunction(
+            [this]()
+            {
+                // if start in stopped state, pause simulation. Default state for simulation by the standard is STOPPED and
+                // SetSimulationState has logic to prevent transition to the same state.
+                if (StartInStoppedState())
+                {
+                    SetSimulationPaused(true);
+                }
+                else
+                {
+                    SetSimulationState(simulation_interfaces::msg::SimulationState::STATE_PLAYING);
+                }
+            });
     }
 
     void SimulationManager::Deactivate()
@@ -194,6 +223,81 @@ namespace SimulationInterfaces
             m_reloadLevelCallback = nullptr;
         }
         AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
+    }
+
+    SimulationState SimulationManager::GetSimulationState() const
+    {
+        return m_simulationState;
+    }
+
+    AZ::Outcome<void, FailedResult> SimulationManager::SetSimulationState(SimulationState stateToSet)
+    {
+        // check if simulation is in desire state
+        if (m_simulationState == stateToSet)
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::srv::SetSimulationState::Response::ALREADY_IN_TARGET_STATE,
+                "Simulation is already in requested state, transition unecessary"));
+        }
+
+        if (IsTransitionForbidden(stateToSet))
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::srv::SetSimulationState::Response::INCORRECT_TRANSITION,
+                AZStd::string::format("Requested transition (%d -> %d) is forbidden", m_simulationState, stateToSet)));
+        }
+
+        switch (stateToSet)
+        {
+        case simulation_interfaces::msg::SimulationState::STATE_STOPPED:
+            {
+                SimulationManagerRequests::ReloadLevelCallback cb = []()
+                {
+                    SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
+                        &SimulationInterfaces::SimulationManagerRequests::SetSimulationPaused, true);
+                };
+                ReloadLevel(cb);
+                break;
+            }
+        case simulation_interfaces::msg::SimulationState::STATE_PLAYING:
+            {
+                SetSimulationPaused(false);
+                break;
+            }
+        case simulation_interfaces::msg::SimulationState::STATE_PAUSED:
+            {
+                SetSimulationPaused(true);
+                break;
+            }
+        case simulation_interfaces::msg::SimulationState::STATE_QUITTING:
+            {
+                // stop simulation -> kill the simulator.
+                SetSimulationPaused(true);
+
+                // queue to allow status of this method to be returned, then start quitting
+                AZ::SystemTickBus::QueueFunction(
+                    []()
+                    {
+                        AzFramework::ConsoleRequestBus::Broadcast(&AzFramework::ConsoleRequests::ExecuteConsoleCommand, "quit");
+                    });
+                break;
+            }
+        default:
+            {
+                return AZ::Failure(FailedResult(
+                    simulation_interfaces::srv::SetSimulationState::Response::INCORRECT_TRANSITION, "Requested state doesn't exists"));
+                break;
+            }
+        }
+        m_simulationState = stateToSet;
+        return AZ::Success();
+    }
+
+    bool SimulationManager::IsTransitionForbidden(SimulationState requestedState)
+    {
+        AZStd::pair<SimulationState, SimulationState> desireTransition{ m_simulationState, requestedState };
+        auto it = AZStd::find(m_forbiddenStatesTransitions.begin(), m_forbiddenStatesTransitions.end(), desireTransition);
+        return it != m_forbiddenStatesTransitions.end();
     }
 
 } // namespace SimulationInterfaces

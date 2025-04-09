@@ -14,14 +14,14 @@
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
+#include <SimulationInterfaces/Result.h>
 
 namespace SimulationInterfaces
 {
-
+    using SimulationState = uint8_t;
     class SimulationManagerRequests
     {
     public:
-
         AZ_RTTI(SimulationManagerRequests, SimulationManagerRequestsTypeId);
         virtual ~SimulationManagerRequests() = default;
 
@@ -47,6 +47,17 @@ namespace SimulationInterfaces
         //! Check if the SimulationSteps is active
         //! @return boolean value indicating if the SimulationSteps is active
         virtual bool IsSimulationStepsActive() const = 0;
+
+        //! Get current simulation state
+        //! @return enum value indicating simulation state based on
+        //! https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulationState.msg
+        virtual SimulationState GetSimulationState() const = 0;
+
+        //! Set simulation state
+        //! @param stateToSet id of the next state to set, based on
+        //! https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulationState.msg
+        //! @return outcome indicating if setting state succeed. In case of failure error message with error code is returned
+        virtual AZ::Outcome<void, FailedResult> SetSimulationState(SimulationState stateToSet) = 0;
     };
 
     class SimulationMangerRequestBusTraits : public AZ::EBusTraits
