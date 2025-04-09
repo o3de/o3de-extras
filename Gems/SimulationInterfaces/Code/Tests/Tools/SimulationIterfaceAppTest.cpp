@@ -159,11 +159,11 @@ namespace UnitTest
         // spawn 3 entities of entities and despawn all of them
         SpawnCompletedCb cb = [&](const AZ::Outcome<AZStd::string, FailedResult>& result){};
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity1", uri, entityNamespace, initialPose, cb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity1", uri, entityNamespace, initialPose, false, cb);
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity2", uri, entityNamespace, initialPose, cb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity2", uri, entityNamespace, initialPose, false, cb);
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity3", uri, entityNamespace, initialPose, cb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity3", uri, entityNamespace, initialPose, false, cb);
         TickApp(100);
         EXPECT_EQ(getNumberOfEntities(), 3);
 
