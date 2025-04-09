@@ -35,10 +35,8 @@ namespace SimulationInterfacesROS2
         // common features are logical AND between two sets
         AZStd::unordered_set<AZ::u8> commonFeatures;
         commonFeatures.insert(ros2Interfaces.begin(), ros2Interfaces.end());
-        for (auto id : o3deInterfaces)
-        {
-            commonFeatures.insert(static_cast<AZ::u8>(id));
-        }
+        commonFeatures.insert(o3deInterfaces.begin(), o3deInterfaces.end());
+
         Response response;
         for (auto id : commonFeatures)
         {

@@ -10,13 +10,13 @@
 
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
-#include "SimulationFeatures.h"
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/containers/unordered_set.h>
 
 namespace SimulationInterfaces
 {
+    using SimulationFeatures = uint8_t;
 
     class SimulationFeaturesAggregatorRequests
     {
@@ -32,7 +32,7 @@ namespace SimulationInterfaces
         virtual const AZStd::unordered_set<SimulationFeatures> GetSimulationFeatures() const = 0;
 
         //! Method checks if feature with given id is available in the simulation
-        //! Method is extenstion to standard defined in simulation_interfaces
+        //! Method is extension to standard defined in simulation_interfaces
         virtual bool HasFeature(SimulationFeatures feature) const = 0;
     };
 

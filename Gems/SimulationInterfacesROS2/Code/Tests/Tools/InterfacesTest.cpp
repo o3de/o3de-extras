@@ -25,17 +25,18 @@
 
 #include "Clients/SimulationInterfacesROS2SystemComponent.h"
 #include "Mocks/SimulationEntityManagerMock.h"
+#include "Mocks/SimulationFeaturesAggregatorRequestsHandlerMock.h"
 #include <QApplication>
 #include <ROS2/ROS2Bus.h>
 #include <gtest/gtest.h>
 #include <memory>
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <simulation_interfaces/msg/simulator_features.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <string>
 #include <string_view>
 #include <vector>
-#include "Mocks/SimulationFeaturesAggregatorRequestsHandlerMock.h"
 
 namespace UnitTest
 {
@@ -99,7 +100,7 @@ namespace UnitTest
     //! Perform a smoke test to check if the ROS2 node is available from ROS2 gem
     TEST_F(SimulationInterfaceROS2TestFixture, TestIfROS2NodeIsAvailable)
     {
-        ASSERT_NE(GetRos2Node(),nullptr)  << "ROS2 node is not available.";
+        ASSERT_NE(GetRos2Node(), nullptr) << "ROS2 node is not available.";
     }
 
     //! Perform a smoke test to check if the ROS2 domain is working
@@ -153,7 +154,7 @@ namespace UnitTest
         auto request = std::make_shared<simulation_interfaces::srv::DeleteEntity::Request>();
         const char TestEntityName[] = "test_entity";
         request->entity = std::string(TestEntityName);
-        const AZStd::string entityName  = AZStd::string(TestEntityName);
+        const AZStd::string entityName = AZStd::string(TestEntityName);
 
         EXPECT_CALL(*mock, DeleteEntity(entityName, _))
             .WillOnce(::testing::Invoke(
@@ -181,7 +182,7 @@ namespace UnitTest
         auto request = std::make_shared<simulation_interfaces::srv::DeleteEntity::Request>();
         const char TestEntityName[] = "test_entity";
         request->entity = std::string(TestEntityName);
-        const AZStd::string entityName  = AZStd::string(TestEntityName);
+        const AZStd::string entityName = AZStd::string(TestEntityName);
 
         EXPECT_CALL(mock, DeleteEntity(entityName, _))
             .WillOnce(::testing::Invoke(
@@ -228,10 +229,10 @@ namespace UnitTest
                     if (filter.m_bounds_shape)
                     {
                         EXPECT_EQ(filter.m_bounds_shape->GetShapeType(), Physics::ShapeType::Sphere);
-                        Physics::SphereShapeConfiguration* sphereShape = azdynamic_cast<Physics::SphereShapeConfiguration*>(filter.m_bounds_shape.get());
+                        Physics::SphereShapeConfiguration* sphereShape =
+                            azdynamic_cast<Physics::SphereShapeConfiguration*>(filter.m_bounds_shape.get());
                         EXPECT_EQ(sphereShape->m_radius, 99.0f);
                         EXPECT_EQ(sphereShape->m_scale, AZ::Vector3(1.0f));
-
                     }
                     auto loc = filter.m_bounds_pose.GetTranslation();
                     EXPECT_EQ(loc.GetX(), point1.GetX());
@@ -298,11 +299,11 @@ namespace UnitTest
                     if (filter.m_bounds_shape)
                     {
                         EXPECT_EQ(filter.m_bounds_shape->GetShapeType(), Physics::ShapeType::Box);
-                        Physics::BoxShapeConfiguration* boxShape = azdynamic_cast<Physics::BoxShapeConfiguration*>(filter.m_bounds_shape.get());
+                        Physics::BoxShapeConfiguration* boxShape =
+                            azdynamic_cast<Physics::BoxShapeConfiguration*>(filter.m_bounds_shape.get());
                         EXPECT_EQ(boxShape->m_dimensions.GetX(), dims.GetX());
                         EXPECT_EQ(boxShape->m_dimensions.GetY(), dims.GetY());
                         EXPECT_EQ(boxShape->m_dimensions.GetZ(), dims.GetZ());
-
                     }
                     auto loc = filter.m_bounds_pose.GetTranslation();
                     EXPECT_EQ(loc, AZ::Vector3::CreateZero());
@@ -320,7 +321,7 @@ namespace UnitTest
     //! Try to call the service with invalid data (first point is greater than second point in box)
     TEST_F(SimulationInterfaceROS2TestFixture, GetEntitiesWithShapeBoxInvalid)
     {
-         using ::testing::_;
+        using ::testing::_;
         auto node = GetRos2Node();
 
         // strict mock, since we don't want to call the real implementation in this test
@@ -368,8 +369,8 @@ namespace UnitTest
         SimulationFeaturesAggregatorRequestsMockedHandler mockAggregator;
         using ::testing::_;
         auto node = GetRos2Node();
-        AZStd::unordered_set<SimulationFeatures> features {
-            SimulationFeatures::SPAWNING,
+        AZStd::unordered_set<SimulationFeatures> features{
+            simulation_interfaces::msg::SimulatorFeatures::SPAWNING,
             static_cast<SimulationFeatures>(0xFE), // invalid feature, should be ignored
             static_cast<SimulationFeatures>(0xFF), // invalid feature, should be ignored
         };
@@ -390,8 +391,6 @@ namespace UnitTest
         EXPECT_EQ(response->features.features.size(), 1) << "Features vector should contain one feature only.";
         EXPECT_EQ(response->features.features[0], simulation_interfaces::msg::SimulatorFeatures::SPAWNING) << "Feature is not SPAWNING.";
     }
-
-
 
 } // namespace UnitTest
 
