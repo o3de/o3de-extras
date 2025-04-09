@@ -55,6 +55,8 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
+        PRIVATE
+            Gem::ROS2.Static
 )
 target_depends_on_ros2_packages(${gem_name}.Private.Object simulation_interfaces)
 

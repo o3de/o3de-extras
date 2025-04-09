@@ -32,7 +32,7 @@
 
 #include <simulation_interfaces/msg/result.hpp>
 #include <simulation_interfaces/srv/spawn_entity.hpp>
-
+#include <ROS2/Frame/ROS2FrameComponent.h>
 namespace SimulationInterfaces
 {
     void SetRigidBodyVelocities(AzPhysics::RigidBody* rigidBody, const EntityState& state)
@@ -572,13 +572,13 @@ namespace SimulationInterfaces
             return;
         }
 
-        if (!entityNamespace.empty())
-        {
-            // TODO: Mpelka - remove this error when ROS 2 namespace is implemented
-            AZ_Error("SimulationInterfaces", false, "ROS 2 namespace is not implemented yet in spawning");
-            completedCb(AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "This feature is not implemented yet in spawning entities")));
-            return;
-        }
+//        if (!entityNamespace.empty())
+//        {
+//            // TODO: Mpelka - remove this error when ROS 2 namespace is implemented
+//            AZ_Error("SimulationInterfaces", false, "ROS 2 namespace is not implemented yet in spawning");
+//            completedCb(AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "This feature is not implemented yet in spawning entities")));
+//            return;
+//        }
 
         // get rel path from uri
         const AZStd::string relPath = Utils::UriToRelPath(uri);
@@ -615,6 +615,24 @@ namespace SimulationInterfaces
                 return;
             }
             const AZ::Entity* root = *view.begin();
+
+            for (auto* entity : view)
+            {
+                ROS2::ROS2FrameComponent* frameComponent = entity->template FindComponent<ROS2::ROS2FrameComponent>();
+                if (frameComponent)
+                {
+                    const AZStd::string f = frameComponent->GetFrameID();
+                    if (f.empty())
+                    {
+                            frameComponent->SetFrameID(name);
+                    }
+                    else
+                    {
+                            frameComponent->SetFrameID(AZStd::string::format("%s/%s", name.c_str(), f.c_str()));
+                    }
+                }
+            }
+
 
             // change names for all entites
             for (auto* entity : view)
