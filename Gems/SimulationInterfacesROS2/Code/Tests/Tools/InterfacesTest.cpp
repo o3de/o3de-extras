@@ -401,7 +401,7 @@ namespace UnitTest
         auto node = GetRos2Node();
         auto client = node->create_client<simulation_interfaces::srv::SpawnEntity>("/spawn_entity");
         auto request = std::make_shared<simulation_interfaces::srv::SpawnEntity::Request>();
-        request->name = "valid_name"; // invalid name
+        request->name = "valid_name";
         request->uri = "test_uri";
         request->entity_namespace = "test_namespace";
         request->allow_renaming = true;
@@ -447,7 +447,7 @@ namespace UnitTest
 
     }
 
-    //! Check if service fails when the name space is invalid
+    //! Check if service fails when the namespace is invalid
     TEST_F(SimulationInterfaceROS2TestFixture, TryToSpawnWithInvalidNamespace)
     {
         // strict mock, since we don't want to call the real implementation in this test
