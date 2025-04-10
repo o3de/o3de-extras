@@ -12,7 +12,7 @@
 #include <AzCore/std/string/string_view.h>
 #include <simulation_interfaces/srv/get_simulator_features.hpp>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     class GetSimulationFeaturesServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::GetSimulatorFeatures>
@@ -34,4 +34,4 @@ namespace SimulationInterfacesROS2
     private:
     };
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

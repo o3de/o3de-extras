@@ -15,8 +15,8 @@ set(FILES
     Source/Clients/CommonUtilities.h
     Source/Clients/SimulationFeaturesAggregator.cpp
     Source/Clients/SimulationFeaturesAggregator.h
-    Source/Clients/SimulationInterfacesROS2SystemComponent.cpp
-    Source/Clients/SimulationInterfacesROS2SystemComponent.h
+    Source/Clients/ROS2SimulationInterfacesSystemComponent.cpp
+    Source/Clients/ROS2SimulationInterfacesSystemComponent.h
     Source/Interfaces/IROS2HandlerBase.h
     Source/Actions/SimulateStepsActionServerHandler.cpp
     Source/Actions/SimulateStepsActionServerHandler.h

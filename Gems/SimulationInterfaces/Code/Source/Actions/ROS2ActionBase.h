@@ -15,7 +15,7 @@
 #include <rclcpp_action/rclcpp_action.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
     //! Base for each ROS 2 action server handler, forces declaration of features provided by the server
     //! combined information along all ROS 2 handlers gives information about simulation features
@@ -124,4 +124,4 @@ namespace SimulationInterfacesROS2
 
         ActionHandle m_actionHandle;
     };
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

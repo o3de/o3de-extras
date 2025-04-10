@@ -12,7 +12,7 @@
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     AZStd::unordered_set<AZ::u8> SpawnEntityServiceHandler::GetProvidedFeatures()
@@ -86,4 +86,4 @@ namespace SimulationInterfacesROS2
         return AZStd::regex_match(frameName, frameRegex);
     }
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

@@ -11,7 +11,7 @@
 #include <AzCore/std/string/string_view.h>
 #include <rclcpp/rclcpp.hpp>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
     // common interface to store all simulation feature ros2  handlers in common container
     class IROS2HandlerBase
@@ -23,4 +23,4 @@ namespace SimulationInterfacesROS2
         virtual AZStd::string_view GetDefaultName() const = 0;
         virtual void Initialize(rclcpp::Node::SharedPtr& node) = 0;
     };
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

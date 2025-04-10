@@ -12,7 +12,7 @@
 #include <AzCore/std/string/string_view.h>
 #include <simulation_interfaces/srv/spawn_entity.hpp>
 #include <AzCore/std/string/regex.h>
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
     class SpawnEntityServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::SpawnEntity>
     {
@@ -37,4 +37,4 @@ namespace SimulationInterfacesROS2
 
     };
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

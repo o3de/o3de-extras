@@ -10,7 +10,7 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/Settings/SettingsRegistry.h>
 
-namespace SimulationInterfacesROS2::RegistryUtilities
+namespace ROS2SimulationInterfaces::RegistryUtilities
 {
     AZStd::string GetName(AZStd::string serviceType)
     {
@@ -21,4 +21,4 @@ namespace SimulationInterfacesROS2::RegistryUtilities
         settingsRegistry->Get(output, setRegPath.String());
         return output;
     }
-} // namespace SimulationInterfacesROS2::RegistryUtilities
+} // namespace ROS2SimulationInterfaces::RegistryUtilities

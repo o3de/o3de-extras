@@ -24,20 +24,20 @@
 #include "Services/SetSimulationStateServiceHandler.h"
 #include "Services/SpawnEntityServiceHandler.h"
 #include "Services/StepSimulationServiceHandler.h"
-#include "SimulationInterfaces/SimulationInterfacesROS2RequestBus.h"
+#include "SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h"
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/optional.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
-    class SimulationInterfacesROS2SystemComponent
+    class ROS2SimulationInterfacesSystemComponent
         : public AZ::Component
-        , public SimulationInterfacesROS2RequestBus::Handler
+        , public ROS2SimulationInterfacesRequestBus::Handler
     {
     public:
-        AZ_COMPONENT_DECL(SimulationInterfacesROS2SystemComponent);
+        AZ_COMPONENT_DECL(ROS2SimulationInterfacesSystemComponent);
 
         static void Reflect(AZ::ReflectContext* context);
 
@@ -46,8 +46,8 @@ namespace SimulationInterfacesROS2
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
-        SimulationInterfacesROS2SystemComponent() = default;
-        ~SimulationInterfacesROS2SystemComponent() = default;
+        ROS2SimulationInterfacesSystemComponent() = default;
+        ~ROS2SimulationInterfacesSystemComponent() = default;
 
     protected:
         // AZ::Component interface implementation
@@ -55,11 +55,11 @@ namespace SimulationInterfacesROS2
         void Activate() override;
         void Deactivate() override;
 
-        // SimulationInterfacesROS2RequestBus override
+        // ROS2SimulationInterfacesRequestBus override
         AZStd::unordered_set<AZ::u8> GetSimulationFeatures() override;
 
     private:
         AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<IROS2HandlerBase>> m_availableRos2Interface;
     };
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

@@ -11,7 +11,7 @@
 #include <simulation_interfaces/msg/result.hpp>
 #include <simulation_interfaces/msg/simulation_state.hpp>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
     AZStd::unordered_set<AZ::u8> SetSimulationStateServiceHandler::GetProvidedFeatures()
     {
@@ -38,4 +38,4 @@ namespace SimulationInterfacesROS2
         }
         return response;
     }
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

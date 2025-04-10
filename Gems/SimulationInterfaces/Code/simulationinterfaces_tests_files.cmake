@@ -6,5 +6,4 @@
 
 set(FILES
     Tests/Clients/SimulationInterfacesTest.cpp
-    Tests/Clients/SimulationInterfacesROS2Test.cpp
 )

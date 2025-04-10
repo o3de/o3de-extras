@@ -5,7 +5,7 @@
 #
 
 set(FILES
-    Tests/Tools/TestFixture.cpp
-    Tests/Tools/TestFixture.h
-    Tests/Tools/SimulationInterfaceTests.cpp
+    Tests/Tools/Mocks/SimulationEntityManagerMock.h
+    Tests/Tools/Mocks/SimulationFeaturesAggregatorRequestsHandlerMock.h
+    Tests/Tools/InterfacesTest.cpp
 )

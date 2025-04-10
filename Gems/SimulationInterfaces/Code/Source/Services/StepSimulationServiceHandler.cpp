@@ -11,7 +11,7 @@
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     AZStd::unordered_set<AZ::u8> StepSimulationServiceHandler::GetProvidedFeatures()
@@ -53,4 +53,4 @@ namespace SimulationInterfacesROS2
             AZ::TickBus::Handler::BusDisconnect();
         }
     }
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

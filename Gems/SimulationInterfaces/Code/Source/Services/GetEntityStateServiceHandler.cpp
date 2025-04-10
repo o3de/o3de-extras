@@ -11,7 +11,7 @@
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     AZStd::unordered_set<AZ::u8> GetEntityStateServiceHandler::GetProvidedFeatures()
@@ -51,4 +51,4 @@ namespace SimulationInterfacesROS2
         return response;
     }
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

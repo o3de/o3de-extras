@@ -13,7 +13,7 @@
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <simulation_interfaces/msg/bounds.hpp>
 
-namespace SimulationInterfacesROS2::Utils
+namespace ROS2SimulationInterfaces::Utils
 {
     template<typename RequestType>
     AZ::Outcome<SimulationInterfaces::EntityFilters, AZStd::string> GetEntityFiltersFromRequest(const RequestType& request)
@@ -59,4 +59,4 @@ namespace SimulationInterfacesROS2::Utils
         }
         return AZ::Success(AZStd::move(filter));
     }
-} // namespace SimulationInterfacesROS2::Utils
+} // namespace ROS2SimulationInterfaces::Utils

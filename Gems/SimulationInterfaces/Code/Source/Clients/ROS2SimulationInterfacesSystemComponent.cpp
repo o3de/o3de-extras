@@ -6,20 +6,20 @@
  *
  */
 
-#include "SimulationInterfacesROS2SystemComponent.h"
+#include "ROS2SimulationInterfacesSystemComponent.h"
 
 #include <Actions/SimulateStepsActionServerHandler.h>
 #include <AzCore/std/string/string.h>
 #include <Services/ROS2ServiceBase.h>
-#include <SimulationInterfaces/SimulationInterfacesROS2RequestBus.h>
+#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
 
 #include <ROS2/ROS2Bus.h>
-#include <SimulationInterfaces/SimulationInterfacesROS2TypeIds.h>
+#include <SimulationInterfaces/ROS2SimulationInterfacesTypeIds.h>
 
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     namespace
@@ -36,44 +36,44 @@ namespace SimulationInterfacesROS2
     } // namespace
 
     AZ_COMPONENT_IMPL(
-        SimulationInterfacesROS2SystemComponent, "SimulationInterfacesROS2SystemComponent", SimulationInterfacesROS2SystemComponentTypeId);
+        ROS2SimulationInterfacesSystemComponent, "ROS2SimulationInterfacesSystemComponent", ROS2SimulationInterfacesSystemComponentTypeId);
 
-    void SimulationInterfacesROS2SystemComponent::Reflect(AZ::ReflectContext* context)
+    void ROS2SimulationInterfacesSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<SimulationInterfacesROS2SystemComponent, AZ::Component>()->Version(0);
+            serializeContext->Class<ROS2SimulationInterfacesSystemComponent, AZ::Component>()->Version(0);
         }
     }
 
-    void SimulationInterfacesROS2SystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    void ROS2SimulationInterfacesSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
-        provided.push_back(AZ_CRC_CE("SimulationInterfacesROS2Service"));
+        provided.push_back(AZ_CRC_CE("ROS2SimulationInterfacesService"));
     }
 
-    void SimulationInterfacesROS2SystemComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    void ROS2SimulationInterfacesSystemComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
     {
-        incompatible.push_back(AZ_CRC_CE("SimulationInterfacesROS2Service"));
+        incompatible.push_back(AZ_CRC_CE("ROS2SimulationInterfacesService"));
     }
 
-    void SimulationInterfacesROS2SystemComponent::GetRequiredServices(
+    void ROS2SimulationInterfacesSystemComponent::GetRequiredServices(
         [[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("ROS2Service"));
     }
 
-    void SimulationInterfacesROS2SystemComponent::GetDependentServices(
+    void ROS2SimulationInterfacesSystemComponent::GetDependentServices(
         [[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
     }
 
-    void SimulationInterfacesROS2SystemComponent::Init()
+    void ROS2SimulationInterfacesSystemComponent::Init()
     {
     }
 
-    void SimulationInterfacesROS2SystemComponent::Activate()
+    void ROS2SimulationInterfacesSystemComponent::Activate()
     {
-        SimulationInterfacesROS2RequestBus::Handler::BusConnect();
+        ROS2SimulationInterfacesRequestBus::Handler::BusConnect();
 
         rclcpp::Node::SharedPtr ros2Node = rclcpp::Node::SharedPtr(ROS2::ROS2Interface::Get()->GetNode());
         AZ_Assert(ros2Node, "ROS2 node is not available.");
@@ -93,9 +93,9 @@ namespace SimulationInterfacesROS2
         RegisterInterface<StepSimulationServiceHandler>(m_availableRos2Interface, ros2Node);
     }
 
-    void SimulationInterfacesROS2SystemComponent::Deactivate()
+    void ROS2SimulationInterfacesSystemComponent::Deactivate()
     {
-        SimulationInterfacesROS2RequestBus::Handler::BusDisconnect();
+        ROS2SimulationInterfacesRequestBus::Handler::BusDisconnect();
 
         for (auto& [handlerType, handler] : m_availableRos2Interface)
         {
@@ -103,7 +103,7 @@ namespace SimulationInterfacesROS2
         }
     }
 
-    AZStd::unordered_set<AZ::u8> SimulationInterfacesROS2SystemComponent::GetSimulationFeatures()
+    AZStd::unordered_set<AZ::u8> ROS2SimulationInterfacesSystemComponent::GetSimulationFeatures()
     {
         AZStd::unordered_set<AZ::u8> result;
         for (auto& [handlerType, handler] : m_availableRos2Interface)
@@ -114,4 +114,4 @@ namespace SimulationInterfacesROS2
         return result;
     }
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

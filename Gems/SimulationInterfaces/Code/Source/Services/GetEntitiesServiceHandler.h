@@ -12,7 +12,7 @@
 #include <AzCore/std/string/string_view.h>
 #include <simulation_interfaces/srv/get_entities.hpp>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
     class GetEntitiesServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::GetEntities>
     {
@@ -33,4 +33,4 @@ namespace SimulationInterfacesROS2
     private:
     };
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

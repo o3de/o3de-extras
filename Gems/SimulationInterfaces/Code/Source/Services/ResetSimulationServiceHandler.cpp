@@ -16,7 +16,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     AZStd::unordered_set<AZ::u8> ResetSimulationServiceHandler::GetProvidedFeatures()
@@ -114,4 +114,4 @@ namespace SimulationInterfacesROS2
         }
         return AZStd::nullopt;
     }
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

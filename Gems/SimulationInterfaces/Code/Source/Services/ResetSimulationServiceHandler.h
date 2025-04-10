@@ -13,7 +13,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <simulation_interfaces/srv/reset_simulation.hpp>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
     class ResetSimulationServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::ResetSimulation>
     {
@@ -32,4 +32,4 @@ namespace SimulationInterfacesROS2
         AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) override;
     };
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

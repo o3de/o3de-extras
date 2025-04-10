@@ -9,7 +9,7 @@
 #include "GetSpawnablesServiceHandler.h"
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     AZStd::unordered_set<AZ::u8> GetSpawnablesServiceHandler::GetProvidedFeatures()
@@ -51,4 +51,4 @@ namespace SimulationInterfacesROS2
 
         return response;
     }
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

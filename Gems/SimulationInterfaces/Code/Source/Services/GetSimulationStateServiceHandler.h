@@ -13,7 +13,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <simulation_interfaces/srv/get_simulation_state.hpp>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     class GetSimulationStateServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::GetSimulationState>
@@ -33,4 +33,4 @@ namespace SimulationInterfacesROS2
         AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) override;
     };
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

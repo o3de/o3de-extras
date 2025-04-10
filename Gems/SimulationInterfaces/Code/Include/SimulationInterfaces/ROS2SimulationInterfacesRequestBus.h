@@ -8,27 +8,27 @@
 
 #pragma once
 
-#include <SimulationInterfaces/SimulationInterfacesROS2TypeIds.h>
+#include <SimulationInterfaces/ROS2SimulationInterfacesTypeIds.h>
 
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/containers/unordered_set.h>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
-    class SimulationInterfacesROS2Requests
+    class ROS2SimulationInterfacesRequests
     {
     public:
-        AZ_RTTI(SimulationInterfacesROS2Requests, SimulationInterfacesROS2RequestBusTypeId);
-        virtual ~SimulationInterfacesROS2Requests() = default;
+        AZ_RTTI(ROS2SimulationInterfacesRequests, ROS2SimulationInterfacesRequestBusTypeId);
+        virtual ~ROS2SimulationInterfacesRequests() = default;
 
-        //! Returns set of simulation features available in SimulationInterfacesROS2 Gem
+        //! Returns set of simulation features available in ROS2SimulationInterfaces Gem
         //! SimulationFeatures follows definition available at:
         //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
         virtual AZStd::unordered_set<AZ::u8> GetSimulationFeatures() = 0;
     };
 
-    class SimulationInterfacesROS2RequestBusTraits : public AZ::EBusTraits
+    class ROS2SimulationInterfacesRequestBusTraits : public AZ::EBusTraits
     {
     public:
         //////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ namespace SimulationInterfacesROS2
         //////////////////////////////////////////////////////////////////////////
     };
 
-    using SimulationInterfacesROS2RequestBus = AZ::EBus<SimulationInterfacesROS2Requests, SimulationInterfacesROS2RequestBusTraits>;
-    using SimulationInterfacesROS2RequestBusInterface = AZ::Interface<SimulationInterfacesROS2Requests>;
+    using ROS2SimulationInterfacesRequestBus = AZ::EBus<ROS2SimulationInterfacesRequests, ROS2SimulationInterfacesRequestBusTraits>;
+    using ROS2SimulationInterfacesRequestBusInterface = AZ::Interface<ROS2SimulationInterfacesRequests>;
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

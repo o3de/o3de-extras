@@ -11,25 +11,25 @@
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
 
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
-#include <Clients/SimulationInterfacesROS2SystemComponent.h>
+#include <Clients/ROS2SimulationInterfacesSystemComponent.h>
 #include <ROS2/ROS2Bus.h>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
-    /// System component for SimulationInterfacesROS2 editor
-    class SimulationInterfacesROS2EditorSystemComponent
-        : public SimulationInterfacesROS2SystemComponent
+    /// System component for ROS2SimulationInterfaces editor
+    class ROS2SimulationInterfacesEditorSystemComponent
+        : public ROS2SimulationInterfacesSystemComponent
         , protected AzToolsFramework::EditorEvents::Bus::Handler
     {
-        using BaseSystemComponent = SimulationInterfacesROS2SystemComponent;
+        using BaseSystemComponent = ROS2SimulationInterfacesSystemComponent;
 
     public:
-        AZ_COMPONENT_DECL(SimulationInterfacesROS2EditorSystemComponent);
+        AZ_COMPONENT_DECL(ROS2SimulationInterfacesEditorSystemComponent);
 
         static void Reflect(AZ::ReflectContext* context);
 
-        SimulationInterfacesROS2EditorSystemComponent();
-        ~SimulationInterfacesROS2EditorSystemComponent();
+        ROS2SimulationInterfacesEditorSystemComponent();
+        ~ROS2SimulationInterfacesEditorSystemComponent();
 
     private:
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
@@ -44,4 +44,4 @@ namespace SimulationInterfacesROS2
         bool m_systemComponentActivated = false;
         ROS2::ROS2Requests::NodeChangedEvent::Handler m_nodeHandler;
     };
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

@@ -10,9 +10,9 @@
 #include <AzCore/base.h>
 #include <AzCore/std/containers/unordered_set.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
-#include <SimulationInterfaces/SimulationInterfacesROS2RequestBus.h>
+#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     AZStd::unordered_set<AZ::u8> GetSimulationFeaturesServiceHandler::GetProvidedFeatures()
@@ -24,9 +24,9 @@ namespace SimulationInterfacesROS2
     AZStd::optional<GetSimulationFeaturesServiceHandler::Response> GetSimulationFeaturesServiceHandler::HandleServiceRequest(
         const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
-        // call bus to get simulation features in SimulationInterfacesROS2 Gem side
+        // call bus to get simulation features in ROS2SimulationInterfaces Gem side
         AZStd::unordered_set<AZ::u8> ros2Interfaces;
-        SimulationInterfacesROS2RequestBus::BroadcastResult(ros2Interfaces, &SimulationInterfacesROS2Requests::GetSimulationFeatures);
+        ROS2SimulationInterfacesRequestBus::BroadcastResult(ros2Interfaces, &ROS2SimulationInterfacesRequests::GetSimulationFeatures);
         // call bus to get simulation features on SimulationInterfaces Gem  side
         AZStd::unordered_set<SimulationInterfaces::SimulationFeatures> o3deInterfaces;
         SimulationInterfaces::SimulationFeaturesAggregatorRequestBus::BroadcastResult(
@@ -48,4 +48,4 @@ namespace SimulationInterfacesROS2
 
         return response;
     }
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

@@ -10,7 +10,7 @@
 #include <AzCore/std/string/string.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     AZStd::unordered_set<AZ::u8> DeleteEntityServiceHandler::GetProvidedFeatures()
@@ -43,4 +43,4 @@ namespace SimulationInterfacesROS2
             });
         return AZStd::nullopt;
     }
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

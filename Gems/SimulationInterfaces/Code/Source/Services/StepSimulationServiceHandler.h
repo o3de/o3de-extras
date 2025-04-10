@@ -12,7 +12,7 @@
 #include <AzCore/std/string/string_view.h>
 #include <simulation_interfaces/srv/step_simulation.hpp>
 #include <AzCore/Component/TickBus.h>
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     class StepSimulationServiceHandler
@@ -38,4 +38,4 @@ namespace SimulationInterfacesROS2
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
     };
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

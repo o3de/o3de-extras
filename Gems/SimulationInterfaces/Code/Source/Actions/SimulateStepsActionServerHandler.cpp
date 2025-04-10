@@ -8,7 +8,7 @@
 
 #include "SimulateStepsActionServerHandler.h"
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     void SimulateStepsActionServerHandler::Initialize(rclcpp::Node::SharedPtr& node)
@@ -120,4 +120,4 @@ namespace SimulationInterfacesROS2
         PublishFeedback(feedback);
     }
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

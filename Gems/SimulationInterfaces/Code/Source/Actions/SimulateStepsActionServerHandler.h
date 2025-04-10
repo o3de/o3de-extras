@@ -13,7 +13,7 @@
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
 #include <simulation_interfaces/action/simulate_steps.hpp>
 
-namespace SimulationInterfacesROS2
+namespace ROS2SimulationInterfaces
 {
 
     class SimulateStepsActionServerHandler
@@ -47,4 +47,4 @@ namespace SimulationInterfacesROS2
         bool m_isCancelled{ false };
     };
 
-} // namespace SimulationInterfacesROS2
+} // namespace ROS2SimulationInterfaces

@@ -23,7 +23,7 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
 
-#include "Clients/SimulationInterfacesROS2SystemComponent.h"
+#include "Clients/ROS2SimulationInterfacesSystemComponent.h"
 #include "Mocks/SimulationEntityManagerMock.h"
 #include "Mocks/SimulationFeaturesAggregatorRequestsHandlerMock.h"
 #include "Mocks/SimulationManagerMock.h"
@@ -57,13 +57,13 @@ namespace UnitTest
 
     void SimulationInterfaceROS2TestEnvironment::AddGemsAndComponents()
     {
-        using namespace SimulationInterfacesROS2;
+        using namespace ROS2SimulationInterfaces;
         AddActiveGems(AZStd::to_array<AZStd::string_view>({ "ROS2" }));
         AddDynamicModulePaths({ "ROS2" });
         AddComponentDescriptors(AZStd::initializer_list<AZ::ComponentDescriptor*>{
-            SimulationInterfacesROS2SystemComponent::CreateDescriptor(),
+            ROS2SimulationInterfacesSystemComponent::CreateDescriptor(),
         });
-        AddRequiredComponents(AZStd::to_array<AZ::TypeId const>({ SimulationInterfacesROS2SystemComponent::TYPEINFO_Uuid() }));
+        AddRequiredComponents(AZStd::to_array<AZ::TypeId const>({ ROS2SimulationInterfacesSystemComponent::TYPEINFO_Uuid() }));
     }
 
     AZ::ComponentApplication* SimulationInterfaceROS2TestEnvironment::CreateApplicationInstance()
