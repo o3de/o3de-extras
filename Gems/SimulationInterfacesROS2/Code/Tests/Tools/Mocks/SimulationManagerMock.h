@@ -24,5 +24,7 @@ namespace UnitTest
         MOCK_METHOD(bool, IsSimulationPaused, (), (const));
         MOCK_METHOD0(CancelStepSimulation, void());
         MOCK_METHOD(bool, IsSimulationStepsActive, (), (const));
+        MOCK_METHOD(SimulationState, GetSimulationState, (), (const));
+        MOCK_METHOD1(SetSimulationState, AZ::Outcome<void, FailedResult>(SimulationState));
     };
 } // namespace UnitTest
