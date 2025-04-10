@@ -500,9 +500,7 @@ namespace SimulationInterfaces
         const auto ticketId = entity->GetEntitySpawnTicketId();
         if (m_spawnedTickets.find(ticketId) != m_spawnedTickets.end())
         {
-            // remove the ticket
-            // m_spawnedTickets.erase(ticketId);
-            /// get spawner
+            // get spawner
             auto spawner = AZ::Interface<AzFramework::SpawnableEntitiesDefinition>::Get();
             AZ_Assert(spawner, "SpawnableEntitiesDefinition is not available.");
             // get ticket
@@ -657,7 +655,6 @@ namespace SimulationInterfaces
             {
                 return;
             }
-            const AZ::Entity* root = *view.begin();
 
             for (auto* entity : view)
             {
@@ -683,11 +680,19 @@ namespace SimulationInterfaces
                 entity->SetName(entityName);
             }
 
-            auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
-            if (transformInterface)
+            // get the first entity
+            if (view.size()>1)
             {
-                transformInterface->SetWorldTM(initialPose);
+                const AZ::Entity* firstEntity = view[1];
+                AZ_Assert(firstEntity, "First entity is not available");
+                auto* transformInterface = firstEntity->FindComponent<AzFramework::TransformComponent>();
+                if (transformInterface)
+                {
+                    transformInterface->SetWorldTM(initialPose);
+                }
             }
+
+
         };
         optionalArgs.m_completionCallback =
             [this, uri](AzFramework::EntitySpawnTicket::Id ticketId, AzFramework::SpawnableConstEntityContainerView view)
