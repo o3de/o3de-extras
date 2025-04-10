@@ -4,7 +4,7 @@ With this example you will learn how to run ROS 2 navigation with a project crea
 
 These instructions assume that you have created and built your project following the [Template README](https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate/README.md).
 
-[ROS 2 navigation stack](https://navigation.ros.org/) is a set of packages which can deliver robot navigation almost out-of-the-box following configuration for your specific robot.
+[ROS 2 navigation stack](https://nav2.org/) is a set of packages which can deliver robot navigation almost out-of-the-box following configuration for your specific robot.
 In other cases, it can serve as a great basis to build your custom robot navigation.
 
 ## How to run the example

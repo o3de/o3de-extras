@@ -25,9 +25,9 @@
                 "Id": 14126657869720434043,
                 "Child Entity Order": [
                     "Entity_[541237100205]",
-                    "Instance_[650636534085]/ContainerEntity",
                     "Entity_[1176639161715]",
-                    "Instance_[594075265400]/ContainerEntity"
+                    "Instance_[475051143394]/ContainerEntity",
+                    "Instance_[24371968301931]/ContainerEntity"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -333,8 +333,8 @@
                     "Parent Entity": "Entity_[541237100205]",
                     "Transform Data": {
                         "Translate": [
-                            2.0,
-                            -12.0,
+                            3.2081193923950195,
+                            0.10913896560668945,
                             0.10000000149011612
                         ]
                     }
@@ -431,8 +431,8 @@
                     "Parent Entity": "Entity_[541237100205]",
                     "Transform Data": {
                         "Translate": [
-                            5.5,
-                            -12.0,
+                            -2.0983591079711914,
+                            0.023543179035186768,
                             0.10000000149011612
                         ]
                     }
@@ -537,8 +537,8 @@
                     "Controller": {
                         "Configuration": {
                             "LightType": 4,
-                            "Intensity": 40000.0,
-                            "AttenuationRadius": 632.4555053710938
+                            "Intensity": 4000.0,
+                            "AttenuationRadius": 200.0
                         }
                     }
                 },
@@ -607,6 +607,16 @@
         }
     },
     "Instances": {
+        "Instance_[24371968301931]": {
+            "Source": "Prefabs/WarehouseScene_small.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[1146574390643]"
+                }
+            ]
+        },
         "Instance_[475051143394]": {
             "Source": "RosbotXL/ROSBotXL_Slamtec.prefab",
             "Patches": [
@@ -618,32 +628,52 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[959982562508610]/Transform Data/Translate/0",
-                    "value": 0.842374324798584
+                    "value": 7.697054386138916
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[959982562508610]/Transform Data/Translate/1",
-                    "value": -12.669219970703123
+                    "value": 0.0905170440673828
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[959982562508610]/Transform Data/Translate/2",
                     "value": 0.034102797508239746
-                }
-            ]
-        },
-        "Instance_[650636534085]": {
-            "Source": "O3DEScene/Prefabs/Warehouse.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[5813610029120484168]/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
                 },
                 {
                     "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[5813610029120484168]/Transform Data/Translate/1",
-                    "value": -12.499871253967283
+                    "path": "/ContainerEntity/Components/Component_[959982562508610]/Transform Data/Rotate/2",
+                    "value": 180.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[1711844155761]/Entities/Entity_[5417796519198]/Components/Component_[6043040033160946649]/Transform Data/Translate/0",
+                    "value": -1.647193431854248
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[1711844155761]/Entities/Entity_[5417796519198]/Components/Component_[6043040033160946649]/Transform Data/Translate/1",
+                    "value": 2.3066246509552
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[1711844155761]/Entities/Entity_[5417796519198]/Components/Component_[6043040033160946649]/Transform Data/Translate/2",
+                    "value": 1.7568819522857666
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[1711844155761]/Entities/Entity_[5417796519198]/Components/Component_[6043040033160946649]/Transform Data/Rotate/0",
+                    "value": 26.134777069091797
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[1711844155761]/Entities/Entity_[5417796519198]/Components/Component_[6043040033160946649]/Transform Data/Rotate/1",
+                    "value": 17.461280822753906
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[1711844155761]/Entities/Entity_[5417796519198]/Components/Component_[6043040033160946649]/Transform Data/Rotate/2",
+                    "value": -148.55166625976565
                 }
             ]
         }
