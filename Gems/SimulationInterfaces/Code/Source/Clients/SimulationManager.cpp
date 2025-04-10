@@ -100,7 +100,7 @@ namespace SimulationInterfaces
                                                       simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_MULTIPLE,
                                                       simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_ACTION,
                                                       simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_SETTING,
-                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_GETTING});
+                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_GETTING });
         AZ::SystemTickBus::QueueFunction(
             [this]()
             {
@@ -148,7 +148,7 @@ namespace SimulationInterfaces
         auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
         AZ_Assert(physicsSystem, "Physics system is not available");
         const auto& sceneHandlers = physicsSystem->GetAllScenes();
-        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        [[maybe_unused]] auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         AZ_Assert(sceneInterface, "Physics scene interface is not available");
         for (auto& scene : sceneHandlers)
         {
@@ -183,7 +183,7 @@ namespace SimulationInterfaces
             });
 
         // get default scene
-        auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
+        [[maybe_unused]] auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
         AZ_Assert(physicsSystem, "Physics system is not available");
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         AZ_Assert(sceneInterface, "Physics scene interface is not available");

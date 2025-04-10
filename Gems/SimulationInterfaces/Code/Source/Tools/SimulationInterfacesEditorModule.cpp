@@ -6,9 +6,9 @@
  *
  */
 
+#include "ROS2SimulationInterfacesEditorSystemComponent.h"
 #include "SimulationEntitiesManagerEditor.h"
 #include "SimulationFeaturesAggregatorEditor.h"
-#include "ROS2SimulationInterfacesEditorSystemComponent.h"
 #include "SimulationManagerEditor.h"
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 #include <SimulationInterfacesModuleInterface.h>
@@ -47,8 +47,4 @@ namespace SimulationInterfaces
     };
 } // namespace SimulationInterfaces
 
-// #if defined(O3DE_GEM_NAME)
-// AZ_DECLARE_MODULE_CLASS(AZ_JOIN(Gem_, O3DE_GEM_NAME, _Editor), SimulationInterfaces::SimulationInterfacesEditorModule)
-// #else
 AZ_DECLARE_MODULE_CLASS(Gem_SimulationInterfaces_Editor, SimulationInterfaces::SimulationInterfacesEditorModule)
-// #endif
