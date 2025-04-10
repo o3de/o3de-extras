@@ -477,7 +477,7 @@ namespace UnitTest
     {
         using ::testing::_;
         auto node = GetRos2Node();
-        auto mock = std::make_shared<SimulationManagerMockedHandler>();
+        SimulationManagerMockedHandler mock;
         auto client = rclcpp_action::create_client<simulation_interfaces::action::SimulateSteps>(node, "/simulate_steps");
         auto goal = std::make_shared<simulation_interfaces::action::SimulateSteps::Goal>();
         constexpr AZ::u64 steps = 10;
@@ -485,16 +485,16 @@ namespace UnitTest
 
         ASSERT_TRUE(client->wait_for_action_server(std::chrono::seconds(0)) == true) << "Action server is unavailable";
 
-        EXPECT_CALL(*mock, IsSimulationPaused())
+        EXPECT_CALL(mock, IsSimulationPaused())
             .WillOnce(::testing::Invoke(
                 []()
                 {
                     return true;
                 }));
 
-        EXPECT_CALL(*mock, StepSimulation(steps));
+        EXPECT_CALL(mock, StepSimulation(steps));
 
-        EXPECT_CALL(*mock, IsSimulationStepsActive())
+        EXPECT_CALL(mock, IsSimulationStepsActive())
             .WillOnce(::testing::Invoke(
                 []()
                 {
@@ -516,14 +516,14 @@ namespace UnitTest
     {
         using ::testing::_;
         auto node = GetRos2Node();
-        auto mock = std::make_shared<SimulationManagerMockedHandler>();
+        SimulationManagerMockedHandler mock;
         auto client = rclcpp_action::create_client<simulation_interfaces::action::SimulateSteps>(node, "/simulate_steps");
         auto goal = std::make_shared<simulation_interfaces::action::SimulateSteps::Goal>();
         goal->steps = 10;
 
         ASSERT_TRUE(client->wait_for_action_server(std::chrono::seconds(0)) == true) << "Action server is unavailable";
 
-        EXPECT_CALL(*mock, IsSimulationPaused())
+        EXPECT_CALL(mock, IsSimulationPaused())
             .WillOnce(::testing::Invoke(
                 []()
                 {
@@ -545,7 +545,7 @@ namespace UnitTest
     {
         using ::testing::_;
         auto node = GetRos2Node();
-        auto mock = std::make_shared<SimulationManagerMockedHandler>();
+        SimulationManagerMockedHandler mock;
         auto client = rclcpp_action::create_client<simulation_interfaces::action::SimulateSteps>(node, "/simulate_steps");
         auto goal = std::make_shared<simulation_interfaces::action::SimulateSteps::Goal>();
         constexpr AZ::u64 steps = 10;
@@ -553,23 +553,23 @@ namespace UnitTest
 
         ASSERT_TRUE(client->wait_for_action_server(std::chrono::seconds(0)) == true) << "Action server is unavailable";
 
-        EXPECT_CALL(*mock, IsSimulationPaused())
+        EXPECT_CALL(mock, IsSimulationPaused())
             .WillOnce(::testing::Invoke(
                 []()
                 {
                     return true;
                 }));
 
-        EXPECT_CALL(*mock, StepSimulation(steps));
+        EXPECT_CALL(mock, StepSimulation(steps));
 
-        EXPECT_CALL(*mock, IsSimulationStepsActive())
+        EXPECT_CALL(mock, IsSimulationStepsActive())
             .WillRepeatedly(::testing::Invoke(
                 []()
                 {
                     return true;
                 }));
 
-        EXPECT_CALL(*mock, CancelStepSimulation());
+        EXPECT_CALL(mock, CancelStepSimulation());
 
         auto future = client->async_send_goal(*goal);
         SpinAppSome();
