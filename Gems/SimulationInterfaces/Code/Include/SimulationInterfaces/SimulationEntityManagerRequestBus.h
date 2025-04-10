@@ -96,6 +96,10 @@ namespace SimulationInterfaces
             const AZ::Transform& initialPose,
             const bool allowRename,
             SpawnCompletedCb completedCb) = 0;
+
+        //! Reset the simulation to begin.
+        //! This will revert the entire simulation to the initial state.
+        virtual void ResetAllEntitiesToInitialState() = 0;
     };
 
     class SimulationInterfacesBusTraits : public AZ::EBusTraits

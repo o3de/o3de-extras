@@ -23,7 +23,7 @@ namespace SimulationInterfacesROS2
     {
         return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::SIMULATION_RESET,
                                              SimulationFeatures::SIMULATION_RESET_TIME,
-                                             //SimulationFeatures::SIMULATION_RESET_STATE,
+                                             SimulationFeatures::SIMULATION_RESET_STATE,
                                              SimulationFeatures::SIMULATION_RESET_SPAWNED};
     }
 
@@ -33,8 +33,9 @@ namespace SimulationInterfacesROS2
         if (request.scope == simulation_interfaces::srv::ResetSimulation::Request::SCOPE_STATE)
         {
             Response response;
-            response.result.result = simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED;
-            response.result.error_message = "Not implemented yet";
+            SimulationInterfaces::SimulationEntityManagerRequestBus::Broadcast(
+                &SimulationInterfaces::SimulationEntityManagerRequests::ResetAllEntitiesToInitialState);
+            response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
             return response;
         }
 

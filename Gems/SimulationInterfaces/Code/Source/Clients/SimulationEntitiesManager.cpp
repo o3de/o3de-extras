@@ -157,6 +157,16 @@ namespace SimulationInterfaces
                     spawnData->second.m_completedCb(AZ::Success(registeredName));
                     m_spawnCompletedCallbacks.erase(spawnData);
                 }
+
+                // cache the initial state
+                EntityState initialState{};
+                initialState.m_pose = entity->GetTransform()->GetLocalTM();
+                if (rigidBody)
+                {
+                    initialState.m_twist_linear = rigidBody->GetLinearVelocity();
+                    initialState.m_twist_angular = rigidBody->GetAngularVelocity();
+                }
+                m_entityIdToInitialState[entityId] = initialState;
             });
         m_simulationBodyRemovedHandler = AzPhysics::SceneEvents::OnSimulationBodyRemoved::Handler(
             [this](AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle)
@@ -272,6 +282,11 @@ namespace SimulationInterfaces
             const auto& simulatedEntityName = findIt->second;
             m_entityIdToSimulatedEntityMap.erase(findIt);
             m_simulatedEntityToEntityIdMap.erase(simulatedEntityName);
+        }
+        auto findIt2 = m_entityIdToInitialState.find(entityId);
+        if (findIt2 != m_entityIdToInitialState.end())
+        {
+            m_entityIdToInitialState.erase(findIt2);
         }
     }
 
@@ -417,17 +432,23 @@ namespace SimulationInterfaces
         // get entity and all descendants
         AZStd::vector<AZ::EntityId> entityAndDescendants;
         AZ::TransformBus::EventResult(entityAndDescendants, entityId, &AZ::TransformBus::Events::GetEntityAndAllDescendants);
+        SetEntitiesState(entityAndDescendants, state);
+        return AZ::Success();
+    }
 
+    void SimulationEntitiesManager::SetEntitiesState(const AZStd::vector<AZ::EntityId>& entityAndDescendants, const EntityState& state)
+    {
+        AZ_Assert(!entityAndDescendants.empty(), "Entity and descendants list is empty");
+        if (entityAndDescendants.empty())
+        {
+            return;
+        }
+        const AZ::EntityId entityId = entityAndDescendants.front();
         if (state.m_pose.IsOrthogonal())
         {
             // disable simulation for all entities
-            AZStd::map<AZ::EntityId, AZ::Transform> entityTransforms;
             for (const auto& descendant : entityAndDescendants)
             {
-                // get name
-                AZStd::string entityName = "Unknown";
-                AZ::ComponentApplicationBus::BroadcastResult(entityName, &AZ::ComponentApplicationRequests::GetEntityName, descendant);
-                AZ_Printf("SimulationInterfaces", "Disable physics for entity %s\n", entityName.c_str());
                 Physics::RigidBodyRequestBus::Event(descendant, &Physics::RigidBodyRequests::DisablePhysics);
             }
 
@@ -451,7 +472,6 @@ namespace SimulationInterfaces
                 SetRigidBodyVelocities(rigidBody, state);
             }
         }
-        return AZ::Success();
     }
 
     void SimulationEntitiesManager::DeleteEntity(const AZStd::string& name, DeletionCompletedCb completedCb)
@@ -480,9 +500,7 @@ namespace SimulationInterfaces
         const auto ticketId = entity->GetEntitySpawnTicketId();
         if (m_spawnedTickets.find(ticketId) != m_spawnedTickets.end())
         {
-            // remove the ticket
-            // m_spawnedTickets.erase(ticketId);
-            /// get spawner
+            // get spawner
             auto spawner = AZ::Interface<AzFramework::SpawnableEntitiesDefinition>::Get();
             AZ_Assert(spawner, "SpawnableEntitiesDefinition is not available.");
             // get ticket
@@ -637,7 +655,6 @@ namespace SimulationInterfaces
             {
                 return;
             }
-            const AZ::Entity* root = *view.begin();
 
             for (auto* entity : view)
             {
@@ -663,11 +680,19 @@ namespace SimulationInterfaces
                 entity->SetName(entityName);
             }
 
-            auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
-            if (transformInterface)
+            // get the first entity
+            if (view.size()>1)
             {
-                transformInterface->SetWorldTM(initialPose);
+                const AZ::Entity* firstEntity = view[1];
+                AZ_Assert(firstEntity, "First entity is not available");
+                auto* transformInterface = firstEntity->FindComponent<AzFramework::TransformComponent>();
+                if (transformInterface)
+                {
+                    transformInterface->SetWorldTM(initialPose);
+                }
             }
+
+
         };
         optionalArgs.m_completionCallback =
             [this, uri](AzFramework::EntitySpawnTicket::Id ticketId, AzFramework::SpawnableConstEntityContainerView view)
@@ -724,5 +749,16 @@ namespace SimulationInterfaces
             simulatedEntityName = AZStd::string::format("%s_%s", entityName.c_str(), entityId.ToString().c_str());
         }
         return simulatedEntityName;
+    }
+
+    void SimulationEntitiesManager::ResetAllEntitiesToInitialState()
+    {
+        for (const auto& [entityId, initialState] : m_entityIdToInitialState)
+        {
+            AZStd::vector<AZ::EntityId> entityAndDescendants;
+            AZ::TransformBus::EventResult(entityAndDescendants, entityId, &AZ::TransformBus::Events::GetEntityAndAllDescendants);
+
+            SetEntitiesState(entityAndDescendants, initialState);
+        }
     }
 } // namespace SimulationInterfaces
