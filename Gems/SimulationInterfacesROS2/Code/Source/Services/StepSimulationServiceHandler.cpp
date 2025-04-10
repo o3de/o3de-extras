@@ -40,7 +40,7 @@ namespace SimulationInterfacesROS2
         return AZStd::nullopt;
     }
 
-    void StepSimulationServiceHandler::OnTick(float deltaTime, AZ::ScriptTimePoint time)
+    void StepSimulationServiceHandler::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
         bool isActive = true;
         SimulationInterfaces::SimulationManagerRequestBus::BroadcastResult(
