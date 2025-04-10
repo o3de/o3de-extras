@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
+
+#pragma once
+
+#include <AzCore/Component/Component.h>
+#include <AzFramework/API/ApplicationAPI.h>
+
+#include "Services/DeleteEntityServiceHandler.h"
+#include "Services/GetEntitiesServiceHandler.h"
+#include "Services/GetEntitiesStatesServiceHandler.h"
+#include "Services/GetEntityStateServiceHandler.h"
+#include "Services/GetSimulationFeaturesServiceHandler.h"
+#include "Services/GetSimulationStateServiceHandler.h"
+#include "Services/GetSpawnablesServiceHandler.h"
+#include "Services/ROS2ServiceBase.h"
+#include "Services/SetEntityStateServiceHandler.h"
+#include "Services/ResetSimulationServiceHandler.h"
+#include "Services/SetSimulationStateServiceHandler.h"
+#include "Services/SpawnEntityServiceHandler.h"
+#include "Services/StepSimulationServiceHandler.h"
+#include "SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h"
+#include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/optional.h>
+#include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <AzCore/std/string/string.h>
+
+namespace ROS2SimulationInterfaces
+{
+    class ROS2SimulationInterfacesSystemComponent
+        : public AZ::Component
+        , public ROS2SimulationInterfacesRequestBus::Handler
+    {
+    public:
+        AZ_COMPONENT_DECL(ROS2SimulationInterfacesSystemComponent);
+
+        static void Reflect(AZ::ReflectContext* context);
+
+        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
+        static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
+        static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
+        static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
+
+        ROS2SimulationInterfacesSystemComponent() = default;
+        ~ROS2SimulationInterfacesSystemComponent() = default;
+
+    protected:
+        // AZ::Component interface implementation
+        void Init() override;
+        void Activate() override;
+        void Deactivate() override;
+
+        // ROS2SimulationInterfacesRequestBus override
+        AZStd::unordered_set<AZ::u8> GetSimulationFeatures() override;
+
+    private:
+        AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<IROS2HandlerBase>> m_availableRos2Interface;
+    };
+
+} // namespace ROS2SimulationInterfaces

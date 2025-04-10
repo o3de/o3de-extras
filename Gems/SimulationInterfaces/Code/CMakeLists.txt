@@ -58,7 +58,7 @@ ly_add_target(
         PRIVATE
             Gem::ROS2.Static
 )
-target_depends_on_ros2_packages(${gem_name}.Private.Object simulation_interfaces)
+target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp std_msgs geometry_msgs simulation_interfaces rclcpp_action)
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
 ly_add_target(
@@ -140,8 +140,10 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Include
                 Source
         BUILD_DEPENDENCIES
+                
             PUBLIC
                 AZ::AzToolsFramework
+                Gem::ROS2.API
                 ${gem_name}.Private.Object
     )
 
@@ -285,6 +287,37 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
             ly_add_googletest(
                     NAME Gem::${gem_name}.TestApp
             )
+
+            ly_add_target(
+                    NAME ${gem_name}.ROS2Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
+                    NAMESPACE Gem
+                    FILES_CMAKE
+                    ros2_simulationinterfaces_tests_files.cmake
+                    INCLUDE_DIRECTORIES
+                    PRIVATE
+                    Tests
+                    Source
+                    Include
+                    BUILD_DEPENDENCIES
+                    PRIVATE
+                    AZ::AzTest
+                    AZ::AzTestShared
+                    AZ::AzToolsFramework
+                    Legacy::CryCommon
+                    Legacy::EditorCommon
+                    Legacy::Editor.Headers
+                    AZ::AzManipulatorTestFramework.Static
+                    Gem::${gem_name}.API
+                    Gem::${gem_name}.Editor.Private.Object
+                    Gem::SimulationInterfaces.API
+                    Gem::ROS2.Static
+                    Gem::${gem_name}.Editor.Private.Object
+                )
+
+                # Add ${gem_name}.Editor.Tests to googletest
+                ly_add_googletest(
+                        NAME Gem::${gem_name}.ROS2Tests
+                )
         endif()
     endif()
 endif()

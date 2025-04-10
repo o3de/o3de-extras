@@ -11,4 +11,5 @@ set(FILES
     Include/SimulationInterfaces/SimulationInterfacesTypeIds.h
     Include/SimulationInterfaces/SimulationMangerRequestBus.h
     Include/SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h
+    Include/SimulationInterfaces/ROS2SimulationInterfacesTypeIds.h
 )

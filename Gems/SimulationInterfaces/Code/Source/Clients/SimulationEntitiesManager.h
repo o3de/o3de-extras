@@ -60,7 +60,6 @@ namespace SimulationInterfaces
 
     private:
 
-
         //! Registers simulated entity to entity id mapping.
         //! Note that the entityId will be registered under unique name.
         //! \param entityId The entity id to register
