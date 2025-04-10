@@ -392,6 +392,81 @@ namespace UnitTest
         EXPECT_EQ(response->features.features[0], simulation_interfaces::msg::SimulatorFeatures::SPAWNING) << "Feature is not SPAWNING.";
     }
 
+    //! Check if service succeeds when the name is valid
+    TEST_F(SimulationInterfaceROS2TestFixture, TryToSpawnWithValidName)
+    {
+        using ::testing::_;
+        SimulationEntityManagerMockedHandler mock;
+
+        auto node = GetRos2Node();
+        auto client = node->create_client<simulation_interfaces::srv::SpawnEntity>("/spawn_entity");
+        auto request = std::make_shared<simulation_interfaces::srv::SpawnEntity::Request>();
+        request->name = "valid_name";
+        request->uri = "test_uri";
+        request->entity_namespace = "test_namespace";
+        request->allow_renaming = true;
+
+        auto future = client->async_send_request(request);
+        EXPECT_CALL(mock, SpawnEntity(_, _, _, _, _, _)).WillOnce(
+                ::testing::Invoke(
+                [](const AZStd::string& name, const AZStd::string& uri, const AZStd::string& entityNamespace, const AZ::Transform& initialPose, const bool allowRename, SpawnCompletedCb completedCb)
+                {
+                    EXPECT_EQ(name, "valid_name");
+                    EXPECT_EQ(uri, "test_uri");
+                    EXPECT_EQ(entityNamespace, "test_namespace");
+                    EXPECT_TRUE(allowRename);
+                    completedCb(AZ::Success("valid_name"));
+                })
+            );
+        SpinAppSome();
+
+        ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
+        auto response = future.get();
+        EXPECT_EQ(response->result.result, simulation_interfaces::msg::Result::RESULT_OK);
+    }
+
+    //! Check if service fails when the name is invalid
+    TEST_F(SimulationInterfaceROS2TestFixture, TryToSpawnWithInvalidName)
+    {
+        // strict mock, since we don't want to call the real implementation in this test
+        [[maybe_unused]] testing::StrictMock<SimulationEntityManagerMockedHandler> mock;
+
+        auto node = GetRos2Node();
+        auto client = node->create_client<simulation_interfaces::srv::SpawnEntity>("/spawn_entity");
+        auto request = std::make_shared<simulation_interfaces::srv::SpawnEntity::Request>();
+        request->name = "invalid name"; // invalid name
+        request->uri = "test_uri";
+        request->entity_namespace = "test_namespace";
+
+        auto future = client->async_send_request(request);
+        SpinAppSome();
+
+        ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
+        auto response = future.get();
+        EXPECT_EQ(response->result.result, simulation_interfaces::srv::SpawnEntity::Response::NAME_INVALID) << "Service call should fail with invalid name.";
+
+    }
+
+    //! Check if service fails when the namespace is invalid
+    TEST_F(SimulationInterfaceROS2TestFixture, TryToSpawnWithInvalidNamespace)
+    {
+        // strict mock, since we don't want to call the real implementation in this test
+        [[maybe_unused]] testing::StrictMock<SimulationEntityManagerMockedHandler> mock;
+
+        auto node = GetRos2Node();
+        auto client = node->create_client<simulation_interfaces::srv::SpawnEntity>("/spawn_entity");
+        auto request = std::make_shared<simulation_interfaces::srv::SpawnEntity::Request>();
+        request->name = "valid_name";
+        request->uri = "test_uri";
+        request->entity_namespace = "invalid namespace";
+
+        auto future = client->async_send_request(request);
+        SpinAppSome();
+
+        ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
+        auto response = future.get();
+        EXPECT_EQ(response->result.result, simulation_interfaces::srv::SpawnEntity::Response::NAMESPACE_INVALID) << "Service call should fail with invalid name.";
+    }
 } // namespace UnitTest
 
 // required to support running integration tests with Qt and PhysX
