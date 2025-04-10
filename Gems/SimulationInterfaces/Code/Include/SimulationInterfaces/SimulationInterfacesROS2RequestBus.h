@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SimulationInterfacesROS2/SimulationInterfacesROS2TypeIds.h>
+#include <SimulationInterfaces/SimulationInterfacesROS2TypeIds.h>
 
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>

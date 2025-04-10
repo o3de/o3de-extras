@@ -9,7 +9,7 @@
 #include "SimulationInterfacesROS2EditorSystemComponent.h"
 #include <AzCore/Serialization/SerializeContext.h>
 
-#include <SimulationInterfacesROS2/SimulationInterfacesROS2TypeIds.h>
+#include <SimulationInterfaces/SimulationInterfacesROS2TypeIds.h>
 
 namespace SimulationInterfacesROS2
 {

@@ -11,10 +11,10 @@
 #include <Actions/SimulateStepsActionServerHandler.h>
 #include <AzCore/std/string/string.h>
 #include <Services/ROS2ServiceBase.h>
-#include <SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h>
+#include <SimulationInterfaces/SimulationInterfacesROS2RequestBus.h>
 
 #include <ROS2/ROS2Bus.h>
-#include <SimulationInterfacesROS2/SimulationInterfacesROS2TypeIds.h>
+#include <SimulationInterfaces/SimulationInterfacesROS2TypeIds.h>
 
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/smart_ptr/make_shared.h>

@@ -24,7 +24,7 @@
 #include "Services/SetSimulationStateServiceHandler.h"
 #include "Services/SpawnEntityServiceHandler.h"
 #include "Services/StepSimulationServiceHandler.h"
-#include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
+#include "SimulationInterfaces/SimulationInterfacesROS2RequestBus.h"
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/optional.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>

@@ -14,6 +14,7 @@
 #include "Clients/SimulationFeaturesAggregator.h"
 #include "Clients/SimulationManager.h"
 #include <Clients/SimulationEntitiesManager.h>
+#include <Clients/SimulationInterfacesROS2SystemComponent.h>
 
 namespace SimulationInterfaces
 {
@@ -30,6 +31,7 @@ namespace SimulationInterfaces
                 SimulationEntitiesManager::CreateDescriptor(),
                 SimulationManager::CreateDescriptor(),
                 SimulationFeaturesAggregator::CreateDescriptor(),
+                SimulationInterfacesROS2::SimulationInterfacesROS2SystemComponent::CreateDescriptor(),
             });
     }
 
@@ -39,6 +41,7 @@ namespace SimulationInterfaces
             azrtti_typeid<SimulationEntitiesManager>(),
             azrtti_typeid<SimulationManager>(),
             azrtti_typeid<SimulationFeaturesAggregator>(),
+            azrtti_typeid<SimulationInterfacesROS2::SimulationInterfacesROS2SystemComponent>(),
         };
     }
 } // namespace SimulationInterfaces

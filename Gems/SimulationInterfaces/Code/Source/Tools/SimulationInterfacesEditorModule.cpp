@@ -8,6 +8,7 @@
 
 #include "SimulationEntitiesManagerEditor.h"
 #include "SimulationFeaturesAggregatorEditor.h"
+#include "SimulationInterfacesROS2EditorSystemComponent.h"
 #include "SimulationManagerEditor.h"
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 #include <SimulationInterfacesModuleInterface.h>
@@ -27,6 +28,7 @@ namespace SimulationInterfaces
                     SimulationEntitiesManagerEditor::CreateDescriptor(),
                     SimulationManagerEditor::CreateDescriptor(),
                     SimulationFeaturesAggregatorEditor::CreateDescriptor(),
+                    SimulationInterfacesROS2::SimulationInterfacesROS2EditorSystemComponent::CreateDescriptor(),
                 });
         }
 
@@ -39,13 +41,14 @@ namespace SimulationInterfaces
             return AZ::ComponentTypeList{
                 azrtti_typeid<SimulationEntitiesManagerEditor>(),
                 azrtti_typeid<SimulationFeaturesAggregatorEditor>(),
+                azrtti_typeid<SimulationInterfacesROS2::SimulationInterfacesROS2EditorSystemComponent>(),
             };
         }
     };
 } // namespace SimulationInterfaces
 
-#if defined(O3DE_GEM_NAME)
-AZ_DECLARE_MODULE_CLASS(AZ_JOIN(Gem_, O3DE_GEM_NAME, _Editor), SimulationInterfaces::SimulationInterfacesEditorModule)
-#else
+// #if defined(O3DE_GEM_NAME)
+// AZ_DECLARE_MODULE_CLASS(AZ_JOIN(Gem_, O3DE_GEM_NAME, _Editor), SimulationInterfaces::SimulationInterfacesEditorModule)
+// #else
 AZ_DECLARE_MODULE_CLASS(Gem_SimulationInterfaces_Editor, SimulationInterfaces::SimulationInterfacesEditorModule)
-#endif
+// #endif

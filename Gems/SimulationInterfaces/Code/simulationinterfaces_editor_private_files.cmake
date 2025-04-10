@@ -11,4 +11,6 @@ set(FILES
         Source/Tools/SimulationEntitiesManagerEditor.h
         Source/Tools/SimulationFeaturesAggregatorEditor.cpp
         Source/Tools/SimulationFeaturesAggregatorEditor.h
+        Source/Tools/SimulationInterfacesROS2EditorSystemComponent.cpp
+        Source/Tools/SimulationInterfacesROS2EditorSystemComponent.h
 )

@@ -10,7 +10,7 @@
 #include <AzCore/base.h>
 #include <AzCore/std/containers/unordered_set.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
-#include <SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h>
+#include <SimulationInterfaces/SimulationInterfacesROS2RequestBus.h>
 
 namespace SimulationInterfacesROS2
 {

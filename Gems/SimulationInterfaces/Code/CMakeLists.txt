@@ -58,7 +58,7 @@ ly_add_target(
         PRIVATE
             Gem::ROS2.Static
 )
-target_depends_on_ros2_packages(${gem_name}.Private.Object simulation_interfaces)
+target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp std_msgs geometry_msgs simulation_interfaces rclcpp_action)
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
 ly_add_target(
@@ -140,8 +140,10 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Include
                 Source
         BUILD_DEPENDENCIES
+                
             PUBLIC
                 AZ::AzToolsFramework
+                Gem::ROS2.API
                 ${gem_name}.Private.Object
     )
 
