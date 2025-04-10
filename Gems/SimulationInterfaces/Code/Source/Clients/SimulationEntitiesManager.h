@@ -51,6 +51,7 @@ namespace SimulationInterfaces
             const AZ::Transform& initialPose,
             const bool allowRename,
             SpawnCompletedCb completedCb) override;
+        void ResetAllEntitiesToInitialState() override;
 
         // AZ::Component interface implementation
         void Init() override;
@@ -58,6 +59,8 @@ namespace SimulationInterfaces
         void Deactivate() override;
 
     private:
+
+
         //! Registers simulated entity to entity id mapping.
         //! Note that the entityId will be registered under unique name.
         //! \param entityId The entity id to register
@@ -71,6 +74,9 @@ namespace SimulationInterfaces
         //! Returns the simulated entity name for the given entity id.
         AZStd::string GetSimulatedEntityName(AZ::EntityId entityId, const AZStd::string& proposedName) const;
 
+        //! Set the state of the entity and their descendants.
+        void SetEntitiesState(const AZStd::vector<AZ::EntityId>& entityAndDescendants, const EntityState& state);
+
         AzPhysics::SceneEvents::OnSimulationBodyAdded::Handler m_simulationBodyAddedHandler;
         AzPhysics::SceneEvents::OnSimulationBodyRemoved::Handler m_simulationBodyRemovedHandler;
 
@@ -79,8 +85,7 @@ namespace SimulationInterfaces
         AzPhysics::SceneHandle m_physicsScenesHandle = AzPhysics::InvalidSceneHandle;
         AZStd::unordered_map<AZStd::string, AZ::EntityId> m_simulatedEntityToEntityIdMap;
         AZStd::unordered_map<AZ::EntityId, AZStd::string> m_entityIdToSimulatedEntityMap;
-        AZStd::unordered_set<AzPhysics::SimulatedBodyHandle> m_disabledBodies;
-
+        AZStd::unordered_map<AZ::EntityId, EntityState> m_entityIdToInitialState;
         AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, AzFramework::EntitySpawnTicket> m_spawnedTickets;
 
         struct SpawnCompletedCbData
