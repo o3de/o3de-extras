@@ -20,7 +20,8 @@
                 "Id": 14126657869720434043,
                 "Child Entity Order": [
                     "Entity_[1176639161715]",
-                    "Instance_[814543674064679]/ContainerEntity"
+                    "Instance_[814543674064679]/ContainerEntity",
+                    "Instance_[432421211856]/ContainerEntity"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -232,8 +233,7 @@
                     "Id": 16880285896855930892,
                     "Controller": {
                         "Configuration": {
-                            "Field of View": 55.0,
-                            "EditorEntityId": 8929576024571800510
+                            "Field of View": 55.0
                         }
                     }
                 },
@@ -557,57 +557,17 @@
         }
     },
     "Instances": {
-        "Instance_[814543674064679]": {
-            "Source": "Proteus.prefab",
+        "Instance_[432421211856]": {
+            "Source": "ProteusRobot/Proteus.prefab",
             "Patches": [
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[15629654211104]/Components/Component_[17075084475750345983]/Configuration/Centre of mass offset/0",
-                    "value": -1.6654873036259232e-9
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[15629654211104]/Components/Component_[17075084475750345983]/Configuration/Centre of mass offset/1",
-                    "value": -2.462736958808165e-10
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[15629654211104]/Components/Component_[17075084475750345983]/Configuration/Centre of mass offset/2",
-                    "value": 6.2086658036975e-10
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[15629654211104]/Components/Component_[17075084475750345983]/Configuration/Inertia tensor/4",
-                    "value": 0.0028837586287409067
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[15672603884064]/Components/Component_[11685358238844952494]/Configuration/Centre of mass offset/0",
-                    "value": -1.6654873036259232e-9
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[15672603884064]/Components/Component_[11685358238844952494]/Configuration/Centre of mass offset/1",
-                    "value": -2.462736958808165e-10
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[15672603884064]/Components/Component_[11685358238844952494]/Configuration/Centre of mass offset/2",
-                    "value": 6.2086658036975e-10
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[15672603884064]/Components/Component_[11685358238844952494]/Configuration/Inertia tensor/4",
-                    "value": 0.0028837586287409067
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[15237572906287023176]/Parent Entity",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
                     "value": "../Entity_[1146574390643]"
                 },
                 {
                     "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[15237572906287023176]/Transform Data/Translate/0",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
                     "value": -2.053994655609131
                 }
             ]

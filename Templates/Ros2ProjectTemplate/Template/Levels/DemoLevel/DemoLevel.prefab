@@ -607,14 +607,9 @@
         }
     },
     "Instances": {
-        "Instance_[594075265400]": {
-            "Source": "ROSBot_slamtec.prefab",
+        "Instance_[475051143394]": {
+            "Source": "RosbotXL/ROSBotXL_Slamtec.prefab",
             "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[615377764463113571]/Child Entity Order/0",
-                    "value": "Instance_[3732164110801]/ContainerEntity"
-                },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[959982562508610]/Parent Entity",
