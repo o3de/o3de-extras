@@ -23,6 +23,8 @@ set(FILES
     Source/Services/DeleteEntityServiceHandler.h
     Source/Services/SetEntityStateServiceHandler.cpp
     Source/Services/SetEntityStateServiceHandler.h
+    Source/Services/StepSimulationServiceHandler.cpp
+    Source/Services/StepSimulationServiceHandler.h
     Source/Services/GetSpawnablesServiceHandler.cpp
     Source/Services/GetSpawnablesServiceHandler.h
     Source/Services/SpawnEntityServiceHandler.cpp

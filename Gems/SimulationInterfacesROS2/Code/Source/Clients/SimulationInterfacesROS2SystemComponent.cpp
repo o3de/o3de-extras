@@ -90,6 +90,7 @@ namespace SimulationInterfacesROS2
         RegisterInterface<SimulateStepsActionServerHandler>(m_availableRos2Interface, ros2Node);
         RegisterInterface<SetSimulationStateServiceHandler>(m_availableRos2Interface, ros2Node);
         RegisterInterface<GetSimulationStateServiceHandler>(m_availableRos2Interface, ros2Node);
+        RegisterInterface<StepSimulationServiceHandler>(m_availableRos2Interface, ros2Node);
     }
 
     void SimulationInterfacesROS2SystemComponent::Deactivate()
