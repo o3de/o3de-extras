@@ -43,10 +43,10 @@ Additionally, the model is equipped with links that are suitable for adding `Cam
 The robot publishes Lidar Sensor's output on the`/base_link/pc` ROS 2 topic and can be driven using the `/base_link/cmd_vel` ROS 2 topic. An example of its use can be found in [ROS 2 Project Template](https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate).
 
 ### Screenshots
-![](docs/images/rosbot_front.png)
+![](docs/images/rosbot_front.png) \
 From left: `ROSbotXL_Velodyne.prefab`, `ROSBotXL_Slamtec.prefab`, and `ROSbotXL.prefab`
 
-![](docs/images/rosbot_back.png)
+![](docs/images/rosbot_back.png) \
 From left: `ROSbotXL.prefab`, `ROSBotXL_Slamtec.prefab`, and `ROSbotXL_Velodyne.prefab`
 
 ## Acknowledgments
