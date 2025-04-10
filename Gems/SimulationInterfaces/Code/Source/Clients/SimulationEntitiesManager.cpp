@@ -211,10 +211,10 @@ namespace SimulationInterfaces
 
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
-            AZStd::unordered_set<SimulationFeatures>{ simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
+            AZStd::unordered_set<SimulationFeatures>{//simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
                                                       simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_BOX,
-                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_CONVEX,
-                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
+                                                      //simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_CONVEX,
+                                                      //simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
                                                       simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_GETTING,
                                                       simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_SETTING,
                                                       simulation_interfaces::msg::SimulatorFeatures::DELETING,

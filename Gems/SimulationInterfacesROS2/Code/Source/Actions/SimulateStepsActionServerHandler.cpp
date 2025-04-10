@@ -25,7 +25,9 @@ namespace SimulationInterfacesROS2
 
     AZStd::unordered_set<AZ::u8> SimulateStepsActionServerHandler::GetProvidedFeatures()
     {
-        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::STEP_SIMULATION_ACTION };
+        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::STEP_SIMULATION_ACTION,
+                                             SimulationFeatures::STEP_SIMULATION_SINGLE,
+                                             SimulationFeatures::STEP_SIMULATION_MULTIPLE };
     }
 
     AZStd::string_view SimulateStepsActionServerHandler::GetTypeName() const
