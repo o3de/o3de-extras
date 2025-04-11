@@ -19,10 +19,10 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 14126657869720434043,
                 "Child Entity Order": [
-                    "Instance_[712990187248]/ContainerEntity",
                     "Entity_[3876413040103]",
                     "Entity_[440535597152]",
-                    "Entity_[513550041184]"
+                    "Entity_[513550041184]",
+                    "Instance_[12517228203983]/ContainerEntity"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -5401,39 +5401,9 @@
         }
     },
     "Instances": {
-        "Instance_[712990187248]": {
-            "Source": "Prefabs/PandaRobot.prefab",
+        "Instance_[12517228203983]": {
+            "Source": "PandaRobot/PandaRobot.prefab",
             "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[768824762096]/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 0.07862424850463867
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[768824762096]/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": -0.02395105361938477
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[768824762096]/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.02015829086303711
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[768824762096]/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": -0.0008067800663411617
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[768824762096]/Components/TransformComponent/Transform Data/Rotate/1",
-                    "value": -15.406730651855469
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[768824762096]/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": 89.99694061279297
-                },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
