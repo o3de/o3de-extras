@@ -7,14 +7,15 @@
  */
 
 #include "ResetSimulationServiceHandler.h"
+#include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/std/optional.h>
+#include <ROS2/Clock/ROS2Clock.h>
+#include <ROS2/ROS2Bus.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
 #include <builtin_interfaces/msg/time.hpp>
-#include <ROS2/Clock/ROS2Clock.h>
-#include <ROS2/ROS2Bus.h>
-#include <AzCore/Component/ComponentApplicationBus.h>
+#include <simulation_interfaces/msg/detail/result__struct.hpp>
 
 namespace ROS2SimulationInterfaces
 {
@@ -24,7 +25,7 @@ namespace ROS2SimulationInterfaces
         return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::SIMULATION_RESET,
                                              SimulationFeatures::SIMULATION_RESET_TIME,
                                              SimulationFeatures::SIMULATION_RESET_STATE,
-                                             SimulationFeatures::SIMULATION_RESET_SPAWNED};
+                                             SimulationFeatures::SIMULATION_RESET_SPAWNED };
     }
 
     AZStd::optional<ResetSimulationServiceHandler::Response> ResetSimulationServiceHandler::HandleServiceRequest(
@@ -63,7 +64,7 @@ namespace ROS2SimulationInterfaces
 
         if (request.scope == Request::SCOPE_TIME)
         {
-            auto * interface = ROS2::ROS2Interface::Get();
+            auto* interface = ROS2::ROS2Interface::Get();
             AZ_Assert(interface, "ROS2Interface is not available");
             auto& clock = interface->GetSimulationClock();
 
@@ -82,7 +83,7 @@ namespace ROS2SimulationInterfaces
             {
                 Response response;
                 response.result.result = simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
-                const auto & errorMessage = results.GetError();
+                const auto& errorMessage = results.GetError();
                 response.result.error_message = std::string(errorMessage.c_str(), errorMessage.size());
                 return response;
             }
@@ -108,10 +109,15 @@ namespace ROS2SimulationInterfaces
                 SendResponse(response);
             };
             SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
-                    &SimulationInterfaces::SimulationManagerRequests::ReloadLevel, levelReloadCompletion);
+                &SimulationInterfaces::SimulationManagerRequests::ReloadLevel, levelReloadCompletion);
 
             return AZStd::nullopt;
         }
-        return AZStd::nullopt;
+
+        // no case matched, return response that request was invalid
+        Response invalidResponse;
+        invalidResponse.result.result = simulation_interfaces::msg::Result::RESULT_NOT_FOUND;
+        invalidResponse.result.error_message = "Passed unknown scope";
+        return invalidResponse;
     }
 } // namespace ROS2SimulationInterfaces
