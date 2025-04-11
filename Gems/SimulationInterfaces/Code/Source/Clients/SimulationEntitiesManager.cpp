@@ -160,7 +160,7 @@ namespace SimulationInterfaces
 
                 // cache the initial state
                 EntityState initialState{};
-                initialState.m_pose = entity->GetTransform()->GetLocalTM();
+                initialState.m_pose = entity->GetTransform()->GetWorldTM();
                 if (rigidBody)
                 {
                     initialState.m_twist_linear = rigidBody->GetLinearVelocity();
@@ -221,10 +221,10 @@ namespace SimulationInterfaces
 
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
-            AZStd::unordered_set<SimulationFeatures>{//simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
+            AZStd::unordered_set<SimulationFeatures>{ // simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
                                                       simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_BOX,
-                                                      //simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_CONVEX,
-                                                      //simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
+                                                      // simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_CONVEX,
+                                                      // simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
                                                       simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_GETTING,
                                                       simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_SETTING,
                                                       simulation_interfaces::msg::SimulatorFeatures::DELETING,
@@ -444,6 +444,8 @@ namespace SimulationInterfaces
             return;
         }
         const AZ::EntityId entityId = entityAndDescendants.front();
+        AZ::EntityId parentEntityId = AZ::EntityId{ AZ::EntityId::InvalidEntityId };
+        AZ::TransformBus::EventResult(parentEntityId, entityId, &AZ::TransformBus::Events::GetParentId);
         if (state.m_pose.IsOrthogonal())
         {
             // disable simulation for all entities
@@ -451,8 +453,17 @@ namespace SimulationInterfaces
             {
                 Physics::RigidBodyRequestBus::Event(descendant, &Physics::RigidBodyRequests::DisablePhysics);
             }
-
-            AZ::TransformBus::Event(entityId, &AZ::TransformBus::Events::SetLocalTM, state.m_pose);
+            if (parentEntityId.IsValid())
+            {
+                AZ::Transform parentTransform;
+                AZ::TransformBus::EventResult(parentTransform, parentEntityId, &AZ::TransformBus::Events::GetWorldTM);
+                auto transformToSet = parentTransform.GetInverse() * state.m_pose;
+                AZ::TransformBus::Event(entityId, &AZ::TransformBus::Events::SetLocalTM, transformToSet);
+            }
+            else
+            {
+                AZ::TransformBus::Event(entityId, &AZ::TransformBus::Events::SetLocalTM, state.m_pose);
+            }
 
             for (const auto& descendant : entityAndDescendants)
             {
@@ -679,20 +690,13 @@ namespace SimulationInterfaces
                 AZStd::string entityName = AZStd::string::format("%s_%s", name.c_str(), entity->GetName().c_str());
                 entity->SetName(entityName);
             }
+            const AZ::Entity* root = *view.begin();
 
-            // get the first entity
-            if (view.size()>1)
+            auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
+            if (transformInterface)
             {
-                const AZ::Entity* firstEntity = view[1];
-                AZ_Assert(firstEntity, "First entity is not available");
-                auto* transformInterface = firstEntity->FindComponent<AzFramework::TransformComponent>();
-                if (transformInterface)
-                {
-                    transformInterface->SetWorldTM(initialPose);
-                }
+                transformInterface->SetWorldTM(initialPose);
             }
-
-
         };
         optionalArgs.m_completionCallback =
             [this, uri](AzFramework::EntitySpawnTicket::Id ticketId, AzFramework::SpawnableConstEntityContainerView view)
