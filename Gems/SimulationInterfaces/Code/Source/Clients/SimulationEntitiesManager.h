@@ -76,6 +76,8 @@ namespace SimulationInterfaces
         //! Set the state of the entity and their descendants.
         void SetEntitiesState(const AZStd::vector<AZ::EntityId>& entityAndDescendants, const EntityState& state);
 
+        bool m_registerEverySimulatedEntity = false; //! Flag to register every simulated entity
+
         AzPhysics::SceneEvents::OnSimulationBodyAdded::Handler m_simulationBodyAddedHandler;
         AzPhysics::SceneEvents::OnSimulationBodyRemoved::Handler m_simulationBodyRemovedHandler;
 
@@ -90,8 +92,10 @@ namespace SimulationInterfaces
         struct SpawnCompletedCbData
         {
             AZStd::string m_userProposedName; //! Name proposed by the User in spawn request
+            AZStd::string m_resultedName; //! Name of the entity in the simulation interface
             SpawnCompletedCb m_completedCb; //! User callback to be called when the entity is registered
             AZ::ScriptTimePoint m_spawnCompletedTime; //! Time at which the entity was spawned
+            bool m_registered = false; //! Flag to check if the entity was registered
         };
         AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, SpawnCompletedCbData>
             m_spawnCompletedCallbacks; //! Callbacks to be called when the entity is registered
