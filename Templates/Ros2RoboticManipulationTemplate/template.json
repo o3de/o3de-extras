@@ -67,174 +67,6 @@
             "isTemplated": false
         },
         {
-            "file": "Assets/Panda/Materials/Shell_gray.material",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/Materials/Shell_white.material",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/finger.dae",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/finger.dae.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/finger_c.stl",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/finger_c.stl.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/hand.dae",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/hand.dae.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/hand_c.stl",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/hand_c.stl.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link0.dae",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link0.dae.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link0_c.stl",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link0_c.stl.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link1.dae",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link1.dae.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link1_c.stl",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link1_c.stl.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link2.dae",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link2.dae.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link2_c.stl",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link2_c.stl.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link3.dae",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link3.dae.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link3_c.stl",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link3_c.stl.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link4.dae",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link4.dae.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link4_c.stl",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link4_c.stl.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link5.dae",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link5.dae.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link5_c.stl",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link5_c.stl.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link6.dae",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link6.dae.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link6_c.stl",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link6_c.stl.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link7.dae",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link7.dae.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link7_c.stl",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Panda/link7_c.stl.assetinfo",
-            "isTemplated": false
-        },
-        {
             "file": "Assets/Room/Desk.fbx",
             "isTemplated": false
         },
@@ -447,10 +279,6 @@
             "isTemplated": false
         },
         {
-            "file": "Prefabs/PandaRobot.prefab",
-            "isTemplated": false
-        },
-        {
             "file": "Registry/assetprocessor_settings.setreg",
             "isTemplated": false
         },
@@ -603,12 +431,6 @@
             "dir": "Assets/BoxToyPuzzle/texture/Roughness"
         },
         {
-            "dir": "Assets/Panda"
-        },
-        {
-            "dir": "Assets/Panda/Materials"
-        },
-        {
             "dir": "Assets/Room"
         },
         {
@@ -679,9 +501,6 @@
         },
         {
             "dir": "Platform/Windows"
-        },
-        {
-            "dir": "Prefabs"
         },
         {
             "dir": "Registry"
