@@ -8,7 +8,7 @@
 #pragma once
 
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2/Utilities/Controllers/PidConfiguration.h>
+#include <ROS2Controllers/Controllers/PidConfiguration.h>
 #include <VehicleDynamics/DriveModel.h>
 #include <VehicleDynamics/ModelLimits/AckermannModelLimits.h>
 #include <VehicleDynamics/VehicleConfiguration.h>

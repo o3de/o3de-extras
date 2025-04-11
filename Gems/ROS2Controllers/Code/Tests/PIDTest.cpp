@@ -9,7 +9,7 @@
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzTest/AzTest.h>
 
-#include <ROS2/Utilities/Controllers/PidConfiguration.h>
+#include <ROS2Controllers/Controllers/PidConfiguration.h>
 
 namespace UnitTest
 {

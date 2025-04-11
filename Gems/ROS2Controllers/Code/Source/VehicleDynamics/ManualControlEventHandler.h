@@ -8,7 +8,7 @@
 #pragma once
 
 #include <AzCore/std/function/function_template.h>
-#include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
+#include <ROS2Controllers/VehicleDynamics/VehicleInputControlBus.h>
 #include <StartingPointInput/InputEventNotificationBus.h>
 
 namespace ROS2::VehicleDynamics

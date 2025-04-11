@@ -16,7 +16,7 @@
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <ImGuiBus.h>
 #include <LmbrCentral/Scripting/TagComponentBus.h>
-#include <ROS2/Gripper/GripperRequestBus.h>
+#include <ROS2Controllers/Gripper/GripperRequestBus.h>
 
 namespace ROS2
 {

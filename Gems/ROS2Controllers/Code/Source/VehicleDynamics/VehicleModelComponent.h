@@ -15,7 +15,7 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzCore/std/utils.h>
-#include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
+#include <ROS2Controllers/VehicleDynamics/VehicleInputControlBus.h>
 #include <VehicleDynamics/VehicleModelLimits.h>
 
 namespace ROS2::VehicleDynamics

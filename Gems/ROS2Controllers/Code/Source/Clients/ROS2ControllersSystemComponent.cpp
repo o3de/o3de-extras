@@ -13,6 +13,7 @@
 
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2Controllers/Controllers/PidConfiguration.h>
+#include <VehicleDynamics/VehicleModelComponent.h>
 
 namespace ROS2Controllers
 {
@@ -22,6 +23,7 @@ namespace ROS2Controllers
     {
         // Reflect structs not strictly owned by any single component
         ROS2::Controllers::PidConfiguration::Reflect(context);
+        ROS2::VehicleDynamics::VehicleModelComponent::Reflect(context);
 
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {

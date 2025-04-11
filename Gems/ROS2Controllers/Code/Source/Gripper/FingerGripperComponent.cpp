@@ -15,7 +15,7 @@
 
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Manipulation/JointsManipulationRequests.h>
+#include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
 #include <Utilities/JointUtilities.h>
 #include <imgui/imgui.h>
 

@@ -10,7 +10,7 @@
 
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
-#include <ROS2/Gripper/GripperRequestBus.h>
+#include <ROS2Controllers/Gripper/GripperRequestBus.h>
 #include <control_msgs/action/gripper_command.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>

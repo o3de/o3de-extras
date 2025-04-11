@@ -11,6 +11,14 @@ set(FILES
     Source/ROS2ControllersModuleInterface.h
     Source/Clients/ROS2ControllersSystemComponent.cpp
     Source/Clients/ROS2ControllersSystemComponent.h
+    Source/Gripper/GripperActionServer.cpp
+    Source/Gripper/GripperActionServer.h
+    Source/Gripper/GripperActionServerComponent.cpp
+    Source/Gripper/GripperActionServerComponent.h
+    Source/Gripper/VacuumGripperComponent.h
+    Source/Gripper/VacuumGripperComponent.cpp
+    Source/Gripper/FingerGripperComponent.h
+    Source/Gripper/FingerGripperComponent.cpp
     Source/Manipulation/Controllers/JointsArticulationControllerComponent.cpp
     Source/Manipulation/Controllers/JointsArticulationControllerComponent.h
     Source/Manipulation/Controllers/JointsPIDControllerComponent.cpp
@@ -51,4 +59,34 @@ set(FILES
     Source/Utilities/JointUtilities.cpp
     Source/Utilities/JointUtilities.h
     Source/Utilities/Controllers/PidConfiguration.cpp
+    Source/VehicleDynamics/AxleConfiguration.cpp
+    Source/VehicleDynamics/AxleConfiguration.h
+    Source/VehicleDynamics/DriveModel.cpp
+    Source/VehicleDynamics/DriveModel.h
+    Source/VehicleDynamics/DriveModels/AckermannDriveModel.cpp
+    Source/VehicleDynamics/DriveModels/AckermannDriveModel.h
+    Source/VehicleDynamics/DriveModels/SkidSteeringDriveModel.cpp
+    Source/VehicleDynamics/DriveModels/SkidSteeringDriveModel.h
+    Source/VehicleDynamics/ManualControlEventHandler.h
+    Source/VehicleDynamics/Utilities.cpp
+    Source/VehicleDynamics/Utilities.h
+    Source/VehicleDynamics/VehicleConfiguration.cpp
+    Source/VehicleDynamics/VehicleConfiguration.h
+    Source/VehicleDynamics/VehicleInputs.cpp
+    Source/VehicleDynamics/VehicleInputs.h
+    Source/VehicleDynamics/VehicleModelComponent.cpp
+    Source/VehicleDynamics/VehicleModelComponent.h
+    Source/VehicleDynamics/ModelComponents/AckermannModelComponent.cpp
+    Source/VehicleDynamics/ModelComponents/AckermannModelComponent.h
+    Source/VehicleDynamics/ModelComponents/SkidSteeringModelComponent.cpp
+    Source/VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h
+    Source/VehicleDynamics/VehicleModelLimits.cpp
+    Source/VehicleDynamics/VehicleModelLimits.h
+    Source/VehicleDynamics/ModelLimits/AckermannModelLimits.cpp
+    Source/VehicleDynamics/ModelLimits/AckermannModelLimits.h
+    Source/VehicleDynamics/ModelLimits/SkidSteeringModelLimits.cpp
+    Source/VehicleDynamics/ModelLimits/SkidSteeringModelLimits.h
+    Source/VehicleDynamics/WheelControllerComponent.cpp
+    Source/VehicleDynamics/WheelControllerComponent.h
+    Source/VehicleDynamics/WheelDynamicsData.h
 )

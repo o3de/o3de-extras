@@ -14,6 +14,9 @@
 
 #include <Clients/ROS2ControllersSystemComponent.h>
 
+#include <Gripper/FingerGripperComponent.h>
+#include <Gripper/GripperActionServerComponent.h>
+#include <Gripper/VacuumGripperComponent.h>
 #include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
 #include <Manipulation/Controllers/JointsPIDControllerComponent.h>
 #include <Manipulation/JointsManipulationComponent.h>
@@ -26,6 +29,9 @@
 #include <RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.h>
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
+#include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
+#include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
+#include <VehicleDynamics/WheelControllerComponent.h>
 
 namespace ROS2Controllers
 {
@@ -39,6 +45,9 @@ namespace ROS2Controllers
             m_descriptors.end(),
             {
                 ROS2ControllersSystemComponent::CreateDescriptor(),
+                ROS2::GripperActionServerComponent::CreateDescriptor(),
+                ROS2::FingerGripperComponent::CreateDescriptor(),
+                ROS2::VacuumGripperComponent::CreateDescriptor(),
                 ROS2::JointsArticulationControllerComponent::CreateDescriptor(),
                 ROS2::JointsPIDControllerComponent::CreateDescriptor(),
                 ROS2::JointsManipulationComponent::CreateDescriptor(),
@@ -50,6 +59,9 @@ namespace ROS2Controllers
                 ROS2::RigidBodyTwistControlComponent::CreateDescriptor(),
                 ROS2::SkidSteeringControlComponent::CreateDescriptor(),
                 ROS2::ROS2RobotControlComponent::CreateDescriptor(),
+                ROS2::VehicleDynamics::AckermannVehicleModelComponent::CreateDescriptor(),
+                ROS2::VehicleDynamics::SkidSteeringModelComponent::CreateDescriptor(),
+                ROS2::VehicleDynamics::WheelControllerComponent::CreateDescriptor(),
             });
     }
 

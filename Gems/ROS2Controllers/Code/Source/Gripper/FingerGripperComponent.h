@@ -12,8 +12,8 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <ImGuiBus.h>
-#include <ROS2/Gripper/GripperRequestBus.h>
-#include <ROS2/Manipulation/JointsManipulationRequests.h>
+#include <ROS2Controllers/Gripper/GripperRequestBus.h>
+#include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
 #include <Utilities/ArticulationsUtilities.h>
 
 namespace ROS2
