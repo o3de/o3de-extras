@@ -151,6 +151,11 @@ namespace SimulationInterfaces
                         rigidBody->GetEntityId().ToString().c_str());
                 }
                 const AZ::EntityId entityId = body->GetEntityId();
+                AZ_Assert(entityId.IsValid(), "EntityId is not valid");
+                if (!entityId.IsValid())
+                {
+                    return;
+                }
                 AZ::Entity* entity = nullptr;
                 AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
                 AZ_Assert(entity, "Entity is not available.");
