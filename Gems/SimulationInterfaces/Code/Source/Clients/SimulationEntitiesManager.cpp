@@ -28,11 +28,13 @@
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <simulation_interfaces/msg/result.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 #include <simulation_interfaces/srv/spawn_entity.hpp>
+
 namespace SimulationInterfaces
 {
     void SetRigidBodyVelocities(AzPhysics::RigidBody* rigidBody, const EntityState& state)
@@ -112,61 +114,81 @@ namespace SimulationInterfaces
         return scene;
     }
 
+    void SimulationEntitiesManager::RegisterNewSimulatedBody(AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle)
+    {
+        auto* scene = GetSceneHelper(sceneHandle);
+        if (scene == nullptr)
+        {
+            return;
+        }
+        auto* body = scene->GetSimulatedBodyFromHandle(bodyHandle);
+        AZ_Assert(body, "Simulated body is not available.");
+        auto* rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(body);
+        if (rigidBody != nullptr)
+        {
+            [[maybe_unused]] auto shapeCount = rigidBody->GetShapeCount();
+            AZ_Warning(
+                "SimulationInterfaces",
+                shapeCount > 0,
+                "Entity %s has no collider shapes, it won't be available by bound search",
+                rigidBody->GetEntityId().ToString().c_str());
+        }
+        const AZ::EntityId entityId = body->GetEntityId();
+        AZ_Assert(entityId.IsValid(), "EntityId is not valid");
+        if (!entityId.IsValid())
+        {
+            return;
+        }
+        AZ::Entity* entity = nullptr;
+        AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
+        AZ_Assert(entity, "Entity is not available.");
+        if (entity == nullptr)
+        {
+            return;
+        }
+        // check if entity is not spawned by this component
+        const auto ticketId = entity->GetEntitySpawnTicketId();
+
+        auto spawnDataIt = m_spawnCompletedCallbacks.find(ticketId);
+        const bool wasSpawned = spawnDataIt != m_spawnCompletedCallbacks.end();
+
+        const AZStd::string proposedName =
+            wasSpawned ? spawnDataIt->second.m_userProposedName : entity->GetName();
+
+        // register entity
+        const AZStd::string registeredName = this->AddSimulatedEntity(entityId, proposedName);
+
+        // cache registered name for later use in SpawnCompletionCallback
+        if (wasSpawned)
+        {
+            spawnDataIt->second.m_registered = true;
+            spawnDataIt->second.m_resultedName = registeredName;
+        }
+
+        // cache the initial state - for simulator reset with SCOPE_STATE.
+        EntityState initialState{};
+        initialState.m_pose = entity->GetTransform()->GetWorldTM();
+        if (rigidBody)
+        {
+            initialState.m_twist_linear = rigidBody->GetLinearVelocity();
+            initialState.m_twist_angular = rigidBody->GetAngularVelocity();
+        }
+        m_entityIdToInitialState[entityId] = initialState;
+    }
+
     void SimulationEntitiesManager::Activate()
     {
+
         m_simulationBodyAddedHandler = AzPhysics::SceneEvents::OnSimulationBodyAdded::Handler(
             [this](AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle)
             {
-                auto* scene = GetSceneHelper(sceneHandle);
-                if (scene == nullptr)
-                {
-                    return;
-                }
-                auto* body = scene->GetSimulatedBodyFromHandle(bodyHandle);
-                AZ_Assert(body, "Simulated body is not available.");
-                auto* rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(body);
-                if (rigidBody != nullptr)
-                {
-                    [[maybe_unused]] auto shapeCount = rigidBody->GetShapeCount();
-                    AZ_Warning(
-                        "SimulationInterfaces",
-                        shapeCount > 0,
-                        "Entity %s has no collider shapes, it won't be available by bound search",
-                        rigidBody->GetEntityId().ToString().c_str());
-                }
-                const AZ::EntityId entityId = body->GetEntityId();
-                AZ::Entity* entity = nullptr;
-                AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
-                AZ_Assert(entity, "Entity is not available.");
-                // check if entity is not spawned by this component
-                const auto ticketId = entity->GetEntitySpawnTicketId();
-                AZStd::string proposedName{};
-                // check if ticket is in the unregistered list
-
-                auto spawnData = m_spawnCompletedCallbacks.find(ticketId);
-                if (spawnData != m_spawnCompletedCallbacks.end())
-                {
-                    proposedName = spawnData->second.m_userProposedName;
-                }
-
-                const AZStd::string registeredName = this->AddSimulatedEntity(entityId, proposedName);
-                // call the callback
-                if (spawnData != m_spawnCompletedCallbacks.end())
-                {
-                    // call and remove the callback
-                    spawnData->second.m_completedCb(AZ::Success(registeredName));
-                    m_spawnCompletedCallbacks.erase(spawnData);
-                }
-
-                // cache the initial state
-                EntityState initialState{};
-                initialState.m_pose = entity->GetTransform()->GetWorldTM();
-                if (rigidBody)
-                {
-                    initialState.m_twist_linear = rigidBody->GetLinearVelocity();
-                    initialState.m_twist_angular = rigidBody->GetAngularVelocity();
-                }
-                m_entityIdToInitialState[entityId] = initialState;
+                // we need to register the simulated body after the simulation tick
+                // since the Entity can be not created yet - it is a case for ArticulationLinkComponent
+                AZ::SystemTickBus::QueueFunction(
+                    [this, sceneHandle, bodyHandle]()
+                    {
+                        RegisterNewSimulatedBody(sceneHandle, bodyHandle);
+                    });
             });
         m_simulationBodyRemovedHandler = AzPhysics::SceneEvents::OnSimulationBodyRemoved::Handler(
             [this](AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle)
@@ -256,6 +278,7 @@ namespace SimulationInterfaces
 
     AZStd::string SimulationEntitiesManager::AddSimulatedEntity(AZ::EntityId entityId, const AZStd::string& userProposedName)
     {
+
         if (!entityId.IsValid())
         {
             return "";
@@ -683,15 +706,7 @@ namespace SimulationInterfaces
                     }
                 }
             }
-
-            // change names for all entites
-            for (auto* entity : view)
-            {
-                AZStd::string entityName = AZStd::string::format("%s_%s", name.c_str(), entity->GetName().c_str());
-                entity->SetName(entityName);
-            }
             const AZ::Entity* root = *view.begin();
-
             auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
             if (transformInterface)
             {
@@ -708,17 +723,24 @@ namespace SimulationInterfaces
             auto spawnData = m_spawnCompletedCallbacks.find(ticketId);
             if (spawnData != m_spawnCompletedCallbacks.end())
             {
-                // call and remove the callback
-                const auto msg = AZStd::string::format(
-                    "Entity %s (uri : %s) was not registered in simulation interface - "
-                    "no physics component or physics component is not enabled in source prefab.\n"
-                    "Entity will be in simulation, but not available in simulation interface.\n"
-                    "Please add some physics component (at least one static rigid body component) to the prefab.\n"
-                    "Technically, it is a memory leak.\n",
-                    spawnData->second.m_userProposedName.c_str(),
-                    uri.c_str());
-                AZ_Error("SimulationInterfaces", false, msg.c_str());
-                spawnData->second.m_completedCb(msg);
+                // call the API user's callback, when the entity was registered
+                if (spawnData->second.m_registered)
+                {
+                    spawnData->second.m_completedCb(AZ::Success(spawnData->second.m_resultedName));
+                }
+                else
+                {
+                    // call the error callback, when the entity was not registered
+                    const auto msg = AZStd::string::format(
+                        "Entity %s (uri : %s) was not registered in simulation interface - "
+                        "no physics component or physics component is not enabled in source prefab.\n"
+                        "Entity will be in simulation, but not available in simulation interface.\n"
+                        "Please add some physics component (at least one static rigid body component) to the prefab.\n"
+                        "Technically, it is a memory leak.\n",
+                        spawnData->second.m_userProposedName.c_str(),
+                        uri.c_str());
+                    spawnData->second.m_completedCb(msg);
+                }
                 m_spawnCompletedCallbacks.erase(spawnData);
             }
         };
@@ -738,21 +760,22 @@ namespace SimulationInterfaces
     AZStd::string SimulationEntitiesManager::GetSimulatedEntityName(AZ::EntityId entityId, const AZStd::string& proposedName) const
     {
         // Get O3DE entity name
-        AZStd::string entityName = proposedName;
-        if (entityName.empty())
+        AZStd::string newName = proposedName;
+        // check if name is not unique. If not, add Entity Name to name
+        if (m_simulatedEntityToEntityIdMap.contains(newName))
         {
+            AZStd::string entityName;
             AZ::ComponentApplicationBus::BroadcastResult(entityName, &AZ::ComponentApplicationRequests::GetEntityName, entityId);
-        }
-        // Generate unique simulated entity name
-        AZStd::string simulatedEntityName = entityName;
-        // check if name is unique
-        auto otherEntityIt = m_simulatedEntityToEntityIdMap.find(simulatedEntityName);
-        if (otherEntityIt != m_simulatedEntityToEntityIdMap.end())
-        {
             // name is not unique, add entityId to name
-            simulatedEntityName = AZStd::string::format("%s_%s", entityName.c_str(), entityId.ToString().c_str());
+            newName = AZStd::string::format("%s_%s", newName.c_str(), entityName.c_str());
         }
-        return simulatedEntityName;
+
+        // check if name is still not unique, if not, add EntityId to name
+        if(m_simulatedEntityToEntityIdMap.contains(newName))
+        {
+            newName = AZStd::string::format("%s_%s", newName.c_str(), entityId.ToString().c_str());
+        }
+        return newName;
     }
 
     void SimulationEntitiesManager::ResetAllEntitiesToInitialState()
