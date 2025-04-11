@@ -68,6 +68,8 @@ namespace SimulationInterfaces
         SimulationState m_simulationState{
             simulation_interfaces::msg::SimulationState::STATE_STOPPED
         }; // default simulation state based on standard
+        void InitializeSimulationState();
+
     private:
         bool IsTransitionForbidden(SimulationState requestedState);
         // forbidden transition between state, first is current state, second is desire state

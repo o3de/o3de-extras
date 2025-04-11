@@ -84,6 +84,20 @@ namespace SimulationInterfaces
     void SimulationManager::Init()
     {
     }
+    void SimulationManager::InitializeSimulationState()
+    {
+        // if start in stopped state, pause simulation. Default state for simulation by the standard is STOPPED and
+        // SetSimulationState has logic to prevent transition to the same state.
+        if (StartInStoppedState())
+        {
+            m_simulationState = simulation_interfaces::msg::SimulationState::STATE_STOPPED;
+            SetSimulationPaused(true);
+        }
+        else
+        {
+            SetSimulationState(simulation_interfaces::msg::SimulationState::STATE_PLAYING);
+        }
+    }
 
     void SimulationManager::Activate()
     {
@@ -104,16 +118,7 @@ namespace SimulationInterfaces
         AZ::SystemTickBus::QueueFunction(
             [this]()
             {
-                // if start in stopped state, pause simulation. Default state for simulation by the standard is STOPPED and
-                // SetSimulationState has logic to prevent transition to the same state.
-                if (StartInStoppedState())
-                {
-                    SetSimulationPaused(true);
-                }
-                else
-                {
-                    SetSimulationState(simulation_interfaces::msg::SimulationState::STATE_PLAYING);
-                }
+                InitializeSimulationState();
             });
     }
 
@@ -224,6 +229,8 @@ namespace SimulationInterfaces
             m_reloadLevelCallback();
             m_reloadLevelCallback = nullptr;
         }
+        // reset of the simulation, assign the same state as at the beginning
+        InitializeSimulationState();
         AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
     }
 
