@@ -5356,7 +5356,7 @@
                 "EditorLookAtComponent": {
                     "$type": "EditorLookAtComponent",
                     "Id": 4050310940192040969,
-                    "Target": "Instance_[712990187248]/Entity_[751644892912]",
+                    "Target": "Instance_[12517228203983]/Entity_[10700457037775]",
                     "ForwardAxis": 2
                 },
                 "EditorOnlyEntityComponent": {
