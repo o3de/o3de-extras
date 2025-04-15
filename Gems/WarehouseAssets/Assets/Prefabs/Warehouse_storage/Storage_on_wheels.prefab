@@ -84,7 +84,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{B59DB34C-8CCC-5B6A-8F32-749689632151}"
-                                            }
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehousestorageonwheels.azmaterial"
                                         }
                                     }
                                 },
@@ -164,20 +165,60 @@
                             "ComponentId": 7562106464527649334
                         },
                         {
-                            "ComponentId": 2195363291273355971,
+                            "ComponentId": 5146712439650349843,
                             "SortIndex": 1
                         },
                         {
-                            "ComponentId": 18429466845483581173,
+                            "ComponentId": 10125249807132554809,
                             "SortIndex": 2
                         },
                         {
-                            "ComponentId": 13201342092318588972,
+                            "ComponentId": 5269735565457263604,
                             "SortIndex": 3
                         },
                         {
-                            "ComponentId": 9509677040110797884,
+                            "ComponentId": 4137486570050063712,
                             "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 10867460426661892159,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 13446196332041057509,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 5324226478596329467,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 4588174646852359714,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 9509677040110797884,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 10454605220892528989,
+                            "SortIndex": 10
+                        },
+                        {
+                            "ComponentId": 14166927651230603815,
+                            "SortIndex": 11
+                        },
+                        {
+                            "ComponentId": 4867191232725169311,
+                            "SortIndex": 12
+                        },
+                        {
+                            "ComponentId": 8990768301169768524,
+                            "SortIndex": 13
+                        },
+                        {
+                            "ComponentId": 1329524434344098663,
+                            "SortIndex": 14
                         }
                     ]
                 },
@@ -192,7 +233,7 @@
                         "Position": [
                             0.0,
                             0.0,
-                            1.0
+                            1.0576494932174683
                         ],
                         "MaterialSlots": {
                             "Slots": [
@@ -215,7 +256,7 @@
                             "Configuration": [
                                 0.6499999761581421,
                                 1.149999976158142,
-                                1.5
+                                1.762472152709961
                             ]
                         }
                     }
@@ -231,41 +272,6 @@
                 "Component_[4588174646852359714]": {
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 4588174646852359714
-                },
-                "Component_[5143803638157116517]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 5143803638157116517,
-                    "ColliderConfiguration": {
-                        "Position": [
-                            0.0,
-                            0.5495275855064392,
-                            0.07400000095367432
-                        ],
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "Entire object",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{9E08AC7C-4AE8-5C65-AA41-2FCF93452D5A}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "assets/materials/storageonwheels.physicsmaterial"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "ShapeType": 1,
-                        "Box": {
-                            "Configuration": [
-                                0.6499999761581421,
-                                0.05000000074505806,
-                                0.15000000596046448
-                            ]
-                        }
-                    }
                 },
                 "Component_[5146712439650349843]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -299,8 +305,8 @@
                     "Id": 8990768301169768524,
                     "ColliderConfiguration": {
                         "Position": [
-                            0.0,
-                            -0.5529183149337769,
+                            -0.29356321692466736,
+                            0.5683783292770386,
                             0.07400000095367432
                         ],
                         "MaterialSlots": {
@@ -322,8 +328,8 @@
                         "ShapeType": 1,
                         "Box": {
                             "Configuration": [
-                                0.6499999761581421,
-                                0.05000000074505806,
+                                0.062225550413131714,
+                                0.1364762783050537,
                                 0.15000000596046448
                             ]
                         }
@@ -358,6 +364,111 @@
                     "PhysXSpecificConfiguration": {
                         "SolverPositionIterations": 40,
                         "SolverVelocityIterations": 10
+                    }
+                },
+                "EditorColliderComponent": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 14166927651230603815,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            0.29356318712234497,
+                            0.5683783292770386,
+                            0.07400000095367432
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{9E08AC7C-4AE8-5C65-AA41-2FCF93452D5A}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/materials/storageonwheels.physicsmaterial"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Configuration": [
+                                0.062225598841905594,
+                                0.1364762932062149,
+                                0.15000000596046448
+                            ]
+                        }
+                    }
+                },
+                "EditorColliderComponent_2": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 10454605220892528989,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            0.29356318712234497,
+                            -0.5683783292770386,
+                            0.07400000095367432
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{9E08AC7C-4AE8-5C65-AA41-2FCF93452D5A}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/materials/storageonwheels.physicsmaterial"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Configuration": [
+                                0.062225598841905594,
+                                0.1364762932062149,
+                                0.15000000596046448
+                            ]
+                        }
+                    }
+                },
+                "EditorColliderComponent_3": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 4867191232725169311,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            -0.29356318712234497,
+                            -0.5683783292770386,
+                            0.07400000095367432
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{9E08AC7C-4AE8-5C65-AA41-2FCF93452D5A}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/materials/storageonwheels.physicsmaterial"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Configuration": [
+                                0.062225598841905594,
+                                0.1364762932062149,
+                                0.15000000596046448
+                            ]
+                        }
                     }
                 }
             }

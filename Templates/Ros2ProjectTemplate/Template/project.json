@@ -42,7 +42,7 @@
         "StartingPointInput",
         "TextureAtlas",
         "WhiteBox",
-        "WarehouseSample",
+        "WarehouseAssets",
         "${Name}"
     ]    
 }
