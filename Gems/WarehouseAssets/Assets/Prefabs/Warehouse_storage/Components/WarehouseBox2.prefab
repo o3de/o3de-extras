@@ -156,6 +156,44 @@
                 "Component_[9483887954899180333]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 9483887954899180333
+                },
+                "EditorMeshColliderComponent": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 785209467024958258,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "MWarehouseBoxes_001"
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
+                                "assetId": {
+                                    "guid": "{198A15B4-31E6-5693-BCF6-6C3D49884F59}",
+                                    "subId": 3227237471
+                                },
+                                "assetHint": "assets/warehouse/models/box2.fbx.pxmesh"
+                            },
+                            "Configuration": {
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{198A15B4-31E6-5693-BCF6-6C3D49884F59}",
+                                        "subId": 3227237471
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "assets/warehouse/models/box2.fbx.pxmesh"
+                                }
+                            }
+                        }
+                    }
+                },
+                "EditorStaticRigidBodyComponent": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 12865458759216510293
                 }
             }
         }
