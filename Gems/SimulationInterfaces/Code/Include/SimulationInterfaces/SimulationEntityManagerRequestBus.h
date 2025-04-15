@@ -23,7 +23,10 @@ namespace SimulationInterfaces
     //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityFilters.msg">EntityFilters.msg</a>
     struct EntityFilters
     {
-        AZStd::string m_filter; //! A posix regular expression to match against entity names
+        //! A posix regular expression to match against entity names,
+        //! The regular expression syntax is POSIX Extended,
+        //! @see <a href="https://pubs.opengroup.org/onlinepubs/9799919799">POSIX_Extended</a> definitions
+        AZStd::string m_filter;
         TagFilter m_tags_filter; //! A filter to match against entity tags
         AZStd::shared_ptr<Physics::ShapeConfiguration>
             m_bounds_shape; //! A shape to use for filtering entities, null means no bounds filtering
