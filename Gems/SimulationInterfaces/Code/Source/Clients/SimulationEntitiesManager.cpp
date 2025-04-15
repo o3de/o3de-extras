@@ -114,15 +114,20 @@ namespace SimulationInterfaces
         return scene;
     }
 
-    void SimulationEntitiesManager::RegisterNewSimulatedBody(AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle)
+
+    bool SimulationEntitiesManager::RegisterNewSimulatedBody(AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle)
     {
         auto* scene = GetSceneHelper(sceneHandle);
         if (scene == nullptr)
         {
-            return;
+            return false;
         }
         auto* body = scene->GetSimulatedBodyFromHandle(bodyHandle);
-        AZ_Assert(body, "Simulated body is not available.");
+        if (body == nullptr)
+        {
+            AZ_Warning("SimulationInterfaces", false, "body Ptr is not valid");
+            return false;
+        }
         auto* rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(body);
         if (rigidBody != nullptr)
         {
@@ -134,17 +139,17 @@ namespace SimulationInterfaces
                 rigidBody->GetEntityId().ToString().c_str());
         }
         const AZ::EntityId entityId = body->GetEntityId();
-        AZ_Assert(entityId.IsValid(), "EntityId is not valid");
         if (!entityId.IsValid())
         {
-            return;
+            AZ_Warning("SimulationInterfaces", false, "EntityId is not valid");
+            return false;
         }
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
-        AZ_Assert(entity, "Entity is not available.");
         if (entity == nullptr)
         {
-            return;
+            AZ_Warning("SimulationInterfaces", false, "EntityId is not valid");
+            return false;
         }
         // check if entity is not spawned by this component
         const auto ticketId = entity->GetEntitySpawnTicketId();
@@ -174,21 +179,31 @@ namespace SimulationInterfaces
             initialState.m_twist_angular = rigidBody->GetAngularVelocity();
         }
         m_entityIdToInitialState[entityId] = initialState;
+        AZ_Printf("SimulationInterfaces", "Registered entity %s\n", registeredName.c_str());
+        return true;
+    }
+
+    AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>> SimulationEntitiesManager::
+        RegisterNewSimulatedBodies(const AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>>& handles)
+    {
+        AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>> unconfiguredHandles;
+        for (const auto& handle : handles)
+        {
+            if (!RegisterNewSimulatedBody(handle.first, handle.second))
+            {
+                unconfiguredHandles.push_back(handle);
+            }
+        }
+        return unconfiguredHandles;
     }
 
     void SimulationEntitiesManager::Activate()
     {
-
         m_simulationBodyAddedHandler = AzPhysics::SceneEvents::OnSimulationBodyAdded::Handler(
             [this](AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle)
             {
-                // we need to register the simulated body after the simulation tick
-                // since the Entity can be not created yet - it is a case for ArticulationLinkComponent
-                AZ::SystemTickBus::QueueFunction(
-                    [this, sceneHandle, bodyHandle]()
-                    {
-                        RegisterNewSimulatedBody(sceneHandle, bodyHandle);
-                    });
+                m_unconfiguredScenesHandles.push_back(AZStd::make_pair(sceneHandle, bodyHandle));
+                m_unconfiguredScenesHandles = RegisterNewSimulatedBodies(m_unconfiguredScenesHandles);
             });
         m_simulationBodyRemovedHandler = AzPhysics::SceneEvents::OnSimulationBodyRemoved::Handler(
             [this](AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle)
@@ -252,10 +267,12 @@ namespace SimulationInterfaces
                                                       simulation_interfaces::msg::SimulatorFeatures::DELETING,
                                                       simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
                                                       simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
+        AZ::TickBus::Handler::BusConnect();
     }
 
     void SimulationEntitiesManager::Deactivate()
     {
+        AZ::TickBus::Handler::BusDisconnect();
         SimulationEntityManagerRequestBus::Handler::BusDisconnect();
         if (m_simulationBodyAddedHandler.IsConnected())
         {
@@ -293,7 +310,6 @@ namespace SimulationInterfaces
         AZStd::string simulatedEntityName = GetSimulatedEntityName(entityId, userProposedName);
         m_simulatedEntityToEntityIdMap[simulatedEntityName] = entityId;
         m_entityIdToSimulatedEntityMap[entityId] = simulatedEntityName;
-        AZ_Printf("SimulationInterfaces", "Registered entity %s\n", simulatedEntityName.c_str());
         return simulatedEntityName;
     }
 
@@ -716,6 +732,8 @@ namespace SimulationInterfaces
         optionalArgs.m_completionCallback =
             [this, uri](AzFramework::EntitySpawnTicket::Id ticketId, AzFramework::SpawnableConstEntityContainerView view)
         {
+            m_unconfiguredScenesHandles = RegisterNewSimulatedBodies(m_unconfiguredScenesHandles);
+
             // at this point the entities are spawned and should be registered in simulation interface and callback should be called
             // if that is not a case, it means that the AZFramework::Physics::OnSimulationBodyAdded event was not called.
             // That means the prefab has no physics component or the physics component is not enabled - we need to call the callback here
@@ -787,5 +805,10 @@ namespace SimulationInterfaces
 
             SetEntitiesState(entityAndDescendants, initialState);
         }
+    }
+
+    void SimulationEntitiesManager::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
+    {
+        m_unconfiguredScenesHandles = RegisterNewSimulatedBodies(m_unconfiguredScenesHandles);
     }
 } // namespace SimulationInterfaces
