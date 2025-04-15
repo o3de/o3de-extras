@@ -28,7 +28,7 @@ namespace ROS2SimulationInterfaces
         const AZStd::string_view entityNamespace{ request.entity_namespace.c_str(), request.entity_namespace.size() };
 
         // Validate entity name
-        if (!ValidateEntityName(name))
+        if (!name.empty() && !ValidateEntityName(name))
         {
             Response response;
             response.result.result = simulation_interfaces::srv::SpawnEntity::Response::NAME_INVALID;
@@ -42,7 +42,8 @@ namespace ROS2SimulationInterfaces
         {
             Response response;
             response.result.result = simulation_interfaces::srv::SpawnEntity::Response::NAMESPACE_INVALID;
-            response.result.error_message = "Invalid entity namespace. Entity namespaces can only contain alphanumeric characters and forward slashes.";
+            response.result.error_message =
+                "Invalid entity namespace. Entity namespaces can only contain alphanumeric characters and forward slashes.";
             SendResponse(response);
             return AZStd::nullopt;
         }
@@ -82,7 +83,9 @@ namespace ROS2SimulationInterfaces
 
     bool SpawnEntityServiceHandler::ValidateFrameName(const AZStd::string& frameName)
     {
-        const AZStd::regex frameRegex{ R"(^[a-zA-Z0-9_/]+$)" }; // Entity names can only contain alphanumeric characters and underscores and forward slashes
+        const AZStd::regex frameRegex{
+            R"(^[a-zA-Z0-9_/]+$)"
+        }; // Entity names can only contain alphanumeric characters and underscores and forward slashes
         return AZStd::regex_match(frameName, frameRegex);
     }
 

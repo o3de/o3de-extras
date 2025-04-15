@@ -11,7 +11,6 @@
 #include <AzCore/std/functional.h>
 #include <Interfaces/IROS2HandlerBase.h>
 #include <Utils/RegistryUtils.h>
-#include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 

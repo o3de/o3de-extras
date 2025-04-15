@@ -12,7 +12,6 @@
 #include <AzCore/std/optional.h>
 #include <Interfaces/IROS2HandlerBase.h>
 #include <Utils/RegistryUtils.h>
-#include <rclcpp/rclcpp.hpp>
 #include <rclcpp/service.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 

@@ -34,11 +34,10 @@ namespace ROS2SimulationInterfaces
         }
 
         const auto& spawnableList = outcome.GetValue();
-        std::vector<simulation_interfaces::msg::Spawnable> simSpawnables;
         AZStd::transform(
             spawnableList.begin(),
             spawnableList.end(),
-            AZStd::back_inserter(simSpawnables),
+            AZStd::back_inserter(response.spawnables),
             [](const SimulationInterfaces::Spawnable& spawnable)
             {
                 simulation_interfaces::msg::Spawnable simSpawnable;
@@ -47,7 +46,6 @@ namespace ROS2SimulationInterfaces
                 return simSpawnable;
             });
         response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
-        response.spawnables = simSpawnables;
 
         return response;
     }
