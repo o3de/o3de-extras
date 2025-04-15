@@ -118,6 +118,7 @@ namespace SimulationInterfaces
     bool SimulationEntitiesManager::RegisterNewSimulatedBody(AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle)
     {
         auto* scene = GetSceneHelper(sceneHandle);
+        AZ_Assert(scene, "Scene is not available.");
         if (scene == nullptr)
         {
             return false;
@@ -125,7 +126,7 @@ namespace SimulationInterfaces
         auto* body = scene->GetSimulatedBodyFromHandle(bodyHandle);
         if (body == nullptr)
         {
-            AZ_Warning("SimulationInterfaces", false, "body Ptr is not valid");
+            AZ_Trace("SimulationInterfaces", "Simulated body pointer is not valid");
             return false;
         }
         auto* rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(body);
@@ -141,14 +142,14 @@ namespace SimulationInterfaces
         const AZ::EntityId entityId = body->GetEntityId();
         if (!entityId.IsValid())
         {
-            AZ_Warning("SimulationInterfaces", false, "EntityId is not valid");
+            AZ_Trace("SimulationInterfaces", "EntityId is not valid");
             return false;
         }
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
         if (entity == nullptr)
         {
-            AZ_Warning("SimulationInterfaces", false, "EntityId is not valid");
+            AZ_Trace("SimulationInterfaces", "Entity pointer is not valid");
             return false;
         }
         // check if entity is not spawned by this component
@@ -164,7 +165,7 @@ namespace SimulationInterfaces
         const AZStd::string registeredName = this->AddSimulatedEntity(entityId, proposedName);
 
         // cache registered name for later use in SpawnCompletionCallback
-        if (wasSpawned)
+        if (wasSpawned && !spawnDataIt->second.m_registered)
         {
             spawnDataIt->second.m_registered = true;
             spawnDataIt->second.m_resultedName = registeredName;
@@ -179,7 +180,7 @@ namespace SimulationInterfaces
             initialState.m_twist_angular = rigidBody->GetAngularVelocity();
         }
         m_entityIdToInitialState[entityId] = initialState;
-        AZ_Printf("SimulationInterfaces", "Registered entity %s\n", registeredName.c_str());
+        AZ_Info("SimulationInterfaces", "Registered entity %s\n", registeredName.c_str());
         return true;
     }
 
@@ -764,9 +765,8 @@ namespace SimulationInterfaces
         };
 
         spawner->SpawnAllEntities(ticket, optionalArgs);
-
         auto ticketId = ticket.GetId();
-        AZ_Printf("SimulationInterfaces", "Spawning uri %s with ticket id %d\n", uri.c_str(), ticketId);
+        AZ_Info("SimulationInterfaces", "Spawning uri %s with ticket id %d\n", uri.c_str(), ticketId);
 
         SpawnCompletedCbData data;
         data.m_userProposedName = name;
