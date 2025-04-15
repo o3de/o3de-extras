@@ -491,7 +491,8 @@ namespace SimulationInterfaces
             // disable simulation for all entities
             for (const auto& descendant : entityAndDescendants)
             {
-                Physics::RigidBodyRequestBus::Event(descendant, &Physics::RigidBodyRequests::DisablePhysics);
+                AzPhysics::SimulatedBodyComponentRequestsBus::Event(descendant, &AzPhysics::SimulatedBodyComponentRequests::DisablePhysics);
+
             }
             if (parentEntityId.IsValid())
             {
@@ -507,7 +508,7 @@ namespace SimulationInterfaces
 
             for (const auto& descendant : entityAndDescendants)
             {
-                Physics::RigidBodyRequestBus::Event(descendant, &Physics::RigidBodyRequests::EnablePhysics);
+                AzPhysics::SimulatedBodyComponentRequestsBus::Event(descendant, &AzPhysics::SimulatedBodyComponentRequests::EnablePhysics);
                 Physics::RigidBodyRequestBus::Event(descendant, &Physics::RigidBodyRequests::SetAngularVelocity, AZ::Vector3::CreateZero());
                 Physics::RigidBodyRequestBus::Event(descendant, &Physics::RigidBodyRequests::SetLinearVelocity, AZ::Vector3::CreateZero());
             }
