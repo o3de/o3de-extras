@@ -21,6 +21,7 @@ namespace SimulationInterfaces
     class SimulationEntitiesManager
         : public AZ::Component
         , protected SimulationEntityManagerRequestBus::Handler
+        , protected AZ::TickBus::Handler
     {
     public:
         AZ_COMPONENT_DECL(SimulationEntitiesManager);
@@ -58,7 +59,21 @@ namespace SimulationInterfaces
         void Activate() override;
         void Deactivate() override;
 
+        // AZ::TickBus::Handler interface implementation
+        void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
+
     private:
+
+        //! Registers a new simulated body to the simulation interface.
+        //! Note that the body handle will be registered under unique name
+        //! Note that body need to be configured to be registered
+        //! \param sceneHandle The scene handle to register the body to
+        //! \param bodyHandle The body handle to register
+        bool RegisterNewSimulatedBody(AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle);
+
+        //! Registers a new simulated body to the simulation interface.
+        //! Returns the list of handles that were not registered
+        AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>> RegisterNewSimulatedBodies(const AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>>& handles);
 
         //! Registers simulated entity to entity id mapping.
         //! Note that the entityId will be registered under unique name.
@@ -76,22 +91,28 @@ namespace SimulationInterfaces
         //! Set the state of the entity and their descendants.
         void SetEntitiesState(const AZStd::vector<AZ::EntityId>& entityAndDescendants, const EntityState& state);
 
+
         AzPhysics::SceneEvents::OnSimulationBodyAdded::Handler m_simulationBodyAddedHandler;
         AzPhysics::SceneEvents::OnSimulationBodyRemoved::Handler m_simulationBodyRemovedHandler;
 
         AzPhysics::SystemEvents::OnSceneAddedEvent::Handler m_sceneAddedHandler;
         AzPhysics::SystemEvents::OnSceneRemovedEvent::Handler m_sceneRemovedHandler;
         AzPhysics::SceneHandle m_physicsScenesHandle = AzPhysics::InvalidSceneHandle;
+
+        AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>> m_unconfiguredScenesHandles; //! Set of yet-invalid scenes handles, that are waiting for configuration
         AZStd::unordered_map<AZStd::string, AZ::EntityId> m_simulatedEntityToEntityIdMap;
         AZStd::unordered_map<AZ::EntityId, AZStd::string> m_entityIdToSimulatedEntityMap;
         AZStd::unordered_map<AZ::EntityId, EntityState> m_entityIdToInitialState;
+
         AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, AzFramework::EntitySpawnTicket> m_spawnedTickets;
 
         struct SpawnCompletedCbData
         {
             AZStd::string m_userProposedName; //! Name proposed by the User in spawn request
+            AZStd::string m_resultedName; //! Name of the entity in the simulation interface
             SpawnCompletedCb m_completedCb; //! User callback to be called when the entity is registered
             AZ::ScriptTimePoint m_spawnCompletedTime; //! Time at which the entity was spawned
+            bool m_registered = false; //! Flag to check if the entity was registered
         };
         AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, SpawnCompletedCbData>
             m_spawnCompletedCallbacks; //! Callbacks to be called when the entity is registered
