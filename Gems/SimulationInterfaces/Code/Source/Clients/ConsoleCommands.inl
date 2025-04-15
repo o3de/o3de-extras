@@ -20,10 +20,11 @@ namespace SimulationInterfacesCommands
     static void simulationinterfaces_GetEntities(const AZ::ConsoleCommandContainer& arguments)
     {
         AZ::Outcome<EntityNameList, FailedResult> entities;
-        SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
+        SimulationEntityManagerRequestBus::BroadcastResult(
+            entities, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
         if (!entities.IsSuccess())
         {
-            AZ_Printf("SimulationInterfacesConsole", "Failed to get entities: %s\n", entities.GetError().error_string.c_str());
+            AZ_Printf("SimulationInterfacesConsole", "Failed to get entities: %s\n", entities.GetError().m_errorString.c_str());
             return;
         }
 
@@ -67,13 +68,13 @@ namespace SimulationInterfacesCommands
         AZ_Printf("SimulationInterfacesConsole", "simulationinterfaces_GetEntities in radius %f \n", sphereShape);
         AZ_Printf("SimulationInterfacesConsole", "position %f %f %f \n", position.GetX(), position.GetY(), position.GetZ());
         EntityFilters filter;
-        filter.m_bounds_shape = AZStd::make_shared<Physics::SphereShapeConfiguration>(sphereShape);
+        filter.m_boundsShape = AZStd::make_shared<Physics::SphereShapeConfiguration>(sphereShape);
 
         AZ::Outcome<EntityNameList, FailedResult> entities;
         SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, filter);
         if (!entities.IsSuccess())
         {
-            AZ_Printf("SimulationInterfacesConsole", "Failed to get entities: %s\n", entities.GetError().error_string.c_str());
+            AZ_Printf("SimulationInterfacesConsole", "Failed to get entities: %s\n", entities.GetError().m_errorString.c_str());
             return;
         }
 
@@ -93,33 +94,23 @@ namespace SimulationInterfacesCommands
         const AZStd::string entityName = arguments[0];
         AZ_Printf("SimulationInterfacesConsole", "simulationinterfaces_GetEntityState %s\n", entityName.c_str());
         AZ::Outcome<EntityState, FailedResult> entityStateResult;
-        SimulationEntityManagerRequestBus::BroadcastResult(entityStateResult, &SimulationEntityManagerRequestBus::Events::GetEntityState, entityName);
+        SimulationEntityManagerRequestBus::BroadcastResult(
+            entityStateResult, &SimulationEntityManagerRequestBus::Events::GetEntityState, entityName);
         if (!entityStateResult.IsSuccess())
         {
-            AZ_Printf("SimulationInterfacesConsole", "Failed to get entity state: %s\n", entityStateResult.GetError().error_string.c_str());
+            AZ_Printf(
+                "SimulationInterfacesConsole", "Failed to get entity state: %s\n", entityStateResult.GetError().m_errorString.c_str());
             return;
         }
-        const auto &entityState = entityStateResult.GetValue();
+        const auto& entityState = entityStateResult.GetValue();
         AZ_Printf("SimulationInterfacesConsole", "Entity %s\n", entityName.c_str());
-        AZ_Printf(
-            "SimulationInterfacesConsole",
-            "Pose %s\n",
-            AZ::Vector3ToString(entityState.m_pose.GetTranslation()).c_str());
-        AZ_Printf(
-            "SimulationInterfacesConsole",
-            "Rotation %s \n",
-             AZ::QuaternionToString(entityState.m_pose.GetRotation()).c_str());
+        AZ_Printf("SimulationInterfacesConsole", "Pose %s\n", AZ::Vector3ToString(entityState.m_pose.GetTranslation()).c_str());
+        AZ_Printf("SimulationInterfacesConsole", "Rotation %s \n", AZ::QuaternionToString(entityState.m_pose.GetRotation()).c_str());
 
         const AZ::Vector3 euler = entityState.m_pose.GetRotation().GetEulerDegrees();
         AZ_Printf("SimulationInterfacesConsole", "Rotation (euler) %s\n", AZ::Vector3ToString(euler).c_str());
-        AZ_Printf(
-            "SimulationInterfacesConsole",
-            "Twist Linear %s\n",
-            AZ::Vector3ToString(entityState.m_twist_linear).c_str());
-        AZ_Printf(
-            "SimulationInterfacesConsole",
-            "Twist Angular %s\n",
-            AZ::Vector3ToString(entityState.m_twist_angular).c_str());
+        AZ_Printf("SimulationInterfacesConsole", "Twist Linear %s\n", AZ::Vector3ToString(entityState.m_twistLinear).c_str());
+        AZ_Printf("SimulationInterfacesConsole", "Twist Angular %s\n", AZ::Vector3ToString(entityState.m_twistAngular).c_str());
     }
 
     static void simulationinterfaces_SetStateXYZ(const AZ::ConsoleCommandContainer& arguments)
@@ -143,11 +134,10 @@ namespace SimulationInterfacesCommands
 
         if (!result.IsSuccess())
         {
-            AZ_Printf("SimulationInterfacesConsole", "Failed to set entity state: %s\n", result.GetError().error_string.c_str());
+            AZ_Printf("SimulationInterfacesConsole", "Failed to set entity state: %s\n", result.GetError().m_errorString.c_str());
             return;
         }
         AZ_Printf("SimulationInterfacesConsole", "Entity %s state set\n", entityName.c_str());
-
     }
 
     static void simulationinterfaces_DeleteEntity(const AZ::ConsoleCommandContainer& arguments)
@@ -166,11 +156,10 @@ namespace SimulationInterfacesCommands
             }
             else
             {
-                AZ_Printf("SimulationInterfacesConsole", "Failed to delete entity: %s\n", result.GetError().error_string.c_str());
+                AZ_Printf("SimulationInterfacesConsole", "Failed to delete entity: %s\n", result.GetError().m_errorString.c_str());
             }
         };
         SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::DeleteEntity, entityName, cb);
-
     }
 
     static void simulationinterfaces_GetSpawnables(const AZ::ConsoleCommandContainer& arguments)
@@ -180,7 +169,7 @@ namespace SimulationInterfacesCommands
         SimulationEntityManagerRequestBus::BroadcastResult(spawnables, &SimulationEntityManagerRequestBus::Events::GetSpawnables);
         if (!spawnables.IsSuccess())
         {
-            AZ_Printf("SimulationInterfacesConsole", "Failed to get spawnables: %s\n", spawnables.GetError().error_string.c_str());
+            AZ_Printf("SimulationInterfacesConsole", "Failed to get spawnables: %s\n", spawnables.GetError().m_errorString.c_str());
             return;
         }
         for (const auto& spawnable : spawnables.GetValue())
@@ -205,24 +194,23 @@ namespace SimulationInterfacesCommands
         AZ::Transform initialPose = AZ::Transform::CreateIdentity();
         if (arguments.size() > 5)
         {
-            initialPose.SetTranslation(
-                AZ::Vector3(
-                    AZStd::stof(AZStd::string(arguments[3])),
-                    AZStd::stof(AZStd::string(arguments[4])),
-                    AZStd::stof(AZStd::string(arguments[5]))));
+            initialPose.SetTranslation(AZ::Vector3(
+                AZStd::stof(AZStd::string(arguments[3])),
+                AZStd::stof(AZStd::string(arguments[4])),
+                AZStd::stof(AZStd::string(arguments[5]))));
         }
         SpawnCompletedCb completedCb = [](const AZ::Outcome<AZStd::string, FailedResult>& result)
         {
             if (!result.IsSuccess())
             {
-                AZ_Printf("SimulationInterfacesConsole", "Failed to spawn entity: %s\n", result.GetError().error_string.c_str());
+                AZ_Printf("SimulationInterfacesConsole", "Failed to spawn entity: %s\n", result.GetError().m_errorString.c_str());
                 return;
             }
             AZ_Printf("SimulationInterfacesConsole", "Entity spawned and registered : %s\n", result.GetValue().c_str());
-
         };
         constexpr bool allowRename = true;
-        SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::SpawnEntity, name, uri, entityNamespace, initialPose, allowRename, completedCb);
+        SimulationEntityManagerRequestBus::Broadcast(
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity, name, uri, entityNamespace, initialPose, allowRename, completedCb);
         AZ_Printf("SimulationInterfacesConsole", "simulationinterface_Spawn %s %s\n", name.c_str(), uri.c_str());
     }
 
@@ -245,7 +233,8 @@ namespace SimulationInterfacesCommands
             }
             else
             {
-                AZ_Printf("SimulationInterfacesConsole", "Failed to delete all spawned entities: %s\n", result.GetError().error_string.c_str());
+                AZ_Printf(
+                    "SimulationInterfacesConsole", "Failed to delete all spawned entities: %s\n", result.GetError().m_errorString.c_str());
             }
         };
         SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::DeleteAllEntities, cb);
@@ -257,7 +246,6 @@ namespace SimulationInterfacesCommands
     AZ_CONSOLEFREEFUNC(simulationinterfaces_Pause, AZ::ConsoleFunctorFlags::DontReplicate, "Pause simulation.");
     AZ_CONSOLEFREEFUNC(simulationinterfaces_Resume, AZ::ConsoleFunctorFlags::DontReplicate, "Resume simulation.");
     AZ_CONSOLEFREEFUNC(simulationinterfaces_Step, AZ::ConsoleFunctorFlags::DontReplicate, "Step simulation.");
-
 
     AZ_CONSOLEFREEFUNC(
         simulationinterfaces_GetEntitiesSphere, AZ::ConsoleFunctorFlags::DontReplicate, "Get all simulated entities in the radius.");

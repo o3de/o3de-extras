@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SimulationInterfaces/ROS2SimulationInterfacesTypeIds.h>
+#include "ROS2SimulationInterfacesTypeIds.h"
 
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
@@ -23,7 +23,7 @@ namespace ROS2SimulationInterfaces
         virtual ~ROS2SimulationInterfacesRequests() = default;
 
         //! Returns set of simulation features available in ROS2SimulationInterfaces Gem
-        //! SimulationFeatures follows definition available at:
+        //! SimulationFeatureType follows definition available at:
         //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
         virtual AZStd::unordered_set<AZ::u8> GetSimulationFeatures() = 0;
     };

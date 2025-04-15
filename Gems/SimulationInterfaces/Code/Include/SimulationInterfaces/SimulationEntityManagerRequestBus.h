@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
+#include "SimulationInterfacesTypeIds.h"
 
 #include "Result.h"
 #include "TagFilter.h"
@@ -19,33 +19,33 @@
 
 namespace SimulationInterfaces
 {
-    //! # A set of filters to apply to entity queries. See GetEntities, GetEntitiesStates.
+    //! A set of filters to apply to entity queries. See GetEntities, GetEntitiesStates.
     //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityFilters.msg">EntityFilters.msg</a>
     struct EntityFilters
     {
         //! A posix regular expression to match against entity names,
         //! The regular expression syntax is POSIX Extended,
         //! @see <a href="https://pubs.opengroup.org/onlinepubs/9799919799">POSIX_Extended</a> definitions
-        AZStd::string m_filter;
-        TagFilter m_tags_filter; //! A filter to match against entity tags
+        AZStd::string m_nameFilter;
+        TagFilter m_tagsFilter; //! A filter to match against entity tags
         AZStd::shared_ptr<Physics::ShapeConfiguration>
-            m_bounds_shape; //! A shape to use for filtering entities, null means no bounds filtering
-        AZ::Transform m_bounds_pose{ AZ::Transform::CreateIdentity() };
+            m_boundsShape; //! A shape to use for filtering entities, null means no bounds filtering
+        AZ::Transform m_boundsPose{ AZ::Transform::CreateIdentity() };
     };
 
     //!  @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityState.msg">EntityState.msg</a>
     struct EntityState
     {
         AZ::Transform m_pose; //! The pose of the entity
-        AZ::Vector3 m_twist_linear; //! The linear velocity of the entity (in the entity frame)
-        AZ::Vector3 m_twist_angular; //! The angular velocity of the entity (in the entity frame)
+        AZ::Vector3 m_twistLinear; //! The linear velocity of the entity (in the entity frame)
+        AZ::Vector3 m_twistAngular; //! The angular velocity of the entity (in the entity frame)
     };
 
     struct Spawnable
     {
         AZStd::string m_uri;
         AZStd::string m_description;
-        AZStd::string m_bounds_sphere;
+        AZStd::string m_boundsSphere;
     };
 
     using EntityNameList = AZStd::vector<AZStd::string>;
@@ -53,6 +53,7 @@ namespace SimulationInterfaces
     using SpawnableList = AZStd::vector<Spawnable>;
     using DeletionCompletedCb = AZStd::function<void(const AZ::Outcome<void, FailedResult>&)>;
     using SpawnCompletedCb = AZStd::function<void(const AZ::Outcome<AZStd::string, FailedResult>&)>;
+
     class SimulationEntityManagerRequests
     {
     public:

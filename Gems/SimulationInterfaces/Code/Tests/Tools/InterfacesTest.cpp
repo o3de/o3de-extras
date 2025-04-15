@@ -34,12 +34,12 @@
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/create_client.hpp>
+#include <simulation_interfaces/action/simulate_steps.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <string>
 #include <string_view>
 #include <vector>
-#include <simulation_interfaces/action/simulate_steps.hpp>
 
 namespace UnitTest
 {
@@ -146,7 +146,6 @@ namespace UnitTest
         EXPECT_NE(services.find("/spawn_entity"), services.end());
         EXPECT_NE(services.find("/get_simulation_features"), services.end());
         EXPECT_NE(services.find("/step_simulation"), services.end());
-
     }
 
     //! Test if the service call succeeds when the entity is found
@@ -195,8 +194,8 @@ namespace UnitTest
                 {
                     EXPECT_EQ(name, "test_entity");
                     FailedResult failedResult;
-                    failedResult.error_code = simulation_interfaces::msg::Result::RESULT_NOT_FOUND,
-                    failedResult.error_string = "FooBar not found.";
+                    failedResult.m_errorCode = simulation_interfaces::msg::Result::RESULT_NOT_FOUND,
+                    failedResult.m_errorString = "FooBar not found.";
                     completedCb(AZ::Failure(failedResult));
                 }));
 
@@ -230,21 +229,21 @@ namespace UnitTest
             .WillOnce(::testing::Invoke(
                 [=](const EntityFilters& filter)
                 {
-                    EXPECT_NE(filter.m_bounds_shape, nullptr);
-                    if (filter.m_bounds_shape)
+                    EXPECT_NE(filter.m_boundsShape, nullptr);
+                    if (filter.m_boundsShape)
                     {
-                        EXPECT_EQ(filter.m_bounds_shape->GetShapeType(), Physics::ShapeType::Sphere);
+                        EXPECT_EQ(filter.m_boundsShape->GetShapeType(), Physics::ShapeType::Sphere);
                         Physics::SphereShapeConfiguration* sphereShape =
-                            azdynamic_cast<Physics::SphereShapeConfiguration*>(filter.m_bounds_shape.get());
+                            azdynamic_cast<Physics::SphereShapeConfiguration*>(filter.m_boundsShape.get());
                         EXPECT_EQ(sphereShape->m_radius, 99.0f);
                         EXPECT_EQ(sphereShape->m_scale, AZ::Vector3(1.0f));
                     }
-                    auto loc = filter.m_bounds_pose.GetTranslation();
+                    auto loc = filter.m_boundsPose.GetTranslation();
                     EXPECT_EQ(loc.GetX(), point1.GetX());
                     EXPECT_EQ(loc.GetY(), point1.GetY());
                     EXPECT_EQ(loc.GetZ(), point1.GetZ());
 
-                    EXPECT_EQ(filter.m_filter, "FooBarFilter");
+                    EXPECT_EQ(filter.m_nameFilter, "FooBarFilter");
                     return AZ::Success(EntityNameList{ "FooBar" });
                 }));
 
@@ -300,17 +299,17 @@ namespace UnitTest
             .WillOnce(::testing::Invoke(
                 [=](const EntityFilters& filter)
                 {
-                    EXPECT_NE(filter.m_bounds_shape, nullptr);
-                    if (filter.m_bounds_shape)
+                    EXPECT_NE(filter.m_boundsShape, nullptr);
+                    if (filter.m_boundsShape)
                     {
-                        EXPECT_EQ(filter.m_bounds_shape->GetShapeType(), Physics::ShapeType::Box);
+                        EXPECT_EQ(filter.m_boundsShape->GetShapeType(), Physics::ShapeType::Box);
                         Physics::BoxShapeConfiguration* boxShape =
-                            azdynamic_cast<Physics::BoxShapeConfiguration*>(filter.m_bounds_shape.get());
+                            azdynamic_cast<Physics::BoxShapeConfiguration*>(filter.m_boundsShape.get());
                         EXPECT_EQ(boxShape->m_dimensions.GetX(), dims.GetX());
                         EXPECT_EQ(boxShape->m_dimensions.GetY(), dims.GetY());
                         EXPECT_EQ(boxShape->m_dimensions.GetZ(), dims.GetZ());
                     }
-                    auto loc = filter.m_bounds_pose.GetTranslation();
+                    auto loc = filter.m_boundsPose.GetTranslation();
                     EXPECT_EQ(loc, AZ::Vector3::CreateZero());
                     return AZ::Success(EntityNameList{ "FooBar" });
                 }));
@@ -374,10 +373,10 @@ namespace UnitTest
         SimulationFeaturesAggregatorRequestsMockedHandler mockAggregator;
         using ::testing::_;
         auto node = GetRos2Node();
-        AZStd::unordered_set<SimulationFeatures> features{
+        AZStd::unordered_set<SimulationFeatureType> features{
             simulation_interfaces::msg::SimulatorFeatures::SPAWNING,
-            static_cast<SimulationFeatures>(0xFE), // invalid feature, should be ignored
-            static_cast<SimulationFeatures>(0xFF), // invalid feature, should be ignored
+            static_cast<SimulationFeatureType>(0xFE), // invalid feature, should be ignored
+            static_cast<SimulationFeatureType>(0xFF), // invalid feature, should be ignored
         };
         EXPECT_CALL(mockAggregator, GetSimulationFeatures())
             .WillOnce(::testing::Invoke(
@@ -412,17 +411,21 @@ namespace UnitTest
         request->allow_renaming = true;
 
         auto future = client->async_send_request(request);
-        EXPECT_CALL(mock, SpawnEntity(_, _, _, _, _, _)).WillOnce(
-                ::testing::Invoke(
-                [](const AZStd::string& name, const AZStd::string& uri, const AZStd::string& entityNamespace, const AZ::Transform& initialPose, const bool allowRename, SpawnCompletedCb completedCb)
+        EXPECT_CALL(mock, SpawnEntity(_, _, _, _, _, _))
+            .WillOnce(::testing::Invoke(
+                [](const AZStd::string& name,
+                   const AZStd::string& uri,
+                   const AZStd::string& entityNamespace,
+                   const AZ::Transform& initialPose,
+                   const bool allowRename,
+                   SpawnCompletedCb completedCb)
                 {
                     EXPECT_EQ(name, "valid_name");
                     EXPECT_EQ(uri, "test_uri");
                     EXPECT_EQ(entityNamespace, "test_namespace");
                     EXPECT_TRUE(allowRename);
                     completedCb(AZ::Success("valid_name"));
-                })
-            );
+                }));
         SpinAppSome();
 
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
@@ -448,8 +451,8 @@ namespace UnitTest
 
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
-        EXPECT_EQ(response->result.result, simulation_interfaces::srv::SpawnEntity::Response::NAME_INVALID) << "Service call should fail with invalid name.";
-
+        EXPECT_EQ(response->result.result, simulation_interfaces::srv::SpawnEntity::Response::NAME_INVALID)
+            << "Service call should fail with invalid name.";
     }
 
     //! Check if service fails when the namespace is invalid
@@ -470,7 +473,8 @@ namespace UnitTest
 
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
-        EXPECT_EQ(response->result.result, simulation_interfaces::srv::SpawnEntity::Response::NAMESPACE_INVALID) << "Service call should fail with invalid name.";
+        EXPECT_EQ(response->result.result, simulation_interfaces::srv::SpawnEntity::Response::NAMESPACE_INVALID)
+            << "Service call should fail with invalid name.";
     }
 
     TEST_F(SimulationInterfaceROS2TestFixture, SimulationStepsSuccess)

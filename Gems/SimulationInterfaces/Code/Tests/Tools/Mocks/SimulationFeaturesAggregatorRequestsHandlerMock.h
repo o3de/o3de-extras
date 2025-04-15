@@ -17,8 +17,8 @@ namespace UnitTest
             SimulationInterfaces::SimulationFeaturesAggregatorRequestBus::Handler::BusDisconnect();
         }
 
-        MOCK_METHOD(void, AddSimulationFeatures, (const AZStd::unordered_set<SimulationFeatures>& features), (override));
-        MOCK_METHOD(const AZStd::unordered_set<SimulationFeatures>, GetSimulationFeatures, (), (const, override));
-        MOCK_METHOD(bool, HasFeature, (SimulationFeatures feature), (const, override));
+        MOCK_METHOD(void, AddSimulationFeatures, (const AZStd::unordered_set<SimulationFeatureType>& features), (override));
+        MOCK_METHOD(const AZStd::unordered_set<SimulationFeatureType>, GetSimulationFeatures, (), (const, override));
+        MOCK_METHOD(bool, HasFeature, (SimulationFeatureType feature), (const, override));
     };
 } // namespace UnitTest

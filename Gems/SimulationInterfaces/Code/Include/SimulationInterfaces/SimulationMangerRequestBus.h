@@ -8,25 +8,27 @@
 
 #pragma once
 
-#include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
+#include "SimulationInterfacesTypeIds.h"
 
+#include "Result.h"
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
-#include <SimulationInterfaces/Result.h>
 
 namespace SimulationInterfaces
 {
     using SimulationState = uint8_t;
+
     class SimulationManagerRequests
     {
     public:
         AZ_RTTI(SimulationManagerRequests, SimulationManagerRequestsTypeId);
         virtual ~SimulationManagerRequests() = default;
 
-        //! Reload level and removal of all spawned simulation entities.
         using ReloadLevelCallback = AZStd::function<void(void)>;
+
+        //! Reload level and removal of all spawned simulation entities.
         virtual void ReloadLevel(ReloadLevelCallback completionCallback) = 0;
 
         //! Set the simulation to paused or unpaused,

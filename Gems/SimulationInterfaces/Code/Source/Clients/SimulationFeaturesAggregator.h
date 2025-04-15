@@ -44,10 +44,10 @@ namespace SimulationInterfaces
 
     private:
         // SimulationFeaturesAggregatorRequestBus overrides
-        void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatures>& features) override;
-        const AZStd::unordered_set<SimulationFeatures> GetSimulationFeatures() const override;
-        bool HasFeature(SimulationFeatures feature) const override;
+        void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatureType>& features) override;
+        const AZStd::unordered_set<SimulationFeatureType> GetSimulationFeatures() const override;
+        bool HasFeature(SimulationFeatureType feature) const override;
 
-        AZStd::unordered_set<SimulationFeatures> m_registeredFeatures;
+        AZStd::unordered_set<SimulationFeatureType> m_registeredFeatures;
     };
 } // namespace SimulationInterfaces

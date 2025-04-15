@@ -9,8 +9,8 @@
 #include "GetSimulationFeaturesServiceHandler.h"
 #include <AzCore/base.h>
 #include <AzCore/std/containers/unordered_set.h>
-#include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
+#include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 
 namespace ROS2SimulationInterfaces
 {
@@ -28,7 +28,7 @@ namespace ROS2SimulationInterfaces
         AZStd::unordered_set<AZ::u8> ros2Interfaces;
         ROS2SimulationInterfacesRequestBus::BroadcastResult(ros2Interfaces, &ROS2SimulationInterfacesRequests::GetSimulationFeatures);
         // call bus to get simulation features on SimulationInterfaces Gem  side
-        AZStd::unordered_set<SimulationInterfaces::SimulationFeatures> o3deInterfaces;
+        AZStd::unordered_set<SimulationInterfaces::SimulationFeatureType> o3deInterfaces;
         SimulationInterfaces::SimulationFeaturesAggregatorRequestBus::BroadcastResult(
             o3deInterfaces, &SimulationInterfaces::SimulationFeaturesAggregatorRequests::GetSimulationFeatures);
         // create common features and return it;
@@ -40,7 +40,7 @@ namespace ROS2SimulationInterfaces
         Response response;
         for (auto id : commonFeatures)
         {
-            if (ros2Interfaces.contains(id) && o3deInterfaces.contains(SimulationInterfaces::SimulationFeatures(id)))
+            if (ros2Interfaces.contains(id) && o3deInterfaces.contains(SimulationInterfaces::SimulationFeatureType(id)))
             {
                 response.features.features.emplace_back(id);
             }

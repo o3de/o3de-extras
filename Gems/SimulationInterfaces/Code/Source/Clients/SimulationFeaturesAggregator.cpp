@@ -74,17 +74,17 @@ namespace SimulationInterfaces
         SimulationFeaturesAggregatorRequestBus::Handler::BusDisconnect();
     }
 
-    void SimulationFeaturesAggregator::AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatures>& features)
+    void SimulationFeaturesAggregator::AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatureType>& features)
     {
         m_registeredFeatures.insert(features.begin(), features.end());
     }
-    
-    const AZStd::unordered_set<SimulationFeatures> SimulationFeaturesAggregator::GetSimulationFeatures() const
+
+    const AZStd::unordered_set<SimulationFeatureType> SimulationFeaturesAggregator::GetSimulationFeatures() const
     {
         return m_registeredFeatures;
     }
 
-    bool SimulationFeaturesAggregator::HasFeature(SimulationFeatures feature) const
+    bool SimulationFeaturesAggregator::HasFeature(SimulationFeatureType feature) const
     {
         return m_registeredFeatures.contains(feature);
     }

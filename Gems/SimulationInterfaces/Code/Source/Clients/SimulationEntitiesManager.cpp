@@ -41,17 +41,17 @@ namespace SimulationInterfaces
     {
         void SetRigidBodyVelocities(AzPhysics::RigidBody* rigidBody, const EntityState& state)
         {
-            if (!state.m_twist_angular.IsClose(AZ::Vector3::CreateZero(), AZ::Constants::FloatEpsilon))
+            if (!state.m_twistAngular.IsClose(AZ::Vector3::CreateZero(), AZ::Constants::FloatEpsilon))
             {
                 // get transform
-                AZ::Vector3 angularVelWorld = rigidBody->GetTransform().TransformVector(state.m_twist_angular);
+                AZ::Vector3 angularVelWorld = rigidBody->GetTransform().TransformVector(state.m_twistAngular);
                 rigidBody->SetAngularVelocity(angularVelWorld);
             }
 
-            if (!state.m_twist_linear.IsClose(AZ::Vector3::CreateZero(), AZ::Constants::FloatEpsilon))
+            if (!state.m_twistLinear.IsClose(AZ::Vector3::CreateZero(), AZ::Constants::FloatEpsilon))
             {
                 // get transform
-                AZ::Vector3 linearVelWorld = rigidBody->GetTransform().TransformVector(state.m_twist_linear);
+                AZ::Vector3 linearVelWorld = rigidBody->GetTransform().TransformVector(state.m_twistLinear);
                 rigidBody->SetLinearVelocity(linearVelWorld);
             }
         }
@@ -178,8 +178,8 @@ namespace SimulationInterfaces
         initialState.m_pose = entity->GetTransform()->GetWorldTM();
         if (rigidBody)
         {
-            initialState.m_twist_linear = rigidBody->GetLinearVelocity();
-            initialState.m_twist_angular = rigidBody->GetAngularVelocity();
+            initialState.m_twistLinear = rigidBody->GetLinearVelocity();
+            initialState.m_twistAngular = rigidBody->GetAngularVelocity();
         }
         m_entityIdToInitialState[entityId] = initialState;
         AZ_Info("SimulationInterfaces", "Registered entity %s\n", registeredName.c_str());
@@ -264,15 +264,15 @@ namespace SimulationInterfaces
 
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
-            AZStd::unordered_set<SimulationFeatures>{ // simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
-                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_BOX,
-                                                      // simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_CONVEX,
-                                                      // simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
-                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_GETTING,
-                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_SETTING,
-                                                      simulation_interfaces::msg::SimulatorFeatures::DELETING,
-                                                      simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
-                                                      simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
+            AZStd::unordered_set<SimulationFeatureType>{ // simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
+                                                         simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_BOX,
+                                                         // simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_CONVEX,
+                                                         // simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
+                                                         simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_GETTING,
+                                                         simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_SETTING,
+                                                         simulation_interfaces::msg::SimulatorFeatures::DELETING,
+                                                         simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
+                                                         simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
         AZ::TickBus::Handler::BusConnect();
     }
 
@@ -327,15 +327,15 @@ namespace SimulationInterfaces
 
     AZ::Outcome<EntityNameList, FailedResult> SimulationEntitiesManager::GetEntities(const EntityFilters& filter)
     {
-        if (!filter.m_tags_filter.m_tags.empty())
+        if (!filter.m_tagsFilter.m_tags.empty())
         {
             AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
             return AZ::Failure(
                 FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
         }
 
-        const bool reFilter = !filter.m_filter.empty();
-        const bool shapeCastFilter = filter.m_bounds_shape != nullptr;
+        const bool reFilter = !filter.m_nameFilter.empty();
+        const bool shapeCastFilter = filter.m_boundsShape != nullptr;
 
         AZStd::vector<AZStd::string> entities;
         if (!shapeCastFilter)
@@ -363,8 +363,8 @@ namespace SimulationInterfaces
             }
 
             AzPhysics::OverlapRequest request;
-            request.m_shapeConfiguration = filter.m_bounds_shape;
-            request.m_pose = filter.m_bounds_pose;
+            request.m_shapeConfiguration = filter.m_boundsShape;
+            request.m_pose = filter.m_boundsPose;
             request.m_maxResults = AZStd::numeric_limits<AZ::u32>::max();
 
             AzPhysics::SceneQueryHits result = sceneInterface->QueryScene(m_physicsScenesHandle, &request);
@@ -382,7 +382,7 @@ namespace SimulationInterfaces
         {
             const AZStd::vector<AZStd::string> prefilteredEntities = AZStd::move(entities);
             entities.clear();
-            const AZStd::regex regex(filter.m_filter);
+            const AZStd::regex regex(filter.m_nameFilter);
             if (!regex.Valid())
             {
                 AZ_Warning("SimulationInterfaces", false, "Invalid regex filter");
@@ -421,14 +421,14 @@ namespace SimulationInterfaces
 
         // transform linear and angular velocities to entity frame
         const AZ::Transform entityTransformInv = entityState.m_pose.GetInverse();
-        entityState.m_twist_linear = entityTransformInv.TransformVector(linearVelocity);
-        entityState.m_twist_angular = entityTransformInv.TransformVector(angularVelocity);
+        entityState.m_twistLinear = entityTransformInv.TransformVector(linearVelocity);
+        entityState.m_twistAngular = entityTransformInv.TransformVector(angularVelocity);
         return AZ::Success(entityState);
     }
 
     AZ::Outcome<MultipleEntitiesStates, FailedResult> SimulationEntitiesManager::GetEntitiesStates(const EntityFilters& filter)
     {
-        if (!filter.m_tags_filter.m_tags.empty())
+        if (!filter.m_tagsFilter.m_tags.empty())
         {
             AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
             return AZ::Failure(
@@ -509,7 +509,7 @@ namespace SimulationInterfaces
             }
         }
 
-        if (!state.m_twist_linear.IsZero(AZ::Constants::FloatEpsilon) || !state.m_twist_angular.IsZero(AZ::Constants::FloatEpsilon))
+        if (!state.m_twistLinear.IsZero(AZ::Constants::FloatEpsilon) || !state.m_twistAngular.IsZero(AZ::Constants::FloatEpsilon))
         {
             // get rigid body
             AzPhysics::RigidBody* rigidBody = nullptr;
