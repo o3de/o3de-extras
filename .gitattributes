@@ -127,7 +127,6 @@ Gems/AtomLyIntegration/CommonFeatures/Assets/Objects/Lucy/.wip/stone/stone_bake.
 Gems/ROS2SampleRobots/docs/images/*.png filter= diff= merge= -text
 Gems/WarehouseAutomation/docs/images/*.png filter= diff= merge= -text
 Gems/WarehouseAssets/docs/images/*.png filter= diff= merge= -text
-Gems/WarehouseSample/docs/images/*.png filter= diff= merge= -text
 Templates/Ros2FleetRobotTemplate/docs/images/*.png filter= diff= merge= -text
 Gems/ROS2/docs/**/*.png -filter -diff -merge
 Templates/Ros2ProjectTemplate/Screenshots/*.png filter= diff= merge= -text
