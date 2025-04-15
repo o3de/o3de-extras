@@ -1,133 +1,104 @@
 {
     "ContainerEntity": {
         "Id": "ContainerEntity",
-        "Name": "LidarOS2",
+        "Name": "OS2Lidar",
         "Components": {
-            "Component_[11054240545439632695]": {
-                "$type": "EditorPendingCompositionComponent",
-                "Id": 11054240545439632695
+            "EditorDisabledCompositionComponent": {
+                "$type": "EditorDisabledCompositionComponent",
+                "Id": 11296661804430830189
             },
-            "Component_[12267693294305582384]": {
-                "$type": "EditorPrefabComponent",
-                "Id": 12267693294305582384
-            },
-            "Component_[13753717631378233523]": {
-                "$type": "EditorInspectorComponent",
-                "Id": 13753717631378233523
-            },
-            "Component_[14137377640240728084]": {
-                "$type": "EditorOnlyEntityComponent",
-                "Id": 14137377640240728084
-            },
-            "Component_[17530435867448426523]": {
-                "$type": "EditorLockComponent",
-                "Id": 17530435867448426523
-            },
-            "Component_[18045801361193694910]": {
+            "EditorEntityIconComponent": {
                 "$type": "EditorEntityIconComponent",
-                "Id": 18045801361193694910
+                "Id": 15434553774900741338
             },
-            "Component_[3246013088748543125]": {
+            "EditorEntitySortComponent": {
                 "$type": "EditorEntitySortComponent",
-                "Id": 3246013088748543125,
+                "Id": 11120781934780152543,
                 "Child Entity Order": [
-                    "Entity_[417184227077]"
+                    "Entity_[2123866998197]"
                 ]
             },
-            "Component_[5389828146587111030]": {
-                "$type": "EditorDisabledCompositionComponent",
-                "Id": 5389828146587111030
+            "EditorInspectorComponent": {
+                "$type": "EditorInspectorComponent",
+                "Id": 403700110033079549
             },
-            "Component_[5989395931141545750]": {
-                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                "Id": 5989395931141545750,
-                "Parent Entity": ""
+            "EditorLockComponent": {
+                "$type": "EditorLockComponent",
+                "Id": 9658122995487508822
             },
-            "Component_[6982904761689756877]": {
+            "EditorOnlyEntityComponent": {
+                "$type": "EditorOnlyEntityComponent",
+                "Id": 11227736333808441704
+            },
+            "EditorPendingCompositionComponent": {
+                "$type": "EditorPendingCompositionComponent",
+                "Id": 6954464244017628351
+            },
+            "EditorPrefabComponent": {
+                "$type": "EditorPrefabComponent",
+                "Id": 4914526603541139134
+            },
+            "EditorVisibilityComponent": {
                 "$type": "EditorVisibilityComponent",
-                "Id": 6982904761689756877
+                "Id": 7200744503169156196
+            },
+            "TransformComponent": {
+                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                "Id": 269878832931862170,
+                "Parent Entity": ""
             }
         }
     },
     "Entities": {
-        "Entity_[1273969985848]": {
-            "Id": "Entity_[1273969985848]",
-            "Name": "Sensor",
+        "Entity_[2123866998197]": {
+            "Id": "Entity_[2123866998197]",
+            "Name": "OS2Lidar",
             "Components": {
-                "Component_[1058300359310703890]": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 1058300359310703890,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 1
-                        },
-                        "Frame Name": "lidar"
-                    }
-                },
-                "Component_[1067011392942644324]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 1067011392942644324
-                },
-                "Component_[10842630456390194262]": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 10842630456390194262,
-                    "m_template": {
-                        "$type": "ROS2LidarSensorComponent",
-                        "SensorConfiguration": {
-                            "Publishers": {
-                                "sensor_msgs::msg::PointCloud2": {
-                                    "Type": "sensor_msgs::msg::PointCloud2",
-                                    "Topic": "pc"
-                                }
-                            }
-                        }
-                    }
-                },
-                "Component_[13013301136498148727]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 13013301136498148727
-                },
-                "Component_[13444160964623421011]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 13444160964623421011
-                },
-                "Component_[14110476541514862518]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 14110476541514862518
-                },
-                "Component_[17124975368240161289]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 17124975368240161289
-                },
-                "Component_[1863593986687460136]": {
+                "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1863593986687460136
+                    "Id": 14421666155801050818
                 },
-                "Component_[3070834537283917104]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3070834537283917104
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 8513369820040480554
                 },
-                "Component_[7054215981025466544]": {
+                "EditorEntitySortComponent": {
                     "$type": "EditorEntitySortComponent",
-                    "Id": 7054215981025466544
+                    "Id": 14856527367541348485,
+                    "Child Entity Order": [
+                        "Entity_[2128161965493]"
+                    ]
                 },
-                "Component_[8854312938977545065]": {
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 15852700971544254272
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 11084506034782928671
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 16658067942896254394
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 9602630122799639820
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 16984790709733995753
+                },
+                "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8854312938977545065,
-                    "Parent Entity": "Entity_[417184227077]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.0,
-                            0.0,
-                            0.06961321830749512
-                        ]
-                    }
+                    "Id": 8415199491072389980,
+                    "Parent Entity": "ContainerEntity"
                 }
             }
         },
-        "Entity_[417184227077]": {
-            "Id": "Entity_[417184227077]",
-            "Name": "LidarOS2",
+        "Entity_[2128161965493]": {
+            "Id": "Entity_[2128161965493]",
+            "Name": "visual",
             "Components": {
                 "Component_[10387713135725007135]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -136,10 +107,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{99D850A3-8E59-5E78-93FE-AE8DB228684D}",
+                                    "guid": "{867FBB10-91D2-538E-A7FE-D1BA211575B9}",
                                     "subId": 268955557
                                 },
-                                "assetHint": "models/sensors/lidaros2/lidaros2.azmodel"
+                                "assetHint": "components/os2lidar/models/lidaros2.fbx.azmodel"
                             }
                         }
                     }
@@ -171,19 +142,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{99D850A3-8E59-5E78-93FE-AE8DB228684D}",
+                                    "guid": "{867FBB10-91D2-538E-A7FE-D1BA211575B9}",
                                     "subId": 2574200790
                                 },
-                                "assetHint": "models/sensors/lidaros2/lidaros2.fbx.pxmesh"
+                                "assetHint": "components/os2lidar/models/lidaros2.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{99D850A3-8E59-5E78-93FE-AE8DB228684D}",
+                                        "guid": "{867FBB10-91D2-538E-A7FE-D1BA211575B9}",
                                         "subId": 2574200790
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "models/sensors/lidaros2/lidaros2.fbx.pxmesh"
+                                    "assetHint": "components/os2lidar/models/lidaros2.fbx.pxmesh"
                                 }
                             }
                         }
@@ -200,7 +171,7 @@
                 "Component_[3201525403568523459]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 3201525403568523459,
-                    "Parent Entity": "ContainerEntity"
+                    "Parent Entity": "Entity_[2123866998197]"
                 },
                 "Component_[5004394864880282263]": {
                     "$type": "EditorEntityIconComponent",
@@ -240,9 +211,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{305BAE93-C067-5CA7-8C6F-6D9737E15C1B}"
+                                                "guid": "{60B891CD-63FE-5AD1-83D1-6F5F6009361C}"
                                             },
-                                            "assetHint": "models/sensors/lidaros2/lidaros2_os2material.azmaterial"
+                                            "assetHint": "components/os2lidar/models/materials/lidaros2_os2material.azmaterial"
                                         }
                                     }
                                 }
@@ -260,10 +231,7 @@
                 },
                 "Component_[8808389010192194694]": {
                     "$type": "EditorEntitySortComponent",
-                    "Id": 8808389010192194694,
-                    "Child Entity Order": [
-                        "Entity_[1273969985848]"
-                    ]
+                    "Id": 8808389010192194694
                 }
             }
         }

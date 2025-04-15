@@ -1,0 +1,245 @@
+{
+    "ContainerEntity": {
+        "Id": "ContainerEntity",
+        "Name": "OrbbeckCamera",
+        "Components": {
+            "EditorDisabledCompositionComponent": {
+                "$type": "EditorDisabledCompositionComponent",
+                "Id": 10942439558212771036
+            },
+            "EditorEntityIconComponent": {
+                "$type": "EditorEntityIconComponent",
+                "Id": 14035999115027477189
+            },
+            "EditorEntitySortComponent": {
+                "$type": "EditorEntitySortComponent",
+                "Id": 4113198002018313498,
+                "Child Entity Order": [
+                    "Entity_[2209766344117]"
+                ]
+            },
+            "EditorInspectorComponent": {
+                "$type": "EditorInspectorComponent",
+                "Id": 8562443704576400949
+            },
+            "EditorLockComponent": {
+                "$type": "EditorLockComponent",
+                "Id": 10362863927969789171
+            },
+            "EditorOnlyEntityComponent": {
+                "$type": "EditorOnlyEntityComponent",
+                "Id": 2381198399607887042
+            },
+            "EditorPendingCompositionComponent": {
+                "$type": "EditorPendingCompositionComponent",
+                "Id": 10108089512319451050
+            },
+            "EditorPrefabComponent": {
+                "$type": "EditorPrefabComponent",
+                "Id": 14036257410100713734
+            },
+            "EditorVisibilityComponent": {
+                "$type": "EditorVisibilityComponent",
+                "Id": 3735174475555922499
+            },
+            "TransformComponent": {
+                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                "Id": 7484990908473607619,
+                "Parent Entity": ""
+            }
+        }
+    },
+    "Entities": {
+        "Entity_[2209766344117]": {
+            "Id": "Entity_[2209766344117]",
+            "Name": "OrbbeckCamera",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9758352434647478121
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16345441105574838653
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 9209245584197550432,
+                    "Child Entity Order": [
+                        "Entity_[2214061311413]"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 16396620250368568003
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 14680429319681099810
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 17863863023842455283
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 7875510946789850905
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 13371499317808249484
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 13159310090264494797,
+                    "Parent Entity": "ContainerEntity"
+                }
+            }
+        },
+        "Entity_[2214061311413]": {
+            "Id": "Entity_[2214061311413]",
+            "Name": "visual",
+            "Components": {
+                "Component_[12057597801334645923]": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 12057597801334645923
+                },
+                "Component_[12232650884412772636]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 12232650884412772636
+                },
+                "Component_[13423704711553959863]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 13423704711553959863
+                },
+                "Component_[14616296837285217185]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 14616296837285217185
+                },
+                "Component_[14985514809153430690]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 14985514809153430690,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "DefaultMaterial"
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
+                                "assetId": {
+                                    "guid": "{C97E0520-0CA4-5100-B4E5-7C0DDFBC0A0F}",
+                                    "subId": 3865077323
+                                },
+                                "assetHint": "components/orbbeckcamera/models/cameraorbbeck.fbx.pxmesh"
+                            },
+                            "Configuration": {
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{C97E0520-0CA4-5100-B4E5-7C0DDFBC0A0F}",
+                                        "subId": 3865077323
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "components/orbbeckcamera/models/cameraorbbeck.fbx.pxmesh"
+                                }
+                            }
+                        }
+                    }
+                },
+                "Component_[15329441649387498950]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 15329441649387498950,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{C97E0520-0CA4-5100-B4E5-7C0DDFBC0A0F}",
+                                    "subId": 272993556
+                                },
+                                "assetHint": "components/orbbeckcamera/models/cameraorbbeck.fbx.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[16525421850445080131]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 16525421850445080131
+                },
+                "Component_[1664914396196781949]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 1664914396196781949
+                },
+                "Component_[18099860883597356778]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 18099860883597356778,
+                    "Parent Entity": "Entity_[2209766344117]"
+                },
+                "Component_[18322469032445804849]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 18322469032445804849
+                },
+                "Component_[2491808840491479985]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 2491808840491479985,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 18099860883597356778
+                        },
+                        {
+                            "ComponentId": 15329441649387498950,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 14985514809153430690,
+                            "SortIndex": 2
+                        }
+                    ]
+                },
+                "Component_[6578496273892635118]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6578496273892635118
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 7348856277130129267,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1175894265
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{B7844A0C-C604-51BC-AC04-B1E7F4AFA837}"
+                                            },
+                                            "assetHint": "components/orbbeckcamera/models/materials/orbbeckcamera_body.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3232760133
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{19C5DB1F-2232-5757-821E-FB2E2E569151}"
+                                            },
+                                            "assetHint": "components/orbbeckcamera/models/materials/orbbeckcamera_glass.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
