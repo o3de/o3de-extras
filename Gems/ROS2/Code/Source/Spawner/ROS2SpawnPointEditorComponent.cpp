@@ -5,9 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#ifndef WITH_GAZEBO_MSGS
-static_assert(false, "This file should not be included in the build, without WITH_GAZEBO_MSGS defined.");
-#endif
+
 #include "ROS2SpawnPointEditorComponent.h"
 #include "Spawner/ROS2SpawnPointComponentController.h"
 #include "Spawner/ROS2SpawnerEditorComponent.h"

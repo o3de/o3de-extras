@@ -15,10 +15,11 @@
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
+#include <simulation_interfaces/msg/simulation_state.hpp>
 
 namespace SimulationInterfaces
 {
-    using SimulationState = uint8_t;
+    using SimulationState = simulation_interfaces::msg::SimulationState::_state_type;
 
     class SimulationManagerRequests
     {

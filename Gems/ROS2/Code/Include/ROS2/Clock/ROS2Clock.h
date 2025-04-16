@@ -34,6 +34,9 @@ namespace ROS2
 
         builtin_interfaces::msg::Time GetROSTimestamp() const;
 
+        //! Sets the time source to the given time.
+        //! @param time The time to set the time source to.
+        //! @return An outcome indicating success or failure.
         AZ::Outcome<void, AZStd::string> AdjustTime(const builtin_interfaces::msg::Time & time) const;
 
         //! Update time in the ROS 2 ecosystem.

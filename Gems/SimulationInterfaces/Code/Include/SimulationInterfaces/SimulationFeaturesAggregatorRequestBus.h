@@ -13,10 +13,11 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/containers/unordered_set.h>
+#include <simulation_interfaces/msg/simulator_features.hpp>
 
 namespace SimulationInterfaces
 {
-    using SimulationFeatureType = uint8_t;
+    using SimulationFeatureType = simulation_interfaces::msg::SimulatorFeatures::_features_type::value_type;
 
     class SimulationFeaturesAggregatorRequests
     {

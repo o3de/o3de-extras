@@ -49,6 +49,13 @@ find_package(gazebo_msgs QUIET)
 if (gazebo_msgs_FOUND)
     message(STATUS "Found gazebo_msgs package, enabling legacy features like ContactSensor Component and ROS2 Spawner Component")
     SET (WITH_GAZEBO_MSGS TRUE)
+    if(NOT (ROS_DISTRO STREQUAL "humble" OR ROS_DISTRO STREQUAL "jazzy"))
+        message(WARNING
+                "The support for deprecated gazebo_msgs package is not supported in ROS 2 Kilted or newer. "
+                "Please consider migration to Simulation Interfaces. "
+                "If you do not intend to use Gazebo messages, please make sure that this package is not sourced in your environment." )
+
+    endif()
 else()
     message(STATUS "Could not find gazebo_msgs package, disabling legacy features like ContactSensor Component and ROS2 Spawner Component")
     SET(WITH_GAZEBO_MSGS FALSE)

@@ -382,7 +382,7 @@ namespace SimulationInterfaces
         {
             const AZStd::vector<AZStd::string> prefilteredEntities = AZStd::move(entities);
             entities.clear();
-            const AZStd::regex regex(filter.m_nameFilter);
+            const AZStd::regex regex(filter.m_nameFilter, AZStd::regex::extended);
             if (!regex.Valid())
             {
                 AZ_Warning("SimulationInterfaces", false, "Invalid regex filter");
