@@ -16,6 +16,7 @@
 
 namespace ROS2SimulationInterfaces
 {
+    using SimulationFeatureType = uint8_t;
     class ROS2SimulationInterfacesRequests
     {
     public:
@@ -25,7 +26,7 @@ namespace ROS2SimulationInterfaces
         //! Returns set of simulation features available in ROS2SimulationInterfaces Gem
         //! SimulationFeatureType follows definition available at:
         //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
-        virtual AZStd::unordered_set<AZ::u8> GetSimulationFeatures() = 0;
+        virtual AZStd::unordered_set<SimulationFeatureType> GetSimulationFeatures() = 0;
     };
 
     class ROS2SimulationInterfacesRequestBusTraits : public AZ::EBusTraits

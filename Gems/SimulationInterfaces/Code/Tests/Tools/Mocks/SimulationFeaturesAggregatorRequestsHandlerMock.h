@@ -18,7 +18,7 @@ namespace UnitTest
         }
 
         MOCK_METHOD(void, AddSimulationFeatures, (const AZStd::unordered_set<SimulationFeatureType>& features), (override));
-        MOCK_METHOD(const AZStd::unordered_set<SimulationFeatureType>, GetSimulationFeatures, (), (const, override));
-        MOCK_METHOD(bool, HasFeature, (SimulationFeatureType feature), (const, override));
+        MOCK_METHOD(AZStd::unordered_set<SimulationFeatureType>, GetSimulationFeatures, (), (override));
+        MOCK_METHOD(bool, HasFeature, (SimulationFeatureType feature), (override));
     };
 } // namespace UnitTest

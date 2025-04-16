@@ -45,8 +45,8 @@ namespace SimulationInterfaces
     private:
         // SimulationFeaturesAggregatorRequestBus overrides
         void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatureType>& features) override;
-        const AZStd::unordered_set<SimulationFeatureType> GetSimulationFeatures() const override;
-        bool HasFeature(SimulationFeatureType feature) const override;
+        AZStd::unordered_set<SimulationFeatureType> GetSimulationFeatures() override;
+        bool HasFeature(SimulationFeatureType feature) override;
 
         AZStd::unordered_set<SimulationFeatureType> m_registeredFeatures;
     };
