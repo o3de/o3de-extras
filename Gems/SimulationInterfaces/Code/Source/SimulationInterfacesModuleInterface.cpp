@@ -13,8 +13,8 @@
 
 #include "Clients/SimulationFeaturesAggregator.h"
 #include "Clients/SimulationManager.h"
-#include <Clients/SimulationEntitiesManager.h>
 #include <Clients/ROS2SimulationInterfacesSystemComponent.h>
+#include <Clients/SimulationEntitiesManager.h>
 
 namespace SimulationInterfaces
 {

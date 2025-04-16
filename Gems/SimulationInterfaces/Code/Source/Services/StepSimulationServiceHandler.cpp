@@ -16,8 +16,7 @@ namespace ROS2SimulationInterfaces
 
     AZStd::unordered_set<AZ::u8> StepSimulationServiceHandler::GetProvidedFeatures()
     {
-        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::STEP_SIMULATION_SINGLE,
-                                             SimulationFeatures::STEP_SIMULATION_MULTIPLE };
+        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::STEP_SIMULATION_SINGLE, SimulationFeatures::STEP_SIMULATION_MULTIPLE };
     }
 
     AZStd::optional<StepSimulationServiceHandler::Response> StepSimulationServiceHandler::HandleServiceRequest(

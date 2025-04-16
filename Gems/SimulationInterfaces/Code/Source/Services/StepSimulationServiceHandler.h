@@ -9,9 +9,9 @@
 #pragma once
 
 #include "ROS2ServiceBase.h"
+#include <AzCore/Component/TickBus.h>
 #include <AzCore/std/string/string_view.h>
 #include <simulation_interfaces/srv/step_simulation.hpp>
-#include <AzCore/Component/TickBus.h>
 namespace ROS2SimulationInterfaces
 {
 

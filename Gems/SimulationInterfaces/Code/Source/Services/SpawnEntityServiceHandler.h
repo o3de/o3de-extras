@@ -9,9 +9,9 @@
 #pragma once
 
 #include "ROS2ServiceBase.h"
+#include <AzCore/std/string/regex.h>
 #include <AzCore/std/string/string_view.h>
 #include <simulation_interfaces/srv/spawn_entity.hpp>
-#include <AzCore/std/string/regex.h>
 namespace ROS2SimulationInterfaces
 {
     class SpawnEntityServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::SpawnEntity>
@@ -33,8 +33,6 @@ namespace ROS2SimulationInterfaces
     private:
         bool ValidateEntityName(const AZStd::string& entityName);
         bool ValidateFrameName(const AZStd::string& frameName);
-
-
     };
 
 } // namespace ROS2SimulationInterfaces

@@ -487,7 +487,6 @@ namespace SimulationInterfaces
             for (const auto& descendant : entityAndDescendants)
             {
                 AzPhysics::SimulatedBodyComponentRequestsBus::Event(descendant, &AzPhysics::SimulatedBodyComponentRequests::DisablePhysics);
-
             }
             if (parentEntityId.IsValid())
             {
