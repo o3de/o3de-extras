@@ -13,18 +13,18 @@ namespace SimulationInterfaces
 {
     //! Result codes to be used in the Result message
     //!  @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/Result.msg">Result.msg</a>
-    using ErrorCodeValue = uint8_t;
+    using ErrorCodeType = uint8_t;
 
     //! A message type to represent the result of a failed operation
     struct FailedResult
     {
         FailedResult() = default;
-        FailedResult(ErrorCodeValue error_code, const AZStd::string& error_string)
-            : error_code(error_code)
-            , error_string(error_string)
+        FailedResult(ErrorCodeType errorCode, const AZStd::string& errorString)
+            : m_errorCode(errorCode)
+            , m_errorString(errorString)
         {
         }
-        ErrorCodeValue error_code;
-        AZStd::string error_string;
+        ErrorCodeType m_errorCode;
+        AZStd::string m_errorString;
     };
 } // namespace SimulationInterfaces

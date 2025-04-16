@@ -28,17 +28,16 @@ namespace ROS2SimulationInterfaces
         if (!outcome.IsSuccess())
         {
             const auto& failedResult = outcome.GetError();
-            response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
-            response.result.error_message = failedResult.error_string.c_str();
+            response.result.result = aznumeric_cast<uint8_t>(failedResult.m_errorCode);
+            response.result.error_message = failedResult.m_errorString.c_str();
             return response;
         }
 
         const auto& spawnableList = outcome.GetValue();
-        std::vector<simulation_interfaces::msg::Spawnable> simSpawnables;
         AZStd::transform(
             spawnableList.begin(),
             spawnableList.end(),
-            AZStd::back_inserter(simSpawnables),
+            AZStd::back_inserter(response.spawnables),
             [](const SimulationInterfaces::Spawnable& spawnable)
             {
                 simulation_interfaces::msg::Spawnable simSpawnable;
@@ -47,7 +46,6 @@ namespace ROS2SimulationInterfaces
                 return simSpawnable;
             });
         response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
-        response.spawnables = simSpawnables;
 
         return response;
     }

@@ -105,16 +105,16 @@ namespace SimulationInterfaces
         SimulationManagerRequestBus::Handler::BusConnect();
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
-            AZStd::unordered_set<SimulationFeatures>{ simulation_interfaces::msg::SimulatorFeatures::SIMULATION_RESET,
-                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_RESET_TIME,
-                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_RESET_STATE,
-                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_RESET_SPAWNED,
-                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_PAUSE,
-                                                      simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_SINGLE,
-                                                      simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_MULTIPLE,
-                                                      simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_ACTION,
-                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_SETTING,
-                                                      simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_GETTING });
+            AZStd::unordered_set<SimulationFeatureType>{ simulation_interfaces::msg::SimulatorFeatures::SIMULATION_RESET,
+                                                         simulation_interfaces::msg::SimulatorFeatures::SIMULATION_RESET_TIME,
+                                                         simulation_interfaces::msg::SimulatorFeatures::SIMULATION_RESET_STATE,
+                                                         simulation_interfaces::msg::SimulatorFeatures::SIMULATION_RESET_SPAWNED,
+                                                         simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_PAUSE,
+                                                         simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_SINGLE,
+                                                         simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_MULTIPLE,
+                                                         simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_ACTION,
+                                                         simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_SETTING,
+                                                         simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_GETTING });
         AZ::SystemTickBus::QueueFunction(
             [this]()
             {

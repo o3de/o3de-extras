@@ -35,8 +35,12 @@ namespace SimulationInterfaces
 
         SimulationEntitiesManager();
         ~SimulationEntitiesManager();
+        // AZ::Component interface implementation
+        void Init() override;
+        void Activate() override;
+        void Deactivate() override;
 
-    protected:
+    private:
         // SimulationEntityManagerRequestBus interface implementation
         AZ::Outcome<EntityNameList, FailedResult> GetEntities(const EntityFilters& filter) override;
         AZ::Outcome<EntityState, FailedResult> GetEntityState(const AZStd::string& name) override;
@@ -54,15 +58,8 @@ namespace SimulationInterfaces
             SpawnCompletedCb completedCb) override;
         void ResetAllEntitiesToInitialState() override;
 
-        // AZ::Component interface implementation
-        void Init() override;
-        void Activate() override;
-        void Deactivate() override;
-
         // AZ::TickBus::Handler interface implementation
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
-
-    private:
 
         //! Registers a new simulated body to the simulation interface.
         //! Note that the body handle will be registered under unique name
@@ -73,7 +70,8 @@ namespace SimulationInterfaces
 
         //! Registers a new simulated body to the simulation interface.
         //! Returns the list of handles that were not registered
-        AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>> RegisterNewSimulatedBodies(const AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>>& handles);
+        AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>> RegisterNewSimulatedBodies(
+            const AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>>& handles);
 
         //! Registers simulated entity to entity id mapping.
         //! Note that the entityId will be registered under unique name.
@@ -91,7 +89,6 @@ namespace SimulationInterfaces
         //! Set the state of the entity and their descendants.
         void SetEntitiesState(const AZStd::vector<AZ::EntityId>& entityAndDescendants, const EntityState& state);
 
-
         AzPhysics::SceneEvents::OnSimulationBodyAdded::Handler m_simulationBodyAddedHandler;
         AzPhysics::SceneEvents::OnSimulationBodyRemoved::Handler m_simulationBodyRemovedHandler;
 
@@ -99,7 +96,8 @@ namespace SimulationInterfaces
         AzPhysics::SystemEvents::OnSceneRemovedEvent::Handler m_sceneRemovedHandler;
         AzPhysics::SceneHandle m_physicsScenesHandle = AzPhysics::InvalidSceneHandle;
 
-        AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>> m_unconfiguredScenesHandles; //! Set of yet-invalid scenes handles, that are waiting for configuration
+        AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>>
+            m_unconfiguredScenesHandles; //! Set of yet-invalid scenes handles, that are waiting for configuration
         AZStd::unordered_map<AZStd::string, AZ::EntityId> m_simulatedEntityToEntityIdMap;
         AZStd::unordered_map<AZ::EntityId, AZStd::string> m_entityIdToSimulatedEntityMap;
         AZStd::unordered_map<AZ::EntityId, EntityState> m_entityIdToInitialState;

@@ -46,7 +46,7 @@ namespace SimulationInterfaces
         void Activate() override;
         void Deactivate() override;
 
-    protected:
+    private:
         // SimulationManagerRequestBus interface implementation
         void SetSimulationPaused(bool paused) override;
         void StepSimulation(AZ::u64 steps) override;
@@ -60,7 +60,6 @@ namespace SimulationInterfaces
         // LevelSystemLifecycleNotificationBus interface implementation
         void OnLoadingComplete(const char* levelName) override;
 
-    private:
         bool m_isSimulationPaused = false;
         uint64_t m_numberOfPhysicsSteps = 0;
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_simulationFinishEvent;
@@ -70,7 +69,6 @@ namespace SimulationInterfaces
         }; // default simulation state based on standard
         void InitializeSimulationState();
 
-    private:
         bool IsTransitionForbidden(SimulationState requestedState);
         // forbidden transition between state, first is current state, second is desire state
         const AZStd::array<AZStd::pair<SimulationState, SimulationState>, 4> m_forbiddenStatesTransitions{ {

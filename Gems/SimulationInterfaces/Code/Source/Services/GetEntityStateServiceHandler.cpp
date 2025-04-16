@@ -33,18 +33,18 @@ namespace ROS2SimulationInterfaces
         if (!outcome.IsSuccess())
         {
             const auto& failedResult = outcome.GetError();
-            response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
-            response.result.error_message = failedResult.error_string.c_str();
+            response.result.result = aznumeric_cast<uint8_t>(failedResult.m_errorCode);
+            response.result.error_message = failedResult.m_errorString.c_str();
             return response;
         }
 
         const auto& entityState = outcome.GetValue();
         simulation_interfaces::msg::EntityState entityStateMsg;
         entityStateMsg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
-        entityStateMsg.header.frame_id = ROS2::ROS2Interface::Get()->GetNode()->get_name();
+        entityStateMsg.header.frame_id = "";
         entityStateMsg.pose = ROS2::ROS2Conversions::ToROS2Pose(entityState.m_pose);
-        entityStateMsg.twist.linear = ROS2::ROS2Conversions::ToROS2Vector3(entityState.m_twist_linear);
-        entityStateMsg.twist.angular = ROS2::ROS2Conversions::ToROS2Vector3(entityState.m_twist_angular);
+        entityStateMsg.twist.linear = ROS2::ROS2Conversions::ToROS2Vector3(entityState.m_twistLinear);
+        entityStateMsg.twist.angular = ROS2::ROS2Conversions::ToROS2Vector3(entityState.m_twistAngular);
 
         response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
         response.state = entityStateMsg;

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
+#include "SimulationInterfacesTypeIds.h"
 
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
@@ -16,7 +16,7 @@
 
 namespace SimulationInterfaces
 {
-    using SimulationFeatures = uint8_t;
+    using SimulationFeatureType = uint8_t;
 
     class SimulationFeaturesAggregatorRequests
     {
@@ -25,15 +25,15 @@ namespace SimulationInterfaces
         virtual ~SimulationFeaturesAggregatorRequests() = default;
 
         //! Registers simulation features defined by caller
-        virtual void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatures>& features) = 0;
+        virtual void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatureType>& features) = 0;
 
         //! Returns features available in the simulator, list follows definitions at
         //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
-        virtual const AZStd::unordered_set<SimulationFeatures> GetSimulationFeatures() const = 0;
+        virtual AZStd::unordered_set<SimulationFeatureType> GetSimulationFeatures() = 0;
 
         //! Method checks if feature with given id is available in the simulation
         //! Method is extension to standard defined in simulation_interfaces
-        virtual bool HasFeature(SimulationFeatures feature) const = 0;
+        virtual bool HasFeature(SimulationFeatureType feature) = 0;
     };
 
     class SimulationFeaturesAggregatorRequestBusTraits : public AZ::EBusTraits

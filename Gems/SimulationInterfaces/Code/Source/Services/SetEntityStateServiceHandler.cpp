@@ -25,8 +25,8 @@ namespace ROS2SimulationInterfaces
         AZStd::string entityName = request.entity.c_str();
         SimulationInterfaces::EntityState entityState;
         entityState.m_pose = ROS2::ROS2Conversions::FromROS2Pose(request.state.pose);
-        entityState.m_twist_angular = ROS2::ROS2Conversions::FromROS2Vector3(request.state.twist.angular);
-        entityState.m_twist_linear = ROS2::ROS2Conversions::FromROS2Vector3(request.state.twist.linear);
+        entityState.m_twistAngular = ROS2::ROS2Conversions::FromROS2Vector3(request.state.twist.angular);
+        entityState.m_twistLinear = ROS2::ROS2Conversions::FromROS2Vector3(request.state.twist.linear);
 
         SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
             outcome, &SimulationInterfaces::SimulationEntityManagerRequests::SetEntityState, entityName, entityState);
@@ -36,8 +36,8 @@ namespace ROS2SimulationInterfaces
         if (!outcome.IsSuccess())
         {
             const auto& failedResult = outcome.GetError();
-            response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
-            response.result.error_message = failedResult.error_string.c_str();
+            response.result.result = aznumeric_cast<uint8_t>(failedResult.m_errorCode);
+            response.result.error_message = failedResult.m_errorString.c_str();
         }
 
         return response;

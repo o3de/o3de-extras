@@ -78,7 +78,13 @@ namespace UnitTest
 
         constexpr bool allowRename = false;
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, entityName, uri, entityNamespace, initialPose, allowRename, completedCb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity,
+            entityName,
+            uri,
+            entityNamespace,
+            initialPose,
+            allowRename,
+            completedCb);
 
         // entities are spawned asynchronously, so we need to tick the app to let the entity be spawned
         TickApp(100);
@@ -92,7 +98,13 @@ namespace UnitTest
             completed2 = true;
         };
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, entityName, uri, entityNamespace, initialPose, allowRename, failedSpawnCompletedCb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity,
+            entityName,
+            uri,
+            entityNamespace,
+            initialPose,
+            allowRename,
+            failedSpawnCompletedCb);
         EXPECT_TRUE(completed2);
 
         // list simulation entities
@@ -136,8 +148,8 @@ namespace UnitTest
 
         // Check if entity was teleported by setting the new state, we use a filter to check if the entity is at the new position
         EntityFilters filter;
-        filter.m_bounds_shape = AZStd::make_shared<Physics::SphereShapeConfiguration>(2.0f);
-        filter.m_bounds_pose = AZ::Transform::CreateTranslation(AZ::Vector3(1000.0f, 0.0f, 0.0f));
+        filter.m_boundsShape = AZStd::make_shared<Physics::SphereShapeConfiguration>(2.0f);
+        filter.m_boundsPose = AZ::Transform::CreateTranslation(AZ::Vector3(1000.0f, 0.0f, 0.0f));
         AZ::Outcome<EntityNameList, FailedResult> entitiesFiltered;
         SimulationEntityManagerRequestBus::BroadcastResult(
             entitiesFiltered, &SimulationEntityManagerRequestBus::Events::GetEntities, filter);
@@ -157,7 +169,9 @@ namespace UnitTest
         EXPECT_EQ(getNumberOfEntities(), 0);
 
         // spawn 3 entities of entities and despawn all of them
-        SpawnCompletedCb cb = [&](const AZ::Outcome<AZStd::string, FailedResult>& result){};
+        SpawnCompletedCb cb = [&](const AZ::Outcome<AZStd::string, FailedResult>& result)
+        {
+        };
         SimulationEntityManagerRequestBus::Broadcast(
             &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity1", uri, entityNamespace, initialPose, false, cb);
         SimulationEntityManagerRequestBus::Broadcast(
@@ -174,13 +188,11 @@ namespace UnitTest
             deletionWasCompleted = true;
             EXPECT_TRUE(result.IsSuccess());
         };
-        SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::DeleteAllEntities, deleteAllCompletion);
+        SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::DeleteAllEntities, deleteAllCompletion);
 
         TickApp(100);
         EXPECT_TRUE(deletionWasCompleted);
         EXPECT_EQ(getNumberOfEntities(), 0);
-
     }
 
 } // namespace UnitTest

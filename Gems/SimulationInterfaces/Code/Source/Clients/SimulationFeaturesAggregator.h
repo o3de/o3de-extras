@@ -42,13 +42,12 @@ namespace SimulationInterfaces
         void Activate() override;
         void Deactivate() override;
 
-    protected:
-        // SimulationFeaturesAggregatorRequestBus overrides
-        void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatures>& features) override;
-        const AZStd::unordered_set<SimulationFeatures> GetSimulationFeatures() const override;
-        bool HasFeature(SimulationFeatures feature) const override;
-
     private:
-        AZStd::unordered_set<SimulationFeatures> m_registeredFeatures;
+        // SimulationFeaturesAggregatorRequestBus overrides
+        void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatureType>& features) override;
+        AZStd::unordered_set<SimulationFeatureType> GetSimulationFeatures() override;
+        bool HasFeature(SimulationFeatureType feature) override;
+
+        AZStd::unordered_set<SimulationFeatureType> m_registeredFeatures;
     };
 } // namespace SimulationInterfaces

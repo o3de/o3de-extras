@@ -20,6 +20,7 @@
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Console/IConsole.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/regex.h>
 #include <AzFramework/Components/TransformComponent.h>
@@ -28,7 +29,6 @@
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
-#include <AzCore/Settings/SettingsRegistry.h>
 
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <simulation_interfaces/msg/result.hpp>
@@ -37,22 +37,34 @@
 
 namespace SimulationInterfaces
 {
-    void SetRigidBodyVelocities(AzPhysics::RigidBody* rigidBody, const EntityState& state)
+    namespace
     {
-        if (!state.m_twist_angular.IsClose(AZ::Vector3::CreateZero(), AZ::Constants::FloatEpsilon))
+        void SetRigidBodyVelocities(AzPhysics::RigidBody* rigidBody, const EntityState& state)
         {
-            // get transform
-            AZ::Vector3 angularVelWorld = rigidBody->GetTransform().TransformVector(state.m_twist_angular);
-            rigidBody->SetAngularVelocity(angularVelWorld);
+            if (!state.m_twistAngular.IsClose(AZ::Vector3::CreateZero(), AZ::Constants::FloatEpsilon))
+            {
+                // get transform
+                AZ::Vector3 angularVelWorld = rigidBody->GetTransform().TransformVector(state.m_twistAngular);
+                rigidBody->SetAngularVelocity(angularVelWorld);
+            }
+
+            if (!state.m_twistLinear.IsClose(AZ::Vector3::CreateZero(), AZ::Constants::FloatEpsilon))
+            {
+                // get transform
+                AZ::Vector3 linearVelWorld = rigidBody->GetTransform().TransformVector(state.m_twistLinear);
+                rigidBody->SetLinearVelocity(linearVelWorld);
+            }
         }
 
-        if (!state.m_twist_linear.IsClose(AZ::Vector3::CreateZero(), AZ::Constants::FloatEpsilon))
+        AzPhysics::Scene* GetSceneHelper(AzPhysics::SceneHandle sceneHandle)
         {
-            // get transform
-            AZ::Vector3 linearVelWorld = rigidBody->GetTransform().TransformVector(state.m_twist_linear);
-            rigidBody->SetLinearVelocity(linearVelWorld);
+            AzPhysics::SystemInterface* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
+            AZ_Assert(physicsSystem, "Physics system is not available.");
+            AzPhysics::Scene* scene = physicsSystem->GetScene(sceneHandle);
+            return scene;
         }
-    }
+
+    } // namespace
 
     AZ_COMPONENT_IMPL(SimulationEntitiesManager, "SimulationEntitiesManager", SimulationEntitiesManagerTypeId);
 
@@ -106,15 +118,6 @@ namespace SimulationInterfaces
     {
     }
 
-    AzPhysics::Scene* GetSceneHelper(AzPhysics::SceneHandle sceneHandle)
-    {
-        AzPhysics::SystemInterface* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
-        AZ_Assert(physicsSystem, "Physics system is not available.");
-        AzPhysics::Scene* scene = physicsSystem->GetScene(sceneHandle);
-        return scene;
-    }
-
-
     bool SimulationEntitiesManager::RegisterNewSimulatedBody(AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle)
     {
         auto* scene = GetSceneHelper(sceneHandle);
@@ -158,8 +161,7 @@ namespace SimulationInterfaces
         auto spawnDataIt = m_spawnCompletedCallbacks.find(ticketId);
         const bool wasSpawned = spawnDataIt != m_spawnCompletedCallbacks.end();
 
-        const AZStd::string proposedName =
-            wasSpawned ? spawnDataIt->second.m_userProposedName : entity->GetName();
+        const AZStd::string proposedName = wasSpawned ? spawnDataIt->second.m_userProposedName : entity->GetName();
 
         // register entity
         const AZStd::string registeredName = this->AddSimulatedEntity(entityId, proposedName);
@@ -176,8 +178,8 @@ namespace SimulationInterfaces
         initialState.m_pose = entity->GetTransform()->GetWorldTM();
         if (rigidBody)
         {
-            initialState.m_twist_linear = rigidBody->GetLinearVelocity();
-            initialState.m_twist_angular = rigidBody->GetAngularVelocity();
+            initialState.m_twistLinear = rigidBody->GetLinearVelocity();
+            initialState.m_twistAngular = rigidBody->GetAngularVelocity();
         }
         m_entityIdToInitialState[entityId] = initialState;
         AZ_Info("SimulationInterfaces", "Registered entity %s\n", registeredName.c_str());
@@ -224,7 +226,10 @@ namespace SimulationInterfaces
         m_sceneAddedHandler = AzPhysics::SystemEvents::OnSceneAddedEvent::Handler(
             [this](AzPhysics::SceneHandle sceneHandle)
             {
-                AZ_Warning("SimulationInterfaces", m_physicsScenesHandle == AzPhysics::InvalidSceneHandle, "Hmm, we already have a scene");
+                AZ_Warning(
+                    "SimulationInterfaces",
+                    m_physicsScenesHandle == AzPhysics::InvalidSceneHandle,
+                    "SimulationInterfaces already gathered physics scene");
                 auto* scene = GetSceneHelper(sceneHandle);
                 AZ_Assert(scene, "Scene is not available.");
                 if (scene == nullptr)
@@ -259,15 +264,15 @@ namespace SimulationInterfaces
 
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
-            AZStd::unordered_set<SimulationFeatures>{ // simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
-                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_BOX,
-                                                      // simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_CONVEX,
-                                                      // simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
-                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_GETTING,
-                                                      simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_SETTING,
-                                                      simulation_interfaces::msg::SimulatorFeatures::DELETING,
-                                                      simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
-                                                      simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
+            AZStd::unordered_set<SimulationFeatureType>{ // simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
+                                                         simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_BOX,
+                                                         // simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_CONVEX,
+                                                         // simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
+                                                         simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_GETTING,
+                                                         simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_SETTING,
+                                                         simulation_interfaces::msg::SimulatorFeatures::DELETING,
+                                                         simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
+                                                         simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
         AZ::TickBus::Handler::BusConnect();
     }
 
@@ -275,28 +280,18 @@ namespace SimulationInterfaces
     {
         AZ::TickBus::Handler::BusDisconnect();
         SimulationEntityManagerRequestBus::Handler::BusDisconnect();
-        if (m_simulationBodyAddedHandler.IsConnected())
-        {
-            m_simulationBodyAddedHandler.Disconnect();
-        }
-        if (m_simulationBodyRemovedHandler.IsConnected())
-        {
-            m_simulationBodyRemovedHandler.Disconnect();
-        }
+
+        m_simulationBodyAddedHandler.Disconnect();
+        m_simulationBodyRemovedHandler.Disconnect();
+
         m_physicsScenesHandle = AzPhysics::InvalidSceneHandle;
-        if (m_sceneAddedHandler.IsConnected())
-        {
-            m_sceneAddedHandler.Disconnect();
-        }
-        if (m_sceneAddedHandler.IsConnected())
-        {
-            m_sceneAddedHandler.Disconnect();
-        }
+
+        m_sceneAddedHandler.Disconnect();
+        m_sceneAddedHandler.Disconnect();
     }
 
     AZStd::string SimulationEntitiesManager::AddSimulatedEntity(AZ::EntityId entityId, const AZStd::string& userProposedName)
     {
-
         if (!entityId.IsValid())
         {
             return "";
@@ -332,15 +327,15 @@ namespace SimulationInterfaces
 
     AZ::Outcome<EntityNameList, FailedResult> SimulationEntitiesManager::GetEntities(const EntityFilters& filter)
     {
-        if (!filter.m_tags_filter.m_tags.empty())
+        if (!filter.m_tagsFilter.m_tags.empty())
         {
             AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
             return AZ::Failure(
                 FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
         }
 
-        const bool reFilter = !filter.m_filter.empty();
-        const bool shapeCastFilter = filter.m_bounds_shape != nullptr;
+        const bool reFilter = !filter.m_nameFilter.empty();
+        const bool shapeCastFilter = filter.m_boundsShape != nullptr;
 
         AZStd::vector<AZStd::string> entities;
         if (!shapeCastFilter)
@@ -368,8 +363,8 @@ namespace SimulationInterfaces
             }
 
             AzPhysics::OverlapRequest request;
-            request.m_shapeConfiguration = filter.m_bounds_shape;
-            request.m_pose = filter.m_bounds_pose;
+            request.m_shapeConfiguration = filter.m_boundsShape;
+            request.m_pose = filter.m_boundsPose;
             request.m_maxResults = AZStd::numeric_limits<AZ::u32>::max();
 
             AzPhysics::SceneQueryHits result = sceneInterface->QueryScene(m_physicsScenesHandle, &request);
@@ -387,7 +382,7 @@ namespace SimulationInterfaces
         {
             const AZStd::vector<AZStd::string> prefilteredEntities = AZStd::move(entities);
             entities.clear();
-            const AZStd::regex regex(filter.m_filter);
+            const AZStd::regex regex(filter.m_nameFilter);
             if (!regex.Valid())
             {
                 AZ_Warning("SimulationInterfaces", false, "Invalid regex filter");
@@ -426,14 +421,14 @@ namespace SimulationInterfaces
 
         // transform linear and angular velocities to entity frame
         const AZ::Transform entityTransformInv = entityState.m_pose.GetInverse();
-        entityState.m_twist_linear = entityTransformInv.TransformVector(linearVelocity);
-        entityState.m_twist_angular = entityTransformInv.TransformVector(angularVelocity);
+        entityState.m_twistLinear = entityTransformInv.TransformVector(linearVelocity);
+        entityState.m_twistAngular = entityTransformInv.TransformVector(angularVelocity);
         return AZ::Success(entityState);
     }
 
     AZ::Outcome<MultipleEntitiesStates, FailedResult> SimulationEntitiesManager::GetEntitiesStates(const EntityFilters& filter)
     {
-        if (!filter.m_tags_filter.m_tags.empty())
+        if (!filter.m_tagsFilter.m_tags.empty())
         {
             AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
             return AZ::Failure(
@@ -514,7 +509,7 @@ namespace SimulationInterfaces
             }
         }
 
-        if (!state.m_twist_linear.IsZero(AZ::Constants::FloatEpsilon) || !state.m_twist_angular.IsZero(AZ::Constants::FloatEpsilon))
+        if (!state.m_twistLinear.IsZero(AZ::Constants::FloatEpsilon) || !state.m_twistAngular.IsZero(AZ::Constants::FloatEpsilon))
         {
             // get rigid body
             AzPhysics::RigidBody* rigidBody = nullptr;
@@ -571,23 +566,6 @@ namespace SimulationInterfaces
             const auto msg = AZStd::string::format("Entity %s was not spawned by this component, wont delete it", name.c_str());
             completedCb(AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, msg)));
         }
-#ifdef POTENTIALY_UNSAFE
-        if (findIt != m_simulatedEntityToEntityIdMap.end())
-        {
-            const AZ::EntityId entityId = findIt->second;
-            AZ_Assert(entityId.IsValid(), "EntityId is not valid");
-            // get all descendants
-            AZStd::vector<AZ::EntityId> entityAndDescendants;
-            AZ::TransformBus::EventResult(entityAndDescendants, entityId, &AZ::TransformBus::Events::GetEntityAndAllDescendants);
-            for (const auto& descendant : entityAndDescendants)
-            {
-                // I am not sure if this is the safe way to delete an entity
-                AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationRequests::DeleteEntity, descendant);
-            }
-
-            return true;
-        }
-#endif
     }
 
     void SimulationEntitiesManager::DeleteAllEntities(DeletionCompletedCb completedCb)
@@ -790,7 +768,7 @@ namespace SimulationInterfaces
         }
 
         // check if name is still not unique, if not, add EntityId to name
-        if(m_simulatedEntityToEntityIdMap.contains(newName))
+        if (m_simulatedEntityToEntityIdMap.contains(newName))
         {
             newName = AZStd::string::format("%s_%s", newName.c_str(), entityId.ToString().c_str());
         }

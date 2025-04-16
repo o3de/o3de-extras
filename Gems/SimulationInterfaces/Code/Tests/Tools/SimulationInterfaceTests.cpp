@@ -79,7 +79,7 @@ namespace UnitTest
             CreateEntityWithStaticBodyComponent("Outside", AZ::Transform::CreateTranslation(AZ::Vector3(10.0f, 0.0f, 0.0f)));
 
         EntityFilters filter;
-        filter.m_bounds_shape = AZStd::make_shared<Physics::SphereShapeConfiguration>(2.0f);
+        filter.m_boundsShape = AZStd::make_shared<Physics::SphereShapeConfiguration>(2.0f);
 
         AZ::Outcome<EntityNameList, FailedResult> entities;
         SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, filter);
@@ -103,7 +103,7 @@ namespace UnitTest
             CreateEntityWithStaticBodyComponent("WontMatch", AZ::Transform::CreateTranslation(AZ::Vector3(10.0f, 0.0f, 0.0f)));
 
         EntityFilters filter;
-        filter.m_filter = "Will.*";
+        filter.m_nameFilter = "Will.*";
 
         AZ::Outcome<EntityNameList, FailedResult> entities;
         SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, filter);
@@ -126,7 +126,7 @@ namespace UnitTest
             CreateEntityWithStaticBodyComponent("WontMatch", AZ::Transform::CreateTranslation(AZ::Vector3(10.0f, 0.0f, 0.0f)));
 
         EntityFilters filter;
-        filter.m_filter = "[a-z";
+        filter.m_nameFilter = "[a-z";
 
         AZ::Outcome<EntityNameList, FailedResult> entities;
         SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, filter);
@@ -168,7 +168,7 @@ namespace UnitTest
         EXPECT_GT(deltaPos.GetLength(), 0.0f);
 
         // check if entity has velocity
-        EXPECT_GT(stateAfter.m_twist_linear.GetLength(), 0.0f);
+        EXPECT_GT(stateAfter.m_twistLinear.GetLength(), 0.0f);
 
         DeleteEntity(entityId1);
     }
@@ -182,8 +182,7 @@ namespace UnitTest
             deletionWasCompleted = true;
             EXPECT_TRUE(result.IsSuccess());
         };
-        SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::DeleteAllEntities, deleteAllCompletion);
+        SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::DeleteAllEntities, deleteAllCompletion);
 
         TickApp(100);
         EXPECT_TRUE(deletionWasCompleted);

@@ -33,8 +33,8 @@ namespace ROS2SimulationInterfaces
         }
         else
         {
-            response.result.result = static_cast<AZ::u8>(transitionResult.GetError().error_code);
-            response.result.error_message = transitionResult.GetError().error_string.c_str();
+            response.result.result = static_cast<AZ::u8>(transitionResult.GetError().m_errorCode);
+            response.result.error_message = transitionResult.GetError().m_errorString.c_str();
         }
         return response;
     }

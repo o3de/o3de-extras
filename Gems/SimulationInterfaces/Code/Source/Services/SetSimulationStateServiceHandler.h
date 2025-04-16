@@ -10,7 +10,6 @@
 
 #include "Services/ROS2ServiceBase.h"
 #include <AzCore/std/string/string_view.h>
-#include <rclcpp/rclcpp.hpp>
 #include <simulation_interfaces/srv/set_simulation_state.hpp>
 
 namespace ROS2SimulationInterfaces
