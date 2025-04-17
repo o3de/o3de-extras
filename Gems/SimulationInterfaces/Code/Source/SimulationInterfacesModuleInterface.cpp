@@ -16,6 +16,7 @@
 #include <Clients/SimulationEntitiesManager.h>
 #include <Clients/SimulationFeaturesAggregator.h>
 #include <Clients/SimulationManager.h>
+#include <Components/NamedPoseComponent.h>
 
 namespace SimulationInterfaces
 {
@@ -33,6 +34,7 @@ namespace SimulationInterfaces
                 SimulationManager::CreateDescriptor(),
                 SimulationFeaturesAggregator::CreateDescriptor(),
                 NamedPoseManager::CreateDescriptor(),
+                NamedPoseComponent::CreateDescriptor(),
                 ROS2SimulationInterfaces::ROS2SimulationInterfacesSystemComponent::CreateDescriptor(),
             });
     }

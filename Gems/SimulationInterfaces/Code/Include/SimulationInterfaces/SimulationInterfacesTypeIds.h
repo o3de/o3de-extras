@@ -37,4 +37,7 @@ namespace SimulationInterfaces
     inline constexpr const char* SimulationManagerNotificationsTypeId = "{0201067B-9D52-4AB7-9A45-284287F53B00}";
     inline constexpr const char* NamedPoseManagerRequestsTypeId = "{705280D6-7AB4-4586-A0A4-25AD71268279}";
 
+    inline constexpr const char* NamedPoseTypeId = "{c6b4a8be-f39a-46ed-82e8-05bc260a1f31}";
+    inline constexpr const char* NamedPoseComponentTypeId = "{a294b840-79ca-402d-a250-b5c3d958b518}";
+
 } // namespace SimulationInterfaces
