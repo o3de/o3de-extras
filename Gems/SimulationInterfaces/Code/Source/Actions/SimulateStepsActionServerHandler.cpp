@@ -23,11 +23,11 @@ namespace ROS2SimulationInterfaces
         SimulationInterfaces::SimulationManagerNotificationsBus::Handler::BusDisconnect();
     }
 
-    AZStd::unordered_set<AZ::u8> SimulateStepsActionServerHandler::GetProvidedFeatures()
+    AZStd::unordered_set<SimulationFeatureType> SimulateStepsActionServerHandler::GetProvidedFeatures()
     {
-        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::STEP_SIMULATION_ACTION,
-                                             SimulationFeatures::STEP_SIMULATION_SINGLE,
-                                             SimulationFeatures::STEP_SIMULATION_MULTIPLE };
+        return AZStd::unordered_set<SimulationFeatureType>{ SimulationFeatures::STEP_SIMULATION_ACTION,
+                                                            SimulationFeatures::STEP_SIMULATION_SINGLE,
+                                                            SimulationFeatures::STEP_SIMULATION_MULTIPLE };
     }
 
     AZStd::string_view SimulateStepsActionServerHandler::GetTypeName() const

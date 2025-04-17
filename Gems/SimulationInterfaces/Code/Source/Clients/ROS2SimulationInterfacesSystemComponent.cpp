@@ -103,9 +103,9 @@ namespace ROS2SimulationInterfaces
         }
     }
 
-    AZStd::unordered_set<AZ::u8> ROS2SimulationInterfacesSystemComponent::GetSimulationFeatures()
+    AZStd::unordered_set<SimulationFeatureType> ROS2SimulationInterfacesSystemComponent::GetSimulationFeatures()
     {
-        AZStd::unordered_set<AZ::u8> result;
+        AZStd::unordered_set<SimulationFeatureType> result;
         for (auto& [handlerType, handler] : m_availableRos2Interface)
         {
             auto features = handler->GetProvidedFeatures();

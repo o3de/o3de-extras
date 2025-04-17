@@ -9,6 +9,7 @@
 #pragma once
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/string/string_view.h>
+#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
 #include <rclcpp/rclcpp.hpp>
 
 namespace ROS2SimulationInterfaces
@@ -17,8 +18,9 @@ namespace ROS2SimulationInterfaces
     class IROS2HandlerBase
     {
     public:
+        using SimulationFeatureType = ROS2SimulationInterfaces::SimulationFeatureType;
         virtual ~IROS2HandlerBase() = default;
-        virtual AZStd::unordered_set<AZ::u8> GetProvidedFeatures() = 0;
+        virtual AZStd::unordered_set<SimulationFeatureType> GetProvidedFeatures() = 0;
         virtual AZStd::string_view GetTypeName() const = 0;
         virtual AZStd::string_view GetDefaultName() const = 0;
         virtual void Initialize(rclcpp::Node::SharedPtr& node) = 0;

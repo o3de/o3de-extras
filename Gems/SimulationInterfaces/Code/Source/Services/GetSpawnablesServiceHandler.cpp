@@ -12,9 +12,9 @@
 namespace ROS2SimulationInterfaces
 {
 
-    AZStd::unordered_set<AZ::u8> GetSpawnablesServiceHandler::GetProvidedFeatures()
+    AZStd::unordered_set<SimulationFeatureType> GetSpawnablesServiceHandler::GetProvidedFeatures()
     {
-        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::SPAWNABLES };
+        return AZStd::unordered_set<SimulationFeatureType>{ SimulationFeatures::SPAWNABLES };
     }
 
     AZStd::optional<GetSpawnablesServiceHandler::Response> GetSpawnablesServiceHandler::HandleServiceRequest(

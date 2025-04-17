@@ -93,7 +93,7 @@ namespace ROS2SimulationInterfaces
 
         //! return features id defined by the handler, ids must follow the definition inside standard:
         //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
-        AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override
+        AZStd::unordered_set<SimulationFeatureType> GetProvidedFeatures() override
         {
             return {};
         };

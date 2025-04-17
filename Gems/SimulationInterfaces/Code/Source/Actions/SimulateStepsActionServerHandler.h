@@ -25,7 +25,7 @@ namespace ROS2SimulationInterfaces
         ~SimulateStepsActionServerHandler();
 
         // IROS2HandlerBase overrides
-        AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override;
+        AZStd::unordered_set<SimulationFeatureType> GetProvidedFeatures() override;
         AZStd::string_view GetTypeName() const override;
         AZStd::string_view GetDefaultName() const override;
         void Initialize(rclcpp::Node::SharedPtr& node) override;

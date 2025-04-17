@@ -13,9 +13,9 @@
 namespace ROS2SimulationInterfaces
 {
 
-    AZStd::unordered_set<AZ::u8> SetEntityStateServiceHandler::GetProvidedFeatures()
+    AZStd::unordered_set<SimulationFeatureType> SetEntityStateServiceHandler::GetProvidedFeatures()
     {
-        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::ENTITY_STATE_SETTING };
+        return AZStd::unordered_set<SimulationFeatureType>{ SimulationFeatures::ENTITY_STATE_SETTING };
     }
 
     AZStd::optional<SetEntityStateServiceHandler::Response> SetEntityStateServiceHandler::HandleServiceRequest(
