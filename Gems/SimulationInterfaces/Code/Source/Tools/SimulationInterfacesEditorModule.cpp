@@ -6,6 +6,7 @@
  *
  */
 
+#include "NamedPoseManagerEditor.h"
 #include "ROS2SimulationInterfacesEditorSystemComponent.h"
 #include "SimulationEntitiesManagerEditor.h"
 #include "SimulationFeaturesAggregatorEditor.h"
@@ -28,6 +29,7 @@ namespace SimulationInterfaces
                     SimulationEntitiesManagerEditor::CreateDescriptor(),
                     SimulationManagerEditor::CreateDescriptor(),
                     SimulationFeaturesAggregatorEditor::CreateDescriptor(),
+                    NamedPoseManagerEditor::CreateDescriptor(),
                     ROS2SimulationInterfaces::ROS2SimulationInterfacesEditorSystemComponent::CreateDescriptor(),
                 });
         }
@@ -38,6 +40,7 @@ namespace SimulationInterfaces
                 azrtti_typeid<SimulationEntitiesManagerEditor>(),
                 azrtti_typeid<SimulationManagerEditor>(),
                 azrtti_typeid<SimulationFeaturesAggregatorEditor>(),
+                azrtti_typeid<NamedPoseManagerEditor>(),
                 azrtti_typeid<ROS2SimulationInterfaces::ROS2SimulationInterfacesEditorSystemComponent>(),
             };
         }
