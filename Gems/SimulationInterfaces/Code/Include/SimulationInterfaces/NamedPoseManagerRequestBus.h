@@ -15,6 +15,7 @@
 #include <AzCore/std/string/string.h>
 
 #include "Bounds.h"
+#include "NamedPose.h"
 #include "Result.h"
 #include "TagFilter.h"
 #include <AzCore/EBus/EBus.h>
@@ -23,27 +24,6 @@
 
 namespace SimulationInterfaces
 {
-    //! A named pose defined in the simulation for certain purposes such as spawning.
-    //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/NamedPose.msg">NamedPose.msg</a>
-    struct NamedPose
-    {
-        NamedPose(
-            const AZStd::string& name,
-            const AZStd::string& description,
-            const AZStd::unordered_set<AZStd::string>& tags,
-            const AZ::Transform& pose)
-            : m_name(name)
-            , m_description(description)
-            , m_tags(tags)
-            , m_pose(pose)
-        {
-        }
-        AZStd::string m_name;
-        AZStd::string m_description;
-        AZStd::unordered_set<AZStd::string> m_tags;
-        AZ::Transform m_pose;
-    };
-
     using NamedPoseSet = AZStd::vector<NamedPose>;
 
     class NamedPoseManagerRequests

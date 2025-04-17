@@ -53,4 +53,6 @@ set(FILES
     Source/Utils/RegistryUtils.cpp
     Source/Utils/RegistryUtils.h
     Source/Utils/Utils.h
+    Source/Components/NamedPoseComponent.cpp
+    Source/Components/NamedPoseComponent.h
 )
