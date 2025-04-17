@@ -5,6 +5,8 @@
 #
 
 set(FILES
+        Source/Tools/NamedPoseManagerEditor.cpp
+        Source/Tools/NamedPoseManagerEditor.h
         Source/Tools/SimulationManagerEditor.cpp
         Source/Tools/SimulationManagerEditor.h
         Source/Tools/SimulationEntitiesManagerEditor.cpp

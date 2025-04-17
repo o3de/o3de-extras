@@ -11,6 +11,7 @@
 
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
+#include <Clients/NamedPosesManager.h>
 #include <Clients/ROS2SimulationInterfacesSystemComponent.h>
 #include <Clients/SimulationEntitiesManager.h>
 #include <Clients/SimulationFeaturesAggregator.h>
@@ -31,6 +32,7 @@ namespace SimulationInterfaces
                 SimulationEntitiesManager::CreateDescriptor(),
                 SimulationManager::CreateDescriptor(),
                 SimulationFeaturesAggregator::CreateDescriptor(),
+                NamedPoseManager::CreateDescriptor(),
                 ROS2SimulationInterfaces::ROS2SimulationInterfacesSystemComponent::CreateDescriptor(),
             });
     }
@@ -41,6 +43,7 @@ namespace SimulationInterfaces
             azrtti_typeid<SimulationEntitiesManager>(),
             azrtti_typeid<SimulationManager>(),
             azrtti_typeid<SimulationFeaturesAggregator>(),
+            azrtti_typeid<NamedPoseManager>(),
             azrtti_typeid<ROS2SimulationInterfaces::ROS2SimulationInterfacesSystemComponent>(),
         };
     }
