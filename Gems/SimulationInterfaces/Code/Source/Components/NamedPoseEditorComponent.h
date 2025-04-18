@@ -8,39 +8,33 @@
 
 #pragma once
 
-#include "SimulationInterfaces/NamedPoseManagerRequestBus.h"
-#include <AzCore/Component/Component.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/std/containers/set.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <SimulationInterfaces/NamedPose.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
 namespace SimulationInterfaces
 {
-    class NamedPoseComponent
-        : public AZ::Component
-        , public NamedPoseComponentRequestBus::Handler
+    class NamedPoseEditorComponent : public AzToolsFramework::Components::EditorComponentBase
     {
     public:
-        AZ_COMPONENT(NamedPoseComponent, NamedPoseComponentTypeId, AZ::Component);
-        NamedPoseComponent() = default;
-        NamedPoseComponent(NamedPose config);
-        ~NamedPoseComponent() override = default;
+        AZ_EDITOR_COMPONENT(NamedPoseEditorComponent, NamedPoseEditorComponentTypeId);
+        NamedPoseEditorComponent() = default;
+        ~NamedPoseEditorComponent() override = default;
 
+        // EditorComponentBase interface overrides ...
         void Activate() override;
         void Deactivate() override;
+        void BuildGameEntity(AZ::Entity* gameEntity) override;
         static void Reflect(AZ::ReflectContext* context);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 
     private:
-        NamedPose GetConfiguration() override
-        {
-            return m_config;
-        }
-
+        void UpdateConfiguration();
         NamedPose m_config;
     };
 } // namespace SimulationInterfaces

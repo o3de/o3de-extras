@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "AzCore/Component/EntityId.h"
 #include "AzCore/Outcome/Outcome.h"
 #include "SimulationInterfacesTypeIds.h"
 #include <AzCore/Math/Transform.h>
@@ -24,20 +25,26 @@
 
 namespace SimulationInterfaces
 {
-    using NamedPoseSet = AZStd::vector<NamedPose>;
+    using NamedPoseList = AZStd::vector<NamedPose>;
 
     class NamedPoseManagerRequests
     {
     public:
-        AZ_RTTI(NamedPoseManagerRequests, SimulationFeaturesAggregatorRequestsTypeId);
+        AZ_RTTI(NamedPoseManagerRequests, NamedPoseManagerRequestsTypeId);
         virtual ~NamedPoseManagerRequests() = default;
 
-        //! Create named pose with given parameters
+        //! Create named pose with given parameters, creates new entity with the named pose component
         virtual AZ::Outcome<void, FailedResult> CreateNamedPose(NamedPose namedPose) = 0;
+
+        //! Register named pose with given id.
+        virtual AZ::Outcome<void, FailedResult> RegisterNamedPose(AZ::EntityId namedPoseEntityId) = 0;
+
+        //! Unregister named pose with given id.
+        virtual AZ::Outcome<void, FailedResult> UnregisterNamedPose(AZ::EntityId namedPoseEntityId) = 0;
 
         //! Get named poses matching given TagFiler
         //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/TagsFilter.msg
-        virtual AZ::Outcome<NamedPoseSet, FailedResult> GetNamedPoses(const TagFilter& tags) = 0;
+        virtual AZ::Outcome<NamedPoseList, FailedResult> GetNamedPoses(const TagFilter& tags) = 0;
 
         //! Get boundaries defined by the pose with given name
         //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/srv/GetNamedPoses.srv
@@ -56,5 +63,29 @@ namespace SimulationInterfaces
 
     using NamedPoseManagerRequestBus = AZ::EBus<NamedPoseManagerRequests, NamedPoseManagerRequestBusTraits>;
     using NamedPoseManagerRequestBusInterface = AZ::Interface<NamedPoseManagerRequests>;
+
+    class NamedPoseComponentRequests
+    {
+    public:
+        AZ_RTTI(NamedPoseComponentRequests, NamedPoseComponentRequestsTypeId);
+        virtual ~NamedPoseComponentRequests() = default;
+
+        //! get configuration of the namedPoseComponent
+        virtual NamedPose GetConfiguration() = 0;
+    };
+
+    class NamedPoseComponentRequestBusTraits : public AZ::EBusTraits
+    {
+    public:
+        //////////////////////////////////////////////////////////////////////////
+        // EBusTraits overrides
+        using BusIdType = AZ::EntityId;
+        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
+        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
+        //////////////////////////////////////////////////////////////////////////
+    };
+
+    using NamedPoseComponentRequestBus = AZ::EBus<NamedPoseComponentRequests, NamedPoseComponentRequestBusTraits>;
+    using NamedPoseComponentRequestBusInterface = AZ::Interface<NamedPoseComponentRequests>;
 
 } // namespace SimulationInterfaces

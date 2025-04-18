@@ -8,16 +8,26 @@
 
 #include "NamedPoseComponent.h"
 #include "SimulationInterfaces/NamedPose.h"
+#include "SimulationInterfaces/NamedPoseManagerRequestBus.h"
 
 namespace SimulationInterfaces
 {
 
+    NamedPoseComponent::NamedPoseComponent(NamedPose config)
+        : m_config(config)
+    {
+    }
+
     void NamedPoseComponent::Activate()
     {
+        NamedPoseComponentRequestBus::Handler::BusConnect(GetEntityId());
+        NamedPoseManagerRequestBus::Broadcast(&NamedPoseManagerRequests::RegisterNamedPose, GetEntityId());
     }
 
     void NamedPoseComponent::Deactivate()
     {
+        NamedPoseManagerRequestBus::Broadcast(&NamedPoseManagerRequests::UnregisterNamedPose, GetEntityId());
+        NamedPoseComponentRequestBus::Handler::BusDisconnect();
     }
 
     void NamedPoseComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -27,18 +37,13 @@ namespace SimulationInterfaces
 
     void NamedPoseComponent::Reflect(AZ::ReflectContext* context)
     {
-        NamedPose::Reflect(context);
+        if (!context->IsTypeReflected(azrtti_typeid<NamedPose>()))
+        {
+            NamedPose::Reflect(context);
+        }
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<NamedPoseComponent, AZ::Component>()->Version(0)->Field("NamedPoseConfig", &NamedPoseComponent::m_config);
-            if (AZ::EditContext* ec = serialize->GetEditContext())
-            {
-                ec->Class<NamedPoseComponent>("Named Pose Component", "Component used to define names pose in simulation")
-                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "NamedPoseComponent")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
-                    ->Attribute(AZ::Edit::Attributes::Category, "Simulation Interfaces")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &NamedPoseComponent::m_config, "Named Pose Config", "");
-            }
         }
     }
 } // namespace SimulationInterfaces

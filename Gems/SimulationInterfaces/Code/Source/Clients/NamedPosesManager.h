@@ -45,10 +45,11 @@ namespace SimulationInterfaces
     private:
         // NamedPoseManagerRequestBus overrides
         AZ::Outcome<void, FailedResult> CreateNamedPose(NamedPose namedPose) override;
-        AZ::Outcome<NamedPoseSet, FailedResult> GetNamedPoses(const TagFilter& tags) override;
+        AZ::Outcome<void, FailedResult> RegisterNamedPose(AZ::EntityId namedPoseEntityId) override;
+        AZ::Outcome<void, FailedResult> UnregisterNamedPose(AZ::EntityId namedPoseEntityId) override;
+        AZ::Outcome<NamedPoseList, FailedResult> GetNamedPoses(const TagFilter& tags) override;
         AZ::Outcome<Bounds, FailedResult> GetNamedPoseBounds(const AZStd::string& name) override;
 
-        AZStd::unordered_map<AZ::EntityId, AZStd::unordered_set<AZStd::string>> m_humanReadableTags;
         AZStd::unordered_map<AZStd::string, AZ::EntityId> m_namedPoseToEntityId;
     };
 

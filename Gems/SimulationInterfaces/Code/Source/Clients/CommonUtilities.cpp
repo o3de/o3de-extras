@@ -7,6 +7,10 @@
  */
 
 #include "CommonUtilities.h"
+#include "AzCore/std/containers/vector.h"
+#include "AzCore/std/string/string.h"
+#include "Components/NamedPoseComponent.h"
+#include "SimulationInterfaces/NamedPoseManagerRequestBus.h"
 #include <simulation_interfaces/msg/tags_filter.hpp>
 
 namespace SimulationInterfaces::Utils
@@ -30,7 +34,7 @@ namespace SimulationInterfaces::Utils
         return {};
     }
 
-    bool AreTagsMatching(const TagFilter& tagFilter, const LmbrCentral::Tags& entityTags)
+    bool AreTagsMatching(const TagFilter& tagFilter, const AZStd::vector<AZStd::string>& entityTags)
     {
         if (tagFilter.m_tags.empty())
         {
@@ -40,7 +44,7 @@ namespace SimulationInterfaces::Utils
         bool matchAllTags = tagFilter.m_mode == simulation_interfaces::msg::TagsFilter::FILTER_MODE_ALL;
         for (auto& tag : tagFilter.m_tags)
         {
-            bool tagExistInEntity = entityTags.contains(LmbrCentral::Tag(tag));
+            bool tagExistInEntity = AZStd::find(entityTags.begin(), entityTags.end(), tag) != entityTags.end();
             // if all tags needs to match but entity doesn't have requested one, return with false
             if (matchAllTags && !tagExistInEntity)
             {
@@ -64,9 +68,9 @@ namespace SimulationInterfaces::Utils
         AZStd::unordered_map<AZStd::string, AZ::EntityId> filteredEntities;
         for (auto& [name, entityId] : entitiesToFilter)
         {
-            LmbrCentral::Tags tags;
-            LmbrCentral::TagComponentRequestBus::EventResult(tags, entityId, &LmbrCentral::TagComponentRequestBus::Events::GetTags);
-            if (AreTagsMatching(tagFilter, tags))
+            NamedPose configuration;
+            NamedPoseComponentRequestBus::EventResult(configuration, entityId, &NamedPoseComponentRequests::GetConfiguration);
+            if (AreTagsMatching(tagFilter, configuration.m_tags))
             {
                 filteredEntities[name] = entityId;
             }
