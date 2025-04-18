@@ -45,7 +45,7 @@ namespace SimulationInterfaces
         NamedPose(
             const AZStd::string& name,
             const AZStd::string& description,
-            const AZStd::unordered_set<AZStd::string>& tags,
+            const AZStd::vector<AZStd::string>& tags,
             const AZ::Transform& pose)
             : m_name(name)
             , m_description(description)
@@ -55,7 +55,7 @@ namespace SimulationInterfaces
         }
         AZStd::string m_name;
         AZStd::string m_description;
-        AZStd::unordered_set<AZStd::string> m_tags;
+        AZStd::vector<AZStd::string> m_tags;
         AZ::Transform m_pose;
     };
 

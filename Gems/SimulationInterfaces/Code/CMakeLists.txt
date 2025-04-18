@@ -145,6 +145,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
             PUBLIC
                 AZ::AzToolsFramework
                 Gem::ROS2.API
+                Gem::LmbrCentral.API
                 ${gem_name}.Private.Object
     )
 

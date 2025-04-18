@@ -8,11 +8,12 @@
 
 #include "Clients/NamedPosesManager.h"
 
-#include "AzCore/Component/EntityId.h"
 #include "CommonUtilities.h"
+#include "Components/NamedPoseComponent.h"
 #include "SimulationInterfaces/NamedPoseManagerRequestBus.h"
 #include "SimulationInterfaces/Result.h"
 #include "SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h"
+#include <AzCore/Component/EntityId.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Outcome/Outcome.h>
@@ -143,18 +144,66 @@ namespace SimulationInterfaces
         return AZ::Success();
     }
 
-    AZ::Outcome<NamedPoseSet, FailedResult> NamedPoseManager::GetNamedPoses(const TagFilter& tags)
+    AZ::Outcome<void, FailedResult> NamedPoseManager::RegisterNamedPose(AZ::EntityId namedPoseEntityId)
+    {
+        // check if given entity has named pose component
+        AZ::Entity* entity = nullptr;
+        AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationBus::Events::FindEntity, namedPoseEntityId);
+        if (!entity)
+        {
+            return AZ::Failure(
+                FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Failed to gather entity with given id"));
+        }
+        auto namedPoseComponent = entity->FindComponent<NamedPoseComponent>();
+        if (!namedPoseComponent)
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Entity with given Id doesn't have NamedPoseComponent, use CreateNamedPose method to create new pose"));
+        }
+
+        NamedPose configuration;
+        NamedPoseComponentRequestBus::EventResult(configuration, namedPoseEntityId, &NamedPoseComponentRequests::GetConfiguration);
+        if (m_namedPoseToEntityId.contains(configuration.m_name))
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Named pose with given name already exists in the record. Change name of your entity with NamedPoseComponent"));
+        }
+        m_namedPoseToEntityId[configuration.m_name] = namedPoseEntityId;
+        return AZ::Success();
+    }
+
+    AZ::Outcome<void, FailedResult> NamedPoseManager::UnregisterNamedPose(AZ::EntityId namedPoseEntityId)
+    {
+        if (!namedPoseEntityId.IsValid())
+        {
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "given ID is invalid"));
+        }
+        AZStd::string name;
+        AZ::ComponentApplicationBus::BroadcastResult(name, &AZ::ComponentApplicationRequests::GetEntityName, namedPoseEntityId);
+        if (m_namedPoseToEntityId.contains(name))
+        {
+            m_namedPoseToEntityId.erase(name);
+            return AZ::Success();
+        }
+        return AZ::Failure(
+            FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "named pose with given id is not registered"));
+    }
+
+    AZ::Outcome<NamedPoseList, FailedResult> NamedPoseManager::GetNamedPoses(const TagFilter& tags)
     {
         auto filteredEntities = Utils::FilterEntitiesByTag(m_namedPoseToEntityId, tags);
-        NamedPoseSet namedPosesSet;
+        NamedPoseList namedPoseList;
+        namedPoseList.reserve(filteredEntities.size());
         for (auto& [name, entityId] : filteredEntities)
         {
-            AZ::Transform worldTM;
-            AZ::TransformBus::EventResult(worldTM, entityId, &AZ::TransformBus::Events::GetWorldTM);
-
-            namedPosesSet.emplace_back(name, "", m_humanReadableTags.at(entityId), worldTM);
+            NamedPose configuration;
+            NamedPoseComponentRequestBus::EventResult(configuration, entityId, &NamedPoseComponentRequests::GetConfiguration);
+            namedPoseList.push_back(configuration);
         }
-        return AZ::Success(namedPosesSet);
+
+        return AZ::Success(namedPoseList);
     }
 
     AZ::Outcome<Bounds, FailedResult> NamedPoseManager::GetNamedPoseBounds(const AZStd::string& name)

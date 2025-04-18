@@ -28,7 +28,7 @@ namespace ROS2SimulationInterfaces
         const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
         using namespace SimulationInterfaces;
-        AZ::Outcome<NamedPoseSet, FailedResult> namedPosesO3DE;
+        AZ::Outcome<NamedPoseList, FailedResult> namedPosesO3DE;
         TagFilter tagFilter;
         tagFilter.m_mode = request.tags.filter_mode;
         for (auto& tag : request.tags.tags)
