@@ -27,7 +27,7 @@ namespace ROS2SimulationInterfaces
         {
             return "set_entity_state";
         }
-        AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override;
+        AZStd::unordered_set<SimulationFeatureType> GetProvidedFeatures() override;
 
         AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) override;
 

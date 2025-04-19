@@ -13,9 +13,10 @@
 
 namespace ROS2SimulationInterfaces
 {
-    AZStd::unordered_set<AZ::u8> SetSimulationStateServiceHandler::GetProvidedFeatures()
+    AZStd::unordered_set<SimulationFeatureType> SetSimulationStateServiceHandler::GetProvidedFeatures()
     {
-        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::SIMULATION_STATE_SETTING, SimulationFeatures::SIMULATION_STATE_PAUSE };
+        return AZStd::unordered_set<SimulationFeatureType>{ SimulationFeatures::SIMULATION_STATE_SETTING,
+                                                            SimulationFeatures::SIMULATION_STATE_PAUSE };
     }
 
     AZStd::optional<SetSimulationStateServiceHandler::Response> SetSimulationStateServiceHandler::HandleServiceRequest(

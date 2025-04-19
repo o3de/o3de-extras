@@ -14,13 +14,13 @@
 
 namespace ROS2SimulationInterfaces
 {
-    AZStd::unordered_set<AZ::u8> GetEntitiesStatesServiceHandler::GetProvidedFeatures()
+    AZStd::unordered_set<SimulationFeatureType> GetEntitiesStatesServiceHandler::GetProvidedFeatures()
     {
-        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::ENTITY_TAGS,
-                                             SimulationFeatures::ENTITY_BOUNDS_BOX,
-                                             SimulationFeatures::ENTITY_BOUNDS_CONVEX,
-                                             SimulationFeatures::ENTITY_CATEGORIES,
-                                             SimulationFeatures::ENTITY_STATE_GETTING };
+        return AZStd::unordered_set<SimulationFeatureType>{ SimulationFeatures::ENTITY_TAGS,
+                                                            SimulationFeatures::ENTITY_BOUNDS_BOX,
+                                                            SimulationFeatures::ENTITY_BOUNDS_CONVEX,
+                                                            SimulationFeatures::ENTITY_CATEGORIES,
+                                                            SimulationFeatures::ENTITY_STATE_GETTING };
     }
 
     AZStd::optional<GetEntitiesStatesServiceHandler::Response> GetEntitiesStatesServiceHandler::HandleServiceRequest(

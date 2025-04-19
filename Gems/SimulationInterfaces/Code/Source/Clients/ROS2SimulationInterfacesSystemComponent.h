@@ -56,7 +56,7 @@ namespace ROS2SimulationInterfaces
         void Deactivate() override;
 
         // ROS2SimulationInterfacesRequestBus override
-        AZStd::unordered_set<AZ::u8> GetSimulationFeatures() override;
+        AZStd::unordered_set<SimulationFeatureType> GetSimulationFeatures() override;
 
     private:
         AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<IROS2HandlerBase>> m_availableRos2Interface;

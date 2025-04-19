@@ -13,9 +13,9 @@
 namespace ROS2SimulationInterfaces
 {
 
-    AZStd::unordered_set<AZ::u8> DeleteEntityServiceHandler::GetProvidedFeatures()
+    AZStd::unordered_set<SimulationFeatureType> DeleteEntityServiceHandler::GetProvidedFeatures()
     {
-        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::DELETING };
+        return AZStd::unordered_set<SimulationFeatureType>{ SimulationFeatures::DELETING };
     }
 
     AZStd::optional<DeleteEntityServiceHandler::Response> DeleteEntityServiceHandler::HandleServiceRequest(

@@ -20,12 +20,12 @@
 namespace ROS2SimulationInterfaces
 {
 
-    AZStd::unordered_set<AZ::u8> ResetSimulationServiceHandler::GetProvidedFeatures()
+    AZStd::unordered_set<SimulationFeatureType> ResetSimulationServiceHandler::GetProvidedFeatures()
     {
-        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::SIMULATION_RESET,
-                                             SimulationFeatures::SIMULATION_RESET_TIME,
-                                             SimulationFeatures::SIMULATION_RESET_STATE,
-                                             SimulationFeatures::SIMULATION_RESET_SPAWNED };
+        return AZStd::unordered_set<SimulationFeatureType>{ SimulationFeatures::SIMULATION_RESET,
+                                                            SimulationFeatures::SIMULATION_RESET_TIME,
+                                                            SimulationFeatures::SIMULATION_RESET_STATE,
+                                                            SimulationFeatures::SIMULATION_RESET_SPAWNED };
     }
 
     AZStd::optional<ResetSimulationServiceHandler::Response> ResetSimulationServiceHandler::HandleServiceRequest(

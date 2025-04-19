@@ -9,11 +9,12 @@
 #pragma once
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/string/string.h>
+#include <simulation_interfaces/msg/result.hpp>
 namespace SimulationInterfaces
 {
     //! Result codes to be used in the Result message
     //!  @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/Result.msg">Result.msg</a>
-    using ErrorCodeType = uint8_t;
+    using ErrorCodeType = simulation_interfaces::msg::Result::_result_type;
 
     //! A message type to represent the result of a failed operation
     struct FailedResult
