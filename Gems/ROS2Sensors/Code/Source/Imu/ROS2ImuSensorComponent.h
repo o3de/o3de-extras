@@ -41,11 +41,6 @@ namespace ROS2
         void Deactivate() override;
         //////////////////////////////////////////////////////////////////////////
 
-        // Configuration Bus
-        // void SetConfiguration(const ImuSensorConfiguration configuration) override;
-
-        // const ImuSensorConfiguration GetConfiguration() const override;
-
     private:
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> m_imuPublisher;
         sensor_msgs::msg::Imu m_imuMsg;
@@ -67,6 +62,12 @@ namespace ROS2
         void OnImuEvent(float imuDeltaTime, AzPhysics::SceneHandle sceneHandle, float physicsDeltaTime);
 
         AZ::Matrix3x3 ToDiagonalCovarianceMatrix(const AZ::Vector3& variance);
+
+        void ConfigureSensor();
+
+        // Configuration Bus
+        void SetConfiguration(const ImuSensorConfiguration configuration) override;
+        const ImuSensorConfiguration GetConfiguration() const override;
 
         // Handle to the simulated physical body
         AzPhysics::SimulatedBodyHandle m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;

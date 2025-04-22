@@ -93,9 +93,7 @@ namespace ROS2
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
 
-        m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
-        m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
-        m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
+        ConfigureSensor();
 
         StartSensor(
             m_sensorConfiguration.m_frequency,
@@ -206,19 +204,22 @@ namespace ROS2
         return covarianceMatrix;
     }
 
-    // const ImuSensorConfiguration ROS2ImuSensorComponent::GetConfiguration() const
-    // {
-    //     std::cout << "GetConfiguration" << std::endl;
-    //     std::cout << "Real: " << m_imuConfiguration.m_filterSize << std::endl;
-    //     return m_imuConfiguration;
-    // }
+    void ROS2ImuSensorComponent::ConfigureSensor()
+    {
+        m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
+        m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
+        m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
+    }
 
-    // void ROS2ImuSensorComponent::SetConfiguration(const ImuSensorConfiguration configuration)
-    // {
-    //     m_imuConfiguration = configuration;
-    //     m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
-    //     m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
-    //     m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
-    // }
+    const ImuSensorConfiguration ROS2ImuSensorComponent::GetConfiguration() const
+    {
+        return m_imuConfiguration;
+    }
+
+    void ROS2ImuSensorComponent::SetConfiguration(const ImuSensorConfiguration configuration)
+    {
+        m_imuConfiguration = configuration;
+        ConfigureSensor();
+    }
 
 } // namespace ROS2

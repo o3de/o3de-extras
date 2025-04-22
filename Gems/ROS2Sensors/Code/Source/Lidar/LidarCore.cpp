@@ -188,6 +188,11 @@ namespace ROS2
         m_implementationToRaycasterMap.clear();
     }
 
+    void LidarCore::UpdateConfig(const LidarSensorConfiguration& lidarConfiguration)
+    {
+        m_lidarConfiguration = lidarConfiguration;
+    }
+
     LidarId LidarCore::GetLidarRaycasterId() const
     {
         return m_lidarRaycasterId;

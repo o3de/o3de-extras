@@ -7,6 +7,7 @@
  */
 
 #include "ROS2CameraSensorComponent.h"
+#include "AzCore/Component/TickBus.h"
 #include "CameraUtilities.h"
 #include <ROS2/Frame/ROS2FrameComponent.h>
 
@@ -35,18 +36,8 @@ namespace ROS2
     void ROS2CameraSensorComponent::Activate()
     {
         ROS2SensorComponentBase::Activate();
-        if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
-        {
-            SetImageSource<CameraRGBDSensor>();
-        }
-        else if (m_cameraConfiguration.m_colorCamera)
-        {
-            SetImageSource<CameraColorSensor>();
-        }
-        else if (m_cameraConfiguration.m_depthCamera)
-        {
-            SetImageSource<CameraDepthSensor>();
-        }
+
+        SetCameraSensorConfiguration();
 
         const auto* component = GetEntity()->FindComponent<ROS2FrameComponent>();
         AZ_Assert(component, "Entity has no ROS2FrameComponent");
@@ -137,4 +128,39 @@ namespace ROS2
         }
         return AZStd::string{};
     }
+
+    void ROS2CameraSensorComponent::SetCameraSensorConfiguration()
+    {
+        if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
+        {
+            SetImageSource<CameraRGBDSensor>();
+        }
+        else if (m_cameraConfiguration.m_colorCamera)
+        {
+            SetImageSource<CameraColorSensor>();
+        }
+        else if (m_cameraConfiguration.m_depthCamera)
+        {
+            SetImageSource<CameraDepthSensor>();
+        }
+    }
+
+    void ROS2CameraSensorComponent::SetConfiguration(const CameraSensorConfiguration configuration)
+    {
+        m_cameraConfiguration = configuration;
+        m_cameraSensor.reset();
+        // SetCameraSensorConfiguration() is called in the next tick to ensure that the camera sensor is
+        // reset.
+        AZ::SystemTickBus::QueueFunction(
+            [this]()
+            {
+                SetCameraSensorConfiguration();
+            });
+    }
+
+    const CameraSensorConfiguration ROS2CameraSensorComponent::GetConfiguration() const
+    {
+        return m_cameraConfiguration;
+    }
+
 } // namespace ROS2

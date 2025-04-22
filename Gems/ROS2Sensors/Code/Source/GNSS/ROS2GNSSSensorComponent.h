@@ -57,6 +57,10 @@ namespace ROS2
         //! @return Current entity position.
         [[nodiscard]] AZ::Transform GetCurrentPose() const;
 
+        // Configuration Bus overrides
+        void SetConfiguration(const ROS2GNSSSensorConfiguration configuration) override;
+        const ROS2GNSSSensorConfiguration GetConfiguration() const override;
+
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::NavSatFix>> m_gnssPublisher;
         sensor_msgs::msg::NavSatFix m_gnssMsg;
     };

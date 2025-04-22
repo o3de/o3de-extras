@@ -35,6 +35,10 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
 
     private:
+        // ConfigurationBus overrides
+        const ROS2WheelOdometryConfiguration GetConfiguration() const override;
+        void SetConfiguration(const ROS2WheelOdometryConfiguration configuration) override;
+
         std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> m_odometryPublisher;
         nav_msgs::msg::Odometry m_odometryMsg;
         AZ::Vector3 m_robotPose{ 0 };

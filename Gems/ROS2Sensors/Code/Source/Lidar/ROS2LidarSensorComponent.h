@@ -47,6 +47,10 @@ namespace ROS2
         void FrequencyTick();
         void PublishRaycastResults(const RaycastResults& results);
 
+        // ConfigurationBus overrides
+        const LidarSensorConfiguration GetConfiguration() const override;
+        void SetConfiguration(const LidarSensorConfiguration configuration) override;
+
         bool m_canRaycasterPublish = false;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
         std::shared_ptr<rclcpp::Publisher<vision_msgs::msg::LabelInfo>> m_segmentationClassesPublisher;

@@ -122,4 +122,14 @@ namespace ROS2
         m_gnssPublisher->publish(m_gnssMsg);
     }
 
+    void ROS2GNSSSensorComponent::SetConfiguration([[maybe_unused]] const ROS2GNSSSensorConfiguration configuration)
+    {
+        // This sensor does not have any configuration parameters.
+    }
+    const ROS2GNSSSensorConfiguration ROS2GNSSSensorComponent::GetConfiguration() const
+    {
+        // This sensor does not have any configuration parameters.
+        return {};
+    }
+
 } // namespace ROS2

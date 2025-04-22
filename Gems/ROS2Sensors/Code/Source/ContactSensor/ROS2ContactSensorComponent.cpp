@@ -209,4 +209,14 @@ namespace ROS2
             m_activeContacts[event.m_body2->GetEntityId()] = AZStd::move(state);
         }
     }
+
+    const ROS2ContactSensorConfiguration ROS2ContactSensorComponent::GetConfiguration() const
+    {
+        return {};
+    }
+
+    void ROS2ContactSensorComponent::SetConfiguration([[maybe_unused]] const ROS2ContactSensorConfiguration configuration)
+    {
+        // No configuration parameters
+    }
 } // namespace ROS2

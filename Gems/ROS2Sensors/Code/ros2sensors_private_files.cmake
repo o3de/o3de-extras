@@ -48,9 +48,7 @@ set(FILES
     Source/Lidar/LidarSystem.cpp
     Source/Lidar/LidarSystem.h
     Source/Lidar/LidarTemplate.cpp
-    Source/Lidar/LidarTemplate.h
     Source/Lidar/LidarTemplateUtils.cpp
-    Source/Lidar/LidarTemplateUtils.h
     Source/Lidar/PointCloudMessageBuilder.cpp
     Source/Lidar/PointCloudMessageBuilder.h
     Source/Lidar/ROS2Lidar2DSensorComponent.cpp
@@ -63,4 +61,7 @@ set(FILES
     Source/Odometry/ROS2WheelOdometryConfiguration.cpp
     Source/Odometry/ROS2WheelOdometry.h
     Source/Odometry/ROS2OdometryCovariance.cpp
+
+    Source/TestComponent.cpp
+    Source/TestComponent.h
 )

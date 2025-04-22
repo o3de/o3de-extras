@@ -35,6 +35,10 @@ namespace ROS2
         //! Deinitialize when deactivating the lidar.
         void Deinit();
 
+        //! Update the lidar configuration.
+        //! This function should only be called when the lidar is not active.
+        void UpdateConfig(const LidarSensorConfiguration& lidarConfiguration);
+
         //! Perform a raycast.
         //! @return Results of the raycast.
         AZStd::optional<RaycastResults> PerformRaycast();

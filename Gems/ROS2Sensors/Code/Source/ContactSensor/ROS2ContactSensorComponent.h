@@ -60,6 +60,10 @@ namespace ROS2
 
         void AddNewContact(const AzPhysics::CollisionEvent& event);
 
+        // Configuration Bus overrides
+        void SetConfiguration(const ROS2ContactSensorConfiguration configuration) override;
+        const ROS2ContactSensorConfiguration GetConfiguration() const override;
+
         AZ::EntityId m_entityId;
         AZStd::string m_entityName = "";
 

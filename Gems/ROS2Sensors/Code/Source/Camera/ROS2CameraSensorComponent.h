@@ -73,6 +73,13 @@ namespace ROS2
         ///! Requests message publication from camera sensor.
         void FrequencyTick();
 
+        //! Sets the camera sensor and image source.
+        void SetCameraSensorConfiguration();
+
+        // ConfigurationBus overrides
+        void SetConfiguration(const CameraSensorConfiguration configuration) override;
+        const CameraSensorConfiguration GetConfiguration() const override;
+
         CameraSensorConfiguration m_cameraConfiguration;
         AZStd::string m_frameName;
         AZStd::shared_ptr<CameraSensor> m_cameraSensor;

@@ -285,4 +285,17 @@ namespace ROS2
             m_segmentationClassesPublisher->publish(segmentationClasses);
         }
     }
+
+    void ROS2LidarSensorComponent::SetConfiguration(const LidarSensorConfiguration configuration)
+    {
+        m_lidarCore.Deinit();
+        m_lidarCore.UpdateConfig(configuration);
+        m_lidarCore.Init(GetEntityId());
+    }
+
+    const LidarSensorConfiguration ROS2LidarSensorComponent::GetConfiguration() const
+    {
+        return m_lidarCore.m_lidarConfiguration;
+    }
+
 } // namespace ROS2

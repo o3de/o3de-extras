@@ -11,9 +11,8 @@
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
-#include <Lidar/LidarRegistrarSystemComponent.h>
-#include <Lidar/LidarTemplate.h>
-#include <Lidar/LidarTemplateUtils.h>
+#include <ROS2Sensors/Configuration/LidarTemplate.h>
+#include <ROS2Sensors/Configuration/LidarTemplateUtils.h>
 #include <ROS2Sensors/Lidar/LidarRegistrarBus.h>
 
 namespace ROS2
@@ -59,7 +58,7 @@ namespace ROS2
         //! Get all available lidar systems.
         AZStd::vector<AZStd::string> FetchLidarSystemList();
 
-        const AZStd::vector<LidarTemplate::LidarModel> m_availableModels;
+        AZStd::vector<LidarTemplate::LidarModel> m_availableModels;
         AZStd::string m_lidarModelName = "CustomLidar2D";
 
         void UpdateShowNoise();

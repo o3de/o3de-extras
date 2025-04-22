@@ -142,4 +142,16 @@ namespace ROS2
         m_odometryPublisher.reset();
         ROS2SensorComponentBase::Deactivate();
     }
+
+    const ROS2OdometrySensorConfiguration ROS2OdometrySensorComponent::GetConfiguration() const
+    {
+        // This sensor does not have any configuration parameters.
+        return {};
+    }
+
+    void ROS2OdometrySensorComponent::SetConfiguration([[maybe_unused]] ROS2OdometrySensorConfiguration configuration)
+    {
+        // This sensor does not have any configuration parameters.
+    }
+
 } // namespace ROS2

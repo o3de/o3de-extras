@@ -29,6 +29,8 @@
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <Odometry/ROS2WheelOdometry.h>
 
+#include <TestComponent.h>
+
 namespace ROS2Sensors
 {
     AZ_TYPE_INFO_WITH_NAME_IMPL(ROS2SensorsModuleInterface, "ROS2SensorsModuleInterface", ROS2SensorsModuleInterfaceTypeId);
@@ -59,6 +61,8 @@ namespace ROS2Sensors
                 ROS2::LidarRegistrarSystemComponent::CreateDescriptor(),
                 ROS2::ROS2OdometrySensorComponent::CreateDescriptor(),
                 ROS2::ROS2WheelOdometryComponent::CreateDescriptor(),
+
+                TestNamespace::TestComponent::CreateDescriptor(),
             });
     }
 

@@ -13,6 +13,7 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Sensor/Events/EventSourceAdapter.h>
+#include <ROS2Sensors/Configuration/ConfigurationBus.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <ROS2Sensors/Sensor/SensorConfiguration.h>
 #include <ROS2Sensors/Sensor/SensorConfigurationRequestBus.h>
@@ -34,6 +35,7 @@ namespace ROS2
     class ROS2SensorComponentBase
         : public AZ::Component
         , public SensorConfigurationRequestBus::Handler
+        , public ConfigurationBus<ComponentConfigurationT>::Handler
     {
     public:
         using SensorBaseType = ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>;
@@ -110,10 +112,12 @@ namespace ROS2
         {
             AZ::EntityComponentIdPair entityComponentIdPair(GetEntityId(), GetId());
             SensorConfigurationRequestBus::Handler::BusConnect(entityComponentIdPair);
+            ConfigurationBus<ComponentConfigurationT>::Handler::BusConnect(GetEntityId());
         }
 
         void Deactivate() override
         {
+            ConfigurationBus<ComponentConfigurationT>::Handler::BusDisconnect();
             SensorConfigurationRequestBus::Handler::BusDisconnect();
         }
 
@@ -149,7 +153,7 @@ namespace ROS2
             m_eventSourceAdapter.Start();
         }
 
-        //! Stops sensor and disconnects event callbacks passed through RSO2::ROS2SensorComponentBase::StartSensor.
+        //! Stops sensor and disconnects event callbacks passed through ROS2::ROS2SensorComponentBase::StartSensor.
         void StopSensor()
         {
             m_eventSourceAdapter.Stop();
