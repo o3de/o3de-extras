@@ -45,7 +45,6 @@ namespace ROS2SimulationInterfaces
                 simSpawnable.description = spawnable.m_description.c_str();
                 return simSpawnable;
             });
-        response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
 
         return response;
     }

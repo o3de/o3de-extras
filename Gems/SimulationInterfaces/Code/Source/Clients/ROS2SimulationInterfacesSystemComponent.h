@@ -9,26 +9,14 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
-#include <AzFramework/API/ApplicationAPI.h>
-
-#include "Services/DeleteEntityServiceHandler.h"
-#include "Services/GetEntitiesServiceHandler.h"
-#include "Services/GetEntitiesStatesServiceHandler.h"
-#include "Services/GetEntityStateServiceHandler.h"
-#include "Services/GetSimulationFeaturesServiceHandler.h"
-#include "Services/GetSimulationStateServiceHandler.h"
-#include "Services/GetSpawnablesServiceHandler.h"
-#include "Services/ROS2ServiceBase.h"
-#include "Services/ResetSimulationServiceHandler.h"
-#include "Services/SetEntityStateServiceHandler.h"
-#include "Services/SetSimulationStateServiceHandler.h"
-#include "Services/SpawnEntityServiceHandler.h"
-#include "Services/StepSimulationServiceHandler.h"
-#include "SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h"
 #include <AzCore/std/containers/unordered_map.h>
-#include <AzCore/std/optional.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
+#include <AzFramework/API/ApplicationAPI.h>
+
+#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
+
+#include <Interfaces/IROS2HandlerBase.h>
 
 namespace ROS2SimulationInterfaces
 {
@@ -51,7 +39,6 @@ namespace ROS2SimulationInterfaces
 
     protected:
         // AZ::Component interface implementation
-        void Init() override;
         void Activate() override;
         void Deactivate() override;
 

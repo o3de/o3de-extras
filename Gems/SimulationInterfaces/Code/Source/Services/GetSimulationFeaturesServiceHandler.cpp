@@ -32,12 +32,12 @@ namespace ROS2SimulationInterfaces
             o3deInterfaces, &SimulationInterfaces::SimulationFeaturesAggregatorRequests::GetSimulationFeatures);
         // create common features and return it;
         // common features are logical AND between two sets
-        AZStd::unordered_set<SimulationFeatureType> commonFeatures;
-        commonFeatures.insert(ros2Interfaces.begin(), ros2Interfaces.end());
-        commonFeatures.insert(o3deInterfaces.begin(), o3deInterfaces.end());
+        AZStd::unordered_set<SimulationFeatureType> allFeatures;
+        allFeatures.insert(ros2Interfaces.begin(), ros2Interfaces.end());
+        allFeatures.insert(o3deInterfaces.begin(), o3deInterfaces.end());
 
         Response response;
-        for (auto id : commonFeatures)
+        for (auto id : allFeatures)
         {
             if (ros2Interfaces.contains(id) && o3deInterfaces.contains(SimulationInterfaces::SimulationFeatureType(id)))
             {

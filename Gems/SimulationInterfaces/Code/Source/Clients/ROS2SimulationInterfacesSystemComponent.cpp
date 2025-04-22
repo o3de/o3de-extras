@@ -9,15 +9,28 @@
 #include "ROS2SimulationInterfacesSystemComponent.h"
 
 #include <Actions/SimulateStepsActionServerHandler.h>
-#include <AzCore/std/string/string.h>
-#include <Services/ROS2ServiceBase.h>
-#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
-
-#include <ROS2/ROS2Bus.h>
-#include <SimulationInterfaces/ROS2SimulationInterfacesTypeIds.h>
-
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
+#include <AzCore/std/string/string.h>
+#include <AzFramework/API/ApplicationAPI.h>
+
+#include <ROS2/ROS2Bus.h>
+#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
+#include <SimulationInterfaces/ROS2SimulationInterfacesTypeIds.h>
+
+#include <Services/DeleteEntityServiceHandler.h>
+#include <Services/GetEntitiesServiceHandler.h>
+#include <Services/GetEntitiesStatesServiceHandler.h>
+#include <Services/GetEntityStateServiceHandler.h>
+#include <Services/GetSimulationFeaturesServiceHandler.h>
+#include <Services/GetSimulationStateServiceHandler.h>
+#include <Services/GetSpawnablesServiceHandler.h>
+#include <Services/ROS2ServiceBase.h>
+#include <Services/ResetSimulationServiceHandler.h>
+#include <Services/SetEntityStateServiceHandler.h>
+#include <Services/SetSimulationStateServiceHandler.h>
+#include <Services/SpawnEntityServiceHandler.h>
+#include <Services/StepSimulationServiceHandler.h>
 
 namespace ROS2SimulationInterfaces
 {
@@ -64,10 +77,6 @@ namespace ROS2SimulationInterfaces
 
     void ROS2SimulationInterfacesSystemComponent::GetDependentServices(
         [[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
-    {
-    }
-
-    void ROS2SimulationInterfacesSystemComponent::Init()
     {
     }
 

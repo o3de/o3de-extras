@@ -14,7 +14,7 @@
 namespace SimulationInterfaces
 {
     //! Structure to design a filter for tags
-    //!  @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/TagsFilter.msg">TagsFilter.msg</a>
+    //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/TagsFilter.msg">TagsFilter.msg</a>
     using TagFilterMode = uint8_t;
 
     struct TagFilter

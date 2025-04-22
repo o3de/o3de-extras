@@ -8,12 +8,12 @@
 
 #include "SimulationEntitiesManager.h"
 
+#include <Clients/SimulationFeaturesAggregator.h>
+#include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
-#include "Clients/SimulationFeaturesAggregator.h"
 #include "CommonUtilities.h"
 #include "ConsoleCommands.inl"
-#include "SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h"
 #include <AzCore/Asset/AssetManager.h>
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
@@ -112,10 +112,6 @@ namespace SimulationInterfaces
         {
             SimulationEntityManagerInterface::Unregister(this);
         }
-    }
-
-    void SimulationEntitiesManager::Init()
-    {
     }
 
     bool SimulationEntitiesManager::RegisterNewSimulatedBody(AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle)
@@ -264,15 +260,16 @@ namespace SimulationInterfaces
 
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
-            AZStd::unordered_set<SimulationFeatureType>{ // simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
-                                                         simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_BOX,
-                                                         // simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_CONVEX,
-                                                         // simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
-                                                         simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_GETTING,
-                                                         simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_SETTING,
-                                                         simulation_interfaces::msg::SimulatorFeatures::DELETING,
-                                                         simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
-                                                         simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
+            AZStd::unordered_set<SimulationFeatureType>{
+                // not implemented: simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
+                simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_BOX,
+                // not implemented: simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_CONVEX,
+                // not implemented: simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
+                simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_GETTING,
+                simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_SETTING,
+                simulation_interfaces::msg::SimulatorFeatures::DELETING,
+                simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
+                simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
         AZ::TickBus::Handler::BusConnect();
     }
 
@@ -286,7 +283,6 @@ namespace SimulationInterfaces
 
         m_physicsScenesHandle = AzPhysics::InvalidSceneHandle;
 
-        m_sceneAddedHandler.Disconnect();
         m_sceneAddedHandler.Disconnect();
     }
 
@@ -311,17 +307,15 @@ namespace SimulationInterfaces
 
     void SimulationEntitiesManager::RemoveSimulatedEntity(AZ::EntityId entityId)
     {
-        auto findIt = m_entityIdToSimulatedEntityMap.find(entityId);
-        if (findIt != m_entityIdToSimulatedEntityMap.end())
+        if (auto findIt = m_entityIdToSimulatedEntityMap.find(entityId); findIt != m_entityIdToSimulatedEntityMap.end())
         {
             const auto& simulatedEntityName = findIt->second;
             m_entityIdToSimulatedEntityMap.erase(findIt);
             m_simulatedEntityToEntityIdMap.erase(simulatedEntityName);
         }
-        auto findIt2 = m_entityIdToInitialState.find(entityId);
-        if (findIt2 != m_entityIdToInitialState.end())
+        if (auto findIt = m_entityIdToInitialState.find(entityId); findIt != m_entityIdToInitialState.end())
         {
-            m_entityIdToInitialState.erase(findIt2);
+            m_entityIdToInitialState.erase(findIt);
         }
     }
 
@@ -371,8 +365,7 @@ namespace SimulationInterfaces
             for (const auto& hit : result.m_hits)
             {
                 const AZ::EntityId entityId = hit.m_entityId;
-                auto findIt = m_entityIdToSimulatedEntityMap.find(entityId);
-                if (findIt != m_entityIdToSimulatedEntityMap.end())
+                if (auto findIt = m_entityIdToSimulatedEntityMap.find(entityId); findIt != m_entityIdToSimulatedEntityMap.end())
                 {
                     entities.push_back(findIt->second);
                 }
@@ -404,7 +397,7 @@ namespace SimulationInterfaces
         const auto findIt = m_simulatedEntityToEntityIdMap.find(name);
         if (findIt == m_simulatedEntityToEntityIdMap.end())
         {
-            AZ_Warning("SimulationInterfaces", findIt != m_simulatedEntityToEntityIdMap.end(), "Entity %s not found", name.c_str());
+            AZ_Warning("SimulationInterfaces", false, "Entity %s not found", name.c_str());
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "Entity not found"));
         }
         EntityState entityState{};
@@ -523,7 +516,6 @@ namespace SimulationInterfaces
     void SimulationEntitiesManager::DeleteEntity(const AZStd::string& name, DeletionCompletedCb completedCb)
     {
         const auto findIt = m_simulatedEntityToEntityIdMap.find(name);
-
         if (findIt == m_simulatedEntityToEntityIdMap.end())
         {
             completedCb(AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "Entity not found")));

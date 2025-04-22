@@ -38,7 +38,7 @@ namespace ROS2SimulationInterfaces::Utils
             const AZ::Aabb aabb = AZ::Aabb::CreateFromMinMax(lowerLeft, upperRight);
             filter.m_boundsShape = AZStd::make_shared<Physics::BoxShapeConfiguration>(aabb.GetExtents());
         }
-        else if (type == simulation_interfaces::msg::Bounds::TYPE_CONVEX_HULL) // TYPE_CONVEX_HULL
+        else if (type == simulation_interfaces::msg::Bounds::TYPE_CONVEX_HULL)
         {
             if (request.filters.bounds.points.size() < 3)
             {
@@ -46,7 +46,7 @@ namespace ROS2SimulationInterfaces::Utils
             }
             filter.m_boundsShape = AZStd::make_shared<Physics::ConvexHullShapeConfiguration>();
         }
-        else if (type == simulation_interfaces::msg::Bounds::TYPE_SPHERE) // TYPE_SPHERE
+        else if (type == simulation_interfaces::msg::Bounds::TYPE_SPHERE)
         {
             if (request.filters.bounds.points.size() != 2)
             {

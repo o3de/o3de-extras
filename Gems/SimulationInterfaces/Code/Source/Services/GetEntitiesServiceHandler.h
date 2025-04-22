@@ -29,8 +29,6 @@ namespace ROS2SimulationInterfaces
         AZStd::unordered_set<SimulationFeatureType> GetProvidedFeatures() override;
 
         AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) override;
-
-    private:
     };
 
 } // namespace ROS2SimulationInterfaces

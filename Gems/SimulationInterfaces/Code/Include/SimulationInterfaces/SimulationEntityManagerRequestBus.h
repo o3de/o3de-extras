@@ -33,7 +33,7 @@ namespace SimulationInterfaces
         AZ::Transform m_boundsPose{ AZ::Transform::CreateIdentity() };
     };
 
-    //!  @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityState.msg">EntityState.msg</a>
+    //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityState.msg">EntityState.msg</a>
     struct EntityState
     {
         AZ::Transform m_pose; //! The pose of the entity
@@ -41,6 +41,7 @@ namespace SimulationInterfaces
         AZ::Vector3 m_twistAngular; //! The angular velocity of the entity (in the entity frame)
     };
 
+    //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/Spawnable.msg">Spawnable.msg</a>
     struct Spawnable
     {
         AZStd::string m_uri;
@@ -64,16 +65,15 @@ namespace SimulationInterfaces
         //! Supported filters:
         //! - name : a posix regular expression to match against entity names
         //! - bounds : a shape to use for filtering entities, null means no bounds filtering
-        //!  @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/srv/GetEntities.srv">GetEntities.srv</a>
+        //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/srv/GetEntities.srv">GetEntities.srv</a>
         virtual AZ::Outcome<EntityNameList, FailedResult> GetEntities(const EntityFilters& filter) = 0;
 
         //! Get the state of an entity.
-        //!  @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/srv/GetEntityState.srv">GetEntityState.srv</a>
+        //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/srv/GetEntityState.srv">GetEntityState.srv</a>
         virtual AZ::Outcome<EntityState, FailedResult> GetEntityState(const AZStd::string& name) = 0;
 
         //! Get the state of all entities that match the filter.
-        //! @see <a
-        //! href="https://github.com/ros-simulation/simulation_interfaces/blob/main/srv/GetEntitiesStates.srv">GetEntitiesStates.srv</a>
+        //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/srv/GetEntitiesStates.srv">GetEntitiesStates.srv</a>
         virtual AZ::Outcome<MultipleEntitiesStates, FailedResult> GetEntitiesStates(const EntityFilters& filter) = 0;
 
         //! Set the state of an entity.
@@ -92,7 +92,7 @@ namespace SimulationInterfaces
         virtual AZ::Outcome<SpawnableList, FailedResult> GetSpawnables() = 0;
 
         //! Callback for when an entity has been spawned and registered. The string is the name of the entity in the simulation interface.
-        //! Note : The names is empty, if the entity could not be registered (e.g. prefab has no simulated entities)
+        //! Note: The names are empty, if the entity could not be registered (e.g. prefab has no simulated entities)
         virtual void SpawnEntity(
             const AZStd::string& name,
             const AZStd::string& uri,

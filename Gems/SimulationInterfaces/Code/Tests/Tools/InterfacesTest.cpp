@@ -23,20 +23,37 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
 
-#include "Clients/ROS2SimulationInterfacesSystemComponent.h"
+#include <Clients/ROS2SimulationInterfacesSystemComponent.h>
+#include <ROS2/ROS2Bus.h>
+#include <Services/DeleteEntityServiceHandler.h>
+#include <Services/GetEntitiesServiceHandler.h>
+#include <Services/GetEntitiesStatesServiceHandler.h>
+#include <Services/GetEntityStateServiceHandler.h>
+#include <Services/GetSimulationFeaturesServiceHandler.h>
+#include <Services/GetSimulationStateServiceHandler.h>
+#include <Services/GetSpawnablesServiceHandler.h>
+#include <Services/ROS2ServiceBase.h>
+#include <Services/ResetSimulationServiceHandler.h>
+#include <Services/SetEntityStateServiceHandler.h>
+#include <Services/SetSimulationStateServiceHandler.h>
+#include <Services/SpawnEntityServiceHandler.h>
+#include <Services/StepSimulationServiceHandler.h>
+
 #include "Mocks/SimulationEntityManagerMock.h"
 #include "Mocks/SimulationFeaturesAggregatorRequestsHandlerMock.h"
 #include "Mocks/SimulationManagerMock.h"
+
 #include <QApplication>
-#include <ROS2/ROS2Bus.h>
-#include <gtest/gtest.h>
-#include <memory>
+
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/create_client.hpp>
 #include <simulation_interfaces/action/simulate_steps.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 #include <std_msgs/msg/string.hpp>
+
+#include <gtest/gtest.h>
+#include <memory>
 #include <string>
 #include <string_view>
 #include <vector>

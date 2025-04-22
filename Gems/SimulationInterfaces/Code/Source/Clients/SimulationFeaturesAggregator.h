@@ -14,9 +14,7 @@
 #include <AzFramework/Entity/EntityContextBus.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
-#include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
-#include <SimulationInterfaces/SimulationMangerRequestBus.h>
 
 namespace SimulationInterfaces
 {
@@ -38,7 +36,6 @@ namespace SimulationInterfaces
         ~SimulationFeaturesAggregator();
 
         // AZ::Component
-        void Init() override;
         void Activate() override;
         void Deactivate() override;
 

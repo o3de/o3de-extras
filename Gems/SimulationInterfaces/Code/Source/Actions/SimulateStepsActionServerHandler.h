@@ -44,7 +44,7 @@ namespace ROS2SimulationInterfaces
 
     private:
         AZ::u64 m_goalSteps{ 0 };
-        bool m_isCancelled{ false };
+        bool m_cancelAction{ false };
     };
 
 } // namespace ROS2SimulationInterfaces

@@ -185,7 +185,6 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::Atom_Feature_Common.Public
     )
 
-
     # By default, we will specify that the above target ROS2 would be used by
     # Tool and Builder type targets when this gem is enabled. If you don't want it
     # active in Tools or Builders by default, delete one or both of the following lines:
