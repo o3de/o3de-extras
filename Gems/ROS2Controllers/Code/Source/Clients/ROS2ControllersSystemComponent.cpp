@@ -48,41 +48,4 @@ namespace ROS2Controllers
     void ROS2ControllersSystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
     }
-
-    ROS2ControllersSystemComponent::ROS2ControllersSystemComponent()
-    {
-        if (ROS2ControllersInterface::Get() == nullptr)
-        {
-            ROS2ControllersInterface::Register(this);
-        }
-    }
-
-    ROS2ControllersSystemComponent::~ROS2ControllersSystemComponent()
-    {
-        if (ROS2ControllersInterface::Get() == this)
-        {
-            ROS2ControllersInterface::Unregister(this);
-        }
-    }
-
-    void ROS2ControllersSystemComponent::Init()
-    {
-    }
-
-    void ROS2ControllersSystemComponent::Activate()
-    {
-        ROS2ControllersRequestBus::Handler::BusConnect();
-        AZ::TickBus::Handler::BusConnect();
-    }
-
-    void ROS2ControllersSystemComponent::Deactivate()
-    {
-        AZ::TickBus::Handler::BusDisconnect();
-        ROS2ControllersRequestBus::Handler::BusDisconnect();
-    }
-
-    void ROS2ControllersSystemComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
-    {
-    }
-
 } // namespace ROS2Controllers
