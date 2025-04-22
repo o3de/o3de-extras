@@ -61,7 +61,4 @@ set(FILES
     Source/Sensor/SensorHelpers.cpp
     Source/ROS2SensorsModuleInterface.cpp
     Source/ROS2SensorsModuleInterface.h
-
-    # Source/TestComponent.cpp
-    # Source/TestComponent.h
 )

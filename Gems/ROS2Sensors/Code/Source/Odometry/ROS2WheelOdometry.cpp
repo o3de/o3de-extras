@@ -26,9 +26,10 @@ namespace ROS2
     // This is done to maintain backwards compatibility with older versions of the component.
     // This function checks if in the prefab there exits a member called "Twist covariance" or "Pose covariance".
     // If it does, it will load the values into the new configuration struct.
-    // If it doesn't, it will treat the loaded values as the new configuration struct.
-    // Checking old members is used instead of checking the version of the component,
+    // If it doesn't, it will treat the loaded json as it would load the new version of the component.
+    // Checking old members is used instead of checking if there is a member called "Odometry configuration"
     // because is default values are used O3DE does not create an empty member and initializes the component with default values.
+    // Meaning if there does not exist a member called "Odometry configuration" this component could use old values or default ones.
     AZ::JsonSerializationResult::Result JsonROS2WheelOdometryComponentConfigSerializer::Load(
         void* outputValue, const AZ::Uuid& outputValueTypeId, const rapidjson::Value& inputValue, AZ::JsonDeserializerContext& context)
     {

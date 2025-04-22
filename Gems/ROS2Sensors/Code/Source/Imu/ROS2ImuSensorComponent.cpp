@@ -84,8 +84,6 @@ namespace ROS2
     {
         ROS2SensorComponentBase::Activate();
 
-        // ConfigurationBus<ImuSensorConfiguration>::Handler::BusConnect(GetEntityId());
-
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
         m_imuMsg.header.frame_id = GetFrameID().c_str();

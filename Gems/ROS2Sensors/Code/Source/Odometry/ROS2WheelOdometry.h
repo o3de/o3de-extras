@@ -60,11 +60,6 @@ namespace ROS2
         AZ::Quaternion m_robotRotation{ 0, 0, 0, 1 };
         ROS2WheelOdometryConfiguration m_odometryConfiguration;
 
-        // Dirty value to check if the old configuration of the odometry sensor is used.
-        // This value is checked during activation and will mark the component as dirty, to force O3DE to
-        // reselialize and save the new preferences.
-        bool m_isDirty = false;
-
         void OnOdometryEvent();
         void OnPhysicsEvent(float physicsDeltaTime);
     };
