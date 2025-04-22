@@ -22,11 +22,14 @@ namespace ROS2 {
 
         virtual ~ConfigurationRequests() = default;
 
-        virtual const Configuration GetConfiguration() const  {
-            return Configuration{};
-        };
+        //! Returns the current configuration of the component.
+        virtual const Configuration GetConfiguration() const = 0;
 
-        virtual void SetConfiguration(const Configuration configuration) {};
+        //! Sets the configuration of the component.
+        //! Each component should handle the configuration change without fully reinitializing the ROS2 publisher.
+        //! This will allow to change the configuration of the component at runtime.
+        //! @param configuration The new configuration to set.
+        virtual void SetConfiguration(const Configuration configuration) = 0;
     };
 
     template<typename Configuration>
