@@ -45,8 +45,8 @@ namespace ROS2Sensors
             m_descriptors.end(),
             {
                 ROS2SensorsSystemComponent::CreateDescriptor(),
-                ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>::CreateDescriptor(),
-                ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::CreateDescriptor(),
+                // ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>::CreateDescriptor(),
+                // ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::CreateDescriptor(),
                 ROS2::ROS2CameraSensorComponent::CreateDescriptor(),
                 ROS2::ROS2SystemCameraComponent::CreateDescriptor(),
                 ROS2::ROS2ImageEncodingConversionComponent::CreateDescriptor(),

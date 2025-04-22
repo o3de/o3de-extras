@@ -23,11 +23,23 @@
 
 namespace ROS2
 {
+    //! This sensor does not have any configuration parameters.
+    //! This structure is required to be able to use the SensorConfigurationRequestBus.
+    struct ROS2ContactSensorConfiguration
+    {
+        AZ_RTTI(ROS2ContactSensorConfiguration, "{f7ebfb9d-2d49-4059-a88f-f577a52cd68c}");
+
+        ROS2ContactSensorConfiguration() = default;
+        virtual ~ROS2ContactSensorConfiguration() = default;
+
+        static void Reflect(AZ::ReflectContext* context);
+    };
+
     //! Contact sensor detects collisions between two objects.
     //! It reports the location of the contact associated forces.
     //! This component publishes a contact_sensor topic.
     //! It doesn't measure torque.
-    class ROS2ContactSensorComponent : public ROS2SensorComponentBase<TickBasedSource>
+    class ROS2ContactSensorComponent : public ROS2SensorComponentBase<TickBasedSource, ROS2ContactSensorConfiguration>
     {
     public:
         AZ_COMPONENT(ROS2ContactSensorComponent, ROS2Sensors::ROS2ContactSensorComponentTypeId, SensorBaseType);

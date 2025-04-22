@@ -18,14 +18,15 @@
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 
-#include "ImuSensorConfiguration.h"
+#include <ROS2Sensors/Configuration/ConfigurationBus.h>
+#include <ROS2Sensors/Configuration/ImuSensorConfiguration.h>
 
 namespace ROS2
 {
     //! An IMU (Inertial Measurement Unit) sensor Component.
     //! IMUs typically include gyroscopes, accelerometers and magnetometers. This component encapsulates data
     //! acquisition and its publishing to ROS2 ecosystem. IMU Component requires ROS2FrameComponent.
-    class ROS2ImuSensorComponent : public ROS2SensorComponentBase<PhysicsBasedSource>
+    class ROS2ImuSensorComponent : public ROS2SensorComponentBase<PhysicsBasedSource, ImuSensorConfiguration>
     {
     public:
         AZ_COMPONENT(ROS2ImuSensorComponent, ROS2Sensors::ROS2ImuSensorComponentTypeId, SensorBaseType);
@@ -39,6 +40,11 @@ namespace ROS2
         void Activate() override;
         void Deactivate() override;
         //////////////////////////////////////////////////////////////////////////
+
+        // Configuration Bus
+        // void SetConfiguration(const ImuSensorConfiguration configuration) override;
+
+        // const ImuSensorConfiguration GetConfiguration() const override;
 
     private:
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> m_imuPublisher;

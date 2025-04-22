@@ -17,11 +17,23 @@
 
 namespace ROS2
 {
+    //! This sensor does not have any configuration parameters.
+    //! This structure is required to be able to use the SensorConfigurationRequestBus.
+    struct ROS2OdometrySensorConfiguration
+    {
+        AZ_RTTI(ROS2OdometrySensorConfiguration, "{04c5d154-6fa7-4c12-a4e3-025ac853198a}");
+
+        ROS2OdometrySensorConfiguration() = default;
+        virtual ~ROS2OdometrySensorConfiguration() = default;
+
+        static void Reflect(AZ::ReflectContext* context);
+    };
+
     //! Odometry sensor Component.
     //! It constructs and publishes an odometry message, which contains information about vehicle velocity and position in space.
     //! This is a ground truth "sensor", which can be helpful for development and machine learning.
     //! @see <a href="https://index.ros.org/p/nav_msgs/"> nav_msgs package. </a>
-    class ROS2OdometrySensorComponent : public ROS2SensorComponentBase<PhysicsBasedSource>
+    class ROS2OdometrySensorComponent : public ROS2SensorComponentBase<PhysicsBasedSource, ROS2OdometrySensorConfiguration>
     {
     public:
         AZ_COMPONENT(ROS2OdometrySensorComponent, ROS2Sensors::ROS2OdometrySensorComponent, SensorBaseType);

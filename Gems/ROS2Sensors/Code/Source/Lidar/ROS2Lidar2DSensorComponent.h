@@ -25,7 +25,7 @@ namespace ROS2
     //! Lidars (Light Detection and Ranging) emit laser light and measure it after reflection.
     //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation
     //! and data publishing. It requires ROS2FrameComponent.
-    class ROS2Lidar2DSensorComponent : public ROS2SensorComponentBase<TickBasedSource>
+    class ROS2Lidar2DSensorComponent : public ROS2SensorComponentBase<TickBasedSource, LidarSensorConfiguration>
     {
     public:
         AZ_COMPONENT(ROS2Lidar2DSensorComponent, ROS2Sensors::ROS2Lidar2DSensorComponentTypeId, SensorBaseType);

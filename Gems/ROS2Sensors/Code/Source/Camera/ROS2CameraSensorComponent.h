@@ -15,10 +15,10 @@
 #include <AzCore/std/containers/vector.h>
 
 #include "CameraSensor.h"
-#include "CameraSensorConfiguration.h"
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2Sensors/Camera/CameraCalibrationRequestBus.h>
+#include <ROS2Sensors/Configuration/CameraSensorConfiguration.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 
@@ -32,7 +32,7 @@ namespace ROS2
     //!   - camera vertical field of view in degrees
     //! Camera frustum is facing negative Z axis; image plane is parallel to X,Y plane: X - right, Y - up
     class ROS2CameraSensorComponent
-        : public ROS2SensorComponentBase<TickBasedSource>
+        : public ROS2SensorComponentBase<TickBasedSource, CameraSensorConfiguration>
         , public CameraCalibrationRequestBus::Handler
     {
     public:

@@ -17,11 +17,23 @@
 
 namespace ROS2
 {
+    //! This sensor does not have any configuration parameters.
+    //! This structure is required to be able to use the SensorConfigurationRequestBus.
+    struct ROS2GNSSSensorConfiguration
+    {
+        AZ_RTTI(ROS2GNSSSensorConfiguration, "{e85947cc-2821-4fa7-93d0-b3150999a588}");
+
+        ROS2GNSSSensorConfiguration() = default;
+        virtual ~ROS2GNSSSensorConfiguration() = default;
+
+        static void Reflect(AZ::ReflectContext* context);
+    };
+
     //! Global Navigation Satellite Systems (GNSS) sensor component class
     //! It provides NavSatFix data of sensor's position in GNSS frame which is defined by GNSS origin offset
     //! Offset is provided as latitude [deg], longitude [deg], altitude [m] of o3de global frame
     //! It is assumed that o3de global frame overlaps with ENU coordinate system
-    class ROS2GNSSSensorComponent : public ROS2SensorComponentBase<TickBasedSource>
+    class ROS2GNSSSensorComponent : public ROS2SensorComponentBase<TickBasedSource, ROS2GNSSSensorConfiguration>
     {
     public:
         AZ_COMPONENT(ROS2GNSSSensorComponent, ROS2Sensors::ROS2GNSSSensorComponentTypeId, SensorBaseType);

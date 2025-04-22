@@ -30,29 +30,31 @@ namespace ROS2
     //! chosen event source implementation).
     //! @see ROS2::TickBasedSource
     //! @see ROS2::PhysicsBasedSource
-    template<class EventSourceT>
+    template<class EventSourceT, class ComponentConfigurationT>
     class ROS2SensorComponentBase
         : public AZ::Component
         , public SensorConfigurationRequestBus::Handler
     {
     public:
-        using SensorBaseType = ROS2SensorComponentBase<EventSourceT>;
+        using SensorBaseType = ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>;
 
-        AZ_COMPONENT_DECL((ROS2SensorComponentBase, AZ_CLASS));
+        AZ_COMPONENT_DECL((ROS2SensorComponentBase, AZ_CLASS, AZ_CLASS));
 
         static void Reflect(AZ::ReflectContext* context)
         {
             if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
             {
-                serializeContext->Class<ROS2SensorComponentBase<EventSourceT>, AZ::Component>()->Version(1)->Field(
-                    "SensorConfiguration", &ROS2SensorComponentBase<EventSourceT>::m_sensorConfiguration);
+                serializeContext->Class<ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>, AZ::Component>()->Version(1)->Field(
+                    "SensorConfiguration", &ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>::m_sensorConfiguration);
 
                 if (auto* editContext = serializeContext->GetEditContext())
                 {
-                    editContext->Class<ROS2SensorComponentBase<EventSourceT>>("ROS2 Sensor Component Base", "Base component for sensors")
+                    editContext
+                        ->Class<ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>>(
+                            "ROS2 Sensor Component Base", "Base component for sensors")
                         ->DataElement(
                             AZ::Edit::UIHandlers::Default,
-                            &ROS2SensorComponentBase<EventSourceT>::m_sensorConfiguration,
+                            &ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>::m_sensorConfiguration,
                             "Sensor configuration",
                             "Sensor configuration");
                 }
@@ -113,6 +115,11 @@ namespace ROS2
         void Deactivate() override
         {
             SensorConfigurationRequestBus::Handler::BusDisconnect();
+        }
+
+        AZ::TypeId GetUnderlyingComponentType() const override
+        {
+            return AZ::TypeId(ROS2Sensors::ROS2SensorComponentBaseTypeId);
         }
 
     protected:
@@ -176,5 +183,5 @@ namespace ROS2
     };
 
     AZ_COMPONENT_IMPL_INLINE(
-        (ROS2SensorComponentBase, AZ_CLASS), "ROS2SensorComponentBase", "{2DF9A652-DF5D-43B1-932F-B6A838E36E97}", AZ::Component)
+        (ROS2SensorComponentBase, AZ_CLASS, AZ_CLASS), "ROS2SensorComponentBase", ROS2Sensors::ROS2SensorComponentBaseTypeId, AZ::Component)
 } // namespace ROS2

@@ -23,6 +23,15 @@ namespace ROS2
         constexpr float ContactMaximumSeparation = 0.0001f;
     }
 
+    void ROS2ContactSensorConfiguration::Reflect(AZ::ReflectContext* context)
+    {
+        // No configuration parameters
+        if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
+        {
+            serialize->Class<ROS2ContactSensorConfiguration>()->Version(1);
+        }
+    }
+
     ROS2ContactSensorComponent::ROS2ContactSensorComponent()
     {
         TopicConfiguration tc;
@@ -35,6 +44,9 @@ namespace ROS2
 
     void ROS2ContactSensorComponent::Reflect(AZ::ReflectContext* context)
     {
+        ROS2ContactSensorConfiguration::Reflect(context);
+        ROS2SensorComponentBase<TickBasedSource, ROS2ContactSensorConfiguration>::Reflect(context);
+
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2ContactSensorComponent, SensorBaseType>()->Version(2);

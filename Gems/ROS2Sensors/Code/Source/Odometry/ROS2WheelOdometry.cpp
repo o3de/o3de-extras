@@ -7,10 +7,10 @@
  */
 
 #include "ROS2WheelOdometry.h"
-#include "Odometry/ROS2OdometryCovariance.h"
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
+#include <ROS2Sensors/Configuration/ROS2OdometryCovariance.h>
 
 namespace ROS2
 {
@@ -21,14 +21,13 @@ namespace ROS2
 
     void ROS2WheelOdometryComponent::Reflect(AZ::ReflectContext* context)
     {
-        ROS2OdometryCovariance::Reflect(context);
+        ROS2WheelOdometryConfiguration::Reflect(context);
+        ROS2SensorComponentBase<PhysicsBasedSource, ROS2WheelOdometryConfiguration>::Reflect(context);
 
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2WheelOdometryComponent, SensorBaseType>()
-                ->Version(2)
-                ->Field("Twist covariance", &ROS2WheelOdometryComponent::m_twistCovariance)
-                ->Field("Pose covariance", &ROS2WheelOdometryComponent::m_poseCovariance);
+            serialize->Class<ROS2WheelOdometryComponent, SensorBaseType>()->Version(2)->Field(
+                "Odometry configuration", &ROS2WheelOdometryComponent::m_odometryConfiguration);
 
             if (auto* editContext = serialize->GetEditContext())
             {
@@ -40,14 +39,10 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2WheelOdometrySensor.svg")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &ROS2WheelOdometryComponent::m_twistCovariance,
-                        "Twist covariance",
-                        "Set ROS twist covariance")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &ROS2WheelOdometryComponent::m_poseCovariance,
-                        "Pose covariance",
-                        "Set ROS pose covariance");
+                        &ROS2WheelOdometryComponent::m_odometryConfiguration,
+                        "Odometry configuration",
+                        "Odometry sensor configuration")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
     }
@@ -72,7 +67,7 @@ namespace ROS2
     {
         m_odometryMsg.pose.pose.position = ROS2Conversions::ToROS2Point(m_robotPose);
         m_odometryMsg.pose.pose.orientation = ROS2Conversions::ToROS2Quaternion(m_robotRotation);
-        m_odometryMsg.pose.covariance = m_poseCovariance.GetRosCovariance();
+        m_odometryMsg.pose.covariance = m_odometryConfiguration.m_poseCovariance.GetRosCovariance();
 
         m_odometryPublisher->publish(m_odometryMsg);
     }
@@ -87,7 +82,7 @@ namespace ROS2
         m_odometryMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
         m_odometryMsg.twist.twist.linear = ROS2Conversions::ToROS2Vector3(vt.first);
         m_odometryMsg.twist.twist.angular = ROS2Conversions::ToROS2Vector3(vt.second);
-        m_odometryMsg.twist.covariance = m_twistCovariance.GetRosCovariance();
+        m_odometryMsg.twist.covariance = m_odometryConfiguration.m_twistCovariance.GetRosCovariance();
 
         if (m_sensorConfiguration.m_frequency > 0)
         {

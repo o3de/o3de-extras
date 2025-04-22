@@ -21,6 +21,9 @@ namespace ROS2Sensors
     // so they use the Same TypeId
     inline constexpr const char* ROS2SensorsEditorModuleTypeId = ROS2SensorsModuleTypeId;
 
+    // Sensor Components Base TypeIds
+    inline constexpr const char* ROS2SensorComponentBaseTypeId = "{A0C2D1B4-8E5F-4E7C-8A3D-6F9B5F1A0E7D}";
+
     // System Sensor Components TypeIds
     inline constexpr const char* ROS2SystemCameraComponentTypeId = "{B4665D39-78FD-40DE-8518-2F6BD345A831}";
     inline constexpr const char* ROS2EditorCameraSystemComponentTypeId = "{407F51C0-92C9-11EE-B9D1-0242AC120002}";

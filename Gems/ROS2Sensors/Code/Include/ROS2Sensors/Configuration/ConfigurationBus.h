@@ -13,7 +13,7 @@
 
 namespace ROS2 {
     template<typename Configuration>
-    class ConfigurationRequests : public AZ::EBusTraits
+    class ConfigurationRequests : public AZ::ComponentBus
     {
     public:
         // AZ_RTTI(ConfigurationRequests, "{44259aa4-ab03-43c9-baf2-77063640e925}");

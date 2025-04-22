@@ -6,9 +6,9 @@
  *
  */
 
-#include "ImuSensorConfiguration.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
+#include <ROS2Sensors/Configuration/ImuSensorConfiguration.h>
 
 namespace ROS2
 {

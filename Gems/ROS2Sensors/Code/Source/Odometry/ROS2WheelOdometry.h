@@ -9,11 +9,10 @@
 
 #include <AzCore/Math/Transform.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2Sensors/Configuration/ROS2WheelOdometryConfiguration.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
-
-#include "ROS2OdometryCovariance.h"
 
 namespace ROS2
 {
@@ -21,7 +20,7 @@ namespace ROS2
     //! It constructs and publishes an odometry message, which contains information about the vehicle's velocity and position in space.
     //! This is a physical sensor that takes a vehicle's configuration and computes updates from the wheels' rotations.
     //! @see <a href="https://index.ros.org/p/nav_msgs/">nav_msgs package</a>.
-    class ROS2WheelOdometryComponent : public ROS2SensorComponentBase<PhysicsBasedSource>
+    class ROS2WheelOdometryComponent : public ROS2SensorComponentBase<PhysicsBasedSource, ROS2WheelOdometryConfiguration>
     {
     public:
         AZ_COMPONENT(ROS2WheelOdometryComponent, ROS2Sensors::ROS2WheelOdometryComponentTypeId, SensorBaseType);
@@ -40,8 +39,7 @@ namespace ROS2
         nav_msgs::msg::Odometry m_odometryMsg;
         AZ::Vector3 m_robotPose{ 0 };
         AZ::Quaternion m_robotRotation{ 0, 0, 0, 1 };
-        ROS2OdometryCovariance m_poseCovariance;
-        ROS2OdometryCovariance m_twistCovariance;
+        ROS2WheelOdometryConfiguration m_odometryConfiguration;
 
         void OnOdometryEvent();
         void OnPhysicsEvent(float physicsDeltaTime);

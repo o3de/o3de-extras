@@ -12,10 +12,10 @@
 #include <AzToolsFramework/API/ComponentEntitySelectionBus.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 
-#include "CameraSensorConfiguration.h"
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2Sensors/Camera/CameraCalibrationRequestBus.h>
+#include <ROS2Sensors/Configuration/CameraSensorConfiguration.h>
 #include <ROS2Sensors/Sensor/SensorConfiguration.h>
 
 namespace ROS2

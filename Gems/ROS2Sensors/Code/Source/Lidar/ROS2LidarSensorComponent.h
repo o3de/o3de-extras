@@ -10,6 +10,7 @@
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
+#include <ROS2Sensors/Configuration/LidarSensorConfiguration.h>
 #include <ROS2Sensors/Lidar/LidarRegistrarBus.h>
 #include <ROS2Sensors/Lidar/LidarSystemBus.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
@@ -19,7 +20,6 @@
 
 #include "LidarCore.h"
 #include "LidarRaycaster.h"
-#include "LidarSensorConfiguration.h"
 
 namespace ROS2
 {
@@ -27,7 +27,7 @@ namespace ROS2
     //! Lidars (Light Detection and Ranging) emit laser light and measure it after reflection.
     //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation
     //! and data publishing. It requires ROS2FrameComponent.
-    class ROS2LidarSensorComponent : public ROS2SensorComponentBase<TickBasedSource>
+    class ROS2LidarSensorComponent : public ROS2SensorComponentBase<TickBasedSource, LidarSensorConfiguration>
     {
     public:
         AZ_COMPONENT(ROS2LidarSensorComponent, ROS2Sensors::ROS2LidarSensorComponentTypeId, SensorBaseType);

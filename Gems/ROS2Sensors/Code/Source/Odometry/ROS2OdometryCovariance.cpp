@@ -6,11 +6,11 @@
  *
  */
 
-#include "ROS2OdometryCovariance.h"
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/base.h>
+#include <ROS2Sensors/Configuration/ROS2OdometryCovariance.h>
 #include <array>
 
 namespace ROS2

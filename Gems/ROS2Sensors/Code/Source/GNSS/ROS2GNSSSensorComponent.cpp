@@ -22,8 +22,19 @@ namespace ROS2
         const char* GNSSMsgType = "sensor_msgs::msg::NavSatFix";
     }
 
+    void ROS2GNSSSensorConfiguration::Reflect(AZ::ReflectContext* context)
+    {
+        if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
+        {
+            serialize->Class<ROS2GNSSSensorConfiguration>()->Version(1);
+        }
+    }
+
     void ROS2GNSSSensorComponent::Reflect(AZ::ReflectContext* context)
     {
+        ROS2GNSSSensorConfiguration::Reflect(context);
+        ROS2SensorComponentBase<TickBasedSource, ROS2GNSSSensorConfiguration>::Reflect(context);
+
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2GNSSSensorComponent, SensorBaseType>()->Version(4);

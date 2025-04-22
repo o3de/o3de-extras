@@ -32,6 +32,7 @@ namespace ROS2
     void ROS2ImuSensorComponent::Reflect(AZ::ReflectContext* context)
     {
         ImuSensorConfiguration::Reflect(context);
+        ROS2SensorComponentBase<PhysicsBasedSource, ImuSensorConfiguration>::Reflect(context);
 
         if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
@@ -82,6 +83,9 @@ namespace ROS2
     void ROS2ImuSensorComponent::Activate()
     {
         ROS2SensorComponentBase::Activate();
+
+        // ConfigurationBus<ImuSensorConfiguration>::Handler::BusConnect(GetEntityId());
+
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
         m_imuMsg.header.frame_id = GetFrameID().c_str();
@@ -114,6 +118,7 @@ namespace ROS2
         StopSensor();
         m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
         m_imuPublisher.reset();
+        // ConfigurationBus<ImuSensorConfiguration>::Handler::BusDisconnect();
         ROS2SensorComponentBase::Deactivate();
     }
 
@@ -200,5 +205,20 @@ namespace ROS2
         covarianceMatrix.SetElement(2, 2, variance.GetZ());
         return covarianceMatrix;
     }
+
+    // const ImuSensorConfiguration ROS2ImuSensorComponent::GetConfiguration() const
+    // {
+    //     std::cout << "GetConfiguration" << std::endl;
+    //     std::cout << "Real: " << m_imuConfiguration.m_filterSize << std::endl;
+    //     return m_imuConfiguration;
+    // }
+
+    // void ROS2ImuSensorComponent::SetConfiguration(const ImuSensorConfiguration configuration)
+    // {
+    //     m_imuConfiguration = configuration;
+    //     m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
+    //     m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
+    //     m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
+    // }
 
 } // namespace ROS2

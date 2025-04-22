@@ -19,4 +19,12 @@ set(FILES
     Include/ROS2Sensors/Lidar/LidarRaycasterBus.h
     Include/ROS2Sensors/Lidar/LidarSystemBus.h
     Include/ROS2Sensors/Lidar/LidarRegistrarBus.h
+
+    Include/ROS2Sensors/Configuration/ConfigurationBus.h
+    Include/ROS2Sensors/Configuration/ImuSensorConfiguration.h
+    Include/ROS2Sensors/Configuration/CameraSensorConfiguration.h
+    Include/ROS2Sensors/Configuration/ROS2OdometryCovariance.h
+    Include/ROS2Sensors/Configuration/ROS2WheelOdometryConfiguration.h
+    Include/ROS2Sensors/Configuration/LidarSensorConfiguration.h
+
 )

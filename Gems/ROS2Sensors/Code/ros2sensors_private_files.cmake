@@ -23,7 +23,6 @@ set(FILES
     Source/Camera/CameraSensorDescription.cpp
     Source/Camera/CameraSensorDescription.h
     Source/Camera/CameraSensorConfiguration.cpp
-    Source/Camera/CameraSensorConfiguration.h
     Source/Camera/CameraUtilities.cpp
     Source/Camera/CameraUtilities.h
     Source/Camera/ROS2CameraSensorComponent.cpp
@@ -35,7 +34,6 @@ set(FILES
     Source/GNSS/ROS2GNSSSensorComponent.cpp
     Source/GNSS/ROS2GNSSSensorComponent.h
     Source/Imu/ImuSensorConfiguration.cpp
-    Source/Imu/ImuSensorConfiguration.h
     Source/Imu/ROS2ImuSensorComponent.cpp
     Source/Imu/ROS2ImuSensorComponent.h
     Source/Lidar/ClassSegmentationConfigurationComponent.cpp
@@ -47,7 +45,6 @@ set(FILES
     Source/Lidar/LidarRegistrarSystemComponent.cpp
     Source/Lidar/LidarRegistrarSystemComponent.h
     Source/Lidar/LidarSensorConfiguration.cpp
-    Source/Lidar/LidarSensorConfiguration.h
     Source/Lidar/LidarSystem.cpp
     Source/Lidar/LidarSystem.h
     Source/Lidar/LidarTemplate.cpp
@@ -63,7 +60,7 @@ set(FILES
     Source/Odometry/ROS2OdometrySensorComponent.cpp
     Source/Odometry/ROS2OdometrySensorComponent.h
     Source/Odometry/ROS2WheelOdometry.cpp
+    Source/Odometry/ROS2WheelOdometryConfiguration.cpp
     Source/Odometry/ROS2WheelOdometry.h
     Source/Odometry/ROS2OdometryCovariance.cpp
-    Source/Odometry/ROS2OdometryCovariance.h
 )
