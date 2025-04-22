@@ -7,6 +7,9 @@
  */
 
 #include "ROS2WheelOdometry.h"
+#include <AzCore/Serialization/Json/JsonSerialization.h>
+#include <AzCore/Serialization/Json/JsonSerializationResult.h>
+#include <AzCore/Serialization/Json/RegistrationContext.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
@@ -19,8 +22,87 @@ namespace ROS2
         const char* WheelOdometryMsgType = "nav_msgs::msg::Odometry";
     }
 
+    // Manual conversion between version without a configuration struct and with a configuration struct.
+    // This is done to maintain backwards compatibility with older versions of the component.
+    // This function checks if in the prefab there exits a member called "Twist covariance" or "Pose covariance".
+    // If it does, it will load the values into the new configuration struct.
+    // If it doesn't, it will treat the loaded values as the new configuration struct.
+    // Checking old members is used instead of checking the version of the component,
+    // because is default values are used O3DE does not create an empty member and initializes the component with default values.
+    AZ::JsonSerializationResult::Result JsonROS2WheelOdometryComponentConfigSerializer::Load(
+        void* outputValue, const AZ::Uuid& outputValueTypeId, const rapidjson::Value& inputValue, AZ::JsonDeserializerContext& context)
+    {
+        namespace JSR = AZ::JsonSerializationResult;
+
+        auto configInstance = reinterpret_cast<ROS2WheelOdometryComponent*>(outputValue);
+        AZ_Assert(configInstance, "Output value for JsonROS2WheelOdometryComponentConfigSerializer can't be null.");
+
+        JSR::ResultCode result(JSR::Tasks::ReadField);
+
+        const bool hasOldMembers = inputValue.HasMember("Twist covariance") || inputValue.HasMember("Pose covariance");
+        if (hasOldMembers)
+        {
+            {
+                JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                    &configInstance->m_odometryConfiguration.m_poseCovariance,
+                    azrtti_typeid<decltype(configInstance->m_odometryConfiguration.m_poseCovariance)>(),
+                    inputValue,
+                    "Pose covariance",
+                    context);
+
+                result.Combine(componentIdLoadResult);
+            }
+
+            {
+                JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                    &configInstance->m_odometryConfiguration.m_twistCovariance,
+                    azrtti_typeid<decltype(configInstance->m_odometryConfiguration.m_twistCovariance)>(),
+                    inputValue,
+                    "Twist covariance",
+                    context);
+
+                result.Combine(componentIdLoadResult);
+            }
+        }
+        else
+        {
+            {
+                JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                    &configInstance->m_odometryConfiguration,
+                    azrtti_typeid<decltype(configInstance->m_odometryConfiguration)>(),
+                    inputValue,
+                    "Odometry configuration",
+                    context);
+
+                result.Combine(componentIdLoadResult);
+            }
+        }
+        {
+            JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                &configInstance->m_sensorConfiguration,
+                azrtti_typeid<decltype(configInstance->m_sensorConfiguration)>(),
+                inputValue,
+                "Sensor configuration",
+                context);
+
+            result.Combine(componentIdLoadResult);
+        }
+
+        return context.Report(
+            result,
+            result.GetProcessing() != JSR::Processing::Halted ? "Successfully loaded ROS2FrameComponent information."
+                                                              : "Failed to load ROS2FrameComponent information.");
+    }
+
+    AZ_CLASS_ALLOCATOR_IMPL(JsonROS2WheelOdometryComponentConfigSerializer, AZ::SystemAllocator);
+
     void ROS2WheelOdometryComponent::Reflect(AZ::ReflectContext* context)
     {
+        if (auto jsonContext = azrtti_cast<AZ::JsonRegistrationContext*>(context))
+        {
+            jsonContext->Serializer<JsonROS2WheelOdometryComponentConfigSerializer>()->HandlesType<ROS2WheelOdometryComponent>();
+        }
+
         ROS2WheelOdometryConfiguration::Reflect(context);
         ROS2SensorComponentBase<PhysicsBasedSource, ROS2WheelOdometryConfiguration>::Reflect(context);
 
