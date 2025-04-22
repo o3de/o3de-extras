@@ -14,6 +14,7 @@
 #include <ImGuiBus.h>
 #include <ROS2Controllers/Gripper/GripperRequestBus.h>
 #include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
 #include <Utilities/ArticulationsUtilities.h>
 
 namespace ROS2
@@ -26,7 +27,7 @@ namespace ROS2
         , public AZ::TickBus::Handler
     {
     public:
-        AZ_COMPONENT(FingerGripperComponent, "{ae5f8ec2-26ee-11ee-be56-0242ac120002}", AZ::Component);
+        AZ_COMPONENT(FingerGripperComponent, ROS2Controllers::ROS2FingerGripperComponentTypeId, AZ::Component);
         FingerGripperComponent() = default;
         ~FingerGripperComponent() = default;
 

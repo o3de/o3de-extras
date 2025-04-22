@@ -14,6 +14,7 @@
 #include <AzCore/Component/TickBus.h>
 #include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
 #include <ROS2Controllers/Manipulation/JointsTrajectoryRequests.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
 #include <control_msgs/action/follow_joint_trajectory.hpp>
 
 namespace ROS2
@@ -28,7 +29,7 @@ namespace ROS2
         JointsTrajectoryComponent() = default;
         JointsTrajectoryComponent(const AZStd::string& followTrajectoryActionName);
         ~JointsTrajectoryComponent() = default;
-        AZ_COMPONENT(JointsTrajectoryComponent, "{429DE04C-6B6D-4B2D-9D6C-3681F23CBF90}", AZ::Component);
+        AZ_COMPONENT(JointsTrajectoryComponent, ROS2Controllers::JointsTrajectoryComponentTypeId, AZ::Component);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);

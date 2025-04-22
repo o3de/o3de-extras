@@ -10,6 +10,7 @@
 
 #include <AzCore/Component/Component.h>
 #include <ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
 
 namespace ROS2
 {
@@ -21,7 +22,7 @@ namespace ROS2
     public:
         JointsArticulationControllerComponent() = default;
         ~JointsArticulationControllerComponent() = default;
-        AZ_COMPONENT(JointsArticulationControllerComponent, "{243E9F07-5F84-4F83-9E6D-D1DA04D7CEF9}", AZ::Component);
+        AZ_COMPONENT(JointsArticulationControllerComponent, ROS2Controllers::JointsArticulationControllerComponentTypeId, AZ::Component);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);

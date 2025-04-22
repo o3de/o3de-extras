@@ -17,6 +17,7 @@
 #include <ImGuiBus.h>
 #include <LmbrCentral/Scripting/TagComponentBus.h>
 #include <ROS2Controllers/Gripper/GripperRequestBus.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
 
 namespace ROS2
 {
@@ -34,7 +35,7 @@ namespace ROS2
     {
     public:
         static constexpr AZ::Crc32 GrippableTag = AZ_CRC_CE("Grippable");
-        AZ_COMPONENT(VacuumGripperComponent, "{a29eb4fa-0f6f-11ee-be56-0242ac120002}", AZ::Component);
+        AZ_COMPONENT(VacuumGripperComponent, ROS2Controllers::ROS2FingerGripperComponentTypeId, AZ::Component);
         VacuumGripperComponent() = default;
         ~VacuumGripperComponent() = default;
 

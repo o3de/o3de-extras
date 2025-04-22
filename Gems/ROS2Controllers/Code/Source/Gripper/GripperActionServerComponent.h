@@ -12,6 +12,7 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <ROS2Controllers/Gripper/GripperRequestBus.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
 #include <control_msgs/action/gripper_command.hpp>
 #include <rclcpp/rclcpp.hpp>
 
@@ -26,7 +27,7 @@ namespace ROS2
     public:
         using GripperCommand = control_msgs::action::GripperCommand;
         using GoalHandleGripperCommand = rclcpp_action::ServerGoalHandle<control_msgs::action::GripperCommand>;
-        AZ_COMPONENT(GripperActionServerComponent, "{6A4417AC-1D85-4AB0-A116-1E77D40FC816}", AZ::Component);
+        AZ_COMPONENT(GripperActionServerComponent, ROS2Controllers::ROS2GripperActionServerComponentTypeId, AZ::Component);
         GripperActionServerComponent() = default;
         ~GripperActionServerComponent() = default;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);

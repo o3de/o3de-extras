@@ -14,6 +14,7 @@
 #include <AzCore/std/utility/pair.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Communication/TopicConfiguration.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
 
 namespace ROS2
 {
@@ -23,7 +24,7 @@ namespace ROS2
     public:
         JointsPositionsEditorComponent();
         ~JointsPositionsEditorComponent() = default;
-        AZ_EDITOR_COMPONENT(JointsPositionsEditorComponent, "{6fef3251-f910-4bf7-a4e6-1cf4f73daaf8}");
+        AZ_EDITOR_COMPONENT(JointsPositionsEditorComponent, ROS2Controllers::JointsPositionsEditorComponentTypeId);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void Reflect(AZ::ReflectContext* context);

@@ -16,6 +16,7 @@
 
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
 #include <ROS2Controllers/RobotControl/ControlSubscriptionHandler.h>
 #include <std_msgs/msg/float64_multi_array.hpp>
 
@@ -30,7 +31,7 @@ namespace ROS2
         JointsPositionsComponent() = default;
         JointsPositionsComponent(const TopicConfiguration& topicConfiguration, const AZStd::vector<AZStd::string>& jointNames);
         ~JointsPositionsComponent() = default;
-        AZ_COMPONENT(JointsPositionsComponent, "{21335907-767e-4b2c-81c0-6f0b410b6d87}", AZ::Component);
+        AZ_COMPONENT(JointsPositionsComponent, ROS2Controllers::JointsPositionsComponentTypeId, AZ::Component);
 
         // AZ::Component overrides...
         void Activate() override;

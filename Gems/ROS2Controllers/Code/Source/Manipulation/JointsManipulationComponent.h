@@ -18,6 +18,7 @@
 
 #include "JointStatePublisher.h"
 #include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
 
 namespace ROS2
 {
@@ -33,7 +34,7 @@ namespace ROS2
         JointsManipulationComponent(
             const PublisherConfiguration& publisherConfiguration, const AZStd::vector<AZStd::pair<AZStd::string, float>>& initialPositions);
         ~JointsManipulationComponent() = default;
-        AZ_COMPONENT(JointsManipulationComponent, "{3da9abfc-0028-4e3e-8d04-4e4440d2e319}", AZ::Component);
+        AZ_COMPONENT(JointsManipulationComponent, ROS2Controllers::JointsManipulationComponentTypeId, AZ::Component);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);

@@ -14,6 +14,7 @@
 #include <AzCore/std/utility/pair.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
 
 namespace ROS2
 {
@@ -24,7 +25,7 @@ namespace ROS2
         JointsManipulationEditorComponent();
         JointsManipulationEditorComponent(const PublisherConfiguration& publisherConfiguration);
         ~JointsManipulationEditorComponent() = default;
-        AZ_EDITOR_COMPONENT(JointsManipulationEditorComponent, "{BF2F77FD-92FB-4730-92C7-DDEE54F508BF}");
+        AZ_EDITOR_COMPONENT(JointsManipulationEditorComponent, ROS2Controllers::JointsManipulationEditorComponentTypeId);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
