@@ -31,7 +31,7 @@ namespace ROS2SimulationInterfaces
     AZStd::optional<ResetSimulationServiceHandler::Response> ResetSimulationServiceHandler::HandleServiceRequest(
         const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
-        if (request.scope == simulation_interfaces::srv::ResetSimulation::Request::SCOPE_STATE)
+        if (request.scope == Request::SCOPE_STATE)
         {
             Response response;
             SimulationInterfaces::SimulationEntityManagerRequestBus::Broadcast(
@@ -40,7 +40,7 @@ namespace ROS2SimulationInterfaces
             return response;
         }
 
-        if (request.scope == simulation_interfaces::srv::ResetSimulation::Request::SCOPE_SPAWNED)
+        if (request.scope == Request::SCOPE_SPAWNED)
         {
             auto deletionCompletedCb = [this](const AZ::Outcome<void, SimulationInterfaces::FailedResult>& outcome)
             {

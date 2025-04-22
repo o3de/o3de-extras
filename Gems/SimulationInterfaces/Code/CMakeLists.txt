@@ -261,26 +261,26 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
             )
 
             ly_add_target(
-                    NAME ${gem_name}.TestApp ${PAL_TRAIT_TEST_TARGET_TYPE}
-                    NAMESPACE Gem
-                    FILES_CMAKE
+                NAME ${gem_name}.TestApp ${PAL_TRAIT_TEST_TARGET_TYPE}
+                NAMESPACE Gem
+                FILES_CMAKE
                     simulationinterfaces_editor_app_test.cmake
-                    INCLUDE_DIRECTORIES
+                INCLUDE_DIRECTORIES
                     PRIVATE
-                    Tests
-                    Source
-                    Include
-                    BUILD_DEPENDENCIES
+                        Tests
+                        Source
+                        Include
+                BUILD_DEPENDENCIES
                     PRIVATE
-                    AZ::AzTest
-                    AZ::AzTestShared
-                    AZ::AzToolsFramework
-                    Legacy::CryCommon
-                    Legacy::EditorCommon
-                    Legacy::Editor.Headers
-                    AZ::AzManipulatorTestFramework.Static
-                    Gem::${gem_name}.API
-                    Gem::${gem_name}.Editor.Private.Object
+                        AZ::AzTest
+                        AZ::AzTestShared
+                        AZ::AzToolsFramework
+                        Legacy::CryCommon
+                        Legacy::EditorCommon
+                        Legacy::Editor.Headers
+                        AZ::AzManipulatorTestFramework.Static
+                        Gem::${gem_name}.API
+                        Gem::${gem_name}.Editor.Private.Object
             )
 
             # Add ${gem_name}.Editor.Tests to googletest
@@ -289,29 +289,29 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
             )
 
             ly_add_target(
-                    NAME ${gem_name}.ROS2Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
-                    NAMESPACE Gem
-                    FILES_CMAKE
+                NAME ${gem_name}.ROS2Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
+                NAMESPACE Gem
+                FILES_CMAKE
                     ros2_simulationinterfaces_tests_files.cmake
-                    INCLUDE_DIRECTORIES
+                INCLUDE_DIRECTORIES
                     PRIVATE
-                    Tests
-                    Source
-                    Include
-                    BUILD_DEPENDENCIES
+                        Tests
+                        Source
+                        Include
+                BUILD_DEPENDENCIES
                     PRIVATE
-                    AZ::AzTest
-                    AZ::AzTestShared
-                    AZ::AzToolsFramework
-                    Legacy::CryCommon
-                    Legacy::EditorCommon
-                    Legacy::Editor.Headers
-                    AZ::AzManipulatorTestFramework.Static
-                    Gem::${gem_name}.API
-                    Gem::${gem_name}.Editor.Private.Object
-                    Gem::SimulationInterfaces.API
-                    Gem::ROS2.Static
-                    Gem::${gem_name}.Editor.Private.Object
+                        AZ::AzTest
+                        AZ::AzTestShared
+                        AZ::AzToolsFramework
+                        Legacy::CryCommon
+                        Legacy::EditorCommon
+                        Legacy::Editor.Headers
+                        AZ::AzManipulatorTestFramework.Static
+                        Gem::${gem_name}.API
+                        Gem::${gem_name}.Editor.Private.Object
+                        Gem::SimulationInterfaces.API
+                        Gem::ROS2.Static
+                        Gem::${gem_name}.Editor.Private.Object
                 )
 
                 # Add ${gem_name}.Editor.Tests to googletest

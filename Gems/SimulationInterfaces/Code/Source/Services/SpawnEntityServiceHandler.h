@@ -32,7 +32,7 @@ namespace ROS2SimulationInterfaces
 
     private:
         bool ValidateEntityName(const AZStd::string& entityName);
-        bool ValidateFrameName(const AZStd::string& frameName);
+        bool ValidateNamespaceName(const AZStd::string& namespaceName);
     };
 
 } // namespace ROS2SimulationInterfaces

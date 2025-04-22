@@ -81,9 +81,6 @@ namespace SimulationInterfaces
         }
     }
 
-    void SimulationManager::Init()
-    {
-    }
     void SimulationManager::InitializeSimulationState()
     {
         // if start in stopped state, pause simulation. Default state for simulation by the standard is STOPPED and

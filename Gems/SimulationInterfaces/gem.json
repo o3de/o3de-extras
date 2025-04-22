@@ -7,20 +7,24 @@
     "origin": "RobotecAI",
     "origin_url": "https://robotec.ai",
     "type": "Code",
-    "summary": "This gem provides C++ API for simulation interfaces.",
+    "summary": "This gem provides ROS 2 and C++ API for simulation interfaces.",
     "canonical_tags": [
         "Gem"
     ],
     "user_tags": [
-        "SimulationInterfaces", "ROS2", "ROS 2"
+        "SimulationInterfaces",
+        "ROS2",
+        "ROS 2"
     ],
     "platforms": [
         ""
     ],
     "icon_path": "preview.png",
-    "requirements": "",
+    "requirements": "Requires ROS 2 Gem",
     "documentation_url": "",
-    "dependencies": ["ROS2"],
+    "dependencies": [
+        "ROS2>=3.3.0"
+    ],
     "repo_uri": "",
     "compatible_engines": [],
     "engine_api_dependencies": [],

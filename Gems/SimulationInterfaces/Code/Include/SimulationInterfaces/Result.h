@@ -13,7 +13,7 @@
 namespace SimulationInterfaces
 {
     //! Result codes to be used in the Result message
-    //!  @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/Result.msg">Result.msg</a>
+    //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/Result.msg">Result.msg</a>
     using ErrorCodeType = simulation_interfaces::msg::Result::_result_type;
 
     //! A message type to represent the result of a failed operation

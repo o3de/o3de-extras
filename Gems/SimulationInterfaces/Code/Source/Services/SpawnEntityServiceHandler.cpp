@@ -37,8 +37,8 @@ namespace ROS2SimulationInterfaces
             return AZStd::nullopt;
         }
 
-        // Validate frame name
-        if (!entityNamespace.empty() && !ValidateFrameName(entityNamespace))
+        // Validate namespace name
+        if (!entityNamespace.empty() && !ValidateNamespaceName(entityNamespace))
         {
             Response response;
             response.result.result = simulation_interfaces::srv::SpawnEntity::Response::NAMESPACE_INVALID;
@@ -81,12 +81,12 @@ namespace ROS2SimulationInterfaces
         return AZStd::regex_match(entityName, entityRegex);
     }
 
-    bool SpawnEntityServiceHandler::ValidateFrameName(const AZStd::string& frameName)
+    bool SpawnEntityServiceHandler::ValidateNamespaceName(const AZStd::string& namespaceName)
     {
-        const AZStd::regex frameRegex{
+        const AZStd::regex namespaceRegex{
             R"(^[a-zA-Z0-9_/]+$)"
-        }; // Entity names can only contain alphanumeric characters and underscores and forward slashes
-        return AZStd::regex_match(frameName, frameRegex);
+        }; // Namespace names can only contain alphanumeric characters and underscores and forward slashes
+        return AZStd::regex_match(namespaceName, namespaceRegex);
     }
 
 } // namespace ROS2SimulationInterfaces

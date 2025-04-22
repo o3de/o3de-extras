@@ -36,7 +36,6 @@ namespace SimulationInterfaces
         SimulationEntitiesManager();
         ~SimulationEntitiesManager();
         // AZ::Component interface implementation
-        void Init() override;
         void Activate() override;
         void Deactivate() override;
 

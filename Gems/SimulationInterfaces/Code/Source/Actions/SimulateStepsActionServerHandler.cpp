@@ -57,7 +57,7 @@ namespace ROS2SimulationInterfaces
     {
         SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
             &SimulationInterfaces::SimulationManagerRequests::CancelStepSimulation);
-        m_isCancelled = true;
+        m_cancelAction = true;
         return rclcpp_action::CancelResponse::ACCEPT;
     }
 
@@ -80,7 +80,7 @@ namespace ROS2SimulationInterfaces
             m_goalHandle.reset();
             return;
         }
-        m_isCancelled = false;
+        m_cancelAction = false;
         AZ::TickBus::Handler::BusConnect();
         SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
             &SimulationInterfaces::SimulationManagerRequests::StepSimulation, m_goalSteps);
@@ -88,7 +88,7 @@ namespace ROS2SimulationInterfaces
 
     void SimulateStepsActionServerHandler::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        if (m_isCancelled)
+        if (m_cancelAction)
         {
             auto result = std::make_shared<Result>();
             result->result.error_message = "Action has been cancelled.";

@@ -22,5 +22,5 @@ namespace ROS2SimulationInterfaces
     inline constexpr const char* ROS2SimulationInterfacesEditorModuleTypeId = ROS2SimulationInterfacesModuleTypeId;
 
     // API TypeIds
-    inline constexpr const char* ROS2SimulationInterfacesRequestBusTypeId = "{00d08870-e329-4bd7-bb8c-f67fe369de92}";
+    inline constexpr const char* ROS2SimulationInterfacesRequestBusTypeId = "{00D08870-E329-4BD7-BB8C-F67FE369DE92}";
 } // namespace ROS2SimulationInterfaces

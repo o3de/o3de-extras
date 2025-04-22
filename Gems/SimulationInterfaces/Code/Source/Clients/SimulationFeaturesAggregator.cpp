@@ -60,10 +60,6 @@ namespace SimulationInterfaces
         }
     }
 
-    void SimulationFeaturesAggregator::Init()
-    {
-    }
-
     void SimulationFeaturesAggregator::Activate()
     {
         SimulationFeaturesAggregatorRequestBus::Handler::BusConnect();
