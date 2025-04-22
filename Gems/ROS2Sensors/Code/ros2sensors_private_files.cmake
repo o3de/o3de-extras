@@ -7,28 +7,24 @@
 #
 
 set(FILES
-    Source/ROS2SensorsModuleInterface.cpp
-    Source/ROS2SensorsModuleInterface.h
-    Source/Clients/ROS2SensorsSystemComponent.cpp
-    Source/Clients/ROS2SensorsSystemComponent.h
-    Source/Sensor/SensorConfiguration.cpp
-    Source/Sensor/SensorHelpers.cpp
-    Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.cpp
-    Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
     Source/Camera/CameraConstants.h
     Source/Camera/CameraPublishers.cpp
     Source/Camera/CameraPublishers.h
     Source/Camera/CameraSensor.cpp
     Source/Camera/CameraSensor.h
+    Source/Camera/CameraSensorConfiguration.cpp
     Source/Camera/CameraSensorDescription.cpp
     Source/Camera/CameraSensorDescription.h
-    Source/Camera/CameraSensorConfiguration.cpp
     Source/Camera/CameraUtilities.cpp
     Source/Camera/CameraUtilities.h
+    Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.cpp
+    Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
     Source/Camera/ROS2CameraSensorComponent.cpp
     Source/Camera/ROS2CameraSensorComponent.h
     Source/Camera/ROS2CameraSystemComponent.cpp
     Source/Camera/ROS2CameraSystemComponent.h
+    Source/Clients/ROS2SensorsSystemComponent.cpp
+    Source/Clients/ROS2SensorsSystemComponent.h
     Source/ContactSensor/ROS2ContactSensorComponent.cpp
     Source/ContactSensor/ROS2ContactSensorComponent.h
     Source/GNSS/ROS2GNSSSensorComponent.cpp
@@ -55,13 +51,17 @@ set(FILES
     Source/Lidar/ROS2Lidar2DSensorComponent.h
     Source/Lidar/ROS2LidarSensorComponent.cpp
     Source/Lidar/ROS2LidarSensorComponent.h
+    Source/Odometry/ROS2OdometryCovariance.cpp
     Source/Odometry/ROS2OdometrySensorComponent.cpp
     Source/Odometry/ROS2OdometrySensorComponent.h
     Source/Odometry/ROS2WheelOdometry.cpp
-    Source/Odometry/ROS2WheelOdometryConfiguration.cpp
     Source/Odometry/ROS2WheelOdometry.h
-    Source/Odometry/ROS2OdometryCovariance.cpp
+    Source/Odometry/ROS2WheelOdometryConfiguration.cpp
+    Source/Sensor/SensorConfiguration.cpp
+    Source/Sensor/SensorHelpers.cpp
+    Source/ROS2SensorsModuleInterface.cpp
+    Source/ROS2SensorsModuleInterface.h
 
-    Source/TestComponent.cpp
-    Source/TestComponent.h
+    # Source/TestComponent.cpp
+    # Source/TestComponent.h
 )

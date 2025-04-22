@@ -6,9 +6,9 @@
  *
  */
 
-#include <ROS2Sensors/Configuration/ROS2OdometryCovariance.h>
-#include <ROS2Sensors/Configuration/ROS2WheelOdometryConfiguration.h>
 #include <AzCore/Serialization/EditContext.h>
+#include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
+#include <ROS2Sensors/Odometry/ROS2WheelOdometryConfiguration.h>
 
 namespace ROS2
 {

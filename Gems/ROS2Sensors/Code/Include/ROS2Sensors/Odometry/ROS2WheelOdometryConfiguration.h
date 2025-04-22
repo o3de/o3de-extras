@@ -10,8 +10,7 @@
 
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
-
-#include "ROS2OdometryCovariance.h"
+#include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
 
 namespace ROS2 {
 

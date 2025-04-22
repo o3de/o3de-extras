@@ -18,7 +18,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2Sensors/Camera/CameraCalibrationRequestBus.h>
-#include <ROS2Sensors/Configuration/CameraSensorConfiguration.h>
+#include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 

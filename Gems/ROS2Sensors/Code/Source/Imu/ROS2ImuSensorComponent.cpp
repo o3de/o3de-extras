@@ -116,7 +116,6 @@ namespace ROS2
         StopSensor();
         m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
         m_imuPublisher.reset();
-        // ConfigurationBus<ImuSensorConfiguration>::Handler::BusDisconnect();
         ROS2SensorComponentBase::Deactivate();
     }
 

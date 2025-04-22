@@ -61,16 +61,8 @@ namespace ROS2
 
     bool IsComponentROS2Sensor(const AZ::Component* component)
     {
-        // In ROS2Sensors gem we have at this moment two types of base classes for sensors, we need to check if the component is derived
-        // from one of them. If we add more base classes for sensors in the future, we need to update this function.
-        // if (azrtti_cast<const ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>*>(component))
-        // {
-        //     return true;
-        // }
-        // if (azrtti_cast<const ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>*>(component))
-        // {
-        //     return true;
-        // }
+        // The Base component implements the GetUndelyingComponentType() method. This enables us to check if the component
+        // is a ROS2 sensor, without the need to specify any template parameters.
         if (component->GetUnderlyingComponentType() == AZ::TypeId(ROS2Sensors::ROS2SensorComponentBaseTypeId))
         {
             return true;

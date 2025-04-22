@@ -9,7 +9,7 @@
 #include "Lidar/LidarRegistrarSystemComponent.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
-#include <ROS2Sensors/Configuration/LidarSensorConfiguration.h>
+#include <ROS2Sensors/Lidar/LidarSensorConfiguration.h>
 
 namespace ROS2
 {
@@ -89,24 +89,6 @@ namespace ROS2
         m_lidarParameters = LidarTemplateUtils::GetTemplate(m_lidarModel);
         m_lidarModelName = m_lidarParameters.m_name;
     }
-
-    // LidarSensorConfiguration& LidarSensorConfiguration::operator=(const LidarSensorConfiguration& other)
-    // {
-    //     if (this != &other)
-    //     {
-    //         m_lidarSystemFeatures = other.m_lidarSystemFeatures;
-    //         m_lidarSystem = other.m_lidarSystem;
-    //         m_lidarModel = other.m_lidarModel;
-    //         m_lidarParameters = other.m_lidarParameters;
-    //         m_ignoredCollisionLayers = other.m_ignoredCollisionLayers;
-    //         m_excludedEntities = other.m_excludedEntities;
-    //         m_isSegmentationEnabled = other.m_isSegmentationEnabled;
-    //         m_addPointsAtMax = other.m_addPointsAtMax;
-    //         m_lidarModelName = other.m_lidarModelName;
-    //         m_availableModels = other.m_availableModels;
-    //     }
-    //     return *this;
-    // }
 
     void LidarSensorConfiguration::FetchLidarImplementationFeatures()
     {

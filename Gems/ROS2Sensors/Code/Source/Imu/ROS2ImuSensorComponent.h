@@ -14,12 +14,11 @@
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2Sensors/Configuration/ConfigurationBus.h>
+#include <ROS2Sensors/Imu/ImuSensorConfiguration.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
-
-#include <ROS2Sensors/Configuration/ConfigurationBus.h>
-#include <ROS2Sensors/Configuration/ImuSensorConfiguration.h>
 
 namespace ROS2
 {

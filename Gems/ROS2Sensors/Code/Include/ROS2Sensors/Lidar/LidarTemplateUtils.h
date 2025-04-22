@@ -9,7 +9,7 @@
 
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/vector.h>
-#include <ROS2Sensors/Configuration/LidarTemplate.h>
+#include <ROS2Sensors/Lidar/LidarTemplate.h>
 
 namespace ROS2
 {

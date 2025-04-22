@@ -10,7 +10,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/base.h>
-#include <ROS2Sensors/Configuration/ROS2OdometryCovariance.h>
+#include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
 #include <array>
 
 namespace ROS2

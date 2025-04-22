@@ -16,7 +16,6 @@ namespace ROS2 {
     class ConfigurationRequests : public AZ::ComponentBus
     {
     public:
-        // AZ_RTTI(ConfigurationRequests, "{44259aa4-ab03-43c9-baf2-77063640e925}");
         using BusIdType = AZ::EntityId;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;

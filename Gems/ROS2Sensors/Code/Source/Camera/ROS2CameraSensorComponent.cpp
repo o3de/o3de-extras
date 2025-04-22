@@ -7,7 +7,6 @@
  */
 
 #include "ROS2CameraSensorComponent.h"
-#include "AzCore/Component/TickBus.h"
 #include "CameraUtilities.h"
 #include <ROS2/Frame/ROS2FrameComponent.h>
 
