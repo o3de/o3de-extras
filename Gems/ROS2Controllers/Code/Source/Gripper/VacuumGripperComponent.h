@@ -35,7 +35,7 @@ namespace ROS2
     {
     public:
         static constexpr AZ::Crc32 GrippableTag = AZ_CRC_CE("Grippable");
-        AZ_COMPONENT(VacuumGripperComponent, ROS2Controllers::ROS2FingerGripperComponentTypeId, AZ::Component);
+        AZ_COMPONENT(VacuumGripperComponent, ROS2Controllers::VacuumGripperComponentTypeId, AZ::Component);
         VacuumGripperComponent() = default;
         ~VacuumGripperComponent() = default;
 

@@ -27,7 +27,7 @@ namespace ROS2
         , public AZ::TickBus::Handler
     {
     public:
-        AZ_COMPONENT(FingerGripperComponent, ROS2Controllers::ROS2FingerGripperComponentTypeId, AZ::Component);
+        AZ_COMPONENT(FingerGripperComponent, ROS2Controllers::FingerGripperComponentTypeId, AZ::Component);
         FingerGripperComponent() = default;
         ~FingerGripperComponent() = default;
 

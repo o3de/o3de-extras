@@ -26,9 +26,9 @@ namespace ROS2Controllers
     inline constexpr const char* ROS2ControllersRequestsTypeId = "{2E0AB230-743E-4BCA-8194-D1BC7C9341EA}";
 
     // Controllers Components TypeIds
-    inline constexpr const char* ROS2FingerGripperComponentTypeId = "{AE5F8EC2-26EE-11EE-BE56-0242AC120002}";
-    inline constexpr const char* ROS2GripperActionServerComponentTypeId = "{6A4417AC-1D85-4AB0-A116-1E77D40FC816}";
-    inline constexpr const char* ROS2VacuumGripperComponentTypeId = "{A29EB4FA-0F6F-11EE-BE56-0242AC120002}";
+    inline constexpr const char* FingerGripperComponentTypeId = "{AE5F8EC2-26EE-11EE-BE56-0242AC120002}";
+    inline constexpr const char* GripperActionServerComponentTypeId = "{6A4417AC-1D85-4AB0-A116-1E77D40FC816}";
+    inline constexpr const char* VacuumGripperComponentTypeId = "{A29EB4FA-0F6F-11EE-BE56-0242AC120002}";
     inline constexpr const char* JointsArticulationControllerComponentTypeId = "{243E9F07-5F84-4F83-9E6D-D1DA04D7CEF9}";
     inline constexpr const char* JointsPIDControllerComponentTypeId = "{41A31EDB-90B0-412E-BBFA-D35D45546A8E}";
     inline constexpr const char* JointsManipulationComponentTypeId = "{3DA9ABFC-0028-4E3E-8D04-4E4440D2E319}";

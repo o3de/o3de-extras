@@ -27,7 +27,7 @@ namespace ROS2
     public:
         using GripperCommand = control_msgs::action::GripperCommand;
         using GoalHandleGripperCommand = rclcpp_action::ServerGoalHandle<control_msgs::action::GripperCommand>;
-        AZ_COMPONENT(GripperActionServerComponent, ROS2Controllers::ROS2GripperActionServerComponentTypeId, AZ::Component);
+        AZ_COMPONENT(GripperActionServerComponent, ROS2Controllers::GripperActionServerComponentTypeId, AZ::Component);
         GripperActionServerComponent() = default;
         ~GripperActionServerComponent() = default;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
