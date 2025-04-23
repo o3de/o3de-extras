@@ -21,14 +21,15 @@
 
 namespace ROS2::SDFormat
 {
-    void HooksUtils::AddTopicConfiguration(
-        SensorConfiguration& sensorConfig, const AZStd::string& topic, const AZStd::string& messageType, const AZStd::string& configName)
-    {
-        TopicConfiguration config;
-        config.m_topic = topic;
-        config.m_type = messageType;
-        sensorConfig.m_publishersConfigurations.insert(AZStd::make_pair(configName, config));
-    }
+    // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
+    // void HooksUtils::AddTopicConfiguration(
+    //     SensorConfiguration& sensorConfig, const AZStd::string& topic, const AZStd::string& messageType, const AZStd::string& configName)
+    // {
+    //     TopicConfiguration config;
+    //     config.m_topic = topic;
+    //     config.m_type = messageType;
+    //     sensorConfig.m_publishersConfigurations.insert(AZStd::make_pair(configName, config));
+    // }
 
     AZ::EntityId HooksUtils::GetJointEntityId(
         const std::string& jointName, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)

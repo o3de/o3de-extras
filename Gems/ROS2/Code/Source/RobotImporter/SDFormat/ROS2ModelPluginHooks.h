@@ -12,16 +12,18 @@
 
 namespace ROS2::SDFormat::ROS2ModelPluginHooks
 {
-    //! Get a mapping of SDFormat skid_steer_drive and diff_drive plugins into O3DE components.
-    ModelPluginImporterHook ROS2SkidSteeringModel();
+    // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
 
-    //! Get a mapping of SDFormat ackermann_drive plugin into O3DE components.
-    ModelPluginImporterHook ROS2AckermannModel();
+    // //! Get a mapping of SDFormat skid_steer_drive and diff_drive plugins into O3DE components.
+    // ModelPluginImporterHook ROS2SkidSteeringModel();
 
-    //! Get a mapping of SDFormat joint_state_publisher plugin into O3DE components.
-    ModelPluginImporterHook ROS2JointStatePublisherModel();
+    // //! Get a mapping of SDFormat ackermann_drive plugin into O3DE components.
+    // ModelPluginImporterHook ROS2AckermannModel();
 
-     //! Get a mapping of SDFormat joint_pose_trajectory plugin into O3DE components.
-    ModelPluginImporterHook ROS2JointPoseTrajectoryModel();
+    // //! Get a mapping of SDFormat joint_state_publisher plugin into O3DE components.
+    // ModelPluginImporterHook ROS2JointStatePublisherModel();
+
+    //  //! Get a mapping of SDFormat joint_pose_trajectory plugin into O3DE components.
+    // ModelPluginImporterHook ROS2JointPoseTrajectoryModel();
 
 } // namespace ROS2::SDFormat::ROS2ModelPluginHooks

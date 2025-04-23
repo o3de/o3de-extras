@@ -14,17 +14,19 @@ namespace ROS2::SDFormat
 {
     namespace ROS2SensorHooks
     {
+        // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
+
         //! Retrieve a sensor importer hook which is used to map SDFormat sensor of type camera, depth or rgbd into O3DE
-        //! ROS2CameraSensorComponent
-        SensorImporterHook ROS2CameraSensor();
+        // //! ROS2CameraSensorComponent
+        // SensorImporterHook ROS2CameraSensor();
 
-        //! Retrieve a sensor importer hook which is used to map SDFormat sensor of type navsat into O3DE ROS2GNSSSensorComponent
-        SensorImporterHook ROS2GNSSSensor();
+        // //! Retrieve a sensor importer hook which is used to map SDFormat sensor of type navsat into O3DE ROS2GNSSSensorComponent
+        // SensorImporterHook ROS2GNSSSensor();
 
-        //! Retrieve a sensor importer hook which is used to map SDFormat sensor of type imu into O3DE ROS2ImuSensorComponent
-        SensorImporterHook ROS2ImuSensor();
+        // //! Retrieve a sensor importer hook which is used to map SDFormat sensor of type imu into O3DE ROS2ImuSensorComponent
+        // SensorImporterHook ROS2ImuSensor();
 
-        //! Retrieve a sensor importer hook which is used to map SDFormat sensor of type lidar into O3DE ROS2LidarSensorComponent
-        SensorImporterHook ROS2LidarSensor();
+        // //! Retrieve a sensor importer hook which is used to map SDFormat sensor of type lidar into O3DE ROS2LidarSensorComponent
+        // SensorImporterHook ROS2LidarSensor();
     } // namespace ROS2SensorHooks
 } // namespace ROS2::SDFormat

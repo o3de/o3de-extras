@@ -9,23 +9,6 @@ set(FILES
         ../Assets/Passes/PipelineROSColor.pass
         ../Assets/Passes/PipelineROSDepth.pass
         ../Assets/Passes/ROSPassTemplates.azasset
-        Source/Camera/CameraConstants.h
-        Source/Camera/CameraPublishers.cpp
-        Source/Camera/CameraPublishers.h
-        Source/Camera/CameraSensor.cpp
-        Source/Camera/CameraSensor.h
-        Source/Camera/CameraSensorDescription.cpp
-        Source/Camera/CameraSensorDescription.h
-        Source/Camera/CameraSensorConfiguration.cpp
-        Source/Camera/CameraSensorConfiguration.h
-        Source/Camera/ROS2CameraSensorComponent.cpp
-        Source/Camera/ROS2CameraSensorComponent.h
-        Source/Camera/ROS2CameraSystemComponent.cpp
-        Source/Camera/ROS2CameraSystemComponent.h
-        Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.cpp
-        Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
-        Source/Camera/CameraUtilities.cpp
-        Source/Camera/CameraUtilities.h
         Source/Clock/ROS2Clock.cpp
         Source/Clock/ROS2TimeSource.cpp
         Source/Clock/SimulationTimeSource.cpp
@@ -33,8 +16,6 @@ set(FILES
         Source/Communication/QoS.cpp
         Source/Communication/PublisherConfiguration.cpp
         Source/Communication/TopicConfiguration.cpp
-        Source/ContactSensor/ROS2ContactSensorComponent.cpp
-        Source/ContactSensor/ROS2ContactSensorComponent.h
         Source/Frame/NamespaceConfiguration.cpp
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2FrameConfiguration.cpp
@@ -47,37 +28,6 @@ set(FILES
         Source/Gripper/VacuumGripperComponent.cpp
         Source/Gripper/FingerGripperComponent.h
         Source/Gripper/FingerGripperComponent.cpp
-        Source/GNSS/ROS2GNSSSensorComponent.cpp
-        Source/GNSS/ROS2GNSSSensorComponent.h
-        Source/Imu/ImuSensorConfiguration.cpp
-        Source/Imu/ImuSensorConfiguration.h
-        Source/Imu/ROS2ImuSensorComponent.cpp
-        Source/Imu/ROS2ImuSensorComponent.h
-        Source/Lidar/LidarRaycaster.cpp
-        Source/Lidar/LidarRaycaster.h
-        Source/Lidar/LidarRegistrarSystemComponent.cpp
-        Source/Lidar/LidarRegistrarSystemComponent.h
-        Source/Lidar/LidarSensorConfiguration.cpp
-        Source/Lidar/LidarSensorConfiguration.h
-        Source/Lidar/LidarSystem.cpp
-        Source/Lidar/LidarSystem.h
-        Source/Lidar/LidarTemplate.cpp
-        Source/Lidar/LidarTemplate.h
-        Source/Lidar/LidarTemplateUtils.cpp
-        Source/Lidar/LidarTemplateUtils.h
-        Source/Lidar/PointCloudMessageBuilder.cpp
-        Source/Lidar/PointCloudMessageBuilder.h
-        Source/Lidar/RaycastResults.cpp
-        Source/Lidar/LidarCore.cpp
-        Source/Lidar/LidarCore.h
-        Source/Lidar/ROS2Lidar2DSensorComponent.cpp
-        Source/Lidar/ROS2Lidar2DSensorComponent.h
-        Source/Lidar/ROS2LidarSensorComponent.cpp
-        Source/Lidar/ROS2LidarSensorComponent.h
-        Source/Lidar/ClassSegmentationConfigurationComponent.cpp
-        Source/Lidar/ClassSegmentationConfigurationComponent.h
-        Source/Lidar/SegmentationClassConfiguration.cpp
-        Source/Lidar/SegmentationUtils.cpp
         Source/Manipulation/Controllers/JointsArticulationControllerComponent.cpp
         Source/Manipulation/Controllers/JointsArticulationControllerComponent.h
         Source/Manipulation/Controllers/JointsPIDControllerComponent.cpp
@@ -101,12 +51,6 @@ set(FILES
         Source/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.cpp
         Source/Manipulation/MotorizedJoints/ManualMotorControllerComponent.cpp
         Source/Manipulation/MotorizedJoints/PidMotorControllerComponent.cpp
-        Source/Odometry/ROS2OdometrySensorComponent.cpp
-        Source/Odometry/ROS2OdometrySensorComponent.h
-        Source/Odometry/ROS2WheelOdometry.cpp
-        Source/Odometry/ROS2WheelOdometry.h
-        Source/Odometry/ROS2OdometryCovariance.cpp
-        Source/Odometry/ROS2OdometryCovariance.h
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
         Source/RobotControl/ControlConfiguration.cpp
@@ -124,8 +68,6 @@ set(FILES
         Source/ROS2ModuleInterface.h
         Source/Sensor/Events/PhysicsBasedSource.cpp
         Source/Sensor/Events/TickBasedSource.cpp
-        Source/Sensor/SensorConfiguration.cpp
-        Source/Sensor/SensorHelpers.cpp
         Source/SimulationUtils/FollowingCameraConfiguration.cpp
         Source/SimulationUtils/FollowingCameraConfiguration.h
         Source/SimulationUtils/FollowingCameraComponent.cpp
@@ -177,4 +119,4 @@ set(FILES
         Source/VehicleDynamics/WheelControllerComponent.cpp
         Source/VehicleDynamics/WheelControllerComponent.h
         Source/VehicleDynamics/WheelDynamicsData.h
-        )
+)

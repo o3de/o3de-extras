@@ -11,7 +11,6 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/Events/SensorEventSource.h>
-#include <ROS2/Sensor/SensorConfiguration.h>
 
 namespace ROS2
 {
@@ -107,7 +106,7 @@ namespace ROS2
                         return;
                     }
 
-                    m_lastDeltaTime =  m_adaptedDeltaTime;
+                    m_lastDeltaTime = m_adaptedDeltaTime;
                     m_sensorAdaptedEvent.Signal(m_adaptedDeltaTime, AZStd::forward<decltype(args)>(args)...);
                     m_adaptedDeltaTime = 0.0f;
                 });

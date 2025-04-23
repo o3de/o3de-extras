@@ -5,11 +5,9 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
 #include <AzCore/RTTI/RTTIMacros.h>
-#include <Camera/ROS2CameraSensorEditorComponent.h>
-#include <Camera/ROS2EditorCameraSystemComponent.h>
 #include <Frame/ROS2FrameSystemComponent.h>
-#include <Lidar/LidarRegistrarEditorSystemComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
 #include <Manipulation/JointsPositionsEditorComponent.h>
 #include <QtCore/qglobal.h>
@@ -42,10 +40,7 @@ namespace ROS2
             m_descriptors.insert(
                 m_descriptors.end(),
                 { ROS2EditorSystemComponent::CreateDescriptor(),
-                  ROS2EditorCameraSystemComponent::CreateDescriptor(),
-                  LidarRegistrarEditorSystemComponent::CreateDescriptor(),
                   ROS2RobotImporterEditorSystemComponent::CreateDescriptor(),
-                  ROS2CameraSensorEditorComponent::CreateDescriptor(),
                   ROS2SpawnerEditorComponent::CreateDescriptor(),
                   ROS2SpawnPointEditorComponent::CreateDescriptor(),
                   SdfAssetBuilderSystemComponent::CreateDescriptor(),
@@ -58,9 +53,10 @@ namespace ROS2
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
             return AZ::ComponentTypeList{
-                azrtti_typeid<ROS2EditorSystemComponent>(),           azrtti_typeid<ROS2EditorCameraSystemComponent>(),
-                azrtti_typeid<LidarRegistrarEditorSystemComponent>(), azrtti_typeid<ROS2RobotImporterEditorSystemComponent>(),
-                azrtti_typeid<SdfAssetBuilderSystemComponent>(),      azrtti_typeid<ROS2FrameSystemComponent>(),
+                azrtti_typeid<ROS2EditorSystemComponent>(),
+                azrtti_typeid<ROS2RobotImporterEditorSystemComponent>(),
+                azrtti_typeid<SdfAssetBuilderSystemComponent>(),
+                azrtti_typeid<ROS2FrameSystemComponent>(),
             };
         }
     };

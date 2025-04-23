@@ -8,14 +8,12 @@
 #include <signal.h>
 
 #include "ROS2SystemComponent.h"
-#include <Lidar/LidarCore.h>
 #include <ROS2/Clock/ROS2TimeSource.h>
 #include <ROS2/Clock/RealTimeSource.h>
 #include <ROS2/Clock/SimulationTimeSource.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
-#include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2/Utilities/Controllers/PidConfiguration.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 
@@ -30,7 +28,6 @@
 #include <AzCore/std/sort.h>
 #include <AzCore/std/string/string_view.h>
 #include <AzFramework/API/ApplicationAPI.h>
-#include <ROS2/Sensor/SensorConfigurationRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 
 namespace ROS2
@@ -45,8 +42,6 @@ namespace ROS2
         QoS::Reflect(context);
         TopicConfiguration::Reflect(context);
         PublisherConfiguration::Reflect(context);
-        LidarCore::Reflect(context);
-        SensorConfiguration::Reflect(context);
         VehicleDynamics::VehicleModelComponent::Reflect(context);
         ROS2::Controllers::PidConfiguration::Reflect(context);
 
@@ -58,8 +53,8 @@ namespace ROS2
             {
                 ec->Class<ROS2SystemComponent>(
                       "ROS 2 System Component",
-                      "This component is responsible for creating ROS 2 node and executor, provides ROS 2 interfaces, manages ROS 2 clock and "
-                      "publishes transforms.")
+                      "This component is responsible for creating ROS 2 node and executor, provides ROS 2 interfaces, manages ROS 2 clock "
+                      "and publishes transforms.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("System"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
@@ -110,10 +105,11 @@ namespace ROS2
         rclcpp::init(0, 0);
 
         // handle signals, e.g. via `Ctrl+C` hotkey or `kill` command
-        auto handler = [](int sig){
+        auto handler = [](int sig)
+        {
             rclcpp::shutdown(); // shutdown rclcpp
             std::raise(sig); // shutdown o3de
-            };
+        };
         signal(SIGINT, handler);
         signal(SIGTERM, handler);
     }
@@ -150,7 +146,8 @@ namespace ROS2
                 return;
             }
         }
-        AZ_Info("ROS2SystemComponent", "Cannot read registry or the clock type '%s' is unknown, enabling simulation clock.", clockType.c_str());
+        AZ_Info(
+            "ROS2SystemComponent", "Cannot read registry or the clock type '%s' is unknown, enabling simulation clock.", clockType.c_str());
         m_simulationClock = AZStd::make_unique<ROS2Clock>(clocksMap["simulation"](), publishClock);
     }
 
@@ -174,14 +171,16 @@ namespace ROS2
     {
         AZ::TickBus::Handler::BusDisconnect();
         ROS2RequestBus::Handler::BusDisconnect();
-        if (m_simulationClock) {
+        if (m_simulationClock)
+        {
             m_simulationClock->Deactivate();
         }
         m_dynamicTFBroadcaster.reset();
         m_staticTFBroadcaster.reset();
         if (m_executor)
         {
-            if (m_ros2Node) {
+            if (m_ros2Node)
+            {
                 m_executor->remove_node(m_ros2Node);
             }
             m_executor.reset();

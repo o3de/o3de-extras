@@ -10,7 +10,6 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
-#include <Lidar/LidarSystem.h>
 #include <ROS2/Clock/ROS2Clock.h>
 #include <ROS2/ROS2Bus.h>
 #include <builtin_interfaces/msg/time.hpp>

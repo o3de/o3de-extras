@@ -1,0 +1,33 @@
+{
+    "gem_name": "ROS2Sensors",
+    "version": "1.0.0",
+    "display_name": "ROS2Sensors",
+    "license": "Apache-2.0",
+    "license_url": "https://opensource.org/licenses/Apache-2.0",
+    "origin": "RobotecAI",
+    "origin_url": "https://robotec.ai",
+    "type": "Code",
+    "summary": "Tools and components for simulating sensors with ROS 2 communication interfaces",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "ROS2Sensors"
+    ],
+    "platforms": [
+        "Linux"
+    ],
+    "icon_path": "preview.png",
+    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem",
+    "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+    "dependencies": [
+        "LevelGeoreferencing",
+        "ROS2>=3.3.0"
+    ],
+    "repo_uri": "https://github.com/o3de/o3de-extras/",
+    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Sensors",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2sensors-1.0.0-gem.zip",
+    "compatible_engines": [],
+    "engine_api_dependencies": [],
+    "restricted": "ROS2Sensors"
+}
