@@ -12,7 +12,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/set.h>
-#include <ROS2/RobotImporter/SDFormatModelPluginImporterHook.h>
+#include <ROS2RobotImporter/SDFormatModelPluginImporterHook.h>
 
 #include <sdf/sdf.hh>
 

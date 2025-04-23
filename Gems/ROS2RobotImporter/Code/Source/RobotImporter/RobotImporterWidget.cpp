@@ -13,16 +13,16 @@
 
 #include "FixURDF/URDFModifications.h"
 #include "RobotImporterWidget.h"
-#include "Utils/SourceAssetsStorage.h"
 #include <QApplication>
 #include <QScreen>
 #include <QTranslator>
+#include <RobotImporter/URDF/URDFPrefabMaker.h>
+#include <RobotImporter/URDF/UrdfParser.h>
+#include <RobotImporter/Utils/ErrorUtils.h>
+#include <RobotImporter/Utils/FilePath.h>
+#include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <RobotImporter/Utils/SourceAssetsStorage.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
-#include <URDF/URDFPrefabMaker.h>
-#include <URDF/UrdfParser.h>
-#include <Utils/ErrorUtils.h>
-#include <Utils/FilePath.h>
-#include <Utils/RobotImporterUtils.h>
 
 namespace ROS2
 {

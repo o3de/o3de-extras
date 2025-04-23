@@ -50,6 +50,11 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
+            # Gem::Atom_RPI.Public
+            # Gem::Atom_Feature_Common.Public
+            # Gem::Atom_AtomBridge.Static
+            # Gem::LmbrCentral.API
+            Gem::ROS2.Static
 )
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
@@ -123,6 +128,8 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
     ly_add_target(
         NAME ${gem_name}.Editor.Private.Object STATIC
         NAMESPACE Gem
+        AUTOMOC
+        AUTORCC
         FILES_CMAKE
             ros2robotimporter_editor_private_files.cmake
         TARGET_PROPERTIES
@@ -134,7 +141,13 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         BUILD_DEPENDENCIES
             PUBLIC
                 AZ::AzToolsFramework
+                Gem::CommonFeaturesAtom.Editor.Static
+                Gem::PhysX5.Editor.Static
+                Gem::ROS2.Editor.Static
                 ${gem_name}.Private.Object
+            PRIVATE
+                AZ::AssetBuilderSDK
+                3rdParty::sdformat
     )
 
     ly_add_target(
@@ -234,6 +247,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                     PRIVATE
                         AZ::AzTest
                         Gem::${gem_name}.Editor.Private.Object
+                        3rdParty::sdformat
             )
 
             # Add ${gem_name}.Editor.Tests to googletest

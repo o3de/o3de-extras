@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <ROS2/RobotImporter/SDFormatModelPluginImporterHook.h>
+#include <ROS2RobotImporter/SDFormatModelPluginImporterHook.h>
 
 namespace ROS2::SDFormat::ROS2ModelPluginHooks
 {

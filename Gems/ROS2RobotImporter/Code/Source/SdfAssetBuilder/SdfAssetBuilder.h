@@ -11,9 +11,9 @@
 #include <AssetBuilderSDK/AssetBuilderBusses.h>
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 
+#include <RobotImporter/URDF/UrdfParser.h>
+#include <RobotImporter/Utils/SourceAssetsStorage.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
-#include <URDF/UrdfParser.h>
-#include <Utils/SourceAssetsStorage.h>
 
 namespace ROS2
 {

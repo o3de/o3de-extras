@@ -16,7 +16,7 @@
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
-#include <ROS2/RobotImporter/SDFormatModelPluginImporterHook.h>
+#include <ROS2RobotImporter/SDFormatModelPluginImporterHook.h>
 // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
 // #include <ROS2/Sensor/SensorConfiguration.h>
 #include <Source/EditorArticulationLinkComponent.h>

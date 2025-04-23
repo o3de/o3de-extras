@@ -1,74 +1,43 @@
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #include "ROS2RobotImporterSystemComponent.h"
-
-#include <ROS2RobotImporter/ROS2RobotImporterTypeIds.h>
-
+#include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace ROS2RobotImporter
+namespace ROS2
 {
-    AZ_COMPONENT_IMPL(ROS2RobotImporterSystemComponent, "ROS2RobotImporterSystemComponent", ROS2RobotImporterSystemComponentTypeId);
-
     void ROS2RobotImporterSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<ROS2RobotImporterSystemComponent, AZ::Component>()->Version(0);
+
+            if (AZ::EditContext* ec = serializeContext->GetEditContext())
+            {
+                ec->Class<ROS2RobotImporterSystemComponent>(
+                      "Robot Importer", "Use this component to import robot definition from supported formats")
+                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("System"))
+                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true);
+            }
         }
     }
 
     void ROS2RobotImporterSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
-        provided.push_back(AZ_CRC_CE("ROS2RobotImporterService"));
+        provided.push_back(AZ_CRC_CE("RobotImporterService"));
     }
 
     void ROS2RobotImporterSystemComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
     {
-        incompatible.push_back(AZ_CRC_CE("ROS2RobotImporterService"));
+        incompatible.push_back(AZ_CRC_CE("RobotImporterService"));
     }
-
-    void ROS2RobotImporterSystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
-    {
-    }
-
-    void ROS2RobotImporterSystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
-    {
-    }
-
-    ROS2RobotImporterSystemComponent::ROS2RobotImporterSystemComponent()
-    {
-        if (ROS2RobotImporterInterface::Get() == nullptr)
-        {
-            ROS2RobotImporterInterface::Register(this);
-        }
-    }
-
-    ROS2RobotImporterSystemComponent::~ROS2RobotImporterSystemComponent()
-    {
-        if (ROS2RobotImporterInterface::Get() == this)
-        {
-            ROS2RobotImporterInterface::Unregister(this);
-        }
-    }
-
-    void ROS2RobotImporterSystemComponent::Init()
-    {
-    }
-
-    void ROS2RobotImporterSystemComponent::Activate()
-    {
-        ROS2RobotImporterRequestBus::Handler::BusConnect();
-        AZ::TickBus::Handler::BusConnect();
-    }
-
-    void ROS2RobotImporterSystemComponent::Deactivate()
-    {
-        AZ::TickBus::Handler::BusDisconnect();
-        ROS2RobotImporterRequestBus::Handler::BusDisconnect();
-    }
-
-    void ROS2RobotImporterSystemComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
-    {
-    }
-
-} // namespace ROS2RobotImporter
+} // namespace ROS2

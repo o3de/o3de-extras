@@ -133,9 +133,6 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::LmbrCentral.API
                 Gem::PhysX5.Editor.Static
                 Gem::${gem_name}.Static
-            PRIVATE
-                AZ::AssetBuilderSDK
-                3rdParty::sdformat
     )
 
     ly_add_target(

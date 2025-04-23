@@ -12,8 +12,8 @@
 #include <AzCore/XML/rapidxml.h>
 #include <AzFramework/Process/ProcessCommunicator.h>
 #include <AzFramework/Process/ProcessWatcher.h>
-#include <FixURDF/FixURDF.h>
 #include <QString>
+#include <RobotImporter/FixURDF/FixURDF.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace ROS2::Utils::xacro

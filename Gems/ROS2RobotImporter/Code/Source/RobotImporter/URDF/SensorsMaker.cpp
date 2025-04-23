@@ -10,7 +10,7 @@
 
 #include <AzCore/Component/EntityId.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
-#include <ROS2/RobotImporter/RobotImporterBus.h>
+#include <ROS2RobotImporter/ROS2RobotImporterBus.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/URDF/PrefabMakerUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>

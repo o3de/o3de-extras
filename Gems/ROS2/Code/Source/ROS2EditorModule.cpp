@@ -8,19 +8,11 @@
 
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <Frame/ROS2FrameSystemComponent.h>
-#include <QtCore/qglobal.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2ModuleInterface.h>
-#include <SdfAssetBuilder/SdfAssetBuilderSystemComponent.h>
 #include <Spawner/ROS2SpawnPointEditorComponent.h>
 #include <Spawner/ROS2SpawnerEditorComponent.h>
 #include <SystemComponents/ROS2EditorSystemComponent.h>
-
-void InitROS2Resources()
-{
-    // Registration of Qt (ROS2.qrc) resources
-    Q_INIT_RESOURCE(ROS2);
-}
 
 namespace ROS2
 {
@@ -32,8 +24,6 @@ namespace ROS2
 
         ROS2EditorModule()
         {
-            InitROS2Resources();
-
             m_descriptors.insert(
                 m_descriptors.end(),
                 { ROS2EditorSystemComponent::CreateDescriptor(),

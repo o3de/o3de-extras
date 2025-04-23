@@ -1,47 +1,37 @@
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #pragma once
 
 #include <AzCore/Component/Component.h>
-#include <AzCore/Component/TickBus.h>
-#include <ROS2RobotImporter/ROS2RobotImporterBus.h>
 
-namespace ROS2RobotImporter
+namespace ROS2
 {
-    class ROS2RobotImporterSystemComponent
-        : public AZ::Component
-        , protected ROS2RobotImporterRequestBus::Handler
-        , public AZ::TickBus::Handler
+    //! A Component for importing robot definition from standard formats such as URDF.
+    //! Sometimes, user decisions will be involved in the process.
+    class ROS2RobotImporterSystemComponent : public AZ::Component
     {
     public:
-        AZ_COMPONENT_DECL(ROS2RobotImporterSystemComponent);
-
+        AZ_COMPONENT(ROS2RobotImporterSystemComponent, "{f2566021-450a-4eae-896f-b268492a58eb}");
         static void Reflect(AZ::ReflectContext* context);
 
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
-        static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
-        static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
-        ROS2RobotImporterSystemComponent();
-        ~ROS2RobotImporterSystemComponent();
+        ROS2RobotImporterSystemComponent() = default;
+        virtual ~ROS2RobotImporterSystemComponent() = default;
 
     protected:
-        ////////////////////////////////////////////////////////////////////////
-        // ROS2RobotImporterRequestBus interface implementation
-
-        ////////////////////////////////////////////////////////////////////////
-
-        ////////////////////////////////////////////////////////////////////////
-        // AZ::Component interface implementation
-        void Init() override;
-        void Activate() override;
-        void Deactivate() override;
-        ////////////////////////////////////////////////////////////////////////
-
-        ////////////////////////////////////////////////////////////////////////
-        // AZTickBus interface implementation
-        void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
-        ////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+        // Component overrides
+        void Init() override{};
+        void Activate() override{};
+        void Deactivate() override{};
+        //////////////////////////////////////////////////////////////////////////
     };
-
-} // namespace ROS2RobotImporter
+} // namespace ROS2

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <ROS2/RobotImporter/SDFormatSensorImporterHook.h>
+#include <ROS2RobotImporter/SDFormatSensorImporterHook.h>
 
 namespace ROS2::SDFormat
 {

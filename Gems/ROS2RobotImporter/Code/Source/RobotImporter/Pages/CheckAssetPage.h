@@ -9,7 +9,6 @@
 #pragma once
 
 #if !defined(Q_MOC_RUN)
-#include "Utils/SourceAssetsStorage.h"
 #include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/Math/Crc.h>
 #include <AzCore/std/containers/map.h>
@@ -23,6 +22,7 @@
 #include <QTimer>
 #include <QVector>
 #include <QWizardPage>
+#include <RobotImporter/Utils/SourceAssetsStorage.h>
 #endif
 
 namespace ROS2
