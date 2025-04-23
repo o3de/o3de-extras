@@ -50,10 +50,6 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
-            # Gem::Atom_RPI.Public
-            # Gem::Atom_Feature_Common.Public
-            # Gem::Atom_AtomBridge.Static
-            # Gem::LmbrCentral.API
             Gem::ROS2.Static
 )
 
@@ -246,6 +242,8 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 BUILD_DEPENDENCIES
                     PRIVATE
                         AZ::AzTest
+                        AZ::AzTestShared
+                        AZ::AzToolsFramework
                         Gem::${gem_name}.Editor.Private.Object
                         3rdParty::sdformat
             )
