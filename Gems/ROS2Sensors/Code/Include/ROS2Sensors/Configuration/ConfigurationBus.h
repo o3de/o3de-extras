@@ -20,8 +20,6 @@ namespace ROS2 {
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
 
-        virtual ~ConfigurationRequests() = default;
-
         //! Returns the current configuration of the component.
         virtual const Configuration GetConfiguration() const = 0;
 
