@@ -6,8 +6,7 @@
 
 namespace ROS2RobotImporter
 {
-    class ROS2RobotImporterModuleInterface
-        : public AZ::Module
+    class ROS2RobotImporterModuleInterface : public AZ::Module
     {
     public:
         AZ_TYPE_INFO_WITH_NAME_DECL(ROS2RobotImporterModuleInterface)
@@ -21,4 +20,4 @@ namespace ROS2RobotImporter
          */
         AZ::ComponentTypeList GetRequiredSystemComponents() const override;
     };
-}// namespace ROS2RobotImporter
+} // namespace ROS2RobotImporter

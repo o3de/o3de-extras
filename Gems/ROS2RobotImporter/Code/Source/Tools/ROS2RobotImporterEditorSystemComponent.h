@@ -13,6 +13,7 @@ namespace ROS2RobotImporter
         , protected AzToolsFramework::EditorEvents::Bus::Handler
     {
         using BaseSystemComponent = ROS2RobotImporterSystemComponent;
+
     public:
         AZ_COMPONENT_DECL(ROS2RobotImporterEditorSystemComponent);
 

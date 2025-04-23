@@ -8,8 +8,8 @@
 
 namespace ROS2RobotImporter
 {
-    AZ_TYPE_INFO_WITH_NAME_IMPL(ROS2RobotImporterModuleInterface,
-        "ROS2RobotImporterModuleInterface", ROS2RobotImporterModuleInterfaceTypeId);
+    AZ_TYPE_INFO_WITH_NAME_IMPL(
+        ROS2RobotImporterModuleInterface, "ROS2RobotImporterModuleInterface", ROS2RobotImporterModuleInterfaceTypeId);
     AZ_RTTI_NO_TYPE_INFO_IMPL(ROS2RobotImporterModuleInterface, AZ::Module);
     AZ_CLASS_ALLOCATOR_IMPL(ROS2RobotImporterModuleInterface, AZ::SystemAllocator);
 
@@ -17,10 +17,13 @@ namespace ROS2RobotImporter
     {
         // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
         // Add ALL components descriptors associated with this gem to m_descriptors.
-        // This will associate the AzTypeInfo information for the components with the the SerializeContext, BehaviorContext and EditContext.
-        // This happens through the [MyComponent]::Reflect() function.
-        m_descriptors.insert(m_descriptors.end(), {
-            ROS2RobotImporterSystemComponent::CreateDescriptor(),
+        // This will associate the AzTypeInfo information for the components with the
+        // the SerializeContext, BehaviorContext and EditContext. This happens through
+        // the [MyComponent]::Reflect() function.
+        m_descriptors.insert(
+            m_descriptors.end(),
+            {
+                ROS2RobotImporterSystemComponent::CreateDescriptor(),
             });
     }
 

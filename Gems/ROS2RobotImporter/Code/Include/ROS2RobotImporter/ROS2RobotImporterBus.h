@@ -16,8 +16,7 @@ namespace ROS2RobotImporter
         // Put your public methods here
     };
 
-    class ROS2RobotImporterBusTraits
-        : public AZ::EBusTraits
+    class ROS2RobotImporterBusTraits : public AZ::EBusTraits
     {
     public:
         //////////////////////////////////////////////////////////////////////////

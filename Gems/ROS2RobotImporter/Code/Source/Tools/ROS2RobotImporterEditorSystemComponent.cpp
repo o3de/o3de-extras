@@ -1,20 +1,22 @@
 
-#include <AzCore/Serialization/SerializeContext.h>
 #include "ROS2RobotImporterEditorSystemComponent.h"
+#include <AzCore/Serialization/SerializeContext.h>
 
 #include <ROS2RobotImporter/ROS2RobotImporterTypeIds.h>
 
 namespace ROS2RobotImporter
 {
-    AZ_COMPONENT_IMPL(ROS2RobotImporterEditorSystemComponent, "ROS2RobotImporterEditorSystemComponent",
-        ROS2RobotImporterEditorSystemComponentTypeId, BaseSystemComponent);
+    AZ_COMPONENT_IMPL(
+        ROS2RobotImporterEditorSystemComponent,
+        "ROS2RobotImporterEditorSystemComponent",
+        ROS2RobotImporterEditorSystemComponentTypeId,
+        BaseSystemComponent);
 
     void ROS2RobotImporterEditorSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ROS2RobotImporterEditorSystemComponent, ROS2RobotImporterSystemComponent>()
-                ->Version(0);
+            serializeContext->Class<ROS2RobotImporterEditorSystemComponent, ROS2RobotImporterSystemComponent>()->Version(0);
         }
     }
 
@@ -34,12 +36,14 @@ namespace ROS2RobotImporter
         incompatible.push_back(AZ_CRC_CE("ROS2RobotImporterEditorService"));
     }
 
-    void ROS2RobotImporterEditorSystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
+    void ROS2RobotImporterEditorSystemComponent::GetRequiredServices(
+        [[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         BaseSystemComponent::GetRequiredServices(required);
     }
 
-    void ROS2RobotImporterEditorSystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
+    void ROS2RobotImporterEditorSystemComponent::GetDependentServices(
+        [[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
         BaseSystemComponent::GetDependentServices(dependent);
     }

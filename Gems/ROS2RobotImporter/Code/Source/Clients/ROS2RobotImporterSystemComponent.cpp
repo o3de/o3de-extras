@@ -7,16 +7,13 @@
 
 namespace ROS2RobotImporter
 {
-    AZ_COMPONENT_IMPL(ROS2RobotImporterSystemComponent, "ROS2RobotImporterSystemComponent",
-        ROS2RobotImporterSystemComponentTypeId);
+    AZ_COMPONENT_IMPL(ROS2RobotImporterSystemComponent, "ROS2RobotImporterSystemComponent", ROS2RobotImporterSystemComponentTypeId);
 
     void ROS2RobotImporterSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ROS2RobotImporterSystemComponent, AZ::Component>()
-                ->Version(0)
-                ;
+            serializeContext->Class<ROS2RobotImporterSystemComponent, AZ::Component>()->Version(0);
         }
     }
 
