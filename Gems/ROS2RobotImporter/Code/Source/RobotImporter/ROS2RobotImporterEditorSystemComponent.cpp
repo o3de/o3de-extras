@@ -110,7 +110,7 @@ namespace ROS2
         options.isDisabledInSimMode = true;
         options.isDeletable = true;
 
-        options.toolbarIcon = ":/ROS2/ROS_import_icon.svg";
+        options.toolbarIcon = ":/ROS2RobotImporter/ToolbarIcon.svg";
         AzToolsFramework::RegisterViewPane<RobotImporterWidget>("Robot Importer", "ROS2", options);
     }
 

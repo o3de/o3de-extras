@@ -10,7 +10,6 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <RobotImporter/ROS2RobotImporterSystemComponent.h>
 #include <SimulationUtils/FollowingCameraComponent.h>
 #include <Spawner/ROS2SpawnPointComponent.h>
 #include <Spawner/ROS2SpawnerComponent.h>
@@ -30,7 +29,6 @@ namespace ROS2
                 m_descriptors.end(),
                 {
                     ROS2SystemComponent::CreateDescriptor(),
-                    ROS2RobotImporterSystemComponent::CreateDescriptor(),
                     ROS2FrameComponent::CreateDescriptor(),
                     ROS2SpawnerComponent::CreateDescriptor(),
                     ROS2SpawnPointComponent::CreateDescriptor(),
@@ -42,7 +40,6 @@ namespace ROS2
         {
             return AZ::ComponentTypeList{
                 azrtti_typeid<ROS2SystemComponent>(),
-                azrtti_typeid<ROS2RobotImporterSystemComponent>(),
             };
         }
     };

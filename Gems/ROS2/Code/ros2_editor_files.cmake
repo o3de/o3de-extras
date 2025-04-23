@@ -4,8 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
-    ../Assets/Editor/Images/Icons/ROS2.qrc
-    ../Assets/Editor/Images/Icons/ROS_import_icon.svg
     Source/ROS2GemUtilities.cpp
     Source/Spawner/ROS2SpawnerEditorComponent.cpp
     Source/Spawner/ROS2SpawnerEditorComponent.h

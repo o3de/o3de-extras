@@ -1,5 +1,7 @@
 
 set(FILES
+    ../Assets/Editor/Images/Icons/ROS2RobotImporter.qrc
+    ../Assets/Editor/Images/Icons/ToolbarIcon.svg
     Source/Tools/ROS2RobotImporterEditorSystemComponent.cpp
     Source/Tools/ROS2RobotImporterEditorSystemComponent.h
     Source/RobotImporter/FixURDF/FixURDF.cpp
