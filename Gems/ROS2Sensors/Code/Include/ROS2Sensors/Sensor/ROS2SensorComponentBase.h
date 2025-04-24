@@ -46,20 +46,21 @@ namespace ROS2
         {
             if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
             {
-                serializeContext->Class<ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>, AZ::Component>()->Version(1)->Field(
-                    "SensorConfiguration", &ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>::m_sensorConfiguration);
+                serializeContext->Class<ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>, AZ::Component>()->Version(1);
+                // ->Field(
+                //     "SensorConfiguration", &ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>::m_sensorConfiguration);
 
-                if (auto* editContext = serializeContext->GetEditContext())
-                {
-                    editContext
-                        ->Class<ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>>(
-                            "ROS2 Sensor Component Base", "Base component for sensors")
-                        ->DataElement(
-                            AZ::Edit::UIHandlers::Default,
-                            &ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>::m_sensorConfiguration,
-                            "Sensor configuration",
-                            "Sensor configuration");
-                }
+                // if (auto* editContext = serializeContext->GetEditContext())
+                // {
+                //     editContext
+                //         ->Class<ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>>(
+                //             "ROS2 Sensor Component Base", "Base component for sensors")
+                //         ->DataElement(
+                //             AZ::Edit::UIHandlers::Default,
+                //             &ROS2SensorComponentBase<EventSourceT, ComponentConfigurationT>::m_sensorConfiguration,
+                //             "Sensor configuration",
+                //             "Sensor configuration");
+                // }
             }
         }
 

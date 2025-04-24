@@ -104,29 +104,30 @@ namespace ROS2
             jsonContext->Serializer<JsonROS2WheelOdometryComponentConfigSerializer>()->HandlesType<ROS2WheelOdometryComponent>();
         }
 
-        ROS2WheelOdometryConfiguration::Reflect(context);
-        ROS2SensorComponentBase<PhysicsBasedSource, ROS2WheelOdometryConfiguration>::Reflect(context);
+        // ROS2WheelOdometryConfiguration::Reflect(context);
+        // ROS2SensorComponentBase<PhysicsBasedSource, ROS2WheelOdometryConfiguration>::Reflect(context);
 
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2WheelOdometryComponent, SensorBaseType>()->Version(2)->Field(
-                "Odometry configuration", &ROS2WheelOdometryComponent::m_odometryConfiguration);
+            serialize->Class<ROS2WheelOdometryComponent, SensorBaseType>()->Version(2);
+            // ->Field(
+            //     "Odometry configuration", &ROS2WheelOdometryComponent::m_odometryConfiguration);
 
-            if (auto* editContext = serialize->GetEditContext())
-            {
-                editContext->Class<ROS2WheelOdometryComponent>("ROS2 Wheel Odometry Sensor", "Odometry sensor component")
-                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
-                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ROS2WheelOdometrySensor.svg")
-                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2WheelOdometrySensor.svg")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &ROS2WheelOdometryComponent::m_odometryConfiguration,
-                        "Odometry configuration",
-                        "Odometry sensor configuration")
-                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
-            }
+            // if (auto* editContext = serialize->GetEditContext())
+            // {
+            //     editContext->Class<ROS2WheelOdometryComponent>("ROS2 Wheel Odometry Sensor", "Odometry sensor component")
+            //         ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+            //         ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+            //         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
+            //         ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ROS2WheelOdometrySensor.svg")
+            //         ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2WheelOdometrySensor.svg")
+            //         ->DataElement(
+            //             AZ::Edit::UIHandlers::Default,
+            //             &ROS2WheelOdometryComponent::m_odometryConfiguration,
+            //             "Odometry configuration",
+            //             "Odometry sensor configuration")
+            //         ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
+            // }
         }
     }
 

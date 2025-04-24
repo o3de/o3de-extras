@@ -1,99 +1,130 @@
-#include "AzCore/Component/Entity.h"
-#include "AzCore/RTTI/ReflectContext.h"
-#include "AzCore/Serialization/Json/BaseJsonSerializer.h"
-#include "AzCore/Serialization/Json/JsonSerialization.h"
-#include "AzCore/Serialization/SerializeContext.h"
-#include "Odometry/ROS2WheelOdometry.h"
-#include <AzCore/IO/Streamer/Streamer.h>
-#include <AzCore/IO/Streamer/StreamerComponent.h>
-#include <AzCore/Memory/Memory.h>
-#include <AzCore/Memory/SystemAllocator.h>
+#include <Odometry/ROS2WheelOdometry.h>
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzTest/AzTest.h>
-
-#include <AzCore/Serialization/Json/JsonSystemComponent.h>
-#include <AzCore/UserSettings/UserSettingsComponent.h>
-#include <AzTest/GemTestEnvironment.h>
-#include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 namespace UnitTest
 {
-    class ROS2SensorsTestEnvironment : public AZ::Test::GemTestEnvironment
-    {
-        // AZ::Test::GemTestEnvironment overrides ...
-        void AddGemsAndComponents() override;
-        AZ::ComponentApplication* CreateApplicationInstance() override;
-        void PostSystemEntityActivate() override;
-
-    public:
-        ROS2SensorsTestEnvironment() = default;
-        ~ROS2SensorsTestEnvironment() override = default;
-    };
-
-    void ROS2SensorsTestEnvironment::AddGemsAndComponents()
-    {
-        AddActiveGems(AZStd::to_array<AZStd::string_view>({ "ROS2", "ROS2Sensors"}));
-        AddDynamicModulePaths({ "ROS2" });
-        // AddComponentDescriptors(AZStd::initializer_list<AZ::ComponentDescriptor*>{ ROS2::ROS2WheelOdometryComponent::CreateDescriptor(),
-                                                                                //    AZ::JsonSystemComponent::CreateDescriptor() });
-        // AddRequiredComponents(AZStd::to_array<AZ::TypeId const>({ AZ::JsonSystemComponent::TYPEINFO_Uuid() }));
-    }
-
-    AZ::ComponentApplication* ROS2SensorsTestEnvironment::CreateApplicationInstance()
-    {
-        // Using ToolsTestApplication to have AzFramework and AzToolsFramework components.
-        return aznew UnitTest::ToolsTestApplication("ROS2SensorsTestEnvironment");
-    }
-
-    void ROS2SensorsTestEnvironment::PostSystemEntityActivate()
-    {
-        AZ::UserSettingsComponentRequestBus::Broadcast(&AZ::UserSettingsComponentRequests::DisableSaveOnFinalize);
-    }
-
     class ROS2SensorsTestFixture : public ::testing::Test
     {
     };
 
-    // Smoke test
-    TEST_F(ROS2SensorsTestFixture, WheelOdometryComponent)
+    // Store test for the old schema, where there is no configuration class.
+    TEST_F(ROS2SensorsTestFixture, Deserialize_WhenOldSchemaProvided_StoresSuccessfully)
     {
-        // Create a WheelOdometryComponent and check if it is created successfully
-        // ROS2::ROS2WheelOdometryComponent wheelOdometryComponent;
-        // EXPECT_NE(wheelOdometryComponent, nullptr);
+        ROS2::ROS2WheelOdometryComponent wheelOdometryComponent;
+
+        rapidjson::Document jsonDocument(rapidjson::kObjectType);
+        jsonDocument.Parse(R"({
+            "Twist covariance": {
+                "Linear covariance": [
+                    123.0,
+                    456.0,
+                    789.0
+                ],
+                "Angular covariance": [
+                    987.0,
+                    654.0,
+                    321.0
+                ]
+            },
+            "Pose covariance": {
+                "Linear covariance": [
+                    321.0,
+                    654.0,
+                    987.0
+                ],
+                "Angular covariance": [
+                    789.0,
+                    456.0,
+                    123.0
+                ]
+            }
+        })");
+
+        AZ::JsonDeserializerSettings settings;
+        auto storeResult = AZ::JsonSerialization::Load(wheelOdometryComponent, jsonDocument, settings);
+
+        EXPECT_EQ(storeResult.GetOutcome(), AZ::JsonSerializationResult::Outcomes::PartialDefaults);
+
+        rapidjson::Document document(rapidjson::kObjectType);
+        document.Parse("{}");
+
+        AZ::JsonSerializerSettings serializerSettings;
+        serializerSettings.m_keepDefaults = true;
+
+        AZ::JsonSerializationResult::ResultCode resultCode =
+            AZ::JsonSerialization::Store(document, document.GetAllocator(), wheelOdometryComponent, serializerSettings);
+
+        EXPECT_EQ(resultCode.GetOutcome(), AZ::JsonSerializationResult::Outcomes::Success);
+
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        document.Accept(writer);
+
+        const char* expectedOutput =
+            R"~({"Id":0,"SensorConfiguration":{"Visualize":true,"Publishing Enabled":true,"Frequency (HZ)":10.0,"Publishers":{"nav_msgs::msg::Odometry":{"Type":"nav_msgs::msg::Odometry","Topic":"odom","QoS":{"Reliability":2,"Durability":2,"Depth":5}}}},"Odometry configuration":{"Pose covariance":{"Linear covariance":[321.0,654.0,987.0],"Angular covariance":[789.0,456.0,123.0]},"Twist covariance":{"Linear covariance":[123.0,456.0,789.0],"Angular covariance":[987.0,654.0,321.0]}}})~";
+        EXPECT_STREQ(buffer.GetString(), expectedOutput);
     }
 
-    // Store test
-    TEST_F(ROS2SensorsTestFixture, WheelOdometryComponentStore)
+    // Store test for the new schema, where there is a configuration class.
+    TEST_F(ROS2SensorsTestFixture, Deserialize_WhenNewSchemaProvided_StoresSuccessfully)
     {
-        // // Create a WheelOdometryComponent and check if it is created successfully
-        // ROS2::ROS2WheelOdometryComponent wheelOdometryComponent;
-        // // EXPECT_NE(wheelOdometryComponent, nullptr);
+        ROS2::ROS2WheelOdometryComponent wheelOdometryComponent;
 
-        // // Create a JSON object to store the component's configuration
-        // rapidjson::Document document;
-        // document.SetObject();
+        rapidjson::Document jsonDocument(rapidjson::kObjectType);
+        jsonDocument.Parse(R"({
+            "Odometry configuration": {
+            "Twist covariance": {
+                "Linear covariance": [
+                123.0,
+                456.0,
+                789.0
+                ],
+                "Angular covariance": [
+                987.0,
+                654.0,
+                321.0
+                ]
+            },
+            "Pose covariance": {
+                "Linear covariance": [
+                321.0,
+                654.0,
+                987.0
+                ],
+                "Angular covariance": [
+                789.0,
+                456.0,
+                123.0
+                ]
+            }
+            }
+        })");
 
-        // AZ::Entity entity;
-        // // auto* wheelOdometryComponent
+        AZ::JsonDeserializerSettings settings;
+        auto storeResult = AZ::JsonSerialization::Load(wheelOdometryComponent, jsonDocument, settings);
 
-        // auto jsonDocument = AZStd::make_unique<rapidjson::Document>();
+        EXPECT_EQ(storeResult.GetOutcome(), AZ::JsonSerializationResult::Outcomes::PartialDefaults);
 
-        // AZ::JsonDeserializerSettings settings;
-        // auto storeResult = AZ::JsonSerialization::Load(wheelOdometryComponent, *jsonDocument, settings);
+        rapidjson::Document document(rapidjson::kObjectType);
+        document.Parse("{}");
 
-        // // Check if the store operation was successful
-        // EXPECT_EQ(storeResult.GetOutcome(), AZ::JsonSerializationResult::Outcomes::Success);
+        AZ::JsonSerializerSettings serializerSettings;
+        serializerSettings.m_keepDefaults = true;
+
+        AZ::JsonSerializationResult::ResultCode resultCode =
+            AZ::JsonSerialization::Store(document, document.GetAllocator(), wheelOdometryComponent, serializerSettings);
+
+        EXPECT_EQ(resultCode.GetOutcome(), AZ::JsonSerializationResult::Outcomes::Success);
+
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        document.Accept(writer);
+
+        const char* expectedOutput =
+            R"~({"Id":0,"SensorConfiguration":{"Visualize":true,"Publishing Enabled":true,"Frequency (HZ)":10.0,"Publishers":{"nav_msgs::msg::Odometry":{"Type":"nav_msgs::msg::Odometry","Topic":"odom","QoS":{"Reliability":2,"Durability":2,"Depth":5}}}},"Odometry configuration":{"Pose covariance":{"Linear covariance":[321.0,654.0,987.0],"Angular covariance":[789.0,456.0,123.0]},"Twist covariance":{"Linear covariance":[123.0,456.0,789.0],"Angular covariance":[987.0,654.0,321.0]}}})~";
+        EXPECT_STREQ(buffer.GetString(), expectedOutput);
     }
 } // namespace UnitTest
-
-// required to support running integration tests with Qt and PhysX
-AZTEST_EXPORT int AZ_UNIT_TEST_HOOK_NAME(int argc, char** argv)
-{
-    ::testing::InitGoogleMock(&argc, argv);
-    AZ::Test::printUnusedParametersWarning(argc, argv);
-    AZ::Test::addTestEnvironments({ new UnitTest::ROS2SensorsTestEnvironment() });
-    int result = RUN_ALL_TESTS();
-    return result;
-}
-
-IMPLEMENT_TEST_EXECUTABLE_MAIN();
