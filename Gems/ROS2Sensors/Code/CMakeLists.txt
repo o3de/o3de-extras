@@ -221,7 +221,7 @@ endif()
 # See if globally, tests are supported
 if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
     # We globally support tests, see if we support tests on this platform for ${gem_name}.Tests
-    if(PAL_TRAIT_TEST_GOOGLE_TEST_SUPPORTED)
+    if(PAL_TRAIT_ROS2SENSORS_TEST_SUPPORTED)
         # We support ${gem_name}.Tests on this platform, add dependency on the Private Object target
         ly_add_target(
             NAME ${gem_name}.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
@@ -249,7 +249,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
     # If we are a host platform we want to add tools test like editor tests here
     if(PAL_TRAIT_BUILD_HOST_TOOLS)
         # We are a host platform, see if Editor tests are supported on this platform
-        if(PAL_TRAIT_TEST_GOOGLE_TEST_SUPPORTED)
+        if(PAL_TRAIT_ROS2SENSORS_EDITOR_TEST_SUPPORTED)
             # We support ${gem_name}.Editor.Tests on this platform, add ${gem_name}.Editor.Tests target which depends on
             # private ${gem_name}.Editor.Private.Object target
             ly_add_target(
