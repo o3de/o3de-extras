@@ -1,28 +1,35 @@
 {
     "gem_name": "ROS2",
-    "version": "1.0.0",
+    "version": "4.0.0",
     "display_name": "ROS2",
-    "license": "License used i.e. Apache-2.0 or MIT",
-    "license_url": "Link to the license web site i.e. https://opensource.org/licenses/Apache-2.0",
-    "origin": "The name of the originator or creator",
-    "origin_url": "The website for this Gem",
+    "license": "Apache-2.0",
+    "license_url": "https://opensource.org/licenses/Apache-2.0",
+    "origin": "RobotecAI",
+    "origin_url": "https://robotec.ai",
+    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
     "type": "Code",
-    "summary": "A short description of this Gem",
+    "summary": "Tools and components to support creating simulations for ROS 2 systems such as robots",
     "canonical_tags": [
         "Gem"
     ],
     "user_tags": [
         "ROS2"
     ],
+    "compatible_engines": [
+        "o3de-sdk>=4.2.0",
+        "o3de>=4.2.0"
+    ],
+    "engine_api_dependencies": [],
     "platforms": [
-        ""
+        "Linux"
     ],
     "icon_path": "preview.png",
-    "requirements": "Notice of any requirements for this Gem i.e. This requires X other gem",
-    "documentation_url": "Link to any documentation of your Gem",
-    "dependencies": [],
-    "repo_uri": "",
-    "compatible_engines": [],
-    "engine_api_dependencies": [],
-    "restricted": "ROS2"
+    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem.",
+    "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+    "dependencies": [
+        "LevelGeoreferencing"
+    ],
+    "restricted": "ROS2",
+    "repo_uri": "https://github.com/o3de/o3de-extras",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-4.0.0-gem.zip"
 }
