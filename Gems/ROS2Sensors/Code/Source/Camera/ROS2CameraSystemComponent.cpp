@@ -41,7 +41,11 @@ namespace ROS2
    void ROS2SystemCameraComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
    {
        required.push_back(AZ_CRC_CE("ROS2Service"));
-       required.push_back(AZ_CRC_CE("RPISystem"));
+   }
+
+   void ROS2SystemCameraComponent::GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent)
+   {
+       dependent.push_back(AZ_CRC_CE("RPISystem"));
    }
 
    void ROS2SystemCameraComponent::InitPassTemplateMappingsHandler()
