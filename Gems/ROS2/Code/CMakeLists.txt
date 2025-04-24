@@ -240,7 +240,6 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                         AZ::AzTestShared
                         AZ::AzToolsFramework
                         Gem::${gem_name}.Editor.Static
-                        3rdParty::sdformat
             )
 
             # Add ROS2.Editor.Tests to googletest
