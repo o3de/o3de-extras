@@ -1,0 +1,32 @@
+{
+    "Type": "JsonSerialization",
+    "Version": 1,
+    "ClassName": "PassAsset",
+    "ClassData": {
+        "PassTemplate": {
+            "Name": "PipelineRenderToTextureROSDepth",
+            "PassClass": "RenderToTexturePass",
+            "PassData": {
+                "$type": "RenderToTexturePassData",
+                "OutputWidth": 512,
+                "OutputHeight": 512,
+                "OutputFormat": "R32_FLOAT"
+            },
+            "PassRequests": [
+                {
+                    "Name": "Pipeline",
+                    "TemplateName": "PipelineROSDepth",
+                    "Connections": [
+                        {
+                            "LocalSlot": "PipelineOutput",
+                            "AttachmentRef": {
+                                "Pass": "Parent",
+                                "Attachment": "Output"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
