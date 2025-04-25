@@ -14,9 +14,10 @@
 
 namespace ROS2
 {
+    // clang-format off
     //! Interface for commanding a system of joints such as robotic arm (manipulator) through FollowJointTrajectory actions.
-    //@see <a
-    //href="https://github.com/ros-controls/control_msgs/blob/humble/control_msgs/action/FollowJointTrajectory.action">FollowJointTrajectory</a>
+    //@see <a href="https://github.com/ros-controls/control_msgs/blob/humble/control_msgs/action/FollowJointTrajectory.action">FollowJointTrajectory</a>
+    // clang-format on
     class JointsTrajectoryRequests : public AZ::EBusTraits
     {
     public:
