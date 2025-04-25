@@ -29,7 +29,7 @@ namespace SimulationInterfaces
 
         using ReloadLevelCallback = AZStd::function<void(void)>;
 
-        //! Reload level and removal of all spawned simulation entities.
+        //! Reload level and remove all spawned simulation entities.
         virtual void ReloadLevel(ReloadLevelCallback completionCallback) = 0;
 
         //! Set the simulation to paused or unpaused,

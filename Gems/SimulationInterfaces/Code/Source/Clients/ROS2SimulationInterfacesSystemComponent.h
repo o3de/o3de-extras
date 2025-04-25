@@ -10,6 +10,7 @@
 
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/API/ApplicationAPI.h>
@@ -47,6 +48,15 @@ namespace ROS2SimulationInterfaces
 
     private:
         AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<IROS2HandlerBase>> m_availableRos2Interface;
+
+        template<typename T>
+        void RegisterInterface(rclcpp::Node::SharedPtr ros2Node)
+        {
+            AZStd::shared_ptr handler = AZStd::make_shared<T>();
+            handler->Initialize(ros2Node);
+            m_availableRos2Interface[handler->GetTypeName()] = AZStd::move(handler);
+            handler.reset();
+        };
     };
 
 } // namespace ROS2SimulationInterfaces
