@@ -9,6 +9,7 @@
 #include "GetSimulationFeaturesServiceHandler.h"
 #include <AzCore/base.h>
 #include <AzCore/std/containers/unordered_set.h>
+#include <AzCore/std/sort.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 
 namespace ROS2SimulationInterfaces
@@ -30,21 +31,19 @@ namespace ROS2SimulationInterfaces
         AZStd::unordered_set<SimulationInterfaces::SimulationFeatureType> o3deInterfaces;
         SimulationInterfaces::SimulationFeaturesAggregatorRequestBus::BroadcastResult(
             o3deInterfaces, &SimulationInterfaces::SimulationFeaturesAggregatorRequests::GetSimulationFeatures);
+
         // create common features and return it;
         // common features are logical AND between two sets
-        AZStd::unordered_set<SimulationFeatureType> allFeatures;
-        allFeatures.insert(ros2Interfaces.begin(), ros2Interfaces.end());
-        allFeatures.insert(o3deInterfaces.begin(), o3deInterfaces.end());
-
         Response response;
-        for (auto id : allFeatures)
+        for (auto id : o3deInterfaces)
         {
-            if (ros2Interfaces.contains(id) && o3deInterfaces.contains(SimulationInterfaces::SimulationFeatureType(id)))
+            if (ros2Interfaces.contains(SimulationFeatureType(id)))
             {
                 response.features.features.emplace_back(id);
             }
         }
-
+        // sort features for better readability
+        AZStd::sort(response.features.features.begin(), response.features.features.end());
         return response;
     }
 } // namespace ROS2SimulationInterfaces
