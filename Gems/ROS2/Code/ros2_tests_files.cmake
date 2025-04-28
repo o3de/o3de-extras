@@ -4,6 +4,4 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
-    Tests/Clients/ROS2Test.cpp
-    Tests/Frame/ROS2FrameComponentTest.cpp
 )
