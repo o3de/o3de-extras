@@ -13,7 +13,6 @@
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
 #include "CommonUtilities.h"
-#include "ConsoleCommands.inl"
 #include <AzCore/Asset/AssetManager.h>
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
@@ -466,9 +465,9 @@ namespace SimulationInterfaces
 
     void SimulationEntitiesManager::SetEntitiesState(const AZStd::vector<AZ::EntityId>& entityAndDescendants, const EntityState& state)
     {
-        AZ_Assert(!entityAndDescendants.empty(), "Entity and descendants list is empty");
         if (entityAndDescendants.empty())
         {
+            AZ_Error("SimulationInterfaces", false, "Entity and descendants list is empty");
             return;
         }
         const AZ::EntityId entityId = entityAndDescendants.front();

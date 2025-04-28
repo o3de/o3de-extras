@@ -33,9 +33,9 @@ namespace ROS2SimulationInterfaces::Utils
             {
                 return AZ::Failure("Invalid points! The first point should be lower than the second point.");
             }
-            const auto upperRight = ROS2::ROS2Conversions::FromROS2Vector3(p2);
-            const auto lowerLeft = ROS2::ROS2Conversions::FromROS2Vector3(p1);
-            const AZ::Aabb aabb = AZ::Aabb::CreateFromMinMax(lowerLeft, upperRight);
+            const auto min = ROS2::ROS2Conversions::FromROS2Vector3(p1);
+            const auto max = ROS2::ROS2Conversions::FromROS2Vector3(p2);
+            const AZ::Aabb aabb = AZ::Aabb::CreateFromMinMax(min, max);
             filter.m_boundsShape = AZStd::make_shared<Physics::BoxShapeConfiguration>(aabb.GetExtents());
         }
         else if (type == simulation_interfaces::msg::Bounds::TYPE_CONVEX_HULL)
@@ -44,7 +44,9 @@ namespace ROS2SimulationInterfaces::Utils
             {
                 return AZ::Failure("Invalid number of points! Type 'TYPE_CONVEX_HULL' should have at least 3 points.");
             }
-            filter.m_boundsShape = AZStd::make_shared<Physics::ConvexHullShapeConfiguration>();
+            // TODO: Implement convex hull shape configuration
+            // filter.m_boundsShape = AZStd::make_shared<Physics::ConvexHullShapeConfiguration>();
+            return AZ::Failure("Unsupported type! Type 'TYPE_CONVEX_HULL' is not supported.");
         }
         else if (type == simulation_interfaces::msg::Bounds::TYPE_SPHERE)
         {

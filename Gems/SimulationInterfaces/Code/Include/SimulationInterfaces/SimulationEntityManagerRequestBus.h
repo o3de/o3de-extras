@@ -72,8 +72,10 @@ namespace SimulationInterfaces
         //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/srv/GetEntityState.srv">GetEntityState.srv</a>
         virtual AZ::Outcome<EntityState, FailedResult> GetEntityState(const AZStd::string& name) = 0;
 
+        // clang-format off
         //! Get the state of all entities that match the filter.
         //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/srv/GetEntitiesStates.srv">GetEntitiesStates.srv</a>
+        // clang-format on
         virtual AZ::Outcome<MultipleEntitiesStates, FailedResult> GetEntitiesStates(const EntityFilters& filter) = 0;
 
         //! Set the state of an entity.
@@ -84,7 +86,7 @@ namespace SimulationInterfaces
         //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/srv/DeleteEntity.srv">DeleteEntity.srv</a>
         virtual void DeleteEntity(const AZStd::string& name, DeletionCompletedCb completedCb) = 0;
 
-        //! Remove all previously spawned entity from the simulation.
+        //! Remove all previously spawned entities from the simulation.
         virtual void DeleteAllEntities(DeletionCompletedCb completedCb) = 0;
 
         //! Get a list of spawnable entities.

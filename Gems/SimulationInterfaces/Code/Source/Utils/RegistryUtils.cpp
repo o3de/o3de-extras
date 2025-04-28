@@ -12,7 +12,7 @@
 
 namespace ROS2SimulationInterfaces::RegistryUtilities
 {
-    AZStd::string GetName(AZStd::string serviceType)
+    AZStd::string GetName(const AZStd::string& serviceType)
     {
         AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get();
         AZ_Assert(settingsRegistry, "Settings Registry is not available");

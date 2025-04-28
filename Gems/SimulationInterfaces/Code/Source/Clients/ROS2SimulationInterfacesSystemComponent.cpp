@@ -34,20 +34,6 @@
 
 namespace ROS2SimulationInterfaces
 {
-
-    namespace
-    {
-        template<typename T>
-        void RegisterInterface(
-            AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<IROS2HandlerBase>>& interfacesMap, rclcpp::Node::SharedPtr ros2Node)
-        {
-            AZStd::shared_ptr handler = AZStd::make_shared<T>();
-            handler->Initialize(ros2Node);
-            interfacesMap[handler->GetTypeName()] = AZStd::move(handler);
-            handler.reset();
-        };
-    } // namespace
-
     AZ_COMPONENT_IMPL(
         ROS2SimulationInterfacesSystemComponent, "ROS2SimulationInterfacesSystemComponent", ROS2SimulationInterfacesSystemComponentTypeId);
 
@@ -87,19 +73,19 @@ namespace ROS2SimulationInterfaces
         rclcpp::Node::SharedPtr ros2Node = rclcpp::Node::SharedPtr(ROS2::ROS2Interface::Get()->GetNode());
         AZ_Assert(ros2Node, "ROS2 node is not available.");
 
-        RegisterInterface<DeleteEntityServiceHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<GetEntitiesServiceHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<GetEntitiesStatesServiceHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<GetEntityStateServiceHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<GetSpawnablesServiceHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<SetEntityStateServiceHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<SpawnEntityServiceHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<GetSimulationFeaturesServiceHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<ResetSimulationServiceHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<SimulateStepsActionServerHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<SetSimulationStateServiceHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<GetSimulationStateServiceHandler>(m_availableRos2Interface, ros2Node);
-        RegisterInterface<StepSimulationServiceHandler>(m_availableRos2Interface, ros2Node);
+        RegisterInterface<DeleteEntityServiceHandler>(ros2Node);
+        RegisterInterface<GetEntitiesServiceHandler>(ros2Node);
+        RegisterInterface<GetEntitiesStatesServiceHandler>(ros2Node);
+        RegisterInterface<GetEntityStateServiceHandler>(ros2Node);
+        RegisterInterface<GetSpawnablesServiceHandler>(ros2Node);
+        RegisterInterface<SetEntityStateServiceHandler>(ros2Node);
+        RegisterInterface<SpawnEntityServiceHandler>(ros2Node);
+        RegisterInterface<GetSimulationFeaturesServiceHandler>(ros2Node);
+        RegisterInterface<ResetSimulationServiceHandler>(ros2Node);
+        RegisterInterface<SimulateStepsActionServerHandler>(ros2Node);
+        RegisterInterface<SetSimulationStateServiceHandler>(ros2Node);
+        RegisterInterface<GetSimulationStateServiceHandler>(ros2Node);
+        RegisterInterface<StepSimulationServiceHandler>(ros2Node);
     }
 
     void ROS2SimulationInterfacesSystemComponent::Deactivate()

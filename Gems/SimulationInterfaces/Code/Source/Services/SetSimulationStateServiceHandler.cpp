@@ -34,7 +34,7 @@ namespace ROS2SimulationInterfaces
         }
         else
         {
-            response.result.result = static_cast<AZ::u8>(transitionResult.GetError().m_errorCode);
+            response.result.result = transitionResult.GetError().m_errorCode;
             response.result.error_message = transitionResult.GetError().m_errorString.c_str();
         }
         return response;
