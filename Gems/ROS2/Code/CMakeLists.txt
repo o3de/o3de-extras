@@ -1,3 +1,7 @@
+# Copyright (c) Contributors to the Open 3D Engine Project.
+# For complete copyright and license terms please see the LICENSE at the root of this distribution.
+#
+# SPDX-License-Identifier: Apache-2.0 OR MIT
 
 # Currently we are in the Code folder: ${CMAKE_CURRENT_LIST_DIR}
 # Get the platform specific folder ${pal_dir} for the current folder: ${CMAKE_CURRENT_LIST_DIR}/Platform/${PAL_PLATFORM_NAME}
@@ -17,6 +21,57 @@ if(NOT PAL_TRAIT_ROS2_SUPPORTED)
     return()
 endif()
 
+# If no ROS2 is found, no targets are valid for this Gem
+find_package(ROS2 MODULE)
+if (NOT ROS2_FOUND)
+    message(FATAL_ERROR "Unable to detect a the ROS2 distribution on this system. Make sure it is installed and enabled.")
+    return()
+endif()
+message(DEBUG "Building ${gem_name} Gem with ros2 $ENV{ROS_DISTRO}")
+
+# Check if ROS 2 distribution is cached
+get_property(ROS_DISTRO_TYPE CACHE ROS_DISTRO PROPERTY TYPE)
+
+# Perform checks with cached ROS 2 distribution and sourced distribution. Save the distribution into cache if it was not cached before or if they do not match end with error.
+if (NOT ROS_DISTRO_TYPE)
+    set(ROS_DISTRO $ENV{ROS_DISTRO} CACHE STRING "ROS 2 distribution of current configuration" FORCE)
+elseif(NOT "$ENV{ROS_DISTRO}" STREQUAL "${ROS_DISTRO}")
+    get_cmake_property(CACHED_VARIABLES CACHE_VARIABLES)
+    set(ROS_DISTRO_COPY ${ROS_DISTRO})
+    # Iterate over cached variables and unset them
+    foreach(CACHED_VARIABLE ${CACHED_VARIABLES})
+        unset(${CACHED_VARIABLE} CACHE)
+    endforeach()
+    message(FATAL_ERROR "ROS 2 distribution does not match. Configuration created for: ${ROS_DISTRO_COPY}, sourced distribution: $ENV{ROS_DISTRO}.  Removed invalid configuration, please reconfigure project.")
+endif()
+
+# Add a custom target to always check during build if sourced and cached distributions match.
+add_custom_target(
+    ROS2DistributionCheck ALL
+    COMMENT "Checking if sourced ROS 2 distribution matches with the configuration"
+    COMMAND ${CMAKE_COMMAND} -DROS_DISTRO=${ROS_DISTRO} -P ${CMAKE_CURRENT_SOURCE_DIR}/checkROS2Distribution.cmake
+)
+
+# Add the static target with the API Interface and the code
+# TODO: This target should be removed after API is fully implemented with buses
+ly_add_target(
+    NAME ${gem_name}.Static STATIC
+    NAMESPACE Gem
+    FILES_CMAKE
+        ros2_api_files.cmake
+        ros2_shared_api_files.cmake
+    INCLUDE_DIRECTORIES
+        PUBLIC
+            Include
+        PRIVATE
+            Source
+    BUILD_DEPENDENCIES
+        PUBLIC
+            AZ::AzCore
+            AZ::AzToolsFramework
+            Gem::${gem_name}.Private.Object
+)
+
 # The ${gem_name}.API target declares the common interface that users of this gem should depend on in their targets
 ly_add_target(
     NAME ${gem_name}.API INTERFACE
@@ -29,8 +84,10 @@ ly_add_target(
             Include
     BUILD_DEPENDENCIES
         INTERFACE
-           AZ::AzCore
+            AZ::AzCore
 )
+
+target_interface_depends_on_ros2_packages(${gem_name}.API rclcpp builtin_interfaces geometry_msgs)
 
 # The ${gem_name}.Private.Object target is an internal target
 # It should not be used outside of this Gems CMakeLists.txt
@@ -50,7 +107,11 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
+            Gem::Atom_AtomBridge.Static # FollowingCameraComponent
+            Gem::LevelGeoreferencing.API # ROS2SpawnerComponent
 )
+
+target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs vision_msgs control_msgs)
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
 ly_add_target(
@@ -67,6 +128,7 @@ ly_add_target(
     BUILD_DEPENDENCIES
         PUBLIC
             Gem::${gem_name}.API
+            Gem::${gem_name}.Static
         PRIVATE
             Gem::${gem_name}.Private.Object
 )
@@ -131,10 +193,14 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
             PRIVATE
                 Include
                 Source
+        COMPILE_DEFINITIONS
+            PRIVATE
+                ROS2_EDITOR
         BUILD_DEPENDENCIES
             PUBLIC
                 AZ::AzToolsFramework
                 ${gem_name}.Private.Object
+                ${gem_name}.Static
     )
 
     ly_add_target(

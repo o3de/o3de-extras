@@ -1,7 +1,18 @@
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #include "ROS2EditorSystemComponent.h"
+#include <Frame/ROS2FrameSystemComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/ROS2TypeIds.h>
 #include <ROS2ModuleInterface.h>
+#include <Spawner/ROS2SpawnPointEditorComponent.h>
+#include <Spawner/ROS2SpawnerEditorComponent.h>
 
 namespace ROS2
 {
@@ -13,25 +24,20 @@ namespace ROS2
 
         ROS2EditorModule()
         {
-            // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
-            // Add ALL components descriptors associated with this gem to m_descriptors.
-            // This will associate the AzTypeInfo information for the components with the the SerializeContext, BehaviorContext and
-            // EditContext. This happens through the [MyComponent]::Reflect() function.
             m_descriptors.insert(
                 m_descriptors.end(),
-                {
-                    ROS2EditorSystemComponent::CreateDescriptor(),
-                });
+                { ROS2EditorSystemComponent::CreateDescriptor(),
+                  ROS2SpawnerEditorComponent::CreateDescriptor(),
+                  ROS2SpawnPointEditorComponent::CreateDescriptor(),
+                  ROS2FrameSystemComponent::CreateDescriptor(),
+                  ROS2FrameEditorComponent::CreateDescriptor() });
         }
 
-        /**
-         * Add required SystemComponents to the SystemEntity.
-         * Non-SystemComponents should not be added here
-         */
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
             return AZ::ComponentTypeList{
                 azrtti_typeid<ROS2EditorSystemComponent>(),
+                azrtti_typeid<ROS2FrameSystemComponent>(),
             };
         }
     };

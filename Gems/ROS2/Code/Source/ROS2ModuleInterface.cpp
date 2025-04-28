@@ -5,6 +5,10 @@
 #include <ROS2/ROS2TypeIds.h>
 
 #include <Clients/ROS2SystemComponent.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <SimulationUtils/FollowingCameraComponent.h>
+#include <Spawner/ROS2SpawnPointComponent.h>
+#include <Spawner/ROS2SpawnerComponent.h>
 
 namespace ROS2
 {
@@ -14,14 +18,14 @@ namespace ROS2
 
     ROS2ModuleInterface::ROS2ModuleInterface()
     {
-        // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
-        // Add ALL components descriptors associated with this gem to m_descriptors.
-        // This will associate the AzTypeInfo information for the components with the the SerializeContext, BehaviorContext and EditContext.
-        // This happens through the [MyComponent]::Reflect() function.
         m_descriptors.insert(
             m_descriptors.end(),
             {
                 ROS2SystemComponent::CreateDescriptor(),
+                ROS2FrameComponent::CreateDescriptor(),
+                ROS2SpawnerComponent::CreateDescriptor(),
+                ROS2SpawnPointComponent::CreateDescriptor(),
+                FollowingCameraComponent::CreateDescriptor(),
             });
     }
 

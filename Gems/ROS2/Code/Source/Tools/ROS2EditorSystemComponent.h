@@ -1,7 +1,14 @@
-
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 #pragma once
 
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
+#include <AzToolsFramework/Entity/EditorEntityContextBus.h>
 
 #include <Clients/ROS2SystemComponent.h>
 
@@ -11,6 +18,7 @@ namespace ROS2
     class ROS2EditorSystemComponent
         : public ROS2SystemComponent
         , protected AzToolsFramework::EditorEvents::Bus::Handler
+        , private AzToolsFramework::EditorEntityContextNotificationBus::Handler
     {
         using BaseSystemComponent = ROS2SystemComponent;
 
@@ -28,8 +36,16 @@ namespace ROS2
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
-        // AZ::Component
+        //////////////////////////////////////////////////////////////////////////
+        // AZ::Component overrides
         void Activate() override;
         void Deactivate() override;
+        //////////////////////////////////////////////////////////////////////////
+
+        //////////////////////////////////////////////////////////////////////////
+        // EditorEntityContextNotificationBus overrides
+        void OnStartPlayInEditorBegin() override;
+        void OnStopPlayInEditor() override;
+        //////////////////////////////////////////////////////////////////////////
     };
 } // namespace ROS2
