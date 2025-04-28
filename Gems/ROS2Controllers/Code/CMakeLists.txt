@@ -57,7 +57,11 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
-            Gem::ROS2.Static
+            Gem::ImGui.Static
+            Gem::LmbrCentral.API
+            Gem::PhysX5.Static
+            Gem::ROS2
+            Gem::StartingPointInput
 )
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface

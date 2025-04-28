@@ -57,7 +57,7 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
-            Gem::ROS2.Static
+            Gem::ROS2
 )
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
@@ -146,7 +146,8 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 AZ::AzToolsFramework
                 Gem::CommonFeaturesAtom.Editor.Static
                 Gem::PhysX5.Editor.Static
-                Gem::ROS2.Editor.Static
+                Gem::ROS2.Editor
+                Gem::ROS2.Static
                 ${gem_name}.Private.Object
             PRIVATE
                 AZ::AssetBuilderSDK

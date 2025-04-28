@@ -18,10 +18,11 @@
         "Linux"
     ],
     "icon_path": "preview.png",
-    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem",
+    "requirements": "Requires ROS 2 Gem and PhysX5 Gem",
     "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
     "dependencies": [
         "LevelGeoreferencing",
+        "PhysX5",
         "ROS2>=3.3.0"
     ],
     "repo_uri": "https://github.com/o3de/o3de-extras/",

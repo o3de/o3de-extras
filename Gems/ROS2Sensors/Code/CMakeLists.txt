@@ -77,7 +77,9 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
-            Gem::ROS2.Static
+            Gem::Atom_Feature_Common.Public # Camera Sensor
+            Gem::PhysX5.Static # Imu Sensor
+            Gem::ROS2
             Gem::LevelGeoreferencing.API
             ${gem_name}.Lidar.Static
 )
