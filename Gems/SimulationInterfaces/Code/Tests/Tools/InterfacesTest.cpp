@@ -88,14 +88,30 @@ namespace UnitTest
             AZ_Assert(node, "Node is not available.");
             return node;
         }
-        void SpinAppSome()
+        void SpinAppSome(int numberOfTicks = 50)
         {
             AZ::ComponentApplication* app = nullptr;
             AZ::ComponentApplicationBus::BroadcastResult(app, &AZ::ComponentApplicationBus::Events::GetApplication);
             AZ_Assert(app, "Application pointer is not available.");
-            for (int i = 0; i < 10; ++i)
+            for (int i = 0; i < numberOfTicks; ++i)
             {
                 app->Tick();
+            }
+        }
+
+        template <typename Future>void SpinAppUntilFuture(Future &future)
+        {
+            AZ::ComponentApplication* app = nullptr;
+            AZ::ComponentApplicationBus::BroadcastResult(app, &AZ::ComponentApplicationBus::Events::GetApplication);
+            AZ_Assert(app, "Application pointer is not available.");
+            constexpr int MaximumTicks = 1000;
+            for (int i = 0; i < MaximumTicks; ++i)
+            {
+                app->Tick();
+                if (future.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
+                {
+                    return;
+                }
             }
         }
     };
@@ -127,7 +143,7 @@ namespace UnitTest
             pub->publish(msg);
         }
         SpinAppSome();
-        EXPECT_EQ(receivedMsgs, 10) << "Did not receive all messages.";
+ed         EXPECT_EQ(receivedMsgs, 10) << "Did not receive all messages.";
     }
 
     //! Check if expected services are available and has the default name
@@ -169,7 +185,7 @@ namespace UnitTest
                 }));
 
         auto future = client->async_send_request(request);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
 
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
@@ -200,7 +216,7 @@ namespace UnitTest
                 }));
 
         auto future = client->async_send_request(request);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
 
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
@@ -248,7 +264,7 @@ namespace UnitTest
                 }));
 
         auto future = client->async_send_request(request);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
 
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
@@ -267,7 +283,7 @@ namespace UnitTest
         request->filters.bounds.type = simulation_interfaces::msg::Bounds::TYPE_SPHERE;
 
         auto future = client->async_send_request(request);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
         EXPECT_NE(response->result.result, simulation_interfaces::msg::Result::RESULT_OK);
@@ -315,7 +331,7 @@ namespace UnitTest
                 }));
 
         auto future = client->async_send_request(request);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
 
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
@@ -344,7 +360,7 @@ namespace UnitTest
         request->filters.bounds.type = simulation_interfaces::msg::Bounds::TYPE_BOX;
 
         auto future = client->async_send_request(request);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
 
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
@@ -360,7 +376,7 @@ namespace UnitTest
         auto client = node->create_client<simulation_interfaces::srv::GetSimulatorFeatures>("/get_simulation_features");
         auto request = std::make_shared<simulation_interfaces::srv::GetSimulatorFeatures::Request>();
         auto future = client->async_send_request(request);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
         EXPECT_TRUE(response->features.features.empty()) << "Features vector is not empty.";
@@ -388,7 +404,7 @@ namespace UnitTest
         auto client = node->create_client<simulation_interfaces::srv::GetSimulatorFeatures>("/get_simulation_features");
         auto request = std::make_shared<simulation_interfaces::srv::GetSimulatorFeatures::Request>();
         auto future = client->async_send_request(request);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
         ASSERT_FALSE(response->features.features.empty()) << "Features vector is empty.";
@@ -426,7 +442,7 @@ namespace UnitTest
                     EXPECT_TRUE(allowRename);
                     completedCb(AZ::Success("valid_name"));
                 }));
-        SpinAppSome();
+        SpinAppUntilFuture(future);
 
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
@@ -447,7 +463,7 @@ namespace UnitTest
         request->entity_namespace = "test_namespace";
 
         auto future = client->async_send_request(request);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
 
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
@@ -469,7 +485,7 @@ namespace UnitTest
         request->entity_namespace = "invalid namespace";
 
         auto future = client->async_send_request(request);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
 
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
@@ -506,12 +522,12 @@ namespace UnitTest
                 }));
 
         auto future = client->async_send_goal(*goal);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
         auto goalHandle = future.get();
         ASSERT_NE(goalHandle, nullptr);
         auto result = client->async_get_result(goalHandle);
-        SpinAppSome();
+        SpinAppUntilFuture(result);
         ASSERT_TRUE(result.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
         EXPECT_EQ(result.get().result->result.result, simulation_interfaces::msg::Result::RESULT_OK);
     }
@@ -535,12 +551,12 @@ namespace UnitTest
                 }));
 
         auto future = client->async_send_goal(*goal);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
         auto goalHandle = future.get();
         ASSERT_NE(goalHandle, nullptr);
         auto result = client->async_get_result(goalHandle);
-        SpinAppSome();
+        SpinAppUntilFuture(result);
         ASSERT_TRUE(result.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
         EXPECT_EQ(result.get().result->result.result, simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED);
     }
@@ -576,13 +592,13 @@ namespace UnitTest
         EXPECT_CALL(mock, CancelStepSimulation());
 
         auto future = client->async_send_goal(*goal);
-        SpinAppSome();
+        SpinAppUntilFuture(future);
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
         auto goalHandle = future.get();
         ASSERT_NE(goalHandle, nullptr);
-        auto cancelFeautre = client->async_cancel_goal(goalHandle);
-        SpinAppSome();
-        ASSERT_TRUE(cancelFeautre.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
+        auto cancelFuture = client->async_cancel_goal(goalHandle);
+        SpinAppUntilFuture(cancelFuture);
+        ASSERT_TRUE(cancelFuture.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Action call timed out.";
     }
 
 } // namespace UnitTest
