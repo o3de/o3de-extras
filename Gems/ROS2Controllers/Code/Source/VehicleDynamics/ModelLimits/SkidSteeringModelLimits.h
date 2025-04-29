@@ -12,7 +12,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <VehicleDynamics/VehicleModelLimits.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
 
     //! A structure holding limits of skid-steering robot.
@@ -41,4 +41,4 @@ namespace ROS2::VehicleDynamics
         float m_linearAcceleration = 3.5f; //!< [m*s^(-2)] Linear acceleration limit
         float m_angularAcceleration = 2.0f; //!< [rad*s^(-2)] Angular acceleration limit
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

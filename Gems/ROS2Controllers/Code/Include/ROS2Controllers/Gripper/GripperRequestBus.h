@@ -11,7 +11,7 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! The interface allows to control gripper components through GripperCommand actions.
     //! It is a bus that allows communication between ROS2 GripperCommand Action server with the particular implementation of the gripper.
@@ -53,4 +53,4 @@ namespace ROS2
     };
 
     using GripperRequestBus = AZ::EBus<GripperRequests>;
-} // namespace ROS2
+} // namespace ROS2Controllers

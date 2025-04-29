@@ -20,7 +20,7 @@
 #include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
 #include <ROS2Controllers/ROS2ControllersTypeIds.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Component responsible for controlling a hierarchical system of joints such as robotic arm with Articulations or Hinge Joints.
     //! This manipulator component uses simple joint position interface. For trajectory control, see JointsTrajectoryComponent.
@@ -32,9 +32,10 @@ namespace ROS2
     public:
         JointsManipulationComponent();
         JointsManipulationComponent(
-            const PublisherConfiguration& publisherConfiguration, const AZStd::vector<AZStd::pair<AZStd::string, float>>& initialPositions);
+            const ROS2::PublisherConfiguration& publisherConfiguration,
+            const AZStd::vector<AZStd::pair<AZStd::string, float>>& initialPositions);
         ~JointsManipulationComponent() = default;
-        AZ_COMPONENT(JointsManipulationComponent, ROS2Controllers::JointsManipulationComponentTypeId, AZ::Component);
+        AZ_COMPONENT(JointsManipulationComponent, JointsManipulationComponentTypeId, AZ::Component);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
@@ -82,10 +83,10 @@ namespace ROS2
         AZ::Outcome<JointEffort, AZStd::string> GetJointEffort(const JointInfo& jointInfo);
 
         AZStd::unique_ptr<JointStatePublisher> m_jointStatePublisher;
-        PublisherConfiguration m_jointStatePublisherConfiguration;
+        ROS2::PublisherConfiguration m_jointStatePublisherConfiguration;
         ManipulationJoints m_manipulationJoints; //!< Map of JointInfo where the key is a joint name (with namespace included)
         AZStd::vector<AZStd::pair<AZStd::string, float>>
             m_initialPositions; //!< Initial positions per joint name (without namespace included)
         builtin_interfaces::msg::Time m_lastTickTimestamp; //!< ROS 2 Timestamp during last OnTick call
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

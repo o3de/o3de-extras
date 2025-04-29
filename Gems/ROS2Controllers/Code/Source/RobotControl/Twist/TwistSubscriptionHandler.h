@@ -10,11 +10,11 @@
 #include <ROS2Controllers/RobotControl/ControlSubscriptionHandler.h>
 #include <geometry_msgs/msg/twist.hpp>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     class TwistSubscriptionHandler : public ControlSubscriptionHandler<geometry_msgs::msg::Twist>
     {
     private:
         void SendToBus(const geometry_msgs::msg::Twist& message) override;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

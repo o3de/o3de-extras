@@ -20,7 +20,7 @@
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <imgui/imgui.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void VacuumGripperComponent::Activate()
     {
@@ -339,4 +339,4 @@ namespace ROS2
         return false;
     }
 
-} // namespace ROS2
+} // namespace ROS2Controllers

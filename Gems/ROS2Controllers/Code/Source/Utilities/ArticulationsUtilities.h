@@ -11,7 +11,7 @@
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
 #include <PhysX/ArticulationTypes.h>
 
-namespace ROS2::Utils
+namespace ROS2Controllers::Utils
 {
     //! Retrieve root of articulation for given entity. If the entity is not part of an articulation, the invalid entity id is returned.
     //! @param entityId The entity to get the root of.
@@ -30,4 +30,4 @@ namespace ROS2::Utils
     //! @param axis Is set to a free axis, if one exists.
     //! @return Whether we found a free articulation axis or not.
     bool TryGetFreeArticulationAxis(const AZ::EntityId& entityId, PhysX::ArticulationJointAxis& axis);
-} // namespace ROS2::Utils
+} // namespace ROS2Controllers::Utils

@@ -16,16 +16,16 @@
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2Controllers/ROS2ControllersTypeIds.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Editor Component responsible for a hierarchical system of joints such as robotic arm with Articulations or Hinge Joints.
     class JointsManipulationEditorComponent : public AzToolsFramework::Components::EditorComponentBase
     {
     public:
         JointsManipulationEditorComponent();
-        JointsManipulationEditorComponent(const PublisherConfiguration& publisherConfiguration);
+        JointsManipulationEditorComponent(const ROS2::PublisherConfiguration& publisherConfiguration);
         ~JointsManipulationEditorComponent() = default;
-        AZ_EDITOR_COMPONENT(JointsManipulationEditorComponent, ROS2Controllers::JointsManipulationEditorComponentTypeId);
+        AZ_EDITOR_COMPONENT(JointsManipulationEditorComponent, JointsManipulationEditorComponentTypeId);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
@@ -38,7 +38,7 @@ namespace ROS2
     private:
         AZ::Crc32 ReloadJoints();
 
-        PublisherConfiguration m_jointStatePublisherConfiguration;
+        ROS2::PublisherConfiguration m_jointStatePublisherConfiguration;
         AZStd::vector<AZStd::pair<AZStd::string, float>> m_initialPositions;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

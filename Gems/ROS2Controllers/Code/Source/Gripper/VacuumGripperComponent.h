@@ -19,7 +19,7 @@
 #include <ROS2Controllers/Gripper/GripperRequestBus.h>
 #include <ROS2Controllers/ROS2ControllersTypeIds.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! This component implements vacuum gripper functionality.
     //! It allows to attach to gripper objects that are in inside designated trigger collider to objects that has "Grippable" tag.
@@ -35,7 +35,7 @@ namespace ROS2
     {
     public:
         static constexpr AZ::Crc32 GrippableTag = AZ_CRC_CE("Grippable");
-        AZ_COMPONENT(VacuumGripperComponent, ROS2Controllers::VacuumGripperComponentTypeId, AZ::Component);
+        AZ_COMPONENT(VacuumGripperComponent, VacuumGripperComponentTypeId, AZ::Component);
         VacuumGripperComponent() = default;
         ~VacuumGripperComponent() = default;
 
@@ -97,4 +97,4 @@ namespace ROS2
         void AttachToGripper(
             AzPhysics::SimulatedBody* gripperBody, AzPhysics::RigidBody* grippedRigidBody, AzPhysics::SceneInterface* sceneInterface);
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

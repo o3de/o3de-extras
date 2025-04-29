@@ -24,7 +24,7 @@
 #include <Source/PrismaticJointComponent.h>
 #include <Utilities/ArticulationsUtilities.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     namespace Internal
     {
@@ -99,7 +99,7 @@ namespace ROS2
                 AZ_Assert(entity, "Unknown entity %s", descendantID.ToString().c_str());
 
                 // If there is a Frame Component, take joint name stored in it.
-                auto* frameComponent = entity->FindComponent<ROS2FrameComponent>();
+                auto* frameComponent = entity->FindComponent<ROS2::ROS2FrameComponent>();
                 if (!frameComponent)
                 { // Frame Component is required for joints.
                     continue;
@@ -107,10 +107,10 @@ namespace ROS2
                 const AZStd::string jointName(frameComponent->GetJointName().GetCStr());
 
                 auto* hingeComponent =
-                    azrtti_cast<PhysX::JointComponent*>(Utils::GetGameOrEditorComponent<PhysX::HingeJointComponent>(entity));
+                    azrtti_cast<PhysX::JointComponent*>(ROS2::Utils::GetGameOrEditorComponent<PhysX::HingeJointComponent>(entity));
                 auto* prismaticComponent =
-                    azrtti_cast<PhysX::JointComponent*>(Utils::GetGameOrEditorComponent<PhysX::PrismaticJointComponent>(entity));
-                auto* articulationComponent = Utils::GetGameOrEditorComponent<PhysX::ArticulationLinkComponent>(entity);
+                    azrtti_cast<PhysX::JointComponent*>(ROS2::Utils::GetGameOrEditorComponent<PhysX::PrismaticJointComponent>(entity));
+                auto* articulationComponent = ROS2::Utils::GetGameOrEditorComponent<PhysX::ArticulationLinkComponent>(entity);
                 [[maybe_unused]] bool classicJoint = hingeComponent || prismaticComponent;
                 AZ_Warning(
                     "JointsManipulationComponent",
@@ -167,7 +167,8 @@ namespace ROS2
     }
 
     JointsManipulationComponent::JointsManipulationComponent(
-        const PublisherConfiguration& publisherConfiguration, const AZStd::vector<AZStd::pair<AZStd::string, float>>& initialPositions)
+        const ROS2::PublisherConfiguration& publisherConfiguration,
+        const AZStd::vector<AZStd::pair<AZStd::string, float>>& initialPositions)
         : m_jointStatePublisherConfiguration(publisherConfiguration)
         , m_initialPositions(initialPositions)
     {
@@ -175,14 +176,14 @@ namespace ROS2
 
     void JointsManipulationComponent::Activate()
     {
-        auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
+        auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         JointStatePublisherContext publisherContext;
         publisherContext.m_publisherNamespace = ros2Frame->GetNamespace();
         publisherContext.m_frameId = ros2Frame->GetFrameID();
         publisherContext.m_entityId = GetEntityId();
 
         m_jointStatePublisher = AZStd::make_unique<JointStatePublisher>(m_jointStatePublisherConfiguration, publisherContext);
-        m_lastTickTimestamp = ROS2Interface::Get()->GetROSTimestamp();
+        m_lastTickTimestamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         AZ::TickBus::Handler::BusConnect();
         JointsManipulationRequestBus::Handler::BusConnect(GetEntityId());
     }
@@ -417,7 +418,7 @@ namespace ROS2
 
     AZStd::string JointsManipulationComponent::GetManipulatorNamespace() const
     {
-        auto* frameComponent = GetEntity()->FindComponent<ROS2FrameComponent>();
+        auto* frameComponent = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(frameComponent, "ROS2FrameComponent is required for joints.");
         return frameComponent->GetNamespace();
     }
@@ -448,9 +449,9 @@ namespace ROS2
             }
             m_jointStatePublisher->InitializePublisher();
         }
-        auto simTimestamp = ROS2Interface::Get()->GetROSTimestamp();
-        float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastTickTimestamp, simTimestamp);
+        auto simTimestamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+        float deltaSimTime = ROS2::ROS2Conversions::GetTimeDifference(m_lastTickTimestamp, simTimestamp);
         MoveToSetPositions(deltaSimTime);
         m_lastTickTimestamp = simTimestamp;
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

@@ -21,7 +21,7 @@
 #include <Source/ArticulationLinkComponent.h>
 #include <Source/HingeJointComponent.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     JointsManipulationEditorComponent::JointsManipulationEditorComponent()
     {
@@ -30,7 +30,7 @@ namespace ROS2
         m_jointStatePublisherConfiguration.m_frequency = 25.0f;
     }
 
-    JointsManipulationEditorComponent::JointsManipulationEditorComponent(const PublisherConfiguration& publisherConfiguration)
+    JointsManipulationEditorComponent::JointsManipulationEditorComponent(const ROS2::PublisherConfiguration& publisherConfiguration)
     {
         m_jointStatePublisherConfiguration = publisherConfiguration;
     }
@@ -105,7 +105,7 @@ namespace ROS2
         AZStd::function<void(const AZ::Entity* entity)> getAllJointsHierarchy = [&](const AZ::Entity* entity)
         {
             auto* frameEditorComponent =
-                azrtti_cast<ROS2::ROS2FrameEditorComponent*>(Utils::GetGameOrEditorComponent<ROS2::ROS2FrameEditorComponent>(entity));
+                azrtti_cast<ROS2::ROS2FrameEditorComponent*>(ROS2::Utils::GetGameOrEditorComponent<ROS2::ROS2FrameEditorComponent>(entity));
             AZ_Assert(frameEditorComponent, "ROS2FrameEditorComponent does not exist!");
 
             const bool hasNonFixedJoints = JointUtils::HasNonFixedJoints(entity);
@@ -131,4 +131,4 @@ namespace ROS2
 
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

@@ -17,7 +17,7 @@
 #include <ROS2Controllers/ROS2ControllersTypeIds.h>
 #include <control_msgs/action/follow_joint_trajectory.hpp>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Component responsible for execution of commands to move robotic arm (manipulator) based on set trajectory goal.
     class JointsTrajectoryComponent
@@ -29,7 +29,7 @@ namespace ROS2
         JointsTrajectoryComponent() = default;
         JointsTrajectoryComponent(const AZStd::string& followTrajectoryActionName);
         ~JointsTrajectoryComponent() = default;
-        AZ_COMPONENT(JointsTrajectoryComponent, ROS2Controllers::JointsTrajectoryComponentTypeId, AZ::Component);
+        AZ_COMPONENT(JointsTrajectoryComponent, JointsTrajectoryComponentTypeId, AZ::Component);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
@@ -70,4 +70,4 @@ namespace ROS2
         ManipulationJoints m_manipulationJoints;
         builtin_interfaces::msg::Time m_lastTickTimestamp; //!< ROS 2 Timestamp during last OnTick call
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

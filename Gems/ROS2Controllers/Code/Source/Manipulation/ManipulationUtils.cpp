@@ -10,7 +10,7 @@
 #include <PhysX/ArticulationJointBus.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 
-namespace ROS2::Utils
+namespace ROS2Controllers::Utils
 {
     JointStateData GetJointState(const JointInfo& jointInfo)
     {
@@ -49,4 +49,4 @@ namespace ROS2::Utils
         }
         return result;
     }
-} // namespace ROS2::Utils
+} // namespace ROS2Controllers::Utils

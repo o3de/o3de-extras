@@ -13,7 +13,7 @@
 #include <ROS2Controllers/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
 #include <ROS2Controllers/Manipulation/MotorizedJoints/PidMotorControllerBus.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     class PidMotorControllerComponent
         : public JointMotorControllerComponent
@@ -46,4 +46,4 @@ namespace ROS2
         float CalculateMotorSpeed([[maybe_unused]] float deltaTime) override;
         void DisplayControllerParameters() override;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

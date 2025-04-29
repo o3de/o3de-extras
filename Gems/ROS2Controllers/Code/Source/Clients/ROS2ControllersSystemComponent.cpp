@@ -22,8 +22,8 @@ namespace ROS2Controllers
     void ROS2ControllersSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         // Reflect structs not strictly owned by any single component
-        ROS2::Controllers::PidConfiguration::Reflect(context);
-        ROS2::VehicleDynamics::VehicleModelComponent::Reflect(context);
+        Controllers::PidConfiguration::Reflect(context);
+        VehicleDynamics::VehicleModelComponent::Reflect(context);
 
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {

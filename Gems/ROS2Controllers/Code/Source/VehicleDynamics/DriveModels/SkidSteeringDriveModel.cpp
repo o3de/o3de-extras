@@ -17,7 +17,7 @@
 #include <ROS2/ROS2GemUtilities.h>
 #include <VehicleDynamics/Utilities.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     void SkidSteeringDriveModel::Reflect(AZ::ReflectContext* context)
     {
@@ -97,7 +97,7 @@ namespace ROS2::VehicleDynamics
         AZ::Entity* wheelEntityPtr = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(wheelEntityPtr, &AZ::ComponentApplicationRequests::FindEntity, wheelEntityId);
         AZ_Assert(wheelEntityPtr, "The wheelEntity should not be null here");
-        out.wheelControllerComponentPtr = Utils::GetGameOrEditorComponent<WheelControllerComponent>(wheelEntityPtr);
+        out.wheelControllerComponentPtr = ROS2::Utils::GetGameOrEditorComponent<WheelControllerComponent>(wheelEntityPtr);
         out.wheelData = VehicleDynamics::Utilities::GetWheelData(wheelEntityId, axle.m_wheelRadius);
         if (out.wheelControllerComponentPtr)
         {
@@ -171,4 +171,4 @@ namespace ROS2::VehicleDynamics
         return &m_limits;
     }
 
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

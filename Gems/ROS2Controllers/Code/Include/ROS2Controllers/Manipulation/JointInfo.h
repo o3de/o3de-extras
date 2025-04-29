@@ -14,7 +14,7 @@
 #include <AzCore/std/string/string.h>
 #include <PhysX/ArticulationTypes.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     using JointPosition = float;
     using JointVelocity = float;
@@ -30,4 +30,4 @@ namespace ROS2
         JointPosition m_restPosition = 0.0f; //!< Keeps this position if no commands are given (for example, opposing gravity).
     };
     using ManipulationJoints = AZStd::unordered_map<AZStd::string, JointInfo>;
-} // namespace ROS2
+} // namespace ROS2Controllers

@@ -10,7 +10,7 @@
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     struct JointMotorControllerConfiguration
     {
@@ -24,4 +24,4 @@ namespace ROS2
         bool m_debugMode{ false }; //!< Is debug mode activated.
     };
 
-} // namespace ROS2
+} // namespace ROS2Controllers

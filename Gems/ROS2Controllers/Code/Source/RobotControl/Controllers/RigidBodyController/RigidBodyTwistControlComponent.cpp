@@ -14,7 +14,7 @@
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void RigidBodyTwistControlComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -100,4 +100,4 @@ namespace ROS2
         m_linearVelocityLocal = linear;
         m_angularVelocityLocal = angular;
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

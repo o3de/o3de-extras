@@ -8,7 +8,7 @@
 
 #include "JointPositionsSubscriptionHandler.h"
 
-namespace ROS2
+namespace ROS2Controllers
 {
     JointPositionsSubscriptionHandler::JointPositionsSubscriptionHandler(MessageCallback messageCallback)
         : m_messageCallback(AZStd::move(messageCallback))
@@ -19,4 +19,4 @@ namespace ROS2
     {
         m_messageCallback(message);
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

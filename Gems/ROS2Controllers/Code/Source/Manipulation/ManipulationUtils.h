@@ -9,7 +9,7 @@
 #pragma once
 #include <ROS2Controllers/Manipulation/JointInfo.h>
 
-namespace ROS2::Utils
+namespace ROS2Controllers::Utils
 {
     struct JointStateData
     {
@@ -22,4 +22,4 @@ namespace ROS2::Utils
     //! @param jointInfo Info of the joint we want to get data of.
     //! @return Data with the current joint state.
     JointStateData GetJointState(const JointInfo& jointInfo);
-} // namespace ROS2::Utils
+} // namespace ROS2Controllers::Utils

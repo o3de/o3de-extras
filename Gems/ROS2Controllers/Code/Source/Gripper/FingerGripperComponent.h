@@ -17,7 +17,7 @@
 #include <ROS2Controllers/ROS2ControllersTypeIds.h>
 #include <Utilities/ArticulationsUtilities.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! This component implements finger gripper functionality.
     class FingerGripperComponent
@@ -27,7 +27,7 @@ namespace ROS2
         , public AZ::TickBus::Handler
     {
     public:
-        AZ_COMPONENT(FingerGripperComponent, ROS2Controllers::FingerGripperComponentTypeId, AZ::Component);
+        AZ_COMPONENT(FingerGripperComponent, FingerGripperComponentTypeId, AZ::Component);
         FingerGripperComponent() = default;
         ~FingerGripperComponent() = default;
 
@@ -83,4 +83,4 @@ namespace ROS2
         float m_stallTime{ 0.1f }; //!< The time in seconds to wait before determining the gripper is stalled
         float m_initialPosition{ 0.0f }; //!< The initial position of the gripper in units of the gripper's joints
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

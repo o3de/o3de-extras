@@ -10,13 +10,13 @@
 #include <AzCore/std/functional.h>
 #include <ROS2/ROS2Bus.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     FollowJointTrajectoryActionServer::FollowJointTrajectoryActionServer(const AZStd::string& actionName, const AZ::EntityId& entityId)
         : m_entityId(entityId)
     {
         m_actionServer = rclcpp_action::create_server<FollowJointTrajectory>(
-            ROS2Interface::Get()->GetNode(),
+            ROS2::ROS2Interface::Get()->GetNode(),
             actionName.c_str(),
             AZStd::bind(&FollowJointTrajectoryActionServer::GoalReceivedCallback, this, AZStd::placeholders::_1, AZStd::placeholders::_2),
             AZStd::bind(&FollowJointTrajectoryActionServer::GoalCancelledCallback, this, AZStd::placeholders::_1),
@@ -138,4 +138,4 @@ namespace ROS2
         m_goalHandle = goalHandle;
         // m_goalHandle->execute(); // No need to call this, as we are already executing the goal due to ACCEPT_AND_EXECUTE
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

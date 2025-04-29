@@ -13,7 +13,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <Source/RigidBodyComponent.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     void WheelControllerComponent::Activate()
     {
@@ -92,4 +92,4 @@ namespace ROS2::VehicleDynamics
         , m_steeringScale(steeringScale)
     {
     }
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

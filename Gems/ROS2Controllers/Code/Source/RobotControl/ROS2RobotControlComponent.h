@@ -13,7 +13,7 @@
 #include <ROS2Controllers/RobotControl/ControlConfiguration.h>
 #include <ROS2Controllers/RobotControl/ControlSubscriptionHandler.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! A Component responsible for controlling a robot movement.
     //! Uses IRobotControl implementation depending on type of ROS2 control message.
@@ -32,9 +32,9 @@ namespace ROS2
 
         void SetControlConfiguration(const ControlConfiguration& controlConfiguration);
 
-        const TopicConfiguration& GetSubscriberConfiguration() const;
+        const ROS2::TopicConfiguration& GetSubscriberConfiguration() const;
 
-        void SetSubscriberConfiguration(const TopicConfiguration& subscriberConfiguration);
+        void SetSubscriberConfiguration(const ROS2::TopicConfiguration& subscriberConfiguration);
 
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
@@ -50,6 +50,6 @@ namespace ROS2
     private:
         AZStd::unique_ptr<IControlSubscriptionHandler> m_subscriptionHandler;
         ControlConfiguration m_controlConfiguration;
-        TopicConfiguration m_subscriberConfiguration;
+        ROS2::TopicConfiguration m_subscriberConfiguration;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

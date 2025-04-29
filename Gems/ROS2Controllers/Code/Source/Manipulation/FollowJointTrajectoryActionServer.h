@@ -15,7 +15,7 @@
 #include <rclcpp_action/rclcpp_action.hpp>
 #include <rclcpp_action/server.hpp>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! A class wrapping ROS 2 action server for joint trajectory controller.
     //! @see <a href="https://control.ros.org/master/doc/ros2_controllers/joint_trajectory_controller/doc/userdoc.html"> joint trajectory
@@ -63,4 +63,4 @@ namespace ROS2
 
         void GoalAcceptedCallback(const std::shared_ptr<GoalHandle> goalHandle);
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

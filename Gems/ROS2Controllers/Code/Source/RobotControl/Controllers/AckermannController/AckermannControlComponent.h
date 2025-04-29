@@ -10,7 +10,7 @@
 #include <AzCore/Component/Component.h>
 #include <ROS2Controllers/RobotControl/Ackermann/AckermannBus.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! A simple component which translates ackermann commands to vehicle dynamics inputs
     class AckermannControlComponent
@@ -35,4 +35,4 @@ namespace ROS2
         void AckermannReceived(const AckermannCommandStruct& angular) override;
         //////////////////////////////////////////////////////////////////////////
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

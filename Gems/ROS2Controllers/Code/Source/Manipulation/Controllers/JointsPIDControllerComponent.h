@@ -13,7 +13,7 @@
 #include <ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <ROS2Controllers/ROS2ControllersTypeIds.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Handles position control commands for joints.
     class JointsPIDControllerComponent
@@ -23,7 +23,7 @@ namespace ROS2
     public:
         JointsPIDControllerComponent() = default;
         ~JointsPIDControllerComponent() = default;
-        AZ_COMPONENT(JointsPIDControllerComponent, ROS2Controllers::JointsPIDControllerComponentTypeId, AZ::Component);
+        AZ_COMPONENT(JointsPIDControllerComponent, JointsPIDControllerComponentTypeId, AZ::Component);
 
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
@@ -58,4 +58,4 @@ namespace ROS2
 
         AZStd::unordered_map<AZStd::string, Controllers::PidConfiguration> m_pidConfiguration;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

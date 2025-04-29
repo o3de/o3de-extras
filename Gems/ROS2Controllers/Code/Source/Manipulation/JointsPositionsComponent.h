@@ -20,7 +20,7 @@
 #include <ROS2Controllers/RobotControl/ControlSubscriptionHandler.h>
 #include <std_msgs/msg/float64_multi_array.hpp>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! This component implements finger gripper functionality.
     class JointsPositionsComponent
@@ -29,9 +29,9 @@ namespace ROS2
     {
     public:
         JointsPositionsComponent() = default;
-        JointsPositionsComponent(const TopicConfiguration& topicConfiguration, const AZStd::vector<AZStd::string>& jointNames);
+        JointsPositionsComponent(const ROS2::TopicConfiguration& topicConfiguration, const AZStd::vector<AZStd::string>& jointNames);
         ~JointsPositionsComponent() = default;
-        AZ_COMPONENT(JointsPositionsComponent, ROS2Controllers::JointsPositionsComponentTypeId, AZ::Component);
+        AZ_COMPONENT(JointsPositionsComponent, JointsPositionsComponentTypeId, AZ::Component);
 
         // AZ::Component overrides...
         void Activate() override;
@@ -48,8 +48,8 @@ namespace ROS2
         void ProcessPositionControlMessage(const std_msgs::msg::Float64MultiArray& message);
 
         AZStd::unique_ptr<IControlSubscriptionHandler> m_jointPositionsSubscriptionHandler;
-        TopicConfiguration m_topicConfiguration; //!< Configuration of the subscribed topic.
+        ROS2::TopicConfiguration m_topicConfiguration; //!< Configuration of the subscribed topic.
         AZStd::vector<AZStd::string> m_jointNames; //!< Ordered list of joint names that can be modified via subscriber
         AZ::EntityId m_rootOfArticulation; //!< The root of the articulation chain
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

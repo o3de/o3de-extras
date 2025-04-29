@@ -10,7 +10,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void JointsPIDControllerComponent::Activate()
     {
@@ -93,4 +93,4 @@ namespace ROS2
             }
         }
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

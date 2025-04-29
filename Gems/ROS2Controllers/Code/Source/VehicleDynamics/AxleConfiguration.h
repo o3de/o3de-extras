@@ -12,7 +12,7 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     //! An axle has one or more wheels attached. Axle configuration is abstracted form the physical object
     class AxleConfiguration
@@ -34,4 +34,4 @@ namespace ROS2::VehicleDynamics
         bool m_isSteering = false; //! A wheel is steered with intention to change direction of movement
         bool m_isDrive = false; //! A wheel is driven (drive torque is applied)
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

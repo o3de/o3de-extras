@@ -8,7 +8,7 @@
 
 #include <ROS2Controllers/Manipulation/JointInfo.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void JointInfo::Reflect(AZ::ReflectContext* context)
     {
@@ -22,4 +22,4 @@ namespace ROS2
                 ->Field("RestPosition", &JointInfo::m_restPosition);
         }
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

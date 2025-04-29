@@ -15,7 +15,7 @@
 #include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     JointsTrajectoryComponent::JointsTrajectoryComponent(const AZStd::string& followTrajectoryActionName)
         : m_followTrajectoryActionName(followTrajectoryActionName)
@@ -24,13 +24,13 @@ namespace ROS2
 
     void JointsTrajectoryComponent::Activate()
     {
-        auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
+        auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(ros2Frame, "Missing Frame Component!");
-        AZStd::string namespacedAction = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), m_followTrajectoryActionName);
+        AZStd::string namespacedAction = ROS2::ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), m_followTrajectoryActionName);
         m_followTrajectoryServer = AZStd::make_unique<FollowJointTrajectoryActionServer>(namespacedAction, GetEntityId());
         AZ::TickBus::Handler::BusConnect();
         JointsTrajectoryRequestBus::Handler::BusConnect(GetEntityId());
-        m_lastTickTimestamp = ROS2Interface::Get()->GetROSTimestamp();
+        m_lastTickTimestamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
     }
 
     ManipulationJoints& JointsTrajectoryComponent::GetManipulationJoints()
@@ -259,11 +259,11 @@ namespace ROS2
             GetManipulationJoints();
             return;
         }
-        const auto simTimestamp = ROS2Interface::Get()->GetROSTimestamp();
-        const float deltaSimulatedTime = ROS2Conversions::GetTimeDifference(simTimestamp, m_lastTickTimestamp);
+        const auto simTimestamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+        const float deltaSimulatedTime = ROS2::ROS2Conversions::GetTimeDifference(simTimestamp, m_lastTickTimestamp);
         m_lastTickTimestamp = simTimestamp;
         const uint64_t deltaTimeNs = deltaSimulatedTime * 1'000'000'000;
         FollowTrajectory(deltaTimeNs);
         UpdateFeedback();
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

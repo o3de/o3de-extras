@@ -15,7 +15,7 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
 
-namespace ROS2::VehicleDynamics::Utilities
+namespace ROS2Controllers::VehicleDynamics::Utilities
 {
     //! Create the most common two wheel axle out of existing wheel entities.
     //! @param leftWheel Left wheel entity. It needs a WheelControllerComponent if it is a drive or steering axis.
@@ -72,4 +72,4 @@ namespace ROS2::VehicleDynamics::Utilities
 
     AZ::Transform GetJointTransform(const VehicleDynamics::WheelDynamicsData& data);
 
-} // namespace ROS2::VehicleDynamics::Utilities
+} // namespace ROS2Controllers::VehicleDynamics::Utilities

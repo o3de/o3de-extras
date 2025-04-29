@@ -11,7 +11,7 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     void SkidSteeringModelComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -66,4 +66,4 @@ namespace ROS2::VehicleDynamics
         VehicleModelComponent::Activate();
         m_driveModel.Activate(m_vehicleConfiguration);
     }
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

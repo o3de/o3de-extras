@@ -16,7 +16,7 @@
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2Controllers/ROS2ControllersTypeIds.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Editor Component responsible for a hierarchical system of joints such as robotic arm with Articulations or Hinge Joints.
     class JointsPositionsEditorComponent : public AzToolsFramework::Components::EditorComponentBase
@@ -24,7 +24,7 @@ namespace ROS2
     public:
         JointsPositionsEditorComponent();
         ~JointsPositionsEditorComponent() = default;
-        AZ_EDITOR_COMPONENT(JointsPositionsEditorComponent, ROS2Controllers::JointsPositionsEditorComponentTypeId);
+        AZ_EDITOR_COMPONENT(JointsPositionsEditorComponent, JointsPositionsEditorComponentTypeId);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void Reflect(AZ::ReflectContext* context);
@@ -35,7 +35,7 @@ namespace ROS2
     private:
         AZ::Crc32 FindAllJoints();
 
-        TopicConfiguration m_topicConfiguration; //!< Configuration of the subscribed topic.
+        ROS2::TopicConfiguration m_topicConfiguration; //!< Configuration of the subscribed topic.
         AZStd::vector<AZStd::string> m_jointNames; //!< Ordered list of joint names that can be modified via subscriber
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

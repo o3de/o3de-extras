@@ -10,7 +10,7 @@
 #include "Source/ArticulationLinkComponent.h"
 #include <AzFramework/Physics/PhysicsScene.h>
 
-namespace ROS2::Utils
+namespace ROS2Controllers::Utils
 {
     AZ::EntityId GetRootOfArticulation(AZ::EntityId entityId)
     {
@@ -92,4 +92,4 @@ namespace ROS2::Utils
         }
         return false;
     }
-} // namespace ROS2::Utils
+} // namespace ROS2Controllers::Utils

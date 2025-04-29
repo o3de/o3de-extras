@@ -13,7 +13,7 @@
 #include <AzCore/std/string/string.h>
 #include <ROS2Controllers/Manipulation/JointInfo.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Interface for general requests for joint systems such as manipulator arms.
     //! This interface supports only systems with joints or articulation links with a single degree of freedom (DOF) each.
@@ -89,4 +89,4 @@ namespace ROS2
         virtual void Stop() = 0;
     };
     using JointsManipulationRequestBus = AZ::EBus<JointsManipulationRequests>;
-} // namespace ROS2
+} // namespace ROS2Controllers

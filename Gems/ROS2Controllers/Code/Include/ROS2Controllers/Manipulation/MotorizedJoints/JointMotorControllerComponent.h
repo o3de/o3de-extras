@@ -15,7 +15,7 @@
 #include <ROS2Controllers/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.h>
 #include <builtin_interfaces/msg/time.hpp>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     class JointMotorControllerComponent
         : public AZ::Component
@@ -62,4 +62,4 @@ namespace ROS2
 
         builtin_interfaces::msg::Time m_lastTickTimestamp; //!< ROS 2 Timestamp during last OnTick call
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

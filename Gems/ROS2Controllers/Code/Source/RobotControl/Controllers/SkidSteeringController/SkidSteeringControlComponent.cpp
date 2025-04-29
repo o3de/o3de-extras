@@ -16,7 +16,7 @@
 #include <ROS2Controllers/VehicleDynamics/VehicleInputControlBus.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void SkidSteeringControlComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -59,4 +59,4 @@ namespace ROS2
         VehicleDynamics::VehicleInputControlRequestBus::Event(
             GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetAngularSpeedV3, angular);
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

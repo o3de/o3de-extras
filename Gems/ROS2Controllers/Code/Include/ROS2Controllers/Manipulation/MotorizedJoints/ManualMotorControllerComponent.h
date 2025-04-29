@@ -10,7 +10,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2Controllers/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     class ManualMotorControllerComponent : public JointMotorControllerComponent
     {
@@ -27,4 +27,4 @@ namespace ROS2
         float CalculateMotorSpeed([[maybe_unused]] float deltaTime) override;
         void DisplayControllerParameters() override;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

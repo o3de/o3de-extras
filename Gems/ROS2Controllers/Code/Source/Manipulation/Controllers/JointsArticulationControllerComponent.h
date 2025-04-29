@@ -12,7 +12,7 @@
 #include <ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <ROS2Controllers/ROS2ControllersTypeIds.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Handles position control commands for joints using Articulations.
     class JointsArticulationControllerComponent
@@ -22,7 +22,7 @@ namespace ROS2
     public:
         JointsArticulationControllerComponent() = default;
         ~JointsArticulationControllerComponent() = default;
-        AZ_COMPONENT(JointsArticulationControllerComponent, ROS2Controllers::JointsArticulationControllerComponentTypeId, AZ::Component);
+        AZ_COMPONENT(JointsArticulationControllerComponent, JointsArticulationControllerComponentTypeId, AZ::Component);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
@@ -55,4 +55,4 @@ namespace ROS2
         void Activate() override;
         void Deactivate() override;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

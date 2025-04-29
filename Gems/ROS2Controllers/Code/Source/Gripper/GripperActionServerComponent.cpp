@@ -17,13 +17,13 @@
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void GripperActionServerComponent::Activate()
     {
-        auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
+        auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(ros2Frame, "Missing Frame Component!");
-        AZStd::string namespacedAction = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), m_gripperActionServerName);
+        AZStd::string namespacedAction = ROS2::ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), m_gripperActionServerName);
         AZ_Printf("GripperActionServerComponent", "Creating Gripper Action Server: %s\n", namespacedAction.c_str());
         m_gripperActionServer = AZStd::make_unique<GripperActionServer>(namespacedAction, GetEntityId());
         AZ::TickBus::Handler::BusConnect();
@@ -134,4 +134,4 @@ namespace ROS2
         return;
     }
 
-} // namespace ROS2
+} // namespace ROS2Controllers

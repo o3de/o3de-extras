@@ -11,7 +11,7 @@
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Configuration for handling of robot control buses.
     //! Used through ROS2RobotControlComponent.
@@ -33,4 +33,4 @@ namespace ROS2
 
         Steering m_steering = Steering::Twist;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

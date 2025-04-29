@@ -15,7 +15,7 @@
 #include <VehicleDynamics/VehicleInputs.h>
 #include <VehicleDynamics/WheelDynamicsData.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     //! A simple Ackermann system implementation converting speed and steering inputs into wheel impulse and steering element torque
     class AckermannDriveModel : public DriveModel
@@ -23,7 +23,7 @@ namespace ROS2::VehicleDynamics
     public:
         AZ_RTTI(AckermannDriveModel, "{104AC31D-E30B-4454-BF42-4FB37B8CFD9B}", DriveModel);
         AckermannDriveModel() = default;
-        AckermannDriveModel(const AckermannModelLimits& limits, const ROS2::Controllers::PidConfiguration& steeringPid);
+        AckermannDriveModel(const AckermannModelLimits& limits, const Controllers::PidConfiguration& steeringPid);
 
         // DriveModel overrides
         void Activate(const VehicleConfiguration& vehicleConfig) override;
@@ -44,8 +44,8 @@ namespace ROS2::VehicleDynamics
         VehicleConfiguration m_vehicleConfiguration;
         AZStd::vector<WheelDynamicsData> m_driveWheelsData;
         AZStd::vector<SteeringDynamicsData> m_steeringData;
-        ROS2::Controllers::PidConfiguration m_steeringPid;
+        Controllers::PidConfiguration m_steeringPid;
         float m_speedCommand = 0.0f;
         AckermannModelLimits m_limits;
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

@@ -13,7 +13,7 @@
 #include <AzCore/std/utils.h>
 #include <VehicleDynamics/VehicleModelLimits.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     //! Abstract class for turning vehicle inputs into behavior of wheels and steering elements
     class DriveModel
@@ -59,4 +59,4 @@ namespace ROS2::VehicleDynamics
         //! True if model is disabled.
         bool m_disabled{ false };
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

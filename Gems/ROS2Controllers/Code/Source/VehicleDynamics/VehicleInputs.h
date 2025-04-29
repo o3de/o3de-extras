@@ -11,7 +11,7 @@
 #include <AzCore/Time/ITime.h>
 #include <AzCore/std/containers/vector.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     //! Inputs with an expiration date - effectively is zero after a certain time since update
 
@@ -68,4 +68,4 @@ namespace ROS2::VehicleDynamics
         VehicleInputs GetValueCheckingDeadline();
     };
 
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

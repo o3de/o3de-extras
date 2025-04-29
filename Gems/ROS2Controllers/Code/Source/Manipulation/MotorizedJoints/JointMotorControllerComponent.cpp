@@ -16,7 +16,7 @@
 #include <ROS2Controllers/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
 #include <imgui/imgui.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void JointMotorControllerComponent::Activate()
     {
@@ -89,7 +89,7 @@ namespace ROS2
         PhysX::JointRequestBus::EventResult(m_currentPosition, m_jointComponentIdPair, &PhysX::JointRequests::GetPosition);
 
         const auto timestamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
-        const float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastTickTimestamp, timestamp);
+        const float deltaSimTime = ROS2::ROS2Conversions::GetTimeDifference(m_lastTickTimestamp, timestamp);
         const float setSpeed = CalculateMotorSpeed(deltaSimTime);
         PhysX::JointRequestBus::Event(m_jointComponentIdPair, &PhysX::JointRequests::SetVelocity, setSpeed);
         m_lastTickTimestamp = timestamp;
@@ -117,4 +117,4 @@ namespace ROS2
 
         m_jointComponentIdPair = { GetEntityId(), componentId };
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

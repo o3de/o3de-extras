@@ -12,7 +12,7 @@
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/utils.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     //! Inputs (speed, steering, acceleration etc.) for vehicle dynamics system
     //! Inputs are valid for a short time (configurable) and need to be repeated if continuous movement is needed.
@@ -74,4 +74,4 @@ namespace ROS2::VehicleDynamics
     };
 
     using VehicleInputControlRequestBus = AZ::EBus<VehicleInputControlRequests>;
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics
