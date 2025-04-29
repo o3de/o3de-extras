@@ -143,7 +143,7 @@ namespace UnitTest
             pub->publish(msg);
         }
         SpinAppSome();
-ed         EXPECT_EQ(receivedMsgs, 10) << "Did not receive all messages.";
+        EXPECT_EQ(receivedMsgs, 10) << "Did not receive all messages.";
     }
 
     //! Check if expected services are available and has the default name
