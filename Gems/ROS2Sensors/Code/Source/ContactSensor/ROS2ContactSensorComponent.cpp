@@ -16,7 +16,7 @@
 #include <ROS2/Utilities/ROS2Names.h>
 #include <geometry_msgs/msg/wrench.hpp>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace
     {
@@ -25,7 +25,7 @@ namespace ROS2
 
     ROS2ContactSensorComponent::ROS2ContactSensorComponent()
     {
-        TopicConfiguration tc;
+        ROS2::TopicConfiguration tc;
         AZStd::string type = "gazebo_msgs::msg::ContactsState";
         tc.m_type = type;
         tc.m_topic = "contact_sensor";
@@ -65,10 +65,10 @@ namespace ROS2
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, m_entityId);
         m_entityName = entity->GetName();
 
-        auto ros2Node = ROS2Interface::Get()->GetNode();
+        auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Contact sensor");
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations["gazebo_msgs::msg::ContactsState"];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+        const auto fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_contactsPublisher = ros2Node->create_publisher<gazebo_msgs::msg::ContactsState>(fullTopic.data(), publisherConfig.GetQoS());
 
         m_onCollisionBeginHandler = AzPhysics::SimulatedBodyEvents::OnCollisionBegin::Handler(
@@ -127,8 +127,10 @@ namespace ROS2
         {
             AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle> foundBody =
                 physicsSystem->FindAttachedBodyHandleFromEntityId(GetEntityId());
-            AZ_Warning("Contact Sensor", foundBody.first != AzPhysics::InvalidSceneHandle, "Invalid scene handle")
-            if (foundBody.first != AzPhysics::InvalidSceneHandle)
+            AZ_Warning(
+                "Contact Sensor",
+                foundBody.first != AzPhysics::InvalidSceneHandle,
+                "Invalid scene handle") if (foundBody.first != AzPhysics::InvalidSceneHandle)
             {
                 AzPhysics::SimulatedBodyEvents::RegisterOnCollisionBeginHandler(
                     foundBody.first, foundBody.second, m_onCollisionBeginHandler);
@@ -140,10 +142,10 @@ namespace ROS2
 
         // Publishes all contacts
         gazebo_msgs::msg::ContactsState msg;
-        const auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
+        const auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(ros2Frame, "Invalid component pointer value");
         msg.header.frame_id = ros2Frame->GetFrameID().data();
-        msg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
+        msg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
 
         {
             // If there are no active collisions, then there is nothing to send
@@ -174,11 +176,11 @@ namespace ROS2
         {
             if (contact.m_separation < ContactMaximumSeparation)
             {
-                state.contact_positions.emplace_back(ROS2Conversions::ToROS2Vector3(contact.m_position));
-                state.contact_normals.emplace_back(ROS2Conversions::ToROS2Vector3(contact.m_normal));
+                state.contact_positions.emplace_back(ROS2::ROS2Conversions::ToROS2Vector3(contact.m_position));
+                state.contact_normals.emplace_back(ROS2::ROS2Conversions::ToROS2Vector3(contact.m_normal));
 
                 geometry_msgs::msg::Wrench contactWrench;
-                contactWrench.force = ROS2Conversions::ToROS2Vector3(contact.m_impulse);
+                contactWrench.force = ROS2::ROS2Conversions::ToROS2Vector3(contact.m_impulse);
                 state.wrenches.push_back(AZStd::move(contactWrench));
 
                 totalWrench.force.x += contact.m_impulse.GetX();
@@ -197,4 +199,4 @@ namespace ROS2
             m_activeContacts[event.m_body2->GetEntityId()] = AZStd::move(state);
         }
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

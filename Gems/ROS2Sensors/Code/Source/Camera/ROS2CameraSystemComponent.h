@@ -11,7 +11,7 @@
 #include <AzCore/Component/Component.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! System Component for Camera simulation in ROS 2.
     class ROS2SystemCameraComponent : public AZ::Component
@@ -39,4 +39,4 @@ namespace ROS2
         void LoadPassTemplateMappings();
         AZ::RPI::PassSystemInterface::OnReadyLoadTemplatesEvent::Handler m_loadTemplatesHandler;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

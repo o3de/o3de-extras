@@ -28,9 +28,9 @@ namespace ROS2Sensors
                 m_descriptors.end(),
                 {
                     ROS2SensorsEditorSystemComponent::CreateDescriptor(),
-                    ROS2::ROS2CameraSensorEditorComponent::CreateDescriptor(),
-                    ROS2::ROS2EditorCameraSystemComponent::CreateDescriptor(),
-                    ROS2::LidarRegistrarEditorSystemComponent::CreateDescriptor(),
+                    ROS2CameraSensorEditorComponent::CreateDescriptor(),
+                    ROS2EditorCameraSystemComponent::CreateDescriptor(),
+                    LidarRegistrarEditorSystemComponent::CreateDescriptor(),
                 });
         }
 
@@ -38,8 +38,8 @@ namespace ROS2Sensors
         {
             return AZ::ComponentTypeList{
                 azrtti_typeid<ROS2SensorsEditorSystemComponent>(),
-                azrtti_typeid<ROS2::ROS2EditorCameraSystemComponent>(),
-                azrtti_typeid<ROS2::LidarRegistrarEditorSystemComponent>(),
+                azrtti_typeid<ROS2EditorCameraSystemComponent>(),
+                azrtti_typeid<LidarRegistrarEditorSystemComponent>(),
             };
         }
     };

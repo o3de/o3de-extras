@@ -9,7 +9,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <Lidar/ClassSegmentationConfigurationComponent.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     void ClassSegmentationConfigurationComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -31,10 +31,8 @@ namespace ROS2
                         "Segmentation classes",
                         "Segmentation classes and their colors.")
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
-                    ->Attribute(
-                        AZ::Edit::Attributes::ChangeValidate, &ClassSegmentationConfigurationComponent::ValidateSegmentationClasses)
-                    ->Attribute(
-                        AZ::Edit::Attributes::ChangeNotify, &ClassSegmentationConfigurationComponent::OnSegmentationClassesChanged);
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ClassSegmentationConfigurationComponent::ValidateSegmentationClasses)
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ClassSegmentationConfigurationComponent::OnSegmentationClassesChanged);
             }
         }
     }
@@ -178,4 +176,4 @@ namespace ROS2
 
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

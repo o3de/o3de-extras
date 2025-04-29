@@ -15,7 +15,7 @@
 #include <Georeferencing/GeoreferenceBus.h>
 #include <ROS2Sensors/GNSS/GNSSPostProcessingRequestBus.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace
     {
@@ -43,7 +43,7 @@ namespace ROS2
 
     ROS2GNSSSensorComponent::ROS2GNSSSensorComponent()
     {
-        TopicConfiguration pc;
+        ROS2::TopicConfiguration pc;
         pc.m_type = GNSSMsgType;
         pc.m_topic = "gnss";
         m_sensorConfiguration.m_frequency = 10;
@@ -58,11 +58,11 @@ namespace ROS2
     void ROS2GNSSSensorComponent::Activate()
     {
         ROS2SensorComponentBase::Activate();
-        auto ros2Node = ROS2Interface::Get()->GetNode();
+        auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for GNSS sensor");
 
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[GNSSMsgType];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+        const auto fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_gnssPublisher = ros2Node->create_publisher<sensor_msgs::msg::NavSatFix>(fullTopic.data(), publisherConfig.GetQoS());
 
         m_gnssMsg.header.frame_id = "gnss_frame_id";
@@ -111,4 +111,4 @@ namespace ROS2
         m_gnssPublisher->publish(m_gnssMsg);
     }
 
-} // namespace ROS2
+} // namespace ROS2Sensors

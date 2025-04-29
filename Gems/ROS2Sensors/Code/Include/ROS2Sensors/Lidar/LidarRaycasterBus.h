@@ -15,7 +15,7 @@
 #include <ROS2/Communication/QoS.h>
 #include <ROS2Sensors/Lidar/RaycastResults.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Class used for creating typesafe Uuid types.
     //! It utilizes the phantom types technique.
@@ -174,7 +174,7 @@ namespace ROS2
         virtual void ConfigurePointCloudPublisher(
             [[maybe_unused]] const AZStd::string& topicName,
             [[maybe_unused]] const AZStd::string& frameId,
-            [[maybe_unused]] const QoS& qoSPolicy)
+            [[maybe_unused]] const ROS2::QoS& qoSPolicy)
         {
             AZ_Assert(false, "This Lidar Implementation does not support PointCloud publishing!");
         }
@@ -218,7 +218,7 @@ namespace ROS2
     };
 
     using LidarRaycasterRequestBus = AZ::EBus<LidarRaycasterRequests, LidarRaycasterBusTraits>;
-} // namespace ROS2
+} // namespace ROS2Sensors
 
 // Since we want to use the LidarId type as a Bus Id type,
 // we need to create a specialization for the hash template operator.
@@ -226,9 +226,9 @@ namespace AZStd
 {
     // hash specialization
     template<>
-    struct hash<ROS2::LidarId>
+    struct hash<ROS2Sensors::LidarId>
     {
-        constexpr size_t operator()(const ROS2::LidarId& id) const
+        constexpr size_t operator()(const ROS2Sensors::LidarId& id) const
         {
             return id.GetHash();
         }

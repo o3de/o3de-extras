@@ -16,7 +16,7 @@
 #include <Lidar/LidarTemplateUtils.h>
 #include <ROS2Sensors/Lidar/LidarRegistrarBus.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! A structure capturing configuration of a lidar sensor (to be used with LidarCore).
     class LidarSensorConfiguration
@@ -64,4 +64,4 @@ namespace ROS2
 
         void UpdateShowNoise();
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

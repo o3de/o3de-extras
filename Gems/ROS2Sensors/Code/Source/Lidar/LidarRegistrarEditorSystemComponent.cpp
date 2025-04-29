@@ -9,7 +9,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     void LidarRegistrarEditorSystemComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -50,4 +50,4 @@ namespace ROS2
     {
         LidarRegistrarSystemComponent::Deactivate();
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

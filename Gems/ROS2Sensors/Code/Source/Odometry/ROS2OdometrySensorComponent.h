@@ -15,13 +15,13 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Odometry sensor Component.
     //! It constructs and publishes an odometry message, which contains information about vehicle velocity and position in space.
     //! This is a ground truth "sensor", which can be helpful for development and machine learning.
     //! @see <a href="https://index.ros.org/p/nav_msgs/"> nav_msgs package. </a>
-    class ROS2OdometrySensorComponent : public ROS2SensorComponentBase<PhysicsBasedSource>
+    class ROS2OdometrySensorComponent : public ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
     {
     public:
         AZ_COMPONENT(ROS2OdometrySensorComponent, ROS2Sensors::ROS2OdometrySensorComponent, SensorBaseType);
@@ -44,4 +44,4 @@ namespace ROS2
 
         void OnOdometryEvent(AzPhysics::SceneHandle sceneHandle);
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

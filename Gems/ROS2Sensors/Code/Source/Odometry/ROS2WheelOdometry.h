@@ -15,13 +15,13 @@
 
 #include "ROS2OdometryCovariance.h"
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Wheel odometry sensor component.
     //! It constructs and publishes an odometry message, which contains information about the vehicle's velocity and position in space.
     //! This is a physical sensor that takes a vehicle's configuration and computes updates from the wheels' rotations.
     //! @see <a href="https://index.ros.org/p/nav_msgs/">nav_msgs package</a>.
-    class ROS2WheelOdometryComponent : public ROS2SensorComponentBase<PhysicsBasedSource>
+    class ROS2WheelOdometryComponent : public ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
     {
     public:
         AZ_COMPONENT(ROS2WheelOdometryComponent, ROS2Sensors::ROS2WheelOdometryComponentTypeId, SensorBaseType);
@@ -46,4 +46,4 @@ namespace ROS2
         void OnOdometryEvent();
         void OnPhysicsEvent(float physicsDeltaTime);
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

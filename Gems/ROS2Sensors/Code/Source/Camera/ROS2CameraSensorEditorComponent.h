@@ -18,7 +18,7 @@
 #include <ROS2Sensors/Camera/CameraCalibrationRequestBus.h>
 #include <ROS2Sensors/Sensor/SensorConfiguration.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! ROS2 Camera Editor sensor component class
     //! Allows turning an entity into a camera sensor in Editor
@@ -55,10 +55,10 @@ namespace ROS2
         // EntityDebugDisplayEventBus::Handler overrides
         void DisplayEntityViewport(const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay) override;
 
-        AZStd::pair<AZStd::string, TopicConfiguration> MakeTopicConfigurationPair(
+        AZStd::pair<AZStd::string, ROS2::TopicConfiguration> MakeTopicConfigurationPair(
             const AZStd::string& topic, const AZStd::string& messageType, const AZStd::string& configName) const;
 
         SensorConfiguration m_sensorConfiguration;
         CameraSensorConfiguration m_cameraSensorConfiguration;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

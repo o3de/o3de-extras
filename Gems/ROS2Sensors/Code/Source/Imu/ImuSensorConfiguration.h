@@ -12,7 +12,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! A structure capturing configuration of a IMU sensor.
     struct ImuSensorConfiguration
@@ -35,4 +35,4 @@ namespace ROS2
         AZ::Vector3 m_angularVelocityVariance = AZ::Vector3::CreateZero();
         AZ::Vector3 m_linearAccelerationVariance = AZ::Vector3::CreateZero();
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

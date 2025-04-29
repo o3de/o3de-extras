@@ -9,7 +9,7 @@
 #include <Lidar/PointCloudMessageBuilder.h>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     PointCloud2MessageBuilder::PointCloud2MessageBuilder(
         const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t count)
@@ -44,4 +44,4 @@ namespace ROS2
 
         return m_message;
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

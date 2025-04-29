@@ -12,7 +12,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! A structure capturing configuration of a segmentation class.
     class SegmentationClassConfiguration
@@ -37,4 +37,4 @@ namespace ROS2
         uint8_t m_classId = 0;
         AZ::Color m_classColor = AZ::Color(1.0f, 1.0f, 1.0f, 1.0f);
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

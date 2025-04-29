@@ -17,12 +17,12 @@
 #include <ROS2Sensors/Sensor/SensorConfiguration.h>
 #include <ROS2Sensors/Sensor/SensorConfigurationRequestBus.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Base sensor component class for all specific sensor implementations. Developer working on the new sensor should derive from this
     //! class, defining necessary event source type (EventSourceT template parameter). Available sources are e.g. TickBasedSource or
-    //! PhysicsBasedSource. Chosen event source is wrapped into EventSourceAdapter, making it possible to work with specific frequency.
-    //! Derived implementation should call ROS2::ROS2SensorComponentBase::StartSensor at the end of Activate (or whenever sensor
+    //! PhysicsBasedSource. Chosen event source is wrapped into ROS2::EventSourceAdapter, making it possible to work with specific
+    //! frequency. Derived implementation should call ROS2::ROS2SensorComponentBase::StartSensor at the end of Activate (or whenever sensor
     //! configuration is already set up) and StopSensor in Deactivate. Starting sensor base requires passing two parameters:
     //!  - sensor working frequency - how often sensor logic should be processed,
     //!  - adapted event callback - what should be done in sensor logic processing.
@@ -153,7 +153,7 @@ namespace ROS2
         //! Returns a complete namespace for this sensor topics and frame ids.
         [[nodiscard]] AZStd::string GetNamespace() const
         {
-            auto* ros2Frame = GetEntity()->template FindComponent<ROS2FrameComponent>();
+            auto* ros2Frame = GetEntity()->template FindComponent<ROS2::ROS2FrameComponent>();
 
             return ros2Frame->GetNamespace();
         }
@@ -161,12 +161,12 @@ namespace ROS2
         //! Returns this sensor frame ID. The ID contains namespace.
         [[nodiscard]] AZStd::string GetFrameID() const
         {
-            auto* ros2Frame = GetEntity()->template FindComponent<ROS2FrameComponent>();
+            auto* ros2Frame = GetEntity()->template FindComponent<ROS2::ROS2FrameComponent>();
             return ros2Frame->GetFrameID();
         }
 
         SensorConfiguration m_sensorConfiguration; ///< Basic sensor configuration.
-        EventSourceAdapter<EventSourceT> m_eventSourceAdapter; ///< Adapter for selected event source (see this class documentation).
+        ROS2::EventSourceAdapter<EventSourceT> m_eventSourceAdapter; ///< Adapter for selected event source (see this class documentation).
 
         //! Handler for source event. Requires manual assignment and connecting to source event in derived class.
         typename EventSourceT::SourceEventHandlerType m_sourceEventHandler;
@@ -177,4 +177,4 @@ namespace ROS2
 
     AZ_COMPONENT_IMPL_INLINE(
         (ROS2SensorComponentBase, AZ_CLASS), "ROS2SensorComponentBase", "{2DF9A652-DF5D-43B1-932F-B6A838E36E97}", AZ::Component)
-} // namespace ROS2
+} // namespace ROS2Sensors

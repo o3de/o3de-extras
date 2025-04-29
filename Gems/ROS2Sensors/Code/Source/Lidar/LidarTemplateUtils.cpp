@@ -10,190 +10,188 @@
 #include <AzCore/Math/Transform.h>
 #include <Lidar/LidarTemplateUtils.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace
     {
         using Model = LidarTemplate::LidarModel;
 
-        static const AZStd::map<Model, LidarTemplate> templates = {
-            {
-                Model::Custom3DLidar,
-                {
-                    /*.m_model = */ Model::Custom3DLidar,
-                    /*.m_name = */ "CustomLidar",
-                    /*.m_is2D = */ false,
-                    /*.m_minHAngle = */ -180.0f,
-                    /*.m_maxHAngle = */ 180.0f,
-                    /*.m_minVAngle = */ -35.0f,
-                    /*.m_maxVAngle = */ 35.0f,
-                    /*.m_layers = */ 24,
-                    /*.m_numberOfIncrements = */ 924,
-                    /*.m_minRange = */ 0.0f,
-                    /*.m_maxRange = */ 100.0f,
-                    /*.m_noiseParameters = */
-                    {
-                        /*.m_angularNoiseStdDev = */ 0.0f,
-                        /*.m_distanceNoiseStdDevBase = */ 0.01f,
-                        /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
-                    },
-                },
-            },
-            {
-                Model::Ouster_OS0_64,
-                {
-                    /*.m_model = */ Model::Ouster_OS0_64,
-                    /*.m_name = */ "Ouster OS0-64",
-                    /*.m_is2D = */ false,
-                    /*.m_minHAngle = */ -180.0f,
-                    /*.m_maxHAngle = */ 180.0f,
-                    /*.m_minVAngle = */ -45.0f,
-                    /*.m_maxVAngle = */ 45.0f,
-                    /*.m_layers = */ 64,
-                    /*.m_numberOfIncrements = */ 2048,
-                    /*.m_minRange = */ 0.0f,
-                    /*.m_maxRange = */ 47.5f,
-                    /*.m_noiseParameters = */
-                    {
-                        /*.m_angularNoiseStdDev = */ 0.0f,
-                        /*.m_distanceNoiseStdDevBase = */ 0.0f,
-                        /*.m_distanceNoiseStdDevRisePerMeter = */ 0.002f,
-                    },
-                },
-            },
-            {
-                Model::Ouster_OS1_64,
-                {
-                    /*.m_model = */ Model::Ouster_OS1_64,
-                    /*.m_name = */ "Ouster OS1-64",
-                    /*.m_is2D = */ false,
-                    /*.m_minHAngle = */ -180.0f,
-                    /*.m_maxHAngle = */ 180.0f,
-                    /*.m_minVAngle = */ 22.5f,
-                    /*.m_maxVAngle = */ -22.5f,
-                    /*.m_layers = */ 64,
-                    /*.m_numberOfIncrements = */ 2048,
-                    /*.m_minRange = */ 0.0f,
-                    /*.m_maxRange = */ 120.0f,
-                    /*.m_noiseParameters = */
-                    {
-                        /*.m_angularNoiseStdDev = */ 0.0f,
-                        /*.m_distanceNoiseStdDevBase = */ 0.002f,
-                        /*.m_distanceNoiseStdDevRisePerMeter = */ 0.0008f,
-                    },
-                },
-            },
-            {
-                Model::Ouster_OS2_64,
-                {
-                    /*.m_model = */ Model::Ouster_OS2_64,
-                    /*.m_name = */ "Ouster OS2-64",
-                    /*.m_is2D = */ false,
-                    /*.m_minHAngle = */ -180.0f,
-                    /*.m_maxHAngle = */ 180.0f,
-                    /*.m_minVAngle = */ 11.25f,
-                    /*.m_maxVAngle = */ -11.25f,
-                    /*.m_layers = */ 64,
-                    /*.m_numberOfIncrements = */ 2048,
-                    /*.m_minRange = */ 0.0f,
-                    /*.m_maxRange = */ 225.0f,
-                    /*.m_noiseParameters = */
-                    {
-                        /*.m_angularNoiseStdDev = */ 0.0f,
-                        /*.m_distanceNoiseStdDevBase = */ 0.006f,
-                        /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
-                    },
-                },
-            },
-            {
-                Model::Velodyne_Puck,
-                {
-                    /*.m_model = */ Model::Velodyne_Puck,
-                    /*.m_name = */ "Velodyne Puck (VLP-16)",
-                    /*.m_is2D = */ false,
-                    /*.m_minHAngle = */ -180.0f,
-                    /*.m_maxHAngle = */ 180.0f,
-                    /*.m_minVAngle = */ 15.0f,
-                    /*.m_maxVAngle = */ -15.0f,
-                    /*.m_layers = */ 16,
-                    /*.m_numberOfIncrements = */ 1800, // For 0.2 angular resolution
-                    /*.m_minRange = */ 0.0f,
-                    /*.m_maxRange = */ 100.0f,
-                    /*.m_noiseParameters = */
-                    {
-                        /*.m_angularNoiseStdDev = */ 0.0f,
-                        /*.m_distanceNoiseStdDevBase = */ 0.03f,
-                        /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
-                    },
-                },
-            },
-            {
-                Model::Velodyne_HDL_32E,
-                {
-                    /*.m_model = */ Model::Velodyne_HDL_32E,
-                    /*.m_name = */ "Velodyne HDL-32E",
-                    /*.m_is2D = */ false,
-                    /*.m_minHAngle = */ -180.0f,
-                    /*.m_maxHAngle = */ 180.0f,
-                    /*.m_minVAngle = */ 10.67f,
-                    /*.m_maxVAngle = */ -30.67f,
-                    /*.m_layers = */ 32,
-                    /*.m_numberOfIncrements = */ 1800, // For 0.2 angular resolution
-                    /*.m_minRange = */ 0.0f,
-                    /*.m_maxRange = */ 100.0f,
-                    /*.m_noiseParameters = */
-                    {
-                        /*.m_angularNoiseStdDev = */ 0.0f,
-                        /*.m_distanceNoiseStdDevBase = */ 0.02f,
-                        /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
-                    },
-                },
-            },
-            {
-                Model::Custom2DLidar,
-                {
-                    /*.m_model = */ Model::Custom2DLidar,
-                    /*.m_name = */ "CustomLidar2D",
-                    /*.m_is2D = */ true,
-                    /*.m_minHAngle = */ -180.0f,
-                    /*.m_maxHAngle = */ 180.0f,
-                    /*.m_minVAngle = */ 0.f,
-                    /*.m_maxVAngle = */ 0.f,
-                    /*.m_layers = */ 1,
-                    /*.m_numberOfIncrements = */ 924,
-                    /*.m_minRange = */ 0.0f,
-                    /*.m_maxRange = */ 100.0f,
-                    /*.m_noiseParameters = */
-                    {
-                        /*.m_angularNoiseStdDev = */ 0.0f,
-                        /*.m_distanceNoiseStdDevBase = */ 0.02f,
-                        /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
-                    },
-                },
-            },
-            {
-                Model::Slamtec_RPLIDAR_S1,
-                {
-                    /*.m_model = */ Model::Slamtec_RPLIDAR_S1,
-                    /*.m_name = */ "Slamtec RPLIDAR S1",
-                    /*.m_is2D = */ true,
-                    /*.m_minHAngle = */ -180.0f,
-                    /*.m_maxHAngle = */ 180.0f,
-                    /*.m_minVAngle = */ 0.f,
-                    /*.m_maxVAngle = */ 0.f,
-                    /*.m_layers = */ 1,
-                    /*.m_numberOfIncrements = */ 921,
-                    /*.m_minRange = */ 0.1f,
-                    /*.m_maxRange = */ 40.0f,
-                    /*.m_noiseParameters = */
-                    {
-                        /*.m_angularNoiseStdDev = */ 0.0f,
-                        /*.m_distanceNoiseStdDevBase = */ 0.02f,
-                        /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
-                    },
-                },
-            }
-        };
+        static const AZStd::map<Model, LidarTemplate> templates = { {
+                                                                        Model::Custom3DLidar,
+                                                                        {
+                                                                            /*.m_model = */ Model::Custom3DLidar,
+                                                                            /*.m_name = */ "CustomLidar",
+                                                                            /*.m_is2D = */ false,
+                                                                            /*.m_minHAngle = */ -180.0f,
+                                                                            /*.m_maxHAngle = */ 180.0f,
+                                                                            /*.m_minVAngle = */ -35.0f,
+                                                                            /*.m_maxVAngle = */ 35.0f,
+                                                                            /*.m_layers = */ 24,
+                                                                            /*.m_numberOfIncrements = */ 924,
+                                                                            /*.m_minRange = */ 0.0f,
+                                                                            /*.m_maxRange = */ 100.0f,
+                                                                            /*.m_noiseParameters = */
+                                                                            {
+                                                                                /*.m_angularNoiseStdDev = */ 0.0f,
+                                                                                /*.m_distanceNoiseStdDevBase = */ 0.01f,
+                                                                                /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        Model::Ouster_OS0_64,
+                                                                        {
+                                                                            /*.m_model = */ Model::Ouster_OS0_64,
+                                                                            /*.m_name = */ "Ouster OS0-64",
+                                                                            /*.m_is2D = */ false,
+                                                                            /*.m_minHAngle = */ -180.0f,
+                                                                            /*.m_maxHAngle = */ 180.0f,
+                                                                            /*.m_minVAngle = */ -45.0f,
+                                                                            /*.m_maxVAngle = */ 45.0f,
+                                                                            /*.m_layers = */ 64,
+                                                                            /*.m_numberOfIncrements = */ 2048,
+                                                                            /*.m_minRange = */ 0.0f,
+                                                                            /*.m_maxRange = */ 47.5f,
+                                                                            /*.m_noiseParameters = */
+                                                                            {
+                                                                                /*.m_angularNoiseStdDev = */ 0.0f,
+                                                                                /*.m_distanceNoiseStdDevBase = */ 0.0f,
+                                                                                /*.m_distanceNoiseStdDevRisePerMeter = */ 0.002f,
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        Model::Ouster_OS1_64,
+                                                                        {
+                                                                            /*.m_model = */ Model::Ouster_OS1_64,
+                                                                            /*.m_name = */ "Ouster OS1-64",
+                                                                            /*.m_is2D = */ false,
+                                                                            /*.m_minHAngle = */ -180.0f,
+                                                                            /*.m_maxHAngle = */ 180.0f,
+                                                                            /*.m_minVAngle = */ 22.5f,
+                                                                            /*.m_maxVAngle = */ -22.5f,
+                                                                            /*.m_layers = */ 64,
+                                                                            /*.m_numberOfIncrements = */ 2048,
+                                                                            /*.m_minRange = */ 0.0f,
+                                                                            /*.m_maxRange = */ 120.0f,
+                                                                            /*.m_noiseParameters = */
+                                                                            {
+                                                                                /*.m_angularNoiseStdDev = */ 0.0f,
+                                                                                /*.m_distanceNoiseStdDevBase = */ 0.002f,
+                                                                                /*.m_distanceNoiseStdDevRisePerMeter = */ 0.0008f,
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        Model::Ouster_OS2_64,
+                                                                        {
+                                                                            /*.m_model = */ Model::Ouster_OS2_64,
+                                                                            /*.m_name = */ "Ouster OS2-64",
+                                                                            /*.m_is2D = */ false,
+                                                                            /*.m_minHAngle = */ -180.0f,
+                                                                            /*.m_maxHAngle = */ 180.0f,
+                                                                            /*.m_minVAngle = */ 11.25f,
+                                                                            /*.m_maxVAngle = */ -11.25f,
+                                                                            /*.m_layers = */ 64,
+                                                                            /*.m_numberOfIncrements = */ 2048,
+                                                                            /*.m_minRange = */ 0.0f,
+                                                                            /*.m_maxRange = */ 225.0f,
+                                                                            /*.m_noiseParameters = */
+                                                                            {
+                                                                                /*.m_angularNoiseStdDev = */ 0.0f,
+                                                                                /*.m_distanceNoiseStdDevBase = */ 0.006f,
+                                                                                /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        Model::Velodyne_Puck,
+                                                                        {
+                                                                            /*.m_model = */ Model::Velodyne_Puck,
+                                                                            /*.m_name = */ "Velodyne Puck (VLP-16)",
+                                                                            /*.m_is2D = */ false,
+                                                                            /*.m_minHAngle = */ -180.0f,
+                                                                            /*.m_maxHAngle = */ 180.0f,
+                                                                            /*.m_minVAngle = */ 15.0f,
+                                                                            /*.m_maxVAngle = */ -15.0f,
+                                                                            /*.m_layers = */ 16,
+                                                                            /*.m_numberOfIncrements = */ 1800, // For 0.2 angular resolution
+                                                                            /*.m_minRange = */ 0.0f,
+                                                                            /*.m_maxRange = */ 100.0f,
+                                                                            /*.m_noiseParameters = */
+                                                                            {
+                                                                                /*.m_angularNoiseStdDev = */ 0.0f,
+                                                                                /*.m_distanceNoiseStdDevBase = */ 0.03f,
+                                                                                /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        Model::Velodyne_HDL_32E,
+                                                                        {
+                                                                            /*.m_model = */ Model::Velodyne_HDL_32E,
+                                                                            /*.m_name = */ "Velodyne HDL-32E",
+                                                                            /*.m_is2D = */ false,
+                                                                            /*.m_minHAngle = */ -180.0f,
+                                                                            /*.m_maxHAngle = */ 180.0f,
+                                                                            /*.m_minVAngle = */ 10.67f,
+                                                                            /*.m_maxVAngle = */ -30.67f,
+                                                                            /*.m_layers = */ 32,
+                                                                            /*.m_numberOfIncrements = */ 1800, // For 0.2 angular resolution
+                                                                            /*.m_minRange = */ 0.0f,
+                                                                            /*.m_maxRange = */ 100.0f,
+                                                                            /*.m_noiseParameters = */
+                                                                            {
+                                                                                /*.m_angularNoiseStdDev = */ 0.0f,
+                                                                                /*.m_distanceNoiseStdDevBase = */ 0.02f,
+                                                                                /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        Model::Custom2DLidar,
+                                                                        {
+                                                                            /*.m_model = */ Model::Custom2DLidar,
+                                                                            /*.m_name = */ "CustomLidar2D",
+                                                                            /*.m_is2D = */ true,
+                                                                            /*.m_minHAngle = */ -180.0f,
+                                                                            /*.m_maxHAngle = */ 180.0f,
+                                                                            /*.m_minVAngle = */ 0.f,
+                                                                            /*.m_maxVAngle = */ 0.f,
+                                                                            /*.m_layers = */ 1,
+                                                                            /*.m_numberOfIncrements = */ 924,
+                                                                            /*.m_minRange = */ 0.0f,
+                                                                            /*.m_maxRange = */ 100.0f,
+                                                                            /*.m_noiseParameters = */
+                                                                            {
+                                                                                /*.m_angularNoiseStdDev = */ 0.0f,
+                                                                                /*.m_distanceNoiseStdDevBase = */ 0.02f,
+                                                                                /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        Model::Slamtec_RPLIDAR_S1,
+                                                                        {
+                                                                            /*.m_model = */ Model::Slamtec_RPLIDAR_S1,
+                                                                            /*.m_name = */ "Slamtec RPLIDAR S1",
+                                                                            /*.m_is2D = */ true,
+                                                                            /*.m_minHAngle = */ -180.0f,
+                                                                            /*.m_maxHAngle = */ 180.0f,
+                                                                            /*.m_minVAngle = */ 0.f,
+                                                                            /*.m_maxVAngle = */ 0.f,
+                                                                            /*.m_layers = */ 1,
+                                                                            /*.m_numberOfIncrements = */ 921,
+                                                                            /*.m_minRange = */ 0.1f,
+                                                                            /*.m_maxRange = */ 40.0f,
+                                                                            /*.m_noiseParameters = */
+                                                                            {
+                                                                                /*.m_angularNoiseStdDev = */ 0.0f,
+                                                                                /*.m_distanceNoiseStdDevBase = */ 0.02f,
+                                                                                /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
+                                                                            },
+                                                                        },
+                                                                    } };
     } // namespace
 
     LidarTemplate LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel model)
@@ -278,4 +276,4 @@ namespace ROS2
 
         return directions;
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

@@ -13,7 +13,7 @@
 #include <AzCore/Component/TransformBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     ROS2CameraSensorEditorComponent::ROS2CameraSensorEditorComponent()
     {
@@ -70,14 +70,14 @@ namespace ROS2
     {
         AzFramework::EntityDebugDisplayEventBus::Handler::BusConnect(this->GetEntityId());
         AzToolsFramework::Components::EditorComponentBase::Activate();
-        ROS2::CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
+        CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2CameraSensorEditorComponent::Deactivate()
     {
         AzToolsFramework::Components::EditorComponentBase::Deactivate();
         AzFramework::EntityDebugDisplayEventBus::Handler::BusDisconnect();
-        ROS2::CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
+        CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
     }
 
     void ROS2CameraSensorEditorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -97,7 +97,7 @@ namespace ROS2
 
     void ROS2CameraSensorEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
-        gameEntity->CreateComponent<ROS2::ROS2CameraSensorComponent>(m_sensorConfiguration, m_cameraSensorConfiguration);
+        gameEntity->CreateComponent<ROS2CameraSensorComponent>(m_sensorConfiguration, m_cameraSensorConfiguration);
     }
 
     AZ::Matrix3x3 ROS2CameraSensorEditorComponent::GetCameraMatrix() const
@@ -199,13 +199,13 @@ namespace ROS2
         debugDisplay.SetState(stateBefore);
     }
 
-    AZStd::pair<AZStd::string, TopicConfiguration> ROS2CameraSensorEditorComponent::MakeTopicConfigurationPair(
+    AZStd::pair<AZStd::string, ROS2::TopicConfiguration> ROS2CameraSensorEditorComponent::MakeTopicConfigurationPair(
         const AZStd::string& topic, const AZStd::string& messageType, const AZStd::string& configName) const
     {
-        TopicConfiguration config;
+        ROS2::TopicConfiguration config;
         config.m_topic = topic;
         config.m_type = messageType;
         return AZStd::make_pair(configName, config);
     }
 
-} // namespace ROS2
+} // namespace ROS2Sensors

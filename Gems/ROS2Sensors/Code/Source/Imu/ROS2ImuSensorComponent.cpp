@@ -22,7 +22,7 @@
 #include <AzCore/std/numeric.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace Internal
     {
@@ -59,7 +59,7 @@ namespace ROS2
     ROS2ImuSensorComponent::ROS2ImuSensorComponent()
     {
         const AZStd::string type = Internal::kImuMsgType;
-        TopicConfiguration pc;
+        ROS2::TopicConfiguration pc;
         pc.m_type = type;
         pc.m_topic = "imu";
         m_sensorConfiguration.m_frequency = 50;
@@ -82,11 +82,11 @@ namespace ROS2
     void ROS2ImuSensorComponent::Activate()
     {
         ROS2SensorComponentBase::Activate();
-        auto ros2Node = ROS2Interface::Get()->GetNode();
+        auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
         m_imuMsg.header.frame_id = GetFrameID().c_str();
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+        const auto fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
 
         m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
@@ -127,7 +127,11 @@ namespace ROS2
 
             if (!rigidBody)
             {
-                AZ_Error("ROS2ImuSensorComponent", false, "Entity %s does not have a rigid body - stopping Imu sensor.", entityId.ToString().c_str());
+                AZ_Error(
+                    "ROS2ImuSensorComponent",
+                    false,
+                    "Entity %s does not have a rigid body - stopping Imu sensor.",
+                    entityId.ToString().c_str());
                 StopSensor();
                 return;
             }
@@ -178,17 +182,17 @@ namespace ROS2
             const auto gravity = sceneInterface->GetGravity(sceneHandle);
             m_acceleration -= inv.TransformVector(gravity);
         }
-        m_imuMsg.linear_acceleration = ROS2Conversions::ToROS2Vector3(m_acceleration);
-        m_imuMsg.linear_acceleration_covariance = ROS2Conversions::ToROS2Covariance(m_linearAccelerationCovariance);
-        m_imuMsg.angular_velocity = ROS2Conversions::ToROS2Vector3(angularRateFiltered);
-        m_imuMsg.angular_velocity_covariance = ROS2Conversions::ToROS2Covariance(m_angularVelocityCovariance);
+        m_imuMsg.linear_acceleration = ROS2::ROS2Conversions::ToROS2Vector3(m_acceleration);
+        m_imuMsg.linear_acceleration_covariance = ROS2::ROS2Conversions::ToROS2Covariance(m_linearAccelerationCovariance);
+        m_imuMsg.angular_velocity = ROS2::ROS2Conversions::ToROS2Vector3(angularRateFiltered);
+        m_imuMsg.angular_velocity_covariance = ROS2::ROS2Conversions::ToROS2Covariance(m_angularVelocityCovariance);
 
         if (m_imuConfiguration.m_absoluteRotation)
         {
-            m_imuMsg.orientation = ROS2Conversions::ToROS2Quaternion(rigidbody->GetTransform().GetRotation());
-            m_imuMsg.orientation_covariance = ROS2Conversions::ToROS2Covariance(m_orientationCovariance);
+            m_imuMsg.orientation = ROS2::ROS2Conversions::ToROS2Quaternion(rigidbody->GetTransform().GetRotation());
+            m_imuMsg.orientation_covariance = ROS2::ROS2Conversions::ToROS2Covariance(m_orientationCovariance);
         }
-        m_imuMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
+        m_imuMsg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         this->m_imuPublisher->publish(m_imuMsg);
     }
 
@@ -201,4 +205,4 @@ namespace ROS2
         return covarianceMatrix;
     }
 
-} // namespace ROS2
+} // namespace ROS2Sensors

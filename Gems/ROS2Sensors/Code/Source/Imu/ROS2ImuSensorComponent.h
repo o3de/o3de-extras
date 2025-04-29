@@ -20,12 +20,12 @@
 
 #include "ImuSensorConfiguration.h"
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! An IMU (Inertial Measurement Unit) sensor Component.
     //! IMUs typically include gyroscopes, accelerometers and magnetometers. This component encapsulates data
     //! acquisition and its publishing to ROS2 ecosystem. IMU Component requires ROS2FrameComponent.
-    class ROS2ImuSensorComponent : public ROS2SensorComponentBase<PhysicsBasedSource>
+    class ROS2ImuSensorComponent : public ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
     {
     public:
         AZ_COMPONENT(ROS2ImuSensorComponent, ROS2Sensors::ROS2ImuSensorComponentTypeId, SensorBaseType);
@@ -65,4 +65,4 @@ namespace ROS2
         // Handle to the simulated physical body
         AzPhysics::SimulatedBodyHandle m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

@@ -14,17 +14,17 @@
 #include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2Sensors/Sensor/SensorConfiguration.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace Internal
     {
-        using TopicConfigurations = AZStd::unordered_map<CameraSensorDescription::CameraChannelType, TopicConfiguration>;
+        using TopicConfigurations = AZStd::unordered_map<CameraSensorDescription::CameraChannelType, ROS2::TopicConfiguration>;
 
-        TopicConfiguration GetTopicConfiguration(const SensorConfiguration& sensorConfiguration, const AZStd::string& key)
+        ROS2::TopicConfiguration GetTopicConfiguration(const SensorConfiguration& sensorConfiguration, const AZStd::string& key)
         {
             auto ipos = sensorConfiguration.m_publishersConfigurations.find(key);
             AZ_Assert(ipos != sensorConfiguration.m_publishersConfigurations.end(), "Missing key in topic configuration!");
-            return ipos != sensorConfiguration.m_publishersConfigurations.end() ? ipos->second : TopicConfiguration{};
+            return ipos != sensorConfiguration.m_publishersConfigurations.end() ? ipos->second : ROS2::TopicConfiguration{};
         }
 
         template<typename CameraType>
@@ -78,8 +78,8 @@ namespace ROS2
         {
             for (const auto& [channel, configuration] : configurations)
             {
-                AZStd::string fullTopic = ROS2Names::GetNamespacedName(cameraNamespace, configuration.m_topic);
-                auto ros2Node = ROS2Interface::Get()->GetNode();
+                AZStd::string fullTopic = ROS2::ROS2Names::GetNamespacedName(cameraNamespace, configuration.m_topic);
+                auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
                 auto publisher = ros2Node->create_publisher<PublishedData>(fullTopic.data(), configuration.GetQoS());
                 publishers[channel] = publisher;
             }
@@ -127,4 +127,4 @@ namespace ROS2
         AZ_Error("GetInfoPublisher", m_infoPublishers.count(type) == 1, "No publisher of this type, logic error!");
         return m_infoPublishers.at(type);
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

@@ -16,7 +16,7 @@
 #include <Lidar/LidarTemplateUtils.h>
 #include <ROS2Sensors/Lidar/SegmentationUtils.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     static AzPhysics::SceneHandle GetPhysicsSceneFromEntityId(const AZ::EntityId& entityId)
     {
@@ -37,7 +37,7 @@ namespace ROS2
         : m_busId{ busId }
         , m_sceneEntityId{ sceneEntityId }
     {
-        ROS2::LidarRaycasterRequestBus::Handler::BusConnect(busId);
+        LidarRaycasterRequestBus::Handler::BusConnect(busId);
     }
 
     LidarRaycaster::LidarRaycaster(LidarRaycaster&& lidarRaycaster)
@@ -53,12 +53,12 @@ namespace ROS2
         lidarRaycaster.BusDisconnect();
         lidarRaycaster.m_busId = LidarId::CreateNull();
 
-        ROS2::LidarRaycasterRequestBus::Handler::BusConnect(m_busId);
+        LidarRaycasterRequestBus::Handler::BusConnect(m_busId);
     }
 
     LidarRaycaster::~LidarRaycaster()
     {
-        ROS2::LidarRaycasterRequestBus::Handler::BusDisconnect();
+        LidarRaycasterRequestBus::Handler::BusDisconnect();
     }
 
     void LidarRaycaster::ConfigureRayOrientations(const AZStd::vector<AZ::Vector3>& orientations)
@@ -257,4 +257,4 @@ namespace ROS2
         // Mapping the 64 bit entity ID onto a 32 integer may result in collisions but the chances are slim.
         return (aznumeric_cast<AZ::u64>(entityId) >> 32) ^ (aznumeric_cast<AZ::u64>(entityId) & 0xFFFFFFFF);
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

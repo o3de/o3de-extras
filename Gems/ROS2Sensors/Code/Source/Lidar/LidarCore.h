@@ -16,7 +16,7 @@
 #include "LidarRaycaster.h"
 #include "LidarSensorConfiguration.h"
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! A class for executing lidar operations, such as data acquisition and visualization.
     class LidarCore
@@ -72,4 +72,4 @@ namespace ROS2
         AZ::EntityId m_entityId;
         RaycastResultFlags m_resultFlags;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

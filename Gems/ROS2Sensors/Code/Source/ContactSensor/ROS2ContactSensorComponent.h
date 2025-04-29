@@ -21,13 +21,13 @@
 #include <gazebo_msgs/msg/contacts_state.hpp>
 #include <rclcpp/publisher.hpp>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Contact sensor detects collisions between two objects.
     //! It reports the location of the contact associated forces.
     //! This component publishes a contact_sensor topic.
     //! It doesn't measure torque.
-    class ROS2ContactSensorComponent : public ROS2SensorComponentBase<TickBasedSource>
+    class ROS2ContactSensorComponent : public ROS2SensorComponentBase<ROS2::TickBasedSource>
     {
     public:
         AZ_COMPONENT(ROS2ContactSensorComponent, ROS2Sensors::ROS2ContactSensorComponentTypeId, SensorBaseType);
@@ -60,4 +60,4 @@ namespace ROS2
         AZStd::unordered_map<AZ::EntityId, gazebo_msgs::msg::ContactState> m_activeContacts;
         AZStd::mutex m_activeContactsMutex;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

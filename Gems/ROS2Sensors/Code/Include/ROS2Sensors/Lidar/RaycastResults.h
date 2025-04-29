@@ -11,7 +11,7 @@
 #include <AzCore/std/containers/span.h>
 #include <AzCore/std/containers/vector.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     enum class RaycastResultFlags : AZ::u8
     {
@@ -226,4 +226,4 @@ namespace ROS2
             field->resize(count);
         }
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

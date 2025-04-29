@@ -11,7 +11,7 @@
 #include <AzCore/EBus/EBus.h>
 #include <ROS2Sensors/Lidar/LidarRaycasterBus.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Interface class that allows for communication with a given Lidar System (implementation).
     class LidarSystemRequests
@@ -44,4 +44,4 @@ namespace ROS2
     };
 
     using LidarSystemRequestBus = AZ::EBus<LidarSystemRequests, LidarSystemBusTraits>;
-} // namespace ROS2
+} // namespace ROS2Sensors

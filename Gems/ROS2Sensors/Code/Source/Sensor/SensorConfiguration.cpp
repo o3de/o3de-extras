@@ -10,14 +10,14 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <ROS2Sensors/Sensor/SensorConfiguration.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     void SensorConfiguration::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->RegisterGenericType<AZStd::shared_ptr<TopicConfiguration>>();
-            serializeContext->RegisterGenericType<AZStd::map<AZStd::string, AZStd::shared_ptr<TopicConfiguration>>>();
+            serializeContext->RegisterGenericType<AZStd::shared_ptr<ROS2::TopicConfiguration>>();
+            serializeContext->RegisterGenericType<AZStd::map<AZStd::string, AZStd::shared_ptr<ROS2::TopicConfiguration>>>();
             serializeContext->Class<SensorConfiguration>()
                 ->Version(2)
                 ->Field("Visualize", &SensorConfiguration::m_visualize)
@@ -48,4 +48,4 @@ namespace ROS2
             }
         }
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

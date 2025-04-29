@@ -22,7 +22,7 @@
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! ROS2 Camera sensor component class
     //! Allows turning an entity into a camera sensor
@@ -32,7 +32,7 @@ namespace ROS2
     //!   - camera vertical field of view in degrees
     //! Camera frustum is facing negative Z axis; image plane is parallel to X,Y plane: X - right, Y - up
     class ROS2CameraSensorComponent
-        : public ROS2SensorComponentBase<TickBasedSource>
+        : public ROS2SensorComponentBase<ROS2::TickBasedSource>
         , public CameraCalibrationRequestBus::Handler
     {
     public:
@@ -77,4 +77,4 @@ namespace ROS2
         AZStd::string m_frameName;
         AZStd::shared_ptr<CameraSensor> m_cameraSensor;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

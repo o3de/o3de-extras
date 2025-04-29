@@ -14,7 +14,7 @@
 #include <AzCore/std/string/string.h>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Interface class that allows to add post-processing to the pipeline
     //!
@@ -60,4 +60,4 @@ namespace ROS2
     };
 
     using GNSSPostProcessingRequestBus = AZ::EBus<GNSSPostProcessingRequests>;
-} // namespace ROS2
+} // namespace ROS2Sensors

@@ -15,13 +15,13 @@
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Global Navigation Satellite Systems (GNSS) sensor component class
     //! It provides NavSatFix data of sensor's position in GNSS frame which is defined by GNSS origin offset
     //! Offset is provided as latitude [deg], longitude [deg], altitude [m] of o3de global frame
     //! It is assumed that o3de global frame overlaps with ENU coordinate system
-    class ROS2GNSSSensorComponent : public ROS2SensorComponentBase<TickBasedSource>
+    class ROS2GNSSSensorComponent : public ROS2SensorComponentBase<ROS2::TickBasedSource>
     {
     public:
         AZ_COMPONENT(ROS2GNSSSensorComponent, ROS2Sensors::ROS2GNSSSensorComponentTypeId, SensorBaseType);
@@ -49,4 +49,4 @@ namespace ROS2
         sensor_msgs::msg::NavSatFix m_gnssMsg;
     };
 
-} // namespace ROS2
+} // namespace ROS2Sensors

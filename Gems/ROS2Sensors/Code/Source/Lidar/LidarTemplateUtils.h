@@ -11,7 +11,7 @@
 #include <AzCore/std/containers/vector.h>
 #include <Lidar/LidarTemplate.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Utility class for Lidar model computations.
     namespace LidarTemplateUtils
@@ -46,4 +46,4 @@ namespace ROS2
         AZStd::vector<AZ::Vector3> RotationsToDirections(
             const AZStd::vector<AZ::Quaternion>& rotations, const AZ::Transform& rootTransform);
     }; // namespace LidarTemplateUtils
-} // namespace ROS2
+} // namespace ROS2Sensors

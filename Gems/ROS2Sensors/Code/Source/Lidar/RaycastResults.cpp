@@ -7,7 +7,7 @@
  */
 #include <ROS2Sensors/Lidar/RaycastResults.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     RaycastResults::RaycastResults(RaycastResultFlags flags, size_t count)
         : m_count{ count }
@@ -73,4 +73,4 @@ namespace ROS2
     {
         return m_count;
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

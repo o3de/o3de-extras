@@ -16,7 +16,7 @@
 #include <ROS2Sensors/Lidar/ClassSegmentationBus.h>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace
     {
@@ -56,7 +56,7 @@ namespace ROS2
     ROS2LidarSensorComponent::ROS2LidarSensorComponent()
         : m_lidarCore(LidarTemplateUtils::Get3DModels())
     {
-        TopicConfiguration pc;
+        ROS2::TopicConfiguration pc;
         AZStd::string type = PointCloudType;
         pc.m_type = type;
         pc.m_topic = "pc";
@@ -86,30 +86,30 @@ namespace ROS2
 
         if (m_canRaycasterPublish)
         {
-            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
-            auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
+            const ROS2::TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
+            auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
 
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterId,
                 &LidarRaycasterRequestBus::Events::ConfigurePointCloudPublisher,
-                ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic),
+                ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic),
                 ros2Frame->GetFrameID().data(),
                 publisherConfig.GetQoS());
         }
         else
         {
-            auto ros2Node = ROS2Interface::Get()->GetNode();
+            auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
             AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
 
-            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
-            AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+            const ROS2::TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
+            AZStd::string fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
             m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
 
             const auto resultFlags = m_lidarCore.GetResultFlags();
             if (IsFlagEnabled(RaycastResultFlags::SegmentationData, resultFlags))
             {
                 m_segmentationClassesPublisher = ros2Node->create_publisher<vision_msgs::msg::LabelInfo>(
-                    ROS2Names::GetNamespacedName(GetNamespace(), "segmentation_classes").data(), publisherConfig.GetQoS());
+                    ROS2::ROS2Names::GetNamespacedName(GetNamespace(), "segmentation_classes").data(), publisherConfig.GetQoS());
             }
         }
 
@@ -141,7 +141,7 @@ namespace ROS2
     {
         if (m_canRaycasterPublish && m_sensorConfiguration.m_publishingEnabled)
         {
-            const builtin_interfaces::msg::Time timestamp = ROS2Interface::Get()->GetROSTimestamp();
+            const builtin_interfaces::msg::Time timestamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterId,
                 &LidarRaycasterRequestBus::Events::UpdatePublisherTimestamp,
@@ -164,7 +164,9 @@ namespace ROS2
     void ROS2LidarSensorComponent::PublishRaycastResults(const RaycastResults& results)
     {
         auto builder = PointCloud2MessageBuilder(
-            GetEntity()->FindComponent<ROS2FrameComponent>()->GetFrameID(), ROS2Interface::Get()->GetROSTimestamp(), results.GetCount());
+            GetEntity()->FindComponent<ROS2::ROS2FrameComponent>()->GetFrameID(),
+            ROS2::ROS2Interface::Get()->GetROSTimestamp(),
+            results.GetCount());
 
         builder.AddField("x", sensor_msgs::msg::PointField::FLOAT32)
             .AddField("y", sensor_msgs::msg::PointField::FLOAT32)
@@ -283,4 +285,4 @@ namespace ROS2
             m_segmentationClassesPublisher->publish(segmentationClasses);
         }
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

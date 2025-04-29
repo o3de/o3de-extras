@@ -9,7 +9,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <Lidar/LidarTemplate.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     void LidarTemplate::NoiseParameters::Reflect(AZ::ReflectContext* context)
     {
@@ -131,7 +131,8 @@ namespace ROS2
         }
 
         return AZ::Failure(AZStd::string::format(
-            "Provided ray range (%.2f, %.2f) was of incorrect value: Max range must be greater than or equal to min range, and both must be greater "
+            "Provided ray range (%.2f, %.2f) was of incorrect value: Max range must be greater than or equal to min range, and both must "
+            "be greater "
             "than zero.",
             minRange,
             maxRange));
@@ -159,4 +160,4 @@ namespace ROS2
         return ValidateRange(m_minRange, *reinterpret_cast<float*>(newValue));
     }
 
-} // namespace ROS2
+} // namespace ROS2Sensors

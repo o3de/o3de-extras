@@ -16,7 +16,7 @@
 #include <sensor_msgs/msg/image.hpp>
 #include <std_msgs/msg/header.hpp>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Handles all the ROS publishing related to a single camera.
     //! This includes 1-2 CameraInfo topics as well as 1-2 Image topics.
@@ -38,4 +38,4 @@ namespace ROS2
         AZStd::unordered_map<CameraSensorDescription::CameraChannelType, ImagePublisherPtrType> m_imagePublishers;
         AZStd::unordered_map<CameraSensorDescription::CameraChannelType, CameraInfoPublisherPtrType> m_infoPublishers;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

@@ -14,7 +14,7 @@
 #include <AzCore/std/containers/array.h>
 #include <AzCore/std/string/string.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Structure containing all information required to create the camera sensor.
     struct CameraSensorDescription
@@ -48,4 +48,4 @@ namespace ROS2
     private:
         void ValidateParameters() const;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

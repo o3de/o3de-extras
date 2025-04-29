@@ -24,7 +24,7 @@
 
 #include <sensor_msgs/distortion_models.hpp>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace Internal
     {
@@ -335,4 +335,4 @@ namespace ROS2
         // Process the Color part.
         CameraSensor::RequestMessagePublication(cameraPose, header);
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

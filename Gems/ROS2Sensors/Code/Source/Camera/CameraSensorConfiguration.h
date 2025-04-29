@@ -11,7 +11,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! A structure capturing configuration of a single camera sensor with up to two image sources (color and depth).
     struct CameraSensorConfiguration
@@ -32,4 +32,4 @@ namespace ROS2
         float m_nearClipDistance = 0.1f; //!< Near clip distance of the camera.
         float m_farClipDistance = 100.0f; //!< Far clip distance of the camera.
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

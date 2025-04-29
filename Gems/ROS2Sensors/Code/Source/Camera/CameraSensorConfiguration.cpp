@@ -10,7 +10,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     void CameraSensorConfiguration::Reflect(AZ::ReflectContext* context)
     {
@@ -55,4 +55,4 @@ namespace ROS2
             }
         }
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

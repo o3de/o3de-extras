@@ -12,7 +12,7 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 #include <ROS2Sensors/Sensor/SensorConfiguration.h>
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Interface that allows to get sensor configuration and switch publish state.
     class SensorConfigurationRequest : public AZ::EBusTraits
@@ -44,4 +44,4 @@ namespace ROS2
     };
 
     using SensorConfigurationRequestBus = AZ::EBus<SensorConfigurationRequest>;
-} // namespace ROS2
+} // namespace ROS2Sensors

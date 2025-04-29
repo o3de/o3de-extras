@@ -10,7 +10,7 @@
 #include "CameraUtilities.h"
 #include <ROS2/Frame/ROS2FrameComponent.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     ROS2CameraSensorComponent::ROS2CameraSensorComponent(
         const SensorConfiguration& sensorConfiguration, const CameraSensorConfiguration& cameraConfiguration)
@@ -47,10 +47,10 @@ namespace ROS2
             SetImageSource<CameraDepthSensor>();
         }
 
-        const auto* component = GetEntity()->FindComponent<ROS2FrameComponent>();
+        const auto* component = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(component, "Entity has no ROS2FrameComponent");
         m_frameName = component->GetFrameID();
-        ROS2::CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
+        CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
 
         StartSensor(
             m_sensorConfiguration.m_frequency,
@@ -68,7 +68,7 @@ namespace ROS2
     {
         StopSensor();
         m_cameraSensor.reset();
-        ROS2::CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
+        CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
         ROS2SensorComponentBase::Deactivate();
     }
 
@@ -116,7 +116,7 @@ namespace ROS2
         }
 
         const AZ::Transform& transform = GetEntity()->GetTransform()->GetWorldTM();
-        const auto timestamp = ROS2Interface::Get()->GetROSTimestamp();
+        const auto timestamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
 
         std_msgs::msg::Header messageHeader;
         messageHeader.stamp = timestamp;
@@ -126,7 +126,7 @@ namespace ROS2
 
     AZStd::string ROS2CameraSensorComponent::GetCameraNameFromFrame(const AZ::Entity* entity) const
     {
-        const auto* component = GetEntity()->FindComponent<ROS2FrameComponent>();
+        const auto* component = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(component, "Entity %s has no ROS2CameraSensorComponent", entity->GetName().c_str());
         if (component)
         {
@@ -136,4 +136,4 @@ namespace ROS2
         }
         return AZStd::string{};
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

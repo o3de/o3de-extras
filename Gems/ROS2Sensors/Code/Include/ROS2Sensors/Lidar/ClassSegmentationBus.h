@@ -14,7 +14,7 @@
 #include <LmbrCentral/Scripting/TagComponentBus.h>
 #include <ROS2Sensors/Lidar/SegmentationClassConfiguration.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     static constexpr uint8_t UnknownClassId = 0U;
     static constexpr uint8_t TerrainClassId = 1U;
@@ -57,4 +57,4 @@ namespace ROS2
 
     using ClassSegmentationRequestBus = AZ::EBus<ClassSegmentationRequests, ClassSegmentationRequestBusTraits>;
     using ClassSegmentationInterface = AZ::Interface<ClassSegmentationRequests>;
-} // namespace ROS2
+} // namespace ROS2Sensors

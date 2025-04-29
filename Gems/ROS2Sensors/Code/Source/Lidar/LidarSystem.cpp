@@ -8,7 +8,7 @@
 #include <Lidar/LidarSystem.h>
 #include <ROS2Sensors/Lidar/LidarRegistrarBus.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     LidarSystem::LidarSystem(LidarSystem&& lidarSystem)
         : m_lidars{ AZStd::move(lidarSystem.m_lidars) }
@@ -30,7 +30,7 @@ namespace ROS2
 
         LidarSystemRequestBus::Handler::BusConnect(AZ_CRC(SystemName));
 
-        auto* lidarRegistrarInterface = ROS2::LidarRegistrarInterface::Get();
+        auto* lidarRegistrarInterface = LidarRegistrarInterface::Get();
         AZ_Assert(lidarRegistrarInterface != nullptr, "The Lidar Registrar interface was inaccessible.");
 
         if (!lidarRegistrarInterface->GetLidarSystemMetaData(SystemName))
@@ -58,4 +58,4 @@ namespace ROS2
     {
         m_lidars.erase(lidarId);
     }
-} // namespace ROS2
+} // namespace ROS2Sensors
