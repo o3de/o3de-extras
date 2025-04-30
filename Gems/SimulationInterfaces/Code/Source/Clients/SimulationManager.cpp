@@ -281,11 +281,24 @@ namespace SimulationInterfaces
                 "Simulation is already in requested state, transition unecessary"));
         }
 
-        if (IsTransitionForbidden(stateToSet))
+        if (IsTransitionForbiddenInEditor(stateToSet))
         {
+            const auto stateToSetName = GetStateName(stateToSet);
+            const auto currentStateName = GetStateName(m_simulationState);
             return AZ::Failure(FailedResult(
                 simulation_interfaces::srv::SetSimulationState::Response::INCORRECT_TRANSITION,
-                AZStd::string::format("Requested transition (%d -> %d) is forbidden", m_simulationState, stateToSet)));
+                AZStd::string::format(
+                    "Requested transition (%s -> %s) is forbidden in the Editor. It is available in GameLauncher.",
+                    currentStateName.c_str(),
+                    stateToSetName.c_str())));
+        }
+        if (IsTransitionForbidden(stateToSet))
+        {
+            const auto stateToSetName = GetStateName(stateToSet);
+            const auto currentStateName = GetStateName(m_simulationState);
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::srv::SetSimulationState::Response::INCORRECT_TRANSITION,
+                AZStd::string::format("Requested transition (%s -> %s) is forbidden", currentStateName.c_str(), stateToSetName.c_str())));
         }
 
         switch (stateToSet)
@@ -332,6 +345,23 @@ namespace SimulationInterfaces
         }
         m_simulationState = stateToSet;
         return AZ::Success();
+    }
+
+    bool SimulationManager::IsTransitionForbiddenInEditor(SimulationState requestedState)
+    {
+        // in the Editor we cannot reload level, so going to STOPPED state is forbidden, we cannot quit the editor so going to QUITTING
+        // state is forbidden
+        AZ::ApplicationTypeQuery appType;
+        AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
+        if (appType.IsValid() && !appType.IsGame())
+        {
+            if (requestedState == simulation_interfaces::msg::SimulationState::STATE_STOPPED ||
+                requestedState == simulation_interfaces::msg::SimulationState::STATE_QUITTING)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     bool SimulationManager::IsTransitionForbidden(SimulationState requestedState)

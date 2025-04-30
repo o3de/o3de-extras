@@ -73,6 +73,8 @@ namespace SimulationInterfaces
         }; // default simulation state based on standard
         void InitializeSimulationState();
 
+        bool IsTransitionForbiddenInEditor(SimulationState requestedState);
+
         bool IsTransitionForbidden(SimulationState requestedState);
         // forbidden transition between state, first is current state, second is desire state
         const AZStd::array<AZStd::pair<SimulationState, SimulationState>, 4> m_forbiddenStatesTransitions{ {
