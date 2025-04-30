@@ -283,6 +283,13 @@ namespace SimulationInterfaces
         m_physicsScenesHandle = AzPhysics::InvalidSceneHandle;
 
         m_sceneAddedHandler.Disconnect();
+        m_sceneRemovedHandler.Disconnect();
+
+        m_unconfiguredScenesHandles.clear();
+        m_entityIdToSimulatedEntityMap.clear();
+        m_simulatedEntityToEntityIdMap.clear();
+        m_entityIdToInitialState.clear();
+        m_spawnedTickets.clear();
     }
 
     AZStd::string SimulationEntitiesManager::AddSimulatedEntity(AZ::EntityId entityId, const AZStd::string& userProposedName)
@@ -636,8 +643,9 @@ namespace SimulationInterfaces
         if (!initialPose.IsOrthogonal())
         {
             AZ_Warning("SimulationInterfaces", false, "Initial pose is not orthogonal");
-            completedCb(AZ::Failure(FailedResult(
-                simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
+            completedCb(
+                AZ::Failure(FailedResult(
+                    simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
             return;
         }
 
