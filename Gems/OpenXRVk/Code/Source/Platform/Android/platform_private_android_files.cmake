@@ -13,4 +13,10 @@ set(FILES
     ../Common/Default/InputDeviceXRController_Default.cpp
     ../Common/Default/OculusTouch_Default.cpp
     ../Common/Default/OculusTouch_Default.h
+    ../../Devices/Common/XRControllerComponent.cpp
+    ../../Devices/Common/XRControllerComponent.h
+	../../Devices/Common/XRControllerAnimationsComponent.cpp
+	../../Devices/Common/XRControllerAnimationsComponent.h
+	../../Devices/Common/XRControllersConfig.cpp
+	../../Devices/Common/XRControllersConfig.h
 )
