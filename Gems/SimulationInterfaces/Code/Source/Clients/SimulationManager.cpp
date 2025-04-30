@@ -41,7 +41,7 @@ namespace SimulationInterfaces
             {
                 return it->second;
             }
-            return AZStd::string::format("Unknown state: %d", static_cast<int>(state));
+            return AZStd::string::format("Unknown state: %d", aznumeric_cast<int>(state));
         }
 
         bool StartInStoppedState()
