@@ -54,13 +54,23 @@ namespace SimulationInterfaces
 
     void SimulationEntitiesManagerEditor::Activate()
     {
-        SimulationEntitiesManager::Activate();
         AzToolsFramework::EditorEvents::Bus::Handler::BusConnect();
+        AzToolsFramework::EditorEntityContextNotificationBus::Handler::BusConnect();
     }
 
     void SimulationEntitiesManagerEditor::Deactivate()
     {
+        AzToolsFramework::EditorEntityContextNotificationBus::Handler::BusDisconnect();
         AzToolsFramework::EditorEvents::Bus::Handler::BusDisconnect();
+    }
+
+    void SimulationEntitiesManagerEditor::OnStartPlayInEditorBegin()
+    {
+        SimulationEntitiesManager::Activate();
+    }
+
+    void SimulationEntitiesManagerEditor::OnStopPlayInEditorBegin()
+    {
         SimulationEntitiesManager::Deactivate();
     }
 
