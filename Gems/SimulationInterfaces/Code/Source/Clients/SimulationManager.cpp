@@ -14,6 +14,7 @@
 #include <AzCore/Settings/SettingsRegistry.h>
 #include <AzFramework/Components/ConsoleBus.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
+#include <DebugDraw/DebugDrawBus.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 #include <simulation_interfaces/msg/simulator_features.hpp>
@@ -22,7 +23,26 @@ namespace SimulationInterfaces
 {
     namespace
     {
+
+        const AZStd::unordered_map<SimulationState, AZStd::string> SimulationStateToString = {
+            { simulation_interfaces::msg::SimulationState::STATE_PAUSED, "STATE_PAUSED" },
+            { simulation_interfaces::msg::SimulationState::STATE_PLAYING, "STATE_PLAYING" },
+            { simulation_interfaces::msg::SimulationState::STATE_QUITTING, "STATE_QUITTING" },
+            { simulation_interfaces::msg::SimulationState::STATE_STOPPED, "STATE_STOPPED" }
+        };
+
+        constexpr AZStd::string_view PrintStateName = "/SimulationInterfaces/PrintStateNameInGui";
         constexpr AZStd::string_view StartInStoppedStateKey = "/SimulationInterfaces/StartInStoppedState";
+
+        AZStd::string GetStateName(SimulationState state)
+        {
+            auto it = SimulationStateToString.find(state);
+            if (it != SimulationStateToString.end())
+            {
+                return it->second;
+            }
+            return AZStd::string::format("Unknown state: %d", static_cast<int>(state));
+        }
 
         bool StartInStoppedState()
         {
@@ -30,6 +50,15 @@ namespace SimulationInterfaces
             AZ_Assert(settingsRegistry, "Settings Registry is not available");
             bool output = true;
             settingsRegistry->Get(output, StartInStoppedStateKey);
+            return output;
+        }
+
+        bool PrintStateNameInGui()
+        {
+            AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get();
+            AZ_Assert(settingsRegistry, "Settings Registry is not available");
+            bool output = true;
+            settingsRegistry->Get(output, PrintStateName);
             return output;
         }
     } // namespace
@@ -63,6 +92,7 @@ namespace SimulationInterfaces
     void SimulationManager::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
         dependent.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
+        dependent.push_back(AZ_CRC_CE("DebugDrawTextService"));
     }
 
     SimulationManager::SimulationManager()
@@ -112,6 +142,10 @@ namespace SimulationInterfaces
                                                          simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_ACTION,
                                                          simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_SETTING,
                                                          simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_GETTING });
+        if (PrintStateNameInGui())
+        {
+            AZ::TickBus::Handler::BusConnect();
+        }
         AZ::SystemTickBus::QueueFunction(
             [this]()
             {
@@ -121,6 +155,7 @@ namespace SimulationInterfaces
 
     void SimulationManager::Deactivate()
     {
+        AZ::TickBus::Handler::BusDisconnect();
         SimulationManagerRequestBus::Handler::BusDisconnect();
     }
 
@@ -304,6 +339,15 @@ namespace SimulationInterfaces
         AZStd::pair<SimulationState, SimulationState> desireTransition{ m_simulationState, requestedState };
         auto it = AZStd::find(m_forbiddenStatesTransitions.begin(), m_forbiddenStatesTransitions.end(), desireTransition);
         return it != m_forbiddenStatesTransitions.end();
+    }
+
+    void SimulationManager::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
+    {
+        DebugDraw::DebugDrawRequestBus::Broadcast(
+            &DebugDraw::DebugDrawRequests::DrawTextOnScreen,
+            AZStd::string::format("Simulation state: %s", GetStateName(m_simulationState).c_str()),
+            AZ::Color(1.0f, 1.0f, 1.0f, 1.0f),
+            0.f);
     }
 
 } // namespace SimulationInterfaces

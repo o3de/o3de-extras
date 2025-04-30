@@ -116,7 +116,8 @@ namespace UnitTest
             }
         }
 
-        template <typename Future>void SpinAppUntilFuture(Future &future)
+        template<typename Future>
+        void SpinAppUntilFuture(Future& future)
         {
             AZ::ComponentApplication* app = nullptr;
             AZ::ComponentApplicationBus::BroadcastResult(app, &AZ::ComponentApplicationBus::Events::GetApplication);

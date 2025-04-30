@@ -9,6 +9,7 @@
 #pragma once
 
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
+#include <AzToolsFramework/Entity/EditorEntityContextBus.h>
 
 #include <Clients/SimulationManager.h>
 
@@ -18,6 +19,7 @@ namespace SimulationInterfaces
     class SimulationManagerEditor
         : public SimulationManager
         , protected AzToolsFramework::EditorEvents::Bus::Handler
+        , private AzToolsFramework::EditorEntityContextNotificationBus::Handler
     {
         using BaseSystemComponent = SimulationManager;
 
@@ -39,5 +41,8 @@ namespace SimulationInterfaces
         void Init() override;
         void Activate() override;
         void Deactivate() override;
+
+        // EditorEntityContextNotificationBus
+        void OnStartPlayInEditorBegin() override;
     };
 } // namespace SimulationInterfaces

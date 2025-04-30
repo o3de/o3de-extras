@@ -57,6 +57,7 @@ ly_add_target(
             AZ::AzFramework
         PRIVATE
             Gem::ROS2.Static
+            Gem::DebugDraw.API
 )
 target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp std_msgs geometry_msgs simulation_interfaces rclcpp_action)
 

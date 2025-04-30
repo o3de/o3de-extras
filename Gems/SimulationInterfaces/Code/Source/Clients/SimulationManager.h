@@ -27,6 +27,7 @@ namespace SimulationInterfaces
         : public AZ::Component
         , protected SimulationManagerRequestBus::Handler
         , protected AzFramework::LevelSystemLifecycleNotificationBus::Handler
+        , protected AZ::TickBus::Handler
     {
     public:
         AZ_COMPONENT_DECL(SimulationManager);
@@ -59,7 +60,11 @@ namespace SimulationInterfaces
         // LevelSystemLifecycleNotificationBus interface implementation
         void OnLoadingComplete(const char* levelName) override;
 
+        // AZ::TickBus::Handler
+        void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
+
         bool m_isSimulationPaused = false;
+
         uint64_t m_numberOfPhysicsSteps = 0;
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_simulationFinishEvent;
         SimulationManagerRequests::ReloadLevelCallback m_reloadLevelCallback;

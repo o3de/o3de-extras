@@ -23,7 +23,8 @@
     "requirements": "Requires ROS 2 Gem",
     "documentation_url": "",
     "dependencies": [
-        "ROS2>=3.3.0"
+        "ROS2>=3.3.0",
+        "DebugDraw"
     ],
     "repo_uri": "",
     "compatible_engines": [],
