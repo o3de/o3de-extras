@@ -1,0 +1,13 @@
+{
+  "O3DE": {
+    "Gems": {
+      "SimulationInterfaces": {
+        "Targets": {
+          "SimulationInterfaces.Editor": {
+            "AutoLoad": true
+          }
+        }
+      }
+    }
+  }
+}
