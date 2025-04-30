@@ -64,6 +64,11 @@ ly_add_target(
             Gem::Atom_RHI_Vulkan.Reflect
             Gem::Atom_RHI_Vulkan.Glad.Static
             Gem::XR.Static
+            Gem::PhysX.Static			
+            Gem::Atom_Feature_Common.Public			
+            Gem::CommonFeaturesAtom.Static
+            Gem::EMotionFXStaticLib
+            Gem::EMotionFX
 )
 
 ly_add_target(
@@ -114,10 +119,11 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         BUILD_DEPENDENCIES
             PUBLIC
                 AZ::AzCore
-                AZ::AzFramework
                 AZ::AssetBuilderSDK
                 ${openxr_dependency}
                 Gem::${gem_name}.Static
+                Gem::EMotionFXStaticLib
+                Gem::EMotionFX
     )
 
     ly_add_target(
