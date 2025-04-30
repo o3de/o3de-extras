@@ -83,4 +83,11 @@ namespace ROS2
         timeStamp.nanosec = static_cast<uint32_t>((m_elapsed - timeStamp.sec) * 1e9);
         return timeStamp;
     }
+
+    AZ::Outcome<void, AZStd::string> SimulationTimeSource::AdjustTime(const builtin_interfaces::msg::Time& time)
+    {
+        const double timeSec = static_cast<double>(time.sec) + static_cast<double>(time.nanosec) * 1e-9;
+        m_elapsed = timeSec;
+        return AZ::Success();
+    }
 } // namespace ROS2

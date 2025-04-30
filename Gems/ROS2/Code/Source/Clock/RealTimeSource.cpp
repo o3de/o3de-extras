@@ -33,4 +33,9 @@ namespace ROS2
             return 0;
         }
     }
+
+    AZ::Outcome<void, AZStd::string> RealTimeSource::AdjustTime(const builtin_interfaces::msg::Time& time)
+    {
+        return AZ::Failure(AZStd::string("RealTimeSource does not support setting a specific time."));
+    }
 } // namespace ROS2

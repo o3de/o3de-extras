@@ -17,4 +17,10 @@ namespace ROS2
         builtin_interfaces::msg::Time timeStamp = ros2Node->get_clock()->now();
         return timeStamp;
     }
+
+    AZ::Outcome<void, AZStd::string> ROS2TimeSource::AdjustTime(const builtin_interfaces::msg::Time& time)
+    {
+        return AZ::Failure(AZStd::string("ROS2TimeSource does not support setting a specific time."));
+    }
+
 } // namespace ROS2
