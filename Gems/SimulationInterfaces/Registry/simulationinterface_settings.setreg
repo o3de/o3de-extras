@@ -1,0 +1,6 @@
+{
+    "SimulationInterfaces": {
+        "PrintStateNameInGui": true,
+        "StartInStoppedState": true
+    }
+}
