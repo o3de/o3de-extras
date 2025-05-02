@@ -10,6 +10,7 @@
 
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
 
+#include <AzToolsFramework/Entity/EditorEntityContextBus.h>
 #include <Clients/SimulationEntitiesManager.h>
 
 namespace SimulationInterfaces
@@ -18,6 +19,7 @@ namespace SimulationInterfaces
     class SimulationEntitiesManagerEditor
         : public SimulationEntitiesManager
         , protected AzToolsFramework::EditorEvents::Bus::Handler
+        , private AzToolsFramework::EditorEntityContextNotificationBus::Handler
     {
         using BaseSystemComponent = SimulationEntitiesManager;
 
@@ -38,5 +40,9 @@ namespace SimulationInterfaces
         // AZ::Component
         void Activate() override;
         void Deactivate() override;
+
+        // EditorEntityContextNotificationBus
+        void OnStartPlayInEditorBegin() override;
+        void OnStopPlayInEditorBegin() override;
     };
 } // namespace SimulationInterfaces
