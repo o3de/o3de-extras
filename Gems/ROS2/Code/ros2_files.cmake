@@ -33,8 +33,6 @@ set(FILES
         Source/Communication/QoS.cpp
         Source/Communication/PublisherConfiguration.cpp
         Source/Communication/TopicConfiguration.cpp
-        Source/ContactSensor/ROS2ContactSensorComponent.cpp
-        Source/ContactSensor/ROS2ContactSensorComponent.h
         Source/Frame/NamespaceConfiguration.cpp
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2FrameConfiguration.cpp
@@ -130,14 +128,6 @@ set(FILES
         Source/SimulationUtils/FollowingCameraConfiguration.h
         Source/SimulationUtils/FollowingCameraComponent.cpp
         Source/SimulationUtils/FollowingCameraComponent.h
-        Source/Spawner/ROS2SpawnerComponent.cpp
-        Source/Spawner/ROS2SpawnerComponent.h
-        Source/Spawner/ROS2SpawnPointComponent.cpp
-        Source/Spawner/ROS2SpawnPointComponent.h
-        Source/Spawner/ROS2SpawnerComponentController.cpp
-        Source/Spawner/ROS2SpawnerComponentController.h
-        Source/Spawner/ROS2SpawnPointComponentController.cpp
-        Source/Spawner/ROS2SpawnPointComponentController.h
         Source/SystemComponents/ROS2SystemComponent.cpp
         Source/SystemComponents/ROS2SystemComponent.h
         Source/Utilities/ArticulationsUtilities.cpp
@@ -178,3 +168,19 @@ set(FILES
         Source/VehicleDynamics/WheelControllerComponent.h
         Source/VehicleDynamics/WheelDynamicsData.h
         )
+
+# optional, legacy features compilation
+if (WITH_GAZEBO_MSGS)
+        list(APPEND FILES
+                Source/ContactSensor/ROS2ContactSensorComponent.cpp
+                Source/ContactSensor/ROS2ContactSensorComponent.h
+                Source/Spawner/ROS2SpawnerComponent.cpp
+                Source/Spawner/ROS2SpawnerComponent.h
+                Source/Spawner/ROS2SpawnPointComponent.cpp
+                Source/Spawner/ROS2SpawnPointComponent.h
+                Source/Spawner/ROS2SpawnerComponentController.cpp
+                Source/Spawner/ROS2SpawnerComponentController.h
+                Source/Spawner/ROS2SpawnPointComponentController.cpp
+                Source/Spawner/ROS2SpawnPointComponentController.h
+        )
+endif ()

@@ -58,4 +58,9 @@ namespace ROS2
         msg.clock = GetROSTimestamp();
         m_clockPublisher->publish(msg);
     }
+
+    AZ::Outcome<void, AZStd::string> ROS2Clock::AdjustTime(const builtin_interfaces::msg::Time & time) const
+    {
+        return m_timeSource->AdjustTime(time);
+    }
 } // namespace ROS2
