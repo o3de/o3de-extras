@@ -46,7 +46,7 @@
 #include <QWizardPage>
 #endif
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     class RobotImporterWidget;
     class URDFPrefabMaker;
@@ -128,4 +128,4 @@ namespace ROS2
         static constexpr QWizard::WizardButton PrefabCreationButtonId{ QWizard::CustomButton1 };
         static constexpr QWizard::WizardOption HavePrefabCreationButton{ QWizard::HaveCustomButton1 };
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

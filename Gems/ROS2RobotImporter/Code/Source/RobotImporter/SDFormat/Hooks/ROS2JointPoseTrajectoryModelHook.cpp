@@ -15,7 +15,7 @@
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <Source/EditorArticulationLinkComponent.h>
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     ModelPluginImporterHook ROS2ModelPluginHooks::ROS2JointPoseTrajectoryModel()
     {
@@ -42,16 +42,16 @@ namespace ROS2::SDFormat
                 HooksUtils::ValueOfAny(poseTrajectoryParams, trajectoryTopicParamNames, "arm_controller/follow_joint_trajectory");
 
             // add required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity);
 
             // create controllerComponent based on model joints/articulations
             entity.FindComponent<PhysX::EditorArticulationLinkComponent>()
-                ? HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity)
-                : HooksUtils::CreateComponent<JointsPIDControllerComponent>(entity);
+                ? HooksUtils::CreateComponent<ROS2Controllers::JointsArticulationControllerComponent>(entity)
+                : HooksUtils::CreateComponent<ROS2Controllers::JointsPIDControllerComponent>(entity);
 
-            HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity, publisherConfiguration);
+            HooksUtils::CreateComponent<ROS2Controllers::JointsManipulationEditorComponent>(entity, publisherConfiguration);
 
-            if (HooksUtils::CreateComponent<JointsTrajectoryComponent>(entity, trajectoryActionName))
+            if (HooksUtils::CreateComponent<ROS2Controllers::JointsTrajectoryComponent>(entity, trajectoryActionName))
             {
                 return AZ::Success();
             }
@@ -63,4 +63,4 @@ namespace ROS2::SDFormat
 
         return importerHook;
     }
-} // namespace ROS2::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

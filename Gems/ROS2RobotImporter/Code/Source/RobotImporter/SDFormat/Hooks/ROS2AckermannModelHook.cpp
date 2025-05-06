@@ -29,7 +29,7 @@
 #include <sdf/Model.hh>
 #include <sdf/Plugin.hh>
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     namespace AckermannParser
     {
@@ -203,7 +203,7 @@ namespace ROS2::SDFormat
                         IsSteeringWheel(jointNameSteeringRight, jointRight.m_jointName, sdfModel);
                     const bool isDrive = !isSteering;
                     const float wheelRadius = GetWheelRadius(jointLeft.m_entity, jointRight.m_entity);
-                    configuration.m_axles.emplace_back(ROS2::VehicleDynamics::Utilities::Create2WheelAxle(
+                    configuration.m_axles.emplace_back(ROS2Controllers::VehicleDynamics::Utilities::Create2WheelAxle(
                         jointLeft.m_entityId, jointRight.m_entityId, AZStd::move(tag), wheelRadius, isSteering, isDrive));
 
                     const float track = GetTrack(jointLeft.m_entity, jointRight.m_entity);
@@ -302,8 +302,8 @@ namespace ROS2::SDFormat
             controlConfiguration.m_steering = ControlConfiguration::Steering::Ackermann;
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
-            HooksUtils::CreateComponent<ROS2RobotControlComponent>(entity, controlConfiguration);
+            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity);
+            HooksUtils::CreateComponent<ROS2Controllers::ROS2RobotControlComponent>(entity, controlConfiguration);
             HooksUtils::CreateComponent<VehicleDynamics::AckermannVehicleModelComponent>(
                 entity, vehicleConfiguration, VehicleDynamics::AckermannDriveModel(modelLimits, steeringPid));
 
@@ -320,4 +320,4 @@ namespace ROS2::SDFormat
 
         return importerHook;
     }
-} // namespace ROS2::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

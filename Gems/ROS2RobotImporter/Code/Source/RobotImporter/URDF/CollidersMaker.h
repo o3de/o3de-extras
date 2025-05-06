@@ -22,7 +22,7 @@
 #include <AzFramework/Physics/Material/PhysicsMaterialManager.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     using BuildReadyCallback = AZStd::function<void()>;
 
@@ -59,4 +59,4 @@ namespace ROS2
         AZ::Data::Asset<Physics::MaterialAsset> m_wheelMaterial;
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

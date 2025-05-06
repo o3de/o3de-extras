@@ -18,7 +18,7 @@
 #include <sdf/Element.hh>
 #include <sdf/Joint.hh>
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
     // void HooksUtils::AddTopicConfiguration(
@@ -173,7 +173,7 @@ namespace ROS2::SDFormat
             }
             AZStd::string prevTopic = contentValue.substr(startKey, contentValue.size() - startKey);
 
-            if (ROS2Names::ValidateTopic(newTopic).IsSuccess() && ROS2Names::ValidateTopic(prevTopic).IsSuccess())
+            if (ROS2::ROS2Names::ValidateTopic(newTopic).IsSuccess() && ROS2::ROS2Names::ValidateTopic(prevTopic).IsSuccess())
             {
                 remappings[prevTopic] = newTopic;
             }
@@ -184,19 +184,20 @@ namespace ROS2::SDFormat
         }
     } // namespace HooksUtils::PluginParser
 
-    ROS2FrameConfiguration HooksUtils::GetFrameConfiguration(const HooksUtils::PluginParams& pluginParams)
+    ROS2::ROS2FrameConfiguration HooksUtils::GetFrameConfiguration(const HooksUtils::PluginParams& pluginParams)
     {
-        ROS2FrameConfiguration frameConfiguration;
+        ROS2::ROS2FrameConfiguration frameConfiguration;
 
         const static AZStd::vector<AZStd::string> namespaceRemapNames = { "robotNamespace", "namespace" };
         const AZStd::string remappedNamespace = HooksUtils::ValueOfAny(pluginParams, namespaceRemapNames);
-        if (!ROS2Names::ValidateNamespace(remappedNamespace).IsSuccess())
+        if (!ROS2::ROS2Names::ValidateNamespace(remappedNamespace).IsSuccess())
         {
             AZ_Warning("PluginParser", false, "Encountered invalid namespace name while parsing URDF/SDF plugin.");
         }
         else if (!remappedNamespace.empty())
         {
-            frameConfiguration.m_namespaceConfiguration.SetNamespace(remappedNamespace, NamespaceConfiguration::NamespaceStrategy::Custom);
+            frameConfiguration.m_namespaceConfiguration.SetNamespace(
+                remappedNamespace, ROS2::NamespaceConfiguration::NamespaceStrategy::Custom);
         }
 
         if (pluginParams.contains("frameName"))
@@ -213,10 +214,10 @@ namespace ROS2::SDFormat
 
     HooksUtils::PluginParams HooksUtils::GetPluginParams(const sdf::Plugins& plugins)
     {
-        HooksUtils::PluginParams remappings;
+        HooksUtils::PluginParams remapping;
         if (plugins.empty())
         {
-            return remappings;
+            return remapping;
         }
 
         const auto plugin = plugins[0];
@@ -230,17 +231,17 @@ namespace ROS2::SDFormat
                 auto rosContent = content->GetFirstElement();
                 while (rosContent != nullptr)
                 {
-                    PluginParser::ParseRos2Remapping(*rosContent, remappings);
+                    PluginParser::ParseRos2Remapping(*rosContent, remapping);
                     rosContent = rosContent->GetNextElement();
                 }
             }
             else
             {
-                PluginParser::ParseRegularContent(*content, remappings);
+                PluginParser::ParseRegularContent(*content, remapping);
             }
         }
 
-        return remappings;
+        return remapping;
     }
 
     AZStd::string HooksUtils::ValueOfAny(
@@ -274,4 +275,4 @@ namespace ROS2::SDFormat
         return AZStd::stof(ValueOfAny(pluginParams, frequencyParamNames, AZStd::to_string(defaultVal)));
     }
 
-} // namespace ROS2::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

@@ -23,7 +23,7 @@
 #include <QWizardPage>
 #endif
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     class RobotImporterWidget;
     class PrefabMakerPage : public QWizardPage
@@ -50,7 +50,7 @@ namespace ROS2
         QPushButton* m_createButton;
         QTextEdit* m_log;
         QComboBox* m_spawnPointsComboBox;
-        SpawnPointInfoMap m_spawnPointsInfos;
+        ROS2::SpawnPointInfoMap m_spawnPointsInfos;
         RobotImporterWidget* m_parentImporterWidget;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

@@ -28,7 +28,7 @@
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     inline namespace SDFAssetBuilderInternal
     {
@@ -325,4 +325,4 @@ namespace ROS2
         response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Success;
     }
 
-} // namespace ROS2
+} // namespace ROS2RobotImporter

@@ -15,7 +15,7 @@
 #include <sdf/Imu.hh>
 #include <sdf/Sensor.hh>
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     SensorImporterHook ROS2SensorHooks::ROS2ImuSensor()
     {
@@ -98,11 +98,11 @@ namespace ROS2::SDFormat
             const auto frameConfiguration = HooksUtils::GetFrameConfiguration(imuPluginParams);
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity, frameConfiguration);
+            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity, frameConfiguration);
             HooksUtils::CreateComponent<PhysX::EditorArticulationLinkComponent>(entity);
 
             // Create Imu component
-            if (HooksUtils::CreateComponent<ROS2ImuSensorComponent>(entity, sensorConfiguration, imuConfiguration))
+            if (HooksUtils::CreateComponent<ROS2Sensors::ROS2ImuSensorComponent>(entity, sensorConfiguration, imuConfiguration))
             {
                 return AZ::Success();
             }
@@ -114,4 +114,4 @@ namespace ROS2::SDFormat
 
         return importerHook;
     }
-} // namespace ROS2::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

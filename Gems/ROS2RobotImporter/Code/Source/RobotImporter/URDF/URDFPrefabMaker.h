@@ -27,7 +27,7 @@
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 #include <optional>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     //! Encapsulates constructive mapping of SDF elements to a complete prefab with entities and components
     class URDFPrefabMaker
@@ -111,4 +111,4 @@ namespace ROS2
 
         const AZStd::optional<AZ::Transform> m_spawnPosition;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

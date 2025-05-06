@@ -231,18 +231,18 @@ namespace UnitTest
     TEST_F(SdfParserTest, SdfWithDuplicateModelNames_ResultsInError)
     {
         const auto xmlStr = GetSdfWithDuplicateModelName();
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+        const auto sdfRootOutcome = ROS2RobotImporter::UrdfParser::Parse(xmlStr, {});
         ASSERT_FALSE(sdfRootOutcome);
         const auto& sdfErrors = sdfRootOutcome.GetSdfErrors();
         EXPECT_FALSE(sdfErrors.empty());
-        AZStd::string errorString = ROS2::Utils::JoinSdfErrorsToString(sdfRootOutcome.GetSdfErrors());
+        AZStd::string errorString = ROS2RobotImporter::Utils::JoinSdfErrorsToString(sdfRootOutcome.GetSdfErrors());
         printf("SDF with duplicate model names failed to parse with errors: %s\n", errorString.c_str());
     }
 
     TEST_F(SdfParserTest, SdfWithModelsOnRootAndWorld_ParsesSuccessfully)
     {
         const auto xmlStr = GetSdfWithWorldThatHasMultipleModels();
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+        const auto sdfRootOutcome = ROS2RobotImporter::UrdfParser::Parse(xmlStr, {});
         ASSERT_TRUE(sdfRootOutcome);
         const auto& sdfRoot = sdfRootOutcome.GetRoot();
         // This SDF should have a model on the root that points to root model
@@ -280,12 +280,12 @@ namespace UnitTest
         AZStd::vector<const sdf::Model*> models;
         // Test visitation return results. All model siblings and nested models are visited
         auto StoreModelAndVisitNestedModelsAndSiblings =
-            [&models](const sdf::Model& model, const ROS2::Utils::ModelStack&) -> ROS2::Utils::VisitModelResponse
+            [&models](const sdf::Model& model, const ROS2RobotImporter::Utils::ModelStack&) -> ROS2RobotImporter::Utils::VisitModelResponse
         {
             models.push_back(&model);
-            return ROS2::Utils::VisitModelResponse::VisitNestedAndSiblings;
+            return ROS2RobotImporter::Utils::VisitModelResponse::VisitNestedAndSiblings;
         };
-        ROS2::Utils::VisitModels(sdfRoot, StoreModelAndVisitNestedModelsAndSiblings);
+        ROS2RobotImporter::Utils::VisitModels(sdfRoot, StoreModelAndVisitNestedModelsAndSiblings);
 
         ASSERT_EQ(4, models.size());
         EXPECT_EQ("root_model", models[0]->Name());
@@ -298,12 +298,12 @@ namespace UnitTest
         // or directory child of the sdf world has there models visited
         models.clear();
         auto StoreModelAndVisitSiblings =
-            [&models](const sdf::Model& model, const ROS2::Utils::ModelStack&) -> ROS2::Utils::VisitModelResponse
+            [&models](const sdf::Model& model, const ROS2RobotImporter::Utils::ModelStack&) -> ROS2RobotImporter::Utils::VisitModelResponse
         {
             models.push_back(&model);
-            return ROS2::Utils::VisitModelResponse::VisitSiblings;
+            return ROS2RobotImporter::Utils::VisitModelResponse::VisitSiblings;
         };
-        ROS2::Utils::VisitModels(sdfRoot, StoreModelAndVisitSiblings);
+        ROS2RobotImporter::Utils::VisitModels(sdfRoot, StoreModelAndVisitSiblings);
 
         ASSERT_EQ(4, models.size());
         EXPECT_EQ("root_model", models[0]->Name());
@@ -313,12 +313,13 @@ namespace UnitTest
 
         // Visit only the first model and stop any futher visitation
         models.clear();
-        auto StoreModelAndStop = [&models](const sdf::Model& model, const ROS2::Utils::ModelStack&) -> ROS2::Utils::VisitModelResponse
+        auto StoreModelAndStop =
+            [&models](const sdf::Model& model, const ROS2RobotImporter::Utils::ModelStack&) -> ROS2RobotImporter::Utils::VisitModelResponse
         {
             models.push_back(&model);
-            return ROS2::Utils::VisitModelResponse::Stop;
+            return ROS2RobotImporter::Utils::VisitModelResponse::Stop;
         };
-        ROS2::Utils::VisitModels(sdfRoot, StoreModelAndStop);
+        ROS2RobotImporter::Utils::VisitModels(sdfRoot, StoreModelAndStop);
 
         ASSERT_EQ(1, models.size());
         EXPECT_EQ("root_model", models[0]->Name());
@@ -327,7 +328,7 @@ namespace UnitTest
     TEST_F(SdfParserTest, VisitingSdfWithMultipleModelsWithSameLinkName_VisitsAllLinks)
     {
         const auto xmlStr = GetSdfWithMultipleModelsThatHaveLinksWithTheSameName();
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+        const auto sdfRootOutcome = ROS2RobotImporter::UrdfParser::Parse(xmlStr, {});
         ASSERT_TRUE(sdfRootOutcome);
         const auto& sdfRoot = sdfRootOutcome.GetRoot();
         // The SDF should also have a single world
@@ -347,8 +348,8 @@ namespace UnitTest
         EXPECT_TRUE(yourModel->LinkNameExists("same_link_name"));
 
         // Make sure that all links are gathered
-        AZStd::unordered_map<AZStd::string, const sdf::Link*> links = ROS2::Utils::GetAllLinks(*myModel, true);
-        auto otherLinks = ROS2::Utils::GetAllLinks(*yourModel, true);
+        AZStd::unordered_map<AZStd::string, const sdf::Link*> links = ROS2RobotImporter::Utils::GetAllLinks(*myModel, true);
+        auto otherLinks = ROS2RobotImporter::Utils::GetAllLinks(*yourModel, true);
         links.insert(AZStd::move(otherLinks.begin()), AZStd::move(otherLinks.end()));
 
         ASSERT_EQ(2, links.size());
@@ -388,7 +389,7 @@ namespace UnitTest
 
         sdfConfig.SetFindCallback(AZStd::move(SdfFindCallback));
 
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, sdfConfig);
+        const auto sdfRootOutcome = ROS2RobotImporter::UrdfParser::Parse(xmlStr, sdfConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const auto& sdfRoot = sdfRootOutcome.GetRoot();
         // The SDF should also have a single world
@@ -423,7 +424,7 @@ namespace UnitTest
     {
         {
             const auto xmlStr = GetSdfWithTwoSensors();
-            const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+            const auto sdfRootOutcome = ROS2RobotImporter::UrdfParser::Parse(xmlStr, {});
             ASSERT_TRUE(sdfRootOutcome);
             const auto& sdfRoot = sdfRootOutcome.GetRoot();
             const auto* sdfModel = sdfRoot.Model();
@@ -473,7 +474,7 @@ namespace UnitTest
 
         {
             const auto xmlStr = GetSdfWithImuSensor();
-            const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+            const auto sdfRootOutcome = ROS2RobotImporter::UrdfParser::Parse(xmlStr, {});
             ASSERT_TRUE(sdfRootOutcome);
             const auto& sdfRoot = sdfRootOutcome.GetRoot();
             const auto* sdfModel = sdfRoot.Model();
@@ -525,27 +526,27 @@ namespace UnitTest
 
         plug.SetName("test_camera");
         plug.SetFilename("libgazebo_ros_camera.so");
-        EXPECT_EQ("libgazebo_ros_camera.so", ROS2::Utils::SDFormat::GetPluginFilename(plug));
-        EXPECT_TRUE(ROS2::Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
+        EXPECT_EQ("libgazebo_ros_camera.so", ROS2RobotImporter::Utils::SDFormat::GetPluginFilename(plug));
+        EXPECT_TRUE(ROS2RobotImporter::Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
         plug.SetFilename("/usr/lib/libgazebo_ros_camera.so");
-        EXPECT_EQ("libgazebo_ros_camera.so", ROS2::Utils::SDFormat::GetPluginFilename(plug));
-        EXPECT_TRUE(ROS2::Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
+        EXPECT_EQ("libgazebo_ros_camera.so", ROS2RobotImporter::Utils::SDFormat::GetPluginFilename(plug));
+        EXPECT_TRUE(ROS2RobotImporter::Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
         plug.SetFilename("~/dev/libgazebo_ros_camera.so");
-        EXPECT_EQ("libgazebo_ros_camera.so", ROS2::Utils::SDFormat::GetPluginFilename(plug));
-        EXPECT_TRUE(ROS2::Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
+        EXPECT_EQ("libgazebo_ros_camera.so", ROS2RobotImporter::Utils::SDFormat::GetPluginFilename(plug));
+        EXPECT_TRUE(ROS2RobotImporter::Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
         plug.SetFilename("fun.so");
-        EXPECT_EQ("fun.so", ROS2::Utils::SDFormat::GetPluginFilename(plug));
-        EXPECT_FALSE(ROS2::Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
+        EXPECT_EQ("fun.so", ROS2RobotImporter::Utils::SDFormat::GetPluginFilename(plug));
+        EXPECT_FALSE(ROS2RobotImporter::Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
         plug.SetFilename("fun");
-        EXPECT_EQ("fun", ROS2::Utils::SDFormat::GetPluginFilename(plug));
-        EXPECT_FALSE(ROS2::Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
+        EXPECT_EQ("fun", ROS2RobotImporter::Utils::SDFormat::GetPluginFilename(plug));
+        EXPECT_FALSE(ROS2RobotImporter::Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
 
         AZStd::unordered_set<AZStd::string> cameraSupportedParams{
             ">update_rate", ">camera>horizontal_fov", ">camera>image>width", ">camera>image>height"
         };
 
         const auto xmlStr = GetSdfWithTwoSensors();
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+        const auto sdfRootOutcome = ROS2RobotImporter::UrdfParser::Parse(xmlStr, {});
         ASSERT_TRUE(sdfRootOutcome);
         const auto& sdfRoot = sdfRootOutcome.GetRoot();
         const auto* sdfModel = sdfRoot.Model();
@@ -554,7 +555,8 @@ namespace UnitTest
         const sdf::ElementPtr laserElement = sdfModel->LinkByName("link2")->SensorByIndex(0U)->Element();
 
         {
-            const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
+            const auto& unsupportedCameraParams =
+                ROS2RobotImporter::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
             EXPECT_EQ(unsupportedCameraParams.size(), 4U);
             EXPECT_EQ(unsupportedCameraParams[0U], ">pose");
             EXPECT_EQ(unsupportedCameraParams[1U], ">camera>clip>near");
@@ -564,7 +566,8 @@ namespace UnitTest
 
         cameraSupportedParams.emplace(">pose");
         {
-            const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
+            const auto& unsupportedCameraParams =
+                ROS2RobotImporter::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
             EXPECT_EQ(unsupportedCameraParams.size(), 3U);
             EXPECT_EQ(unsupportedCameraParams[0U], ">camera>clip>near");
             EXPECT_EQ(unsupportedCameraParams[1U], ">camera>clip>far");
@@ -574,21 +577,22 @@ namespace UnitTest
         cameraSupportedParams.emplace(">camera>clip>near");
         cameraSupportedParams.emplace(">camera>clip>far");
         {
-            const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
+            const auto& unsupportedCameraParams =
+                ROS2RobotImporter::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
             EXPECT_EQ(unsupportedCameraParams.size(), 1U);
             EXPECT_EQ(unsupportedCameraParams[0U], "plugin \"libgazebo_ros_camera.so\"");
         }
 
         {
             const auto& unsupportedCameraParams =
-                ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams, supportedPlugins);
+                ROS2RobotImporter::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams, supportedPlugins);
             EXPECT_EQ(unsupportedCameraParams.size(), 1U);
             EXPECT_EQ(unsupportedCameraParams[0U], "plugin \"libgazebo_ros_camera.so\": >camera_name");
         }
 
         AZStd::unordered_set<AZStd::string> supportedCameraPluginParams = { ">camera_name", ">ros>remapping" };
         {
-            const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(
+            const auto& unsupportedCameraParams = ROS2RobotImporter::Utils::SDFormat::GetUnsupportedParams(
                 cameraElement, cameraSupportedParams, supportedPlugins, supportedCameraPluginParams);
             EXPECT_EQ(unsupportedCameraParams.size(), 0U);
         }
@@ -605,7 +609,7 @@ namespace UnitTest
                                                                         ">always_on",
                                                                         ">visualize" };
         const auto& unsupportedLaserParams =
-            ROS2::Utils::SDFormat::GetUnsupportedParams(laserElement, laserSupportedParams, supportedPlugins);
+            ROS2RobotImporter::Utils::SDFormat::GetUnsupportedParams(laserElement, laserSupportedParams, supportedPlugins);
         EXPECT_EQ(unsupportedLaserParams.size(), 1U);
         EXPECT_EQ(unsupportedLaserParams[0U], "plugin \"librayplugin.so\"");
     }
@@ -615,15 +619,15 @@ namespace UnitTest
     // {
     //     {
     //         const auto xmlStr = GetSdfWithTwoSensors();
-    //         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+    //         const auto sdfRootOutcome = ROS2RobotImporter::UrdfParser::Parse(xmlStr, {});
     //         ASSERT_TRUE(sdfRootOutcome);
     //         const auto& sdfRoot = sdfRootOutcome.GetRoot();
     //         const auto* sdfModel = sdfRoot.Model();
     //         ASSERT_NE(nullptr, sdfModel);
     //         const sdf::ElementPtr cameraElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
-    //         const auto& cameraImporterHook = ROS2::SDFormat::ROS2SensorHooks::ROS2CameraSensor();
+    //         const auto& cameraImporterHook = ROS2RobotImporter::SDFormat::ROS2SensorHooks::ROS2CameraSensor();
 
-    //         const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(
+    //         const auto& unsupportedCameraParams = ROS2RobotImporter::Utils::SDFormat::GetUnsupportedParams(
     //             cameraElement, cameraImporterHook.m_supportedSensorParams, cameraImporterHook.m_pluginNames,
     //             cameraImporterHook.m_supportedPluginParams);
     //         EXPECT_EQ(unsupportedCameraParams.size(), 1U);
@@ -632,21 +636,21 @@ namespace UnitTest
     //         sdf::Plugin plug;
     //         plug.SetName("test_camera");
     //         plug.SetFilename("libgazebo_ros_camera.so");
-    //         EXPECT_TRUE(ROS2::Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
+    //         EXPECT_TRUE(ROS2RobotImporter::Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
     //         plug.SetFilename("/usr/lib/libgazebo_ros_openni_kinect.so");
-    //         EXPECT_TRUE(ROS2::Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
+    //         EXPECT_TRUE(ROS2RobotImporter::Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
     //         plug.SetFilename("~/dev/libgazebo_ros_imu.so");
-    //         EXPECT_FALSE(ROS2::Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
+    //         EXPECT_FALSE(ROS2RobotImporter::Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
     //         plug.SetFilename("libgazebo_ros_camera");
-    //         EXPECT_FALSE(ROS2::Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
+    //         EXPECT_FALSE(ROS2RobotImporter::Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
 
     //         EXPECT_TRUE(cameraImporterHook.m_sensorTypes.contains(sdf::SensorType::CAMERA));
     //         EXPECT_TRUE(cameraImporterHook.m_sensorTypes.contains(sdf::SensorType::DEPTH_CAMERA));
     //         EXPECT_FALSE(cameraImporterHook.m_sensorTypes.contains(sdf::SensorType::GPS));
 
     //         const sdf::ElementPtr lidarElement = sdfModel->LinkByName("link2")->SensorByIndex(0U)->Element();
-    //         const auto& lidarImporterHook = ROS2::SDFormat::ROS2SensorHooks::ROS2LidarSensor();
-    //         const auto& unsupportedLidarParams = ROS2::Utils::SDFormat::GetUnsupportedParams(
+    //         const auto& lidarImporterHook = ROS2RobotImporter::SDFormat::ROS2SensorHooks::ROS2LidarSensor();
+    //         const auto& unsupportedLidarParams = ROS2RobotImporter::Utils::SDFormat::GetUnsupportedParams(
     //             lidarElement, lidarImporterHook.m_supportedSensorParams, lidarImporterHook.m_pluginNames,
     //             lidarImporterHook.m_supportedPluginParams);
     //         EXPECT_EQ(unsupportedLidarParams.size(), 3U);
@@ -656,15 +660,15 @@ namespace UnitTest
     //     }
     //     {
     //         const auto xmlStr = GetSdfWithImuSensor();
-    //         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+    //         const auto sdfRootOutcome = ROS2RobotImporter::UrdfParser::Parse(xmlStr, {});
     //         ASSERT_TRUE(sdfRootOutcome);
     //         const auto& sdfRoot = sdfRootOutcome.GetRoot();
     //         const auto* sdfModel = sdfRoot.Model();
     //         ASSERT_NE(nullptr, sdfModel);
     //         const sdf::ElementPtr imuElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
-    //         const auto& importerHook = ROS2::SDFormat::ROS2SensorHooks::ROS2ImuSensor();
+    //         const auto& importerHook = ROS2RobotImporter::SDFormat::ROS2SensorHooks::ROS2ImuSensor();
 
-    //         const auto& unsupportedImuParams = ROS2::Utils::SDFormat::GetUnsupportedParams(
+    //         const auto& unsupportedImuParams = ROS2RobotImporter::Utils::SDFormat::GetUnsupportedParams(
     //               imuElement, importerHook.m_supportedSensorParams, importerHook.m_pluginNames, importerHook.m_supportedPluginParams);
     //         EXPECT_EQ(unsupportedImuParams.size(), 1U);
     //         EXPECT_EQ(unsupportedImuParams[0U], ">always_on");

@@ -9,7 +9,7 @@
 #include "IntroPage.h"
 #include <QVBoxLayout>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     IntroPage::IntroPage(QWizard* parent)
         : QWizardPage(parent)
@@ -35,4 +35,4 @@ namespace ROS2
         setLayout(layout);
     }
 
-} // namespace ROS2
+} // namespace ROS2RobotImporter

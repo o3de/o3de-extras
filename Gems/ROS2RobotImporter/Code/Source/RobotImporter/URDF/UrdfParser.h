@@ -24,7 +24,7 @@
 #include <sdf/Root.hh>
 #include <sdf/Visual.hh>
 
-namespace ROS2::UrdfParser
+namespace ROS2RobotImporter::UrdfParser
 {
     //! Functions for parsing URDF/SDF data.
 
@@ -106,4 +106,4 @@ namespace ROS2::UrdfParser
     //! @return SDF root object containing parsed <world> or <model> tags
     RootObjectOutcome ParseFromFile(
         AZ::IO::PathView filePath, const sdf::ParserConfig& parserConfig, const SdfAssetBuilderSettings& settings);
-} // namespace ROS2::UrdfParser
+} // namespace ROS2RobotImporter::UrdfParser

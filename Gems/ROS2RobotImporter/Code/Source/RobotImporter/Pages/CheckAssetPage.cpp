@@ -14,7 +14,7 @@
 #include <QVBoxLayout>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     namespace Columns
     {
@@ -252,4 +252,4 @@ namespace ROS2
         }
     }
 
-} // namespace ROS2
+} // namespace ROS2RobotImporter

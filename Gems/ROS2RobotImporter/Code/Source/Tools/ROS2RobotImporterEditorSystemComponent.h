@@ -15,7 +15,7 @@
 #include <ROS2RobotImporter/SDFormatModelPluginImporterHook.h>
 #include <ROS2RobotImporter/SDFormatSensorImporterHook.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
-namespace ROS2
+namespace ROS2RobotImporter
 {
 
     //! Editor component for RobotImporter widget
@@ -81,4 +81,4 @@ namespace ROS2
         // Cache for storing model plugin importer hooks (read only once)
         SDFormat::ModelPluginImporterHooksStorage m_modelPluginHooks;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

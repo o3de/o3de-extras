@@ -21,15 +21,15 @@
 #include <qcombobox.h>
 #include <qvariant.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     PrefabMakerPage::PrefabMakerPage(RobotImporterWidget* parent)
         : QWizardPage(parent)
         , m_success(false)
         , m_parentImporterWidget(parent)
     {
-        AZ::EBusAggregateResults<AZStd::unordered_map<AZStd::string, SpawnPointInfo>> allActiveSpawnPoints;
-        SpawnerRequestsBus::BroadcastResult(allActiveSpawnPoints, &SpawnerRequestsBus::Events::GetAllSpawnPointInfos);
+        AZ::EBusAggregateResults<AZStd::unordered_map<AZStd::string, ROS2::SpawnPointInfo>> allActiveSpawnPoints;
+        ROS2::SpawnerRequestsBus::BroadcastResult(allActiveSpawnPoints, &ROS2::SpawnerRequestsBus::Events::GetAllSpawnPointInfos);
 
         m_spawnPointsComboBox = new QComboBox(this);
 
@@ -119,4 +119,4 @@ namespace ROS2
     {
         return spawnPointName == PrefabMakerPage::zeroPoint;
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

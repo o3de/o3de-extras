@@ -10,7 +10,7 @@
 
 #include <ROS2RobotImporter/SDFormatModelPluginImporterHook.h>
 
-namespace ROS2::SDFormat::ROS2ModelPluginHooks
+namespace ROS2RobotImporter::SDFormat::ROS2ModelPluginHooks
 {
     // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
 
@@ -26,4 +26,4 @@ namespace ROS2::SDFormat::ROS2ModelPluginHooks
     //  //! Get a mapping of SDFormat joint_pose_trajectory plugin into O3DE components.
     // ModelPluginImporterHook ROS2JointPoseTrajectoryModel();
 
-} // namespace ROS2::SDFormat::ROS2ModelPluginHooks
+} // namespace ROS2RobotImporter::SDFormat::ROS2ModelPluginHooks

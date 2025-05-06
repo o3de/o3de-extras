@@ -24,7 +24,7 @@
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     RobotImporterWidget::RobotImporterWidget(QWidget* parent)
         : QWizard(parent)
@@ -718,4 +718,4 @@ namespace ROS2
         AZ_Error("RobotImporterWidget", false, "%s", errorMessage.toUtf8().constData());
     }
 
-} // namespace ROS2
+} // namespace ROS2RobotImporter

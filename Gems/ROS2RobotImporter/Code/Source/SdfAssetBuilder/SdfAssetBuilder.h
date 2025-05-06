@@ -15,7 +15,7 @@
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     [[maybe_unused]] constexpr const char* SdfAssetBuilderName = "SdfAssetBuilder";
 
@@ -28,7 +28,7 @@ namespace ROS2
     class SdfAssetBuilder : public AssetBuilderSDK::AssetBuilderCommandBus::Handler
     {
     public:
-        AZ_RTTI(ROS2::SdfAssetBuilder, "{F5A45C1B-1D9F-4898-8E31-499C3787DA76}");
+        AZ_RTTI(SdfAssetBuilder, "{F5A45C1B-1D9F-4898-8E31-499C3787DA76}");
 
         SdfAssetBuilder();
         ~SdfAssetBuilder();
@@ -52,4 +52,4 @@ namespace ROS2
         AZStd::string m_fingerprint;
     };
 
-} // namespace ROS2
+} // namespace ROS2RobotImporter

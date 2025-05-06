@@ -13,7 +13,7 @@
 #include <AzCore/std/containers/unordered_map.h>
 #include <iostream>
 
-namespace ROS2::Utils
+namespace ROS2RobotImporter::Utils
 {
     //! Modifies a parsed URDF in memory to add missing inertia to links, which prevents SDF error 19.
     //! @param urdf URDF to modify.
@@ -178,4 +178,4 @@ namespace ROS2::Utils
         return ModifyURDFInMemory(AZStd::string(data.c_str()));
     }
 
-} // namespace ROS2::Utils
+} // namespace ROS2RobotImporter::Utils

@@ -13,7 +13,7 @@
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <Source/EditorRigidBodyComponent.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     void InertialsMaker::AddInertial(const gz::math::Inertiald& inertial, AZ::EntityId entityId) const
     {
@@ -50,4 +50,4 @@ namespace ROS2
 
         entity->CreateComponent<PhysX::EditorRigidBodyComponent>(rigidBodyConfiguration, physxSpecificConfiguration);
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

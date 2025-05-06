@@ -12,7 +12,7 @@
 #include <AzCore/Serialization/Json/JsonUtils.h>
 #include <AzCore/Settings/SettingsRegistryVisitorUtils.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     namespace
     {
@@ -199,4 +199,4 @@ namespace ROS2
 
         AZ_Warning(SdfAssetBuilderName, !m_builderPatterns.empty(), "SdfAssetBuilder disabled, no supported file type extensions found.");
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

@@ -25,7 +25,7 @@
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 #endif
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     class CheckAssetPage : public QWizardPage
     {
@@ -63,4 +63,4 @@ namespace ROS2
 
         int GetRowIndex(const AZStd::string& unresolvedFileName);
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

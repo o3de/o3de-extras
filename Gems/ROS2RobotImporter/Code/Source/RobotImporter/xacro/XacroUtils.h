@@ -12,7 +12,7 @@
 #include <AzCore/std/string/string.h>
 #include <RobotImporter/URDF/UrdfParser.h>
 
-namespace ROS2::Utils::xacro
+namespace ROS2RobotImporter::Utils::xacro
 {
 
     static const char* XacroExecutable = "xacro";
@@ -47,4 +47,4 @@ namespace ROS2::Utils::xacro
         const sdf::ParserConfig& parserConfig,
         const SdfAssetBuilderSettings& settings);
 
-} // namespace ROS2::Utils::xacro
+} // namespace ROS2RobotImporter::Utils::xacro

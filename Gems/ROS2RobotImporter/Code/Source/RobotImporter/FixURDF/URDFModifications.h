@@ -10,7 +10,7 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
 
-namespace ROS2::Utils
+namespace ROS2RobotImporter::Utils
 {
     struct MissingInertia
     {
@@ -38,4 +38,4 @@ namespace ROS2::Utils
         AZStd::vector<DuplicatedJoint> duplicatedJoints;
     };
 
-} // namespace ROS2::Utils
+} // namespace ROS2RobotImporter::Utils

@@ -15,7 +15,7 @@
 #include <QWizardPage>
 #endif
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     class IntroPage : public QWizardPage
     {
@@ -26,4 +26,4 @@ namespace ROS2
     private:
         QLabel* m_label;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

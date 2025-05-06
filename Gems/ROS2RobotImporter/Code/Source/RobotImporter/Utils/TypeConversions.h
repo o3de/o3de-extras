@@ -14,7 +14,7 @@
 #include <AzCore/Math/Vector3.h>
 #include <RobotImporter/URDF/UrdfParser.h>
 
-namespace ROS2::URDF
+namespace ROS2RobotImporter::URDF
 {
     //! Common types conversion between urdf and AZ formats
     namespace TypeConversions
@@ -24,4 +24,4 @@ namespace ROS2::URDF
         AZ::Color ConvertColor(const gz::math::Color& color);
         AZ::Transform ConvertPose(const gz::math::Pose3d& pose);
     }; // namespace TypeConversions
-} // namespace ROS2::URDF
+} // namespace ROS2RobotImporter::URDF

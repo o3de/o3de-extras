@@ -16,7 +16,7 @@
 #include <Source/EditorPrismaticJointComponent.h>
 #include <Source/EditorRigidBodyComponent.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     JointsMaker::JointsMakerResult JointsMaker::AddJointComponent(
         const sdf::Joint* joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId) const
@@ -153,4 +153,4 @@ namespace ROS2
         followColliderEntity->Deactivate();
         return AZ::Success(jointComponent->GetId());
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

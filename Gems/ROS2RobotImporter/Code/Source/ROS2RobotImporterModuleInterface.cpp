@@ -25,14 +25,14 @@ namespace ROS2RobotImporter
         m_descriptors.insert(
             m_descriptors.end(),
             {
-                ROS2::ROS2RobotImporterSystemComponent::CreateDescriptor(),
+                ROS2RobotImporterSystemComponent::CreateDescriptor(),
             });
     }
 
     AZ::ComponentTypeList ROS2RobotImporterModuleInterface::GetRequiredSystemComponents() const
     {
         return AZ::ComponentTypeList{
-            azrtti_typeid<ROS2::ROS2RobotImporterSystemComponent>(),
+            azrtti_typeid<ROS2RobotImporterSystemComponent>(),
         };
     }
 } // namespace ROS2RobotImporter

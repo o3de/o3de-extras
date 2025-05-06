@@ -10,7 +10,7 @@
 
 #include <AzCore/Component/Component.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     //! A Component for importing robot definition from standard formats such as URDF.
     //! Sometimes, user decisions will be involved in the process.
@@ -34,4 +34,4 @@ namespace ROS2
         void Deactivate() override{};
         //////////////////////////////////////////////////////////////////////////
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

@@ -19,7 +19,7 @@
 #include <Source/EditorColliderComponent.h>
 #include <Source/EditorShapeColliderComponent.h>
 
-namespace ROS2::PrefabMakerUtils
+namespace ROS2RobotImporter::PrefabMakerUtils
 {
     AZ::IO::Path GetAzModelAssetPathFromModelPath(const AZ::IO::Path& modelPath)
     {
@@ -160,4 +160,4 @@ namespace ROS2::PrefabMakerUtils
         return GetAssetFromPath(urdfAssetsMapping, AZStd::string(urdfMeshPath.c_str(), urdfMeshPath.size()));
     }
 
-} // namespace ROS2::PrefabMakerUtils
+} // namespace ROS2RobotImporter::PrefabMakerUtils

@@ -13,7 +13,7 @@
 #include <ROS2RobotImporter/SDFormatModelPluginImporterHook.h>
 #include <ROS2RobotImporter/SDFormatSensorImporterHook.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     class RobotImporterRequest : public AZ::EBusTraits
     {
@@ -36,4 +36,4 @@ namespace ROS2
 
     using RobotImporterRequestBus = AZ::EBus<RobotImporterRequest>;
 
-} // namespace ROS2
+} // namespace ROS2RobotImporter

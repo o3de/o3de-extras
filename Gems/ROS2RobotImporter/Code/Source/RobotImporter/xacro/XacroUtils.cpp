@@ -16,7 +16,7 @@
 #include <RobotImporter/FixURDF/FixURDF.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
-namespace ROS2::Utils::xacro
+namespace ROS2RobotImporter::Utils::xacro
 {
     ExecutionOutcome ParseXacro(
         const AZStd::string& filename, const Params& params, const sdf::ParserConfig& parserConfig, const SdfAssetBuilderSettings& settings)
@@ -92,7 +92,7 @@ namespace ROS2::Utils::xacro
             if (settings.m_fixURDF)
             {
                 // modify in memory URDF result
-                auto [modifiedXmlStr, modifiedElements] = (ROS2::Utils::ModifyURDFInMemory(output));
+                auto [modifiedXmlStr, modifiedElements] = (Utils::ModifyURDFInMemory(output));
                 outcome.m_urdfHandle = UrdfParser::Parse(modifiedXmlStr, parserConfig);
                 outcome.m_urdfHandle.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
                 outcome.m_urdfHandle.m_urdfModifications = AZStd::move(modifiedElements);
@@ -184,4 +184,4 @@ namespace ROS2::Utils::xacro
         return GetParameterFromXacroData(charBuffer);
     }
 
-} // namespace ROS2::Utils::xacro
+} // namespace ROS2RobotImporter::Utils::xacro

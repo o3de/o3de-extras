@@ -12,13 +12,13 @@
 #include <ROS2RobotImporter/ROS2RobotImporterBus.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     RobotControlMaker::ControlHookCallOutcome RobotControlMaker::AddPlugin(
         AZ::EntityId entityId, const sdf::Plugin& plugin, const sdf::Model& model, const SDFormat::CreatedEntitiesMap& createdEntities)
     {
         SDFormat::ModelPluginImporterHooksStorage pluginHooks;
-        ROS2::RobotImporterRequestBus::BroadcastResult(pluginHooks, &ROS2::RobotImporterRequest::GetModelPluginHooks);
+        RobotImporterRequestBus::BroadcastResult(pluginHooks, &RobotImporterRequest::GetModelPluginHooks);
         for (const auto& hook : pluginHooks)
         {
             const AZStd::string query(plugin.Filename().c_str());
@@ -85,4 +85,4 @@ namespace ROS2
     {
         return m_status;
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

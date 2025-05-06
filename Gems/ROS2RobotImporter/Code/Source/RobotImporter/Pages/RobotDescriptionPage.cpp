@@ -9,7 +9,7 @@
 #include "RobotDescriptionPage.h"
 #include <QVBoxLayout>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     RobotDescriptionPage::RobotDescriptionPage(QWizard* parent)
         : QWizardPage(parent)
@@ -79,4 +79,4 @@ namespace ROS2
     {
         return m_warning;
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

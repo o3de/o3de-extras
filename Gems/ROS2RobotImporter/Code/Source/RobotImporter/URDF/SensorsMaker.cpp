@@ -18,7 +18,7 @@
 #include <sdf/Link.hh>
 #include <sdf/Sensor.hh>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     SensorsMaker::SensorHookCallOutcome SensorsMaker::CallSensorHook(
         AZ::EntityId entityId,
@@ -85,7 +85,7 @@ namespace ROS2
         AZ::EntityId entityId, const sdf::Sensor* sensor, AZStd::vector<AZ::EntityId>& createdEntities)
     {
         SDFormat::SensorImporterHooksStorage sensorHooks;
-        ROS2::RobotImporterRequestBus::BroadcastResult(sensorHooks, &ROS2::RobotImporterRequest::GetSensorHooks);
+        RobotImporterRequestBus::BroadcastResult(sensorHooks, &RobotImporterRequest::GetSensorHooks);
 
         const auto& sensorPlugins = sensor->Plugins();
         // Add sensor without plugins
@@ -108,7 +108,7 @@ namespace ROS2
         for (const auto& sp : sensorPlugins)
         {
             bool sensorProcessed = false;
-            ROS2::SDFormat::SensorImporterHook* defaultHook = nullptr;
+            SDFormat::SensorImporterHook* defaultHook = nullptr;
             for (auto& hook : sensorHooks)
             {
                 if (hook.m_sensorTypes.contains(sensor->Type()))
@@ -160,4 +160,4 @@ namespace ROS2
     {
         return m_status;
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter
