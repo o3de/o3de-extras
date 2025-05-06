@@ -27,13 +27,12 @@ namespace SimulationInterfaces
     public:
         AZ_COMPONENT(NamedPoseComponent, NamedPoseComponentTypeId, AZ::Component);
         NamedPoseComponent() = default;
-        NamedPoseComponent(NamedPose config);
+        NamedPoseComponent(const NamedPose& config);
         ~NamedPoseComponent() override = default;
 
         void Activate() override;
         void Deactivate() override;
         static void Reflect(AZ::ReflectContext* context);
-        static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 
     private:
         NamedPose GetConfiguration() override

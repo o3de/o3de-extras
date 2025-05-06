@@ -28,6 +28,8 @@ set(FILES
     Source/Services/GetEntitiesServiceHandler.h
     Source/Services/DeleteEntityServiceHandler.cpp
     Source/Services/DeleteEntityServiceHandler.h
+    Source/Services/GetNamedPoseBoundsServiceHandler.cpp
+    Source/Services/GetNamedPoseBoundsServiceHandler.h
     Source/Services/GetNamedPosesServiceHandler.cpp
     Source/Services/GetNamedPosesServiceHandler.h
     Source/Services/GetEntitiesStatesServiceHandler.cpp

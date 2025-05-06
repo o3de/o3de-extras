@@ -38,8 +38,8 @@ namespace SimulationInterfaces
     inline constexpr const char* NamedPoseManagerRequestsTypeId = "{705280D6-7AB4-4586-A0A4-25AD71268279}";
     inline constexpr const char* NamedPoseComponentRequestsTypeId = "{9C2FEA33-90CE-4577-AB32-F7963852DC81}";
 
-    inline constexpr const char* NamedPoseTypeId = "{c6b4a8be-f39a-46ed-82e8-05bc260a1f31}";
-    inline constexpr const char* NamedPoseComponentTypeId = "{a294b840-79ca-402d-a250-b5c3d958b518}";
-    inline constexpr const char* NamedPoseEditorComponentTypeId = "{867002fc-eca9-4cae-a7b4-d2ca6fa14ef6}";
+    inline constexpr const char* NamedPoseTypeId = "{C6B4A8BE-F39A-46ED-82E8-05BC260A1F31}";
+    inline constexpr const char* NamedPoseComponentTypeId = "{A294B840-79CA-402D-A250-B5C3D958B518}";
+    inline constexpr const char* NamedPoseEditorComponentTypeId = "{867002FC-ECA9-4CAE-A7B4-D2CA6FA14EF6}";
 
 } // namespace SimulationInterfaces
