@@ -5,6 +5,8 @@
 
 set(FILES
     Source/Clients/ROS2Module.cpp
+    Source/Clients/ROS2SystemComponent.cpp
+    Source/Clients/ROS2SystemComponent.h
     Source/Clock/ROS2Clock.cpp
     Source/Clock/ROS2TimeSource.cpp
     Source/Clock/SimulationTimeSource.cpp

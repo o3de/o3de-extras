@@ -14,9 +14,8 @@
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
-#include <ROS2/Utilities/ROS2Conversions.h>
-
 #include <ROS2/ROS2TypeIds.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
