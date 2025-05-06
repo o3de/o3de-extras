@@ -8,8 +8,14 @@
 
 #include "Clients/NamedPosesManager.h"
 
+#include "AzCore/Debug/Trace.h"
+#include "AzCore/Math/Crc.h"
+#include "AzCore/RTTI/RTTIMacros.h"
+#include "AzCore/std/smart_ptr/shared_ptr.h"
+#include "AzFramework/Physics/Shape.h"
 #include "CommonUtilities.h"
 #include "Components/NamedPoseComponent.h"
+#include "SimulationInterfaces/Bounds.h"
 #include "SimulationInterfaces/NamedPoseManagerRequestBus.h"
 #include "SimulationInterfaces/Result.h"
 #include "SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h"
@@ -22,6 +28,8 @@
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Entity/GameEntityContextBus.h>
+#include <AzFramework/Physics/Components/SimulatedBodyComponentBus.h>
+#include <AzFramework/Physics/SimulatedBodies/StaticRigidBody.h>
 #include <LmbrCentral/Scripting/TagComponentBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
@@ -32,6 +40,26 @@
 
 namespace SimulationInterfaces
 {
+    namespace
+    {
+        AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> GetSimulatedBody(AZ::EntityId entityId)
+        {
+            AzPhysics::SimulatedBody* parentSimulatedBody = nullptr;
+            AzPhysics::SimulatedBodyComponentRequestsBus::EventResult(
+                parentSimulatedBody, entityId, &AzPhysics::SimulatedBodyComponentRequests::GetSimulatedBody);
+            if (parentSimulatedBody == nullptr)
+            {
+                auto msg = AZStd::string::format("Entity's simulated body doesn't exist");
+                return AZ::Failure(msg);
+            }
+            if (parentSimulatedBody->m_bodyHandle == AzPhysics::InvalidSimulatedBodyHandle)
+            {
+                auto msg = AZStd::string::format("Entity is not valid simulated body");
+                return AZ::Failure(msg);
+            }
+            return AZ::Success(parentSimulatedBody);
+        }
+    } // namespace
 
     AZ_COMPONENT_IMPL(NamedPoseManager, "NamedPoseManager", NamedPoseManagerTypeId);
 
@@ -188,7 +216,7 @@ namespace SimulationInterfaces
             return AZ::Success();
         }
         return AZ::Failure(
-            FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "named pose with given id is not registered"));
+            FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Named pose with given id is not registered"));
     }
 
     AZ::Outcome<NamedPoseList, FailedResult> NamedPoseManager::GetNamedPoses(const TagFilter& tags)
@@ -208,6 +236,37 @@ namespace SimulationInterfaces
 
     AZ::Outcome<Bounds, FailedResult> NamedPoseManager::GetNamedPoseBounds(const AZStd::string& name)
     {
+        if (!m_namedPoseToEntityId.contains(name))
+        {
+            return AZ::Failure(
+                FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Named pose with given name is not registered"));
+        }
+        AZ::EntityId namedPoseEntityId = m_namedPoseToEntityId.at(name);
+        if (!namedPoseEntityId.IsValid())
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                AZStd::string::format("Named pose with given name %s has invalid entity ID", name.c_str())));
+        }
+        // get simulated body
+        auto simulatedBody = GetSimulatedBody(namedPoseEntityId);
+        if (!simulatedBody.IsSuccess())
+        {
+            Bounds emptyBounds;
+            emptyBounds.m_boundsType = simulation_interfaces::msg::Bounds::TYPE_EMPTY;
+            return emptyBounds;
+        }
+        // only static rigid body makes sense to be named pose bounds.
+        auto staticRigidBody = azdynamic_cast<AzPhysics::StaticRigidBody*>(simulatedBody.GetValue());
+
+        const AZ::Crc32 shapesCount = staticRigidBody->GetShapeCount();
+        for (int i = 0; i < shapesCount; i++)
+        {
+            AZStd::shared_ptr<Physics::Shape> shape = staticRigidBody->GetShape(i);
+            auto config = shape->GetShapeConfiguration();
+            [[maybe_unused]] auto shapeType = config->GetShapeType();
+        }
+
         return AZ::Failure(FailedResult(
             simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, "Getting named poses bound isn't currently supported"));
     }
