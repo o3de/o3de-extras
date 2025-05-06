@@ -13,13 +13,14 @@
 namespace SimulationInterfaces
 {
 
-    NamedPoseComponent::NamedPoseComponent(NamedPose config)
+    NamedPoseComponent::NamedPoseComponent(const NamedPose& config)
         : m_config(config)
     {
     }
 
     void NamedPoseComponent::Activate()
     {
+        AZ_Info("DEbug", "named pose activate");
         NamedPoseComponentRequestBus::Handler::BusConnect(GetEntityId());
         NamedPoseManagerRequestBus::Broadcast(&NamedPoseManagerRequests::RegisterNamedPose, GetEntityId());
     }
@@ -30,17 +31,9 @@ namespace SimulationInterfaces
         NamedPoseComponentRequestBus::Handler::BusDisconnect();
     }
 
-    void NamedPoseComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
-    {
-        required.push_back(AZ_CRC_CE("TagService")); // tag component
-    }
-
     void NamedPoseComponent::Reflect(AZ::ReflectContext* context)
     {
-        if (!context->IsTypeReflected(azrtti_typeid<NamedPose>()))
-        {
-            NamedPose::Reflect(context);
-        }
+        NamedPose::Reflect(context);
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<NamedPoseComponent, AZ::Component>()->Version(0)->Field("NamedPoseConfig", &NamedPoseComponent::m_config);

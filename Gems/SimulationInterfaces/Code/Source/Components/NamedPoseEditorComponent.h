@@ -22,7 +22,7 @@ namespace SimulationInterfaces
     class NamedPoseEditorComponent : public AzToolsFramework::Components::EditorComponentBase
     {
     public:
-        AZ_EDITOR_COMPONENT(NamedPoseEditorComponent, NamedPoseEditorComponentTypeId);
+        AZ_EDITOR_COMPONENT(NamedPoseEditorComponent, NamedPoseEditorComponentTypeId, AzToolsFramework::Components::EditorComponentBase);
         NamedPoseEditorComponent() = default;
         ~NamedPoseEditorComponent() override = default;
 
@@ -30,6 +30,7 @@ namespace SimulationInterfaces
         void Activate() override;
         void Deactivate() override;
         void BuildGameEntity(AZ::Entity* gameEntity) override;
+
         static void Reflect(AZ::ReflectContext* context);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 

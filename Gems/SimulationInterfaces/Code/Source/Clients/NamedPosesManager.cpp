@@ -8,11 +8,6 @@
 
 #include "Clients/NamedPosesManager.h"
 
-#include "AzCore/Debug/Trace.h"
-#include "AzCore/Math/Crc.h"
-#include "AzCore/RTTI/RTTIMacros.h"
-#include "AzCore/std/smart_ptr/shared_ptr.h"
-#include "AzFramework/Physics/Shape.h"
 #include "CommonUtilities.h"
 #include "Components/NamedPoseComponent.h"
 #include "SimulationInterfaces/Bounds.h"
@@ -29,11 +24,12 @@
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Entity/GameEntityContextBus.h>
 #include <AzFramework/Physics/Components/SimulatedBodyComponentBus.h>
+#include <AzFramework/Physics/Shape.h>
+#include <AzFramework/Physics/ShapeConfiguration.h>
 #include <AzFramework/Physics/SimulatedBodies/StaticRigidBody.h>
 #include <LmbrCentral/Scripting/TagComponentBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
-#include <simulation_interfaces/msg/detail/result__struct.hpp>
 #include <simulation_interfaces/msg/result.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 #include <simulation_interfaces/srv/spawn_entity.hpp>
@@ -118,7 +114,7 @@ namespace SimulationInterfaces
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
             AZStd::unordered_set<SimulationFeatureType>{
                 simulation_interfaces::msg::SimulatorFeatures::NAMED_POSES,
-                //  simulation_interfaces::msg::SimulatorFeatures::POSE_BOUNDS
+                simulation_interfaces::msg::SimulatorFeatures::POSE_BOUNDS,
             });
 
         NamedPoseManagerRequestBus::Handler::BusConnect();
@@ -259,15 +255,80 @@ namespace SimulationInterfaces
         // only static rigid body makes sense to be named pose bounds.
         auto staticRigidBody = azdynamic_cast<AzPhysics::StaticRigidBody*>(simulatedBody.GetValue());
 
-        const AZ::Crc32 shapesCount = staticRigidBody->GetShapeCount();
-        for (int i = 0; i < shapesCount; i++)
+        if (!staticRigidBody)
         {
-            AZStd::shared_ptr<Physics::Shape> shape = staticRigidBody->GetShape(i);
-            auto config = shape->GetShapeConfiguration();
-            [[maybe_unused]] auto shapeType = config->GetShapeType();
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Named Pose in simulation interfaces supports bounds defined by the static rigid body"));
         }
 
-        return AZ::Failure(FailedResult(
-            simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, "Getting named poses bound isn't currently supported"));
+        const AZ::u32 shapesCount = staticRigidBody->GetShapeCount();
+        if (shapesCount == 0)
+        {
+            Bounds emptyBounds;
+            emptyBounds.m_boundsType = simulation_interfaces::msg::Bounds::TYPE_EMPTY;
+            return emptyBounds;
+        }
+
+        if (shapesCount > 1)
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Named Pose in simulation interfaces doesn't support multiple shapes"));
+        }
+
+        AZStd::shared_ptr<Physics::Shape> shape = staticRigidBody->GetShape(0);
+        auto config = shape->GetShapeConfiguration();
+        auto shapeType = config->GetShapeType();
+
+        // get final collider transform including entity TM and offsets
+        AZStd::pair<AZ::Vector3, AZ::Quaternion> colliderOffsets = shape->GetLocalPose();
+        AZ::Transform offsetTransform = AZ::Transform::CreateFromQuaternionAndTranslation(colliderOffsets.second, colliderOffsets.first);
+        AZ::Transform entityTransform;
+        AZ::TransformBus::EventResult(entityTransform, namedPoseEntityId, &AZ::TransformBus::Events::GetWorldTM);
+        AZ::Transform colliderAbsoluteTransform = entityTransform * offsetTransform;
+
+        Bounds bounds;
+        switch (shapeType)
+        {
+        case Physics::ShapeType::Box:
+            {
+                bounds.m_boundsType = simulation_interfaces::msg::Bounds::TYPE_BOX;
+
+                auto boxConfig = azdynamic_cast<Physics::BoxShapeConfiguration*>(config);
+                bounds.m_points.emplace_back(colliderAbsoluteTransform.GetTranslation() + (boxConfig->m_dimensions / 2)); // upper Right
+                bounds.m_points.emplace_back(colliderAbsoluteTransform.GetTranslation() - (boxConfig->m_dimensions / 2)); // bottom left
+                return bounds;
+            }
+        case Physics::ShapeType::Sphere:
+            {
+                bounds.m_boundsType = simulation_interfaces::msg::Bounds::TYPE_SPHERE;
+                auto sphereConfig = azdynamic_cast<Physics::SphereShapeConfiguration*>(config);
+                bounds.m_points.emplace_back(colliderAbsoluteTransform.GetTranslation()); // sphere center
+                bounds.m_points.emplace_back(sphereConfig->m_radius, 0.f, 0.f); // radius and two ignored fields
+                return bounds;
+            }
+        // this type of collider is currently unsupported by the PhysX engine, but this implementation uses provided abstractions and is
+        // independent  from selected physic engine.
+        case Physics::ShapeType::ConvexHull:
+            {
+                bounds.m_boundsType = simulation_interfaces::msg::Bounds::TYPE_CONVEX_HULL;
+                AZStd::vector<AZ::Vector3> vertices;
+                AZStd::vector<AZ::u32> indices;
+                shape->GetGeometry(vertices, indices);
+                for (auto& vertex : vertices)
+                {
+                    bounds.m_points.emplace_back(colliderAbsoluteTransform.TransformPoint(vertex));
+                }
+                return bounds;
+            }
+        default:
+            {
+                return AZ::Failure(FailedResult(
+                    simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                    AZStd::string::format(
+                        "Passed shape type with id %d is not supported by simulation interfaces", static_cast<AZ::u8>(shapeType))));
+            }
+        }
     }
 } // namespace SimulationInterfaces

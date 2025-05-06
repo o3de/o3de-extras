@@ -7,7 +7,6 @@
  */
 
 #include "ROS2SimulationInterfacesSystemComponent.h"
-#include "Services/GetNamedPosesServiceHandler.h"
 
 #include <Actions/SimulateStepsActionServerHandler.h>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -23,6 +22,8 @@
 #include <Services/GetEntitiesServiceHandler.h>
 #include <Services/GetEntitiesStatesServiceHandler.h>
 #include <Services/GetEntityStateServiceHandler.h>
+#include <Services/GetNamedPoseBoundsServiceHandler.h>
+#include <Services/GetNamedPosesServiceHandler.h>
 #include <Services/GetSimulationStateServiceHandler.h>
 #include <Services/GetSimulatorFeaturesServiceHandler.h>
 #include <Services/GetSpawnablesServiceHandler.h>
@@ -88,6 +89,7 @@ namespace ROS2SimulationInterfaces
         RegisterInterface<GetSimulationStateServiceHandler>(ros2Node);
         RegisterInterface<StepSimulationServiceHandler>(ros2Node);
         RegisterInterface<GetNamedPosesServiceHandler>(ros2Node);
+        RegisterInterface<GetNamedPoseBoundsServiceHandler>(ros2Node);
     }
 
     void ROS2SimulationInterfacesSystemComponent::Deactivate()

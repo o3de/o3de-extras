@@ -7,14 +7,13 @@
  */
 
 #include "NamedPoseEditorComponent.h"
-#include "Components/NamedPoseComponent.h"
-#include "SimulationInterfaces/NamedPose.h"
+#include "NamedPoseComponent.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <LmbrCentral/Scripting/EditorTagComponentBus.h>
+#include <SimulationInterfaces/NamedPose.h>
 
 namespace SimulationInterfaces
 {
-
     void NamedPoseEditorComponent::Activate()
     {
         EditorComponentBase::Activate();
@@ -34,27 +33,24 @@ namespace SimulationInterfaces
     void NamedPoseEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
         // Create Game component
-        UpdateConfiguration();
-        gameEntity->CreateComponent<NamedPoseComponent>(m_config);
+        [[maybe_unused]] auto component = gameEntity->CreateComponent<NamedPoseComponent>(m_config);
+        AZ_Assert(component, "NamedPoseEditorComponent:: failed to create runtime component");
     }
 
     void NamedPoseEditorComponent::Reflect(AZ::ReflectContext* context)
     {
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            if (!context->IsTypeReflected(azrtti_typeid<NamedPose>()))
-            {
-                NamedPose::Reflect(context);
-            }
-            serialize->Class<NamedPoseEditorComponent, EditorComponentBase>()->Version(0)->Field(
+            serialize->Class<NamedPoseEditorComponent, AzToolsFramework::Components::EditorComponentBase>()->Version(0)->Field(
                 "NamedPoseConfig", &NamedPoseEditorComponent::m_config);
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<NamedPoseEditorComponent>("Named Pose Component", "Component used to define names pose in simulation")
+                ec->Class<NamedPoseEditorComponent>("NamedPoseEditorComponent", "Component used to define names pose in simulation")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "NamedPoseEditorComponent")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "Simulation Interfaces")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &NamedPoseEditorComponent::m_config, "Named Pose Config", "");
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &NamedPoseEditorComponent::m_config, "NamedPoseConfig", "")
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &NamedPoseEditorComponent::UpdateConfiguration);
             }
         }
     }
