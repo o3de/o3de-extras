@@ -14,7 +14,6 @@
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
-#include <VehicleDynamics/WheelControllerComponent.h>
 
 #include <sdf/Element.hh>
 #include <sdf/Joint.hh>

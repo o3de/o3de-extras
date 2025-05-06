@@ -14,10 +14,7 @@
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
-#include <ROS2/Utilities/Controllers/PidConfiguration.h>
-#include <VehicleDynamics/VehicleModelComponent.h>
-
-#include <Atom/RPI.Public/Pass/PassSystemInterface.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
@@ -28,7 +25,6 @@
 #include <AzCore/std/sort.h>
 #include <AzCore/std/string/string_view.h>
 #include <AzFramework/API/ApplicationAPI.h>
-#include <ROS2/Utilities/ROS2Conversions.h>
 
 namespace ROS2
 {
@@ -42,8 +38,6 @@ namespace ROS2
         QoS::Reflect(context);
         TopicConfiguration::Reflect(context);
         PublisherConfiguration::Reflect(context);
-        VehicleDynamics::VehicleModelComponent::Reflect(context);
-        ROS2::Controllers::PidConfiguration::Reflect(context);
 
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {

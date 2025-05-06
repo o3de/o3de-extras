@@ -6,12 +6,6 @@
 set(FILES
     ../Assets/Editor/Images/Icons/ROS2.qrc
     ../Assets/Editor/Images/Icons/ROS_import_icon.svg
-    Source/Manipulation/JointsPositionsEditorComponent.cpp
-    Source/Manipulation/JointsPositionsEditorComponent.h
-    Source/Manipulation/JointsManipulationEditorComponent.cpp
-    Source/Manipulation/JointsManipulationEditorComponent.h
-    Source/Manipulation/JointUtils.cpp
-    Source/Manipulation/JointUtils.h
     Source/RobotImporter/FixURDF/FixURDF.cpp
     Source/RobotImporter/FixURDF/FixURDF.h
     Source/RobotImporter/Pages/ModifiedURDFWindow.cpp

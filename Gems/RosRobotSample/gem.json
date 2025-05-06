@@ -21,7 +21,9 @@
     "requirements": "Requires ROS 2 Gem",
     "documentation_url": "",
     "dependencies": [
-        "ROS2>=3.1.0"
+        "ROS2>=3.1.0",
+        "ROS2Controllers>=1.0.0",
+        "ROS2Sensors>=1.0.0"
     ],
     "compatible_engines": [
         "o3de-sdk>=2.3.0",
