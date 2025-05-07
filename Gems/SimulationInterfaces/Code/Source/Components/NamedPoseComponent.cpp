@@ -7,8 +7,6 @@
  */
 
 #include "NamedPoseComponent.h"
-#include "SimulationInterfaces/NamedPose.h"
-#include "SimulationInterfaces/NamedPoseManagerRequestBus.h"
 
 namespace SimulationInterfaces
 {

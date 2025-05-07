@@ -8,18 +8,21 @@
 
 #pragma once
 
+#include <AzCore/Component/EntityBus.h>
 #include <AzCore/Component/EntityId.h>
-#include <AzCore/Component/TickBus.h>
 #include <AzCore/Component/TransformBus.h>
-#include <AzCore/std/containers/set.h>
-#include <AzCore/std/containers/unordered_map.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
+#include <LmbrCentral/Scripting/TagComponentBus.h>
 #include <SimulationInterfaces/NamedPose.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
 namespace SimulationInterfaces
 {
-    class NamedPoseEditorComponent : public AzToolsFramework::Components::EditorComponentBase
+    class NamedPoseEditorComponent
+        : public AzToolsFramework::Components::EditorComponentBase
+        , public LmbrCentral::TagComponentNotificationsBus::Handler
+        , public AZ::TransformNotificationBus::Handler
+        , public AZ::EntityBus::Handler
     {
     public:
         AZ_EDITOR_COMPONENT(NamedPoseEditorComponent, NamedPoseEditorComponentTypeId, AzToolsFramework::Components::EditorComponentBase);
@@ -35,7 +38,18 @@ namespace SimulationInterfaces
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 
     private:
+        // methods to update named pose configuration (name, pose and added tags. Native O3DE component and systems are used to define this
+        // data and it needs to be updated in case of change)
+
+        //  TagComponentNotificationsBus overrides
+        void OnTagAdded(const LmbrCentral::Tag&) override;
+        void OnTagRemoved(const LmbrCentral::Tag&) override;
+        // transform notification bus overrides
+        void OnTransformChanged(const AZ::Transform& local, const AZ::Transform& world) override;
+        // AZ::EntityBus overrides
+        void OnEntityNameChanged(const AZStd::string& name) override;
         void UpdateConfiguration();
+        
         NamedPose m_config;
     };
 } // namespace SimulationInterfaces
