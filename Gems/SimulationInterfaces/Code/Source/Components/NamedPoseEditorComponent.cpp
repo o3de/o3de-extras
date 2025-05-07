@@ -18,10 +18,16 @@ namespace SimulationInterfaces
     {
         EditorComponentBase::Activate();
         UpdateConfiguration();
+        LmbrCentral::TagComponentNotificationsBus::Handler::BusConnect(GetEntityId());
+        AZ::TransformNotificationBus::Handler::BusConnect(GetEntityId());
+        AZ::EntityBus::Handler::BusConnect(GetEntityId());
     }
 
     void NamedPoseEditorComponent::Deactivate()
     {
+        AZ::EntityBus::Handler::BusDisconnect();
+        AZ::TransformNotificationBus::Handler::BusDisconnect();
+        LmbrCentral::TagComponentNotificationsBus::Handler::BusDisconnect();
         EditorComponentBase::Deactivate();
     }
 
@@ -49,10 +55,30 @@ namespace SimulationInterfaces
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "NamedPoseEditorComponent")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "Simulation Interfaces")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &NamedPoseEditorComponent::m_config, "NamedPoseConfig", "")
-                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &NamedPoseEditorComponent::UpdateConfiguration);
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &NamedPoseEditorComponent::m_config, "NamedPoseConfig", "");
             }
         }
+    }
+
+    void NamedPoseEditorComponent::OnTagAdded(const LmbrCentral::Tag&)
+    {
+        LmbrCentral::EditorTagComponentRequestBus::EventResult(
+            m_config.m_tags, GetEntityId(), &LmbrCentral::EditorTagComponentRequests::GetTags);
+    }
+    void NamedPoseEditorComponent::OnTagRemoved(const LmbrCentral::Tag&)
+    {
+        LmbrCentral::EditorTagComponentRequestBus::EventResult(
+            m_config.m_tags, GetEntityId(), &LmbrCentral::EditorTagComponentRequests::GetTags);
+    }
+
+    void NamedPoseEditorComponent::OnTransformChanged(const AZ::Transform& local, const AZ::Transform& world)
+    {
+        m_config.m_pose = world;
+    }
+
+    void NamedPoseEditorComponent::OnEntityNameChanged(const AZStd::string& name)
+    {
+        m_config.m_name = name;
     }
 
     void NamedPoseEditorComponent::UpdateConfiguration()

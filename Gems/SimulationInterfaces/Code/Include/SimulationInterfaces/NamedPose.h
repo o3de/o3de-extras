@@ -21,7 +21,7 @@ namespace SimulationInterfaces
     //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/NamedPose.msg">NamedPose.msg</a>
     struct NamedPose
     {
-        AZ_TYPE_INFO(NamedPose, NamedPoseTypeId);
+        AZ_RTTI(NamedPose, NamedPoseTypeId);
         static void Reflect(AZ::ReflectContext* context)
         {
             if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
@@ -53,6 +53,7 @@ namespace SimulationInterfaces
             , m_pose(pose)
         {
         }
+        virtual ~NamedPose() = default;
         AZStd::string m_name;
         AZStd::string m_description;
         AZStd::vector<AZStd::string> m_tags;

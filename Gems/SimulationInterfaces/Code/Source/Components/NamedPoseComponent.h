@@ -8,14 +8,9 @@
 
 #pragma once
 
-#include "SimulationInterfaces/NamedPoseManagerRequestBus.h"
 #include <AzCore/Component/Component.h>
-#include <AzCore/Component/EntityId.h>
-#include <AzCore/Component/TickBus.h>
-#include <AzCore/Component/TransformBus.h>
-#include <AzCore/std/containers/set.h>
-#include <AzCore/std/containers/unordered_map.h>
 #include <SimulationInterfaces/NamedPose.h>
+#include <SimulationInterfaces/NamedPoseManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
 namespace SimulationInterfaces
@@ -25,7 +20,7 @@ namespace SimulationInterfaces
         , public NamedPoseComponentRequestBus::Handler
     {
     public:
-        AZ_COMPONENT(NamedPoseComponent, NamedPoseComponentTypeId, AZ::Component);
+        AZ_COMPONENT(NamedPoseComponent, NamedPoseComponentTypeId);
         NamedPoseComponent() = default;
         NamedPoseComponent(const NamedPose& config);
         ~NamedPoseComponent() override = default;

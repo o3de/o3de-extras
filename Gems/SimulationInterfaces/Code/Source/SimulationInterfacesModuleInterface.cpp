@@ -34,8 +34,8 @@ namespace SimulationInterfaces
                 SimulationManager::CreateDescriptor(),
                 SimulationFeaturesAggregator::CreateDescriptor(),
                 NamedPoseManager::CreateDescriptor(),
-                NamedPoseComponent::CreateDescriptor(),
                 ROS2SimulationInterfaces::ROS2SimulationInterfacesSystemComponent::CreateDescriptor(),
+                NamedPoseComponent::CreateDescriptor(),
             });
     }
 
