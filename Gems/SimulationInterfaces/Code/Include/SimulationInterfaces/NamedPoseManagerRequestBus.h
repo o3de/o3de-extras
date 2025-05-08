@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "AzCore/Component/EntityId.h"
-#include "AzCore/Outcome/Outcome.h"
 #include "SimulationInterfacesTypeIds.h"
+#include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Transform.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/string/string.h>
 
@@ -32,9 +32,6 @@ namespace SimulationInterfaces
     public:
         AZ_RTTI(NamedPoseManagerRequests, NamedPoseManagerRequestsTypeId);
         virtual ~NamedPoseManagerRequests() = default;
-
-        //! Create named pose with given parameters, creates new entity with the named pose component
-        virtual AZ::Outcome<void, FailedResult> CreateNamedPose(NamedPose namedPose) = 0;
 
         //! Register named pose with given id.
         virtual AZ::Outcome<void, FailedResult> RegisterNamedPose(AZ::EntityId namedPoseEntityId) = 0;

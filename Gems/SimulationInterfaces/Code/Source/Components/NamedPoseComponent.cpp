@@ -18,7 +18,6 @@ namespace SimulationInterfaces
 
     void NamedPoseComponent::Activate()
     {
-        AZ_Info("DEbug", "named pose activate");
         NamedPoseComponentRequestBus::Handler::BusConnect(GetEntityId());
         NamedPoseManagerRequestBus::Broadcast(&NamedPoseManagerRequests::RegisterNamedPose, GetEntityId());
     }
