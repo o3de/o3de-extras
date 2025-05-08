@@ -14,9 +14,9 @@
 namespace ROS2Sensors
 {
     //! Enum bitwise flags used to describe LidarSystem's feature support.
+    // clang-format off
     enum LidarSystemFeatures : uint16_t
     {
-        // clang-format off
         None =                  0,
         Noise =                 1,
         CollisionLayers =       1 << 1,
@@ -26,8 +26,8 @@ namespace ROS2Sensors
         Intensity =             1 << 5,
         Segmentation =          1 << 6,
         All =                   (1 << 7) - 1, // All feature bits enabled.
-                            // clang-format on
     };
+    // clang-format on
 
     //! Structure used to hold LidarSystem's metadata.
     struct LidarSystemMetaData
