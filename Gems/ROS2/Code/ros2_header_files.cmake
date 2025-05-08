@@ -16,8 +16,6 @@ set(FILES
         Include/ROS2/Frame/ROS2FrameComponent.h
         Include/ROS2/Frame/ROS2FrameConfiguration.h
         Include/ROS2/Frame/ROS2Transform.h
-        Include/ROS2/RobotImporter/SDFormatModelPluginImporterHook.h
-        Include/ROS2/RobotImporter/SDFormatSensorImporterHook.h
         Include/ROS2/ROS2Bus.h
         Include/ROS2/ROS2GemUtilities.h
         Include/ROS2/Sensor/Events/EventSourceAdapter.h

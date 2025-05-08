@@ -121,7 +121,6 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         INCLUDE_DIRECTORIES
             PRIVATE
                 Source
-                Source/RobotImporter
             PUBLIC
                 Include
         COMPILE_DEFINITIONS
@@ -134,9 +133,6 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::LmbrCentral.API
                 Gem::PhysX5.Editor.Static
                 Gem::${gem_name}.Static
-            PRIVATE
-                AZ::AssetBuilderSDK
-                3rdParty::sdformat
     )
 
     ly_add_target(
@@ -244,7 +240,6 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                         AZ::AzTestShared
                         AZ::AzToolsFramework
                         Gem::${gem_name}.Editor.Static
-                        3rdParty::sdformat
             )
 
             # Add ROS2.Editor.Tests to googletest

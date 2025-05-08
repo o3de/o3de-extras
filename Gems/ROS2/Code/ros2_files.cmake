@@ -20,8 +20,6 @@ set(FILES
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2FrameConfiguration.cpp
         Source/Frame/ROS2Transform.cpp
-        Source/RobotImporter/ROS2RobotImporterSystemComponent.cpp
-        Source/RobotImporter/ROS2RobotImporterSystemComponent.h
         Source/ROS2ModuleInterface.h
         Source/Sensor/Events/PhysicsBasedSource.cpp
         Source/Sensor/Events/TickBasedSource.cpp

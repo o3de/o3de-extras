@@ -8,20 +8,11 @@
 
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <Frame/ROS2FrameSystemComponent.h>
-#include <QtCore/qglobal.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2ModuleInterface.h>
-#include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
-#include <SdfAssetBuilder/SdfAssetBuilderSystemComponent.h>
 #include <Spawner/ROS2SpawnPointEditorComponent.h>
 #include <Spawner/ROS2SpawnerEditorComponent.h>
 #include <SystemComponents/ROS2EditorSystemComponent.h>
-
-void InitROS2Resources()
-{
-    // Registration of Qt (ROS2.qrc) resources
-    Q_INIT_RESOURCE(ROS2);
-}
 
 namespace ROS2
 {
@@ -33,15 +24,11 @@ namespace ROS2
 
         ROS2EditorModule()
         {
-            InitROS2Resources();
-
             m_descriptors.insert(
                 m_descriptors.end(),
                 { ROS2EditorSystemComponent::CreateDescriptor(),
-                  ROS2RobotImporterEditorSystemComponent::CreateDescriptor(),
                   ROS2SpawnerEditorComponent::CreateDescriptor(),
                   ROS2SpawnPointEditorComponent::CreateDescriptor(),
-                  SdfAssetBuilderSystemComponent::CreateDescriptor(),
                   ROS2FrameSystemComponent::CreateDescriptor(),
                   ROS2FrameEditorComponent::CreateDescriptor() });
         }
@@ -50,8 +37,6 @@ namespace ROS2
         {
             return AZ::ComponentTypeList{
                 azrtti_typeid<ROS2EditorSystemComponent>(),
-                azrtti_typeid<ROS2RobotImporterEditorSystemComponent>(),
-                azrtti_typeid<SdfAssetBuilderSystemComponent>(),
                 azrtti_typeid<ROS2FrameSystemComponent>(),
             };
         }
