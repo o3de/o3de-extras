@@ -125,49 +125,6 @@ namespace SimulationInterfaces
         NamedPoseManagerRequestBus::Handler::BusDisconnect();
     }
 
-    AZ::Outcome<void, FailedResult> NamedPoseManager::CreateNamedPose(NamedPose namedPose)
-    {
-        AZ::Entity* entityForNamedPose = nullptr;
-        AzFramework::EntityContextId entityContextId;
-        AzFramework::GameEntityContextRequestBus::BroadcastResult(
-            entityContextId, &AzFramework::GameEntityContextRequestBus::Events::GetGameEntityContextId);
-        AzFramework::EntityContextRequestBus::EventResult(
-            entityForNamedPose, entityContextId, &AzFramework::EntityContextRequestBus::Events::CreateEntity, namedPose.m_name.c_str());
-        if (!entityForNamedPose)
-        {
-            return AZ::Failure(
-                FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Failed to create named pose entity"));
-        }
-        // add transform component
-
-        auto transformComponent = entityForNamedPose->CreateComponent<AzFramework::TransformComponent>();
-        if (!transformComponent)
-        {
-            return AZ::Failure(
-                FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Failed to create transform component"));
-        }
-        // assign valid pose
-        transformComponent->SetWorldTM(namedPose.m_pose);
-        // add tag component
-        auto tagComponent = entityForNamedPose->CreateComponent(AZ::Uuid("{0F16A377-EAA0-47D2-8472-9EAAA680B169}")); // Tag component uuid
-        if (!tagComponent)
-        {
-            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Failed to create tag component"));
-        }
-        AZ::EntityId namedPoseEntityId = entityForNamedPose->GetId();
-        entityForNamedPose->Init();
-        entityForNamedPose->Activate();
-
-        // add tags to entity
-        for (auto& tag : namedPose.m_tags)
-        {
-            LmbrCentral::TagComponentRequestBus::Event(
-                namedPoseEntityId, &LmbrCentral::TagComponentRequestBus::Events::AddTag, LmbrCentral::Tag(tag));
-        }
-
-        return AZ::Success();
-    }
-
     AZ::Outcome<void, FailedResult> NamedPoseManager::RegisterNamedPose(AZ::EntityId namedPoseEntityId)
     {
         // check if given entity has named pose component
