@@ -146,12 +146,12 @@ namespace ROS2RobotImporter::SDFormat
             return AZ::Vector3();
         }
 
-        Controllers::PidConfiguration GetModelPidConfiguration(const sdf::ElementPtr element)
+        PidConfiguration GetModelPidConfiguration(const sdf::ElementPtr element)
         {
             auto pid = element->Get<gz::math::Vector3d>("linear_velocity_pid_gain", gz::math::Vector3d::Zero).first;
             auto iRange = element->Get<gz::math::Vector2d>("linear_velocity_i_range", gz::math::Vector2d::Zero).first;
 
-            Controllers::PidConfiguration config(pid.X(), pid.Y(), pid.Z(), iRange.Y(), iRange.X(), false, 0.0);
+            PidConfiguration config(pid.X(), pid.Y(), pid.Z(), iRange.Y(), iRange.X(), false, 0.0);
             return config;
         }
 
@@ -297,7 +297,7 @@ namespace ROS2RobotImporter::SDFormat
             VehicleDynamics::VehicleConfiguration vehicleConfiguration =
                 AckermannParser::GetConfiguration(element, sdfModel, createdEntities);
             VehicleDynamics::AckermannModelLimits modelLimits = AckermannParser::GetModelLimits(element);
-            Controllers::PidConfiguration steeringPid = AckermannParser::GetModelPidConfiguration(element);
+            PidConfiguration steeringPid = AckermannParser::GetModelPidConfiguration(element);
             ControlConfiguration controlConfiguration;
             controlConfiguration.m_steering = ControlConfiguration::Steering::Ackermann;
 

@@ -49,7 +49,7 @@ namespace ROS2Controllers
             "PID not defined for joint %s, using a default, the behavior is likely to be wrong for this joint",
             jointName.c_str());
 
-        Controllers::PidConfiguration defaultConfiguration;
+        PidConfiguration defaultConfiguration;
         defaultConfiguration.InitializePid();
         auto applicablePidConfiguration = jointPIDdefined ? m_pidConfiguration.at(jointName) : defaultConfiguration;
 

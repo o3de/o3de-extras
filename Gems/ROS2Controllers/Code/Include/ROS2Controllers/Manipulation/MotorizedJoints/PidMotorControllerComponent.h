@@ -37,7 +37,7 @@ namespace ROS2Controllers
         float GetError() override;
 
     private:
-        Controllers::PidConfiguration m_pidPos; //!< PID controller for position.
+        PidConfiguration m_pidPos; //!< PID controller for position.
         float m_zeroOffset{ 0.0f }; //!< Offset added to setpoint.
         float m_setPoint{ 0.0f }; //!< Desired local position.
         float m_error{ 0.0f }; //!< Current error (difference between control value and measurement).

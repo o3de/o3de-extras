@@ -12,7 +12,7 @@
 
 namespace ROS2RobotImporter::SDFormat
 {
-    namespace ROS2RobotImporterSensorHooks
+    namespace ROS2SensorHooks
     {
         // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
 
@@ -28,5 +28,5 @@ namespace ROS2RobotImporter::SDFormat
 
         // //! Retrieve a sensor importer hook which is used to map SDFormat sensor of type lidar into O3DE ROS2LidarSensorComponent
         // SensorImporterHook ROS2LidarSensor();
-    } // namespace ROS2RobotImporterSensorHooks
+    } // namespace ROS2SensorHooks
 } // namespace ROS2RobotImporter::SDFormat

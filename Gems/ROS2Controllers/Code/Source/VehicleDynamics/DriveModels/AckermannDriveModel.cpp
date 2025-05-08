@@ -43,7 +43,7 @@ namespace ROS2Controllers::VehicleDynamics
         }
     }
 
-    AckermannDriveModel::AckermannDriveModel(const AckermannModelLimits& limits, const Controllers::PidConfiguration& steeringPid)
+    AckermannDriveModel::AckermannDriveModel(const AckermannModelLimits& limits, const PidConfiguration& steeringPid)
         : m_limits(limits)
         , m_steeringPid(steeringPid)
     {

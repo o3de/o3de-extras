@@ -9,7 +9,7 @@
 
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace ROS2Controllers::Controllers
+namespace ROS2Controllers
 {
     //! A PID controller.
     //! Based on a ROS 2 control_toolbox implementation.
@@ -59,4 +59,4 @@ namespace ROS2Controllers::Controllers
         double m_previousError = 0.0; //!< previous recorded error.
         double m_integral = 0.0; //!< integral accumulator.
     };
-} // namespace ROS2Controllers::Controllers
+} // namespace ROS2Controllers

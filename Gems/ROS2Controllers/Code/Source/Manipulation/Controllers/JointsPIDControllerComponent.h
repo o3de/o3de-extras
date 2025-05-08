@@ -56,6 +56,6 @@ namespace ROS2Controllers
         void Deactivate() override;
         void InitializePIDs();
 
-        AZStd::unordered_map<AZStd::string, Controllers::PidConfiguration> m_pidConfiguration;
+        AZStd::unordered_map<AZStd::string, PidConfiguration> m_pidConfiguration;
     };
 } // namespace ROS2Controllers

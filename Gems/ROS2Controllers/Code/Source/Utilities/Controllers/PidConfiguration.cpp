@@ -12,7 +12,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2Controllers/Controllers/PidConfiguration.h>
 
-namespace ROS2Controllers::Controllers
+namespace ROS2Controllers
 {
     void PidConfiguration::Reflect(AZ::ReflectContext* context)
     {
@@ -127,4 +127,4 @@ namespace ROS2Controllers::Controllers
         }
         return output;
     }
-} // namespace ROS2Controllers::Controllers
+} // namespace ROS2Controllers
