@@ -8,13 +8,12 @@
 
 #pragma once
 
-#include "AzCore/Component/EntityId.h"
-#include "AzCore/std/containers/unordered_map.h"
-#include "AzCore/std/containers/unordered_set.h"
-#include "AzCore/std/string/string.h"
 #include <AzCore/Component/Component.h>
+#include <AzCore/Component/EntityId.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Script/ScriptTimePoint.h>
+#include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/string/string.h>
 #include <AzFramework/Entity/EntityContextBus.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
@@ -44,8 +43,8 @@ namespace SimulationInterfaces
 
     private:
         // NamedPoseManagerRequestBus overrides
-        AZ::Outcome<void, FailedResult> RegisterNamedPose(AZ::EntityId namedPoseEntityId) override;
-        AZ::Outcome<void, FailedResult> UnregisterNamedPose(AZ::EntityId namedPoseEntityId) override;
+        AZ::Outcome<void, FailedResult> RegisterNamedPose(AZ::EntityId& namedPoseEntityId) override;
+        AZ::Outcome<void, FailedResult> UnregisterNamedPose(AZ::EntityId& namedPoseEntityId) override;
         AZ::Outcome<NamedPoseList, FailedResult> GetNamedPoses(const TagFilter& tags) override;
         AZ::Outcome<Bounds, FailedResult> GetNamedPoseBounds(const AZStd::string& name) override;
 

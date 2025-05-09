@@ -41,15 +41,15 @@ namespace SimulationInterfaces
         // methods to update named pose configuration (name, pose and added tags. Native O3DE component and systems are used to define this
         // data and it needs to be updated in case of change)
 
-        //  TagComponentNotificationsBus overrides
+        //  LmbrCentral::TagComponentNotificationsBus overrides
         void OnTagAdded(const LmbrCentral::Tag&) override;
         void OnTagRemoved(const LmbrCentral::Tag&) override;
-        // transform notification bus overrides
+        // AZ::TransformNotificationBus overrides
         void OnTransformChanged(const AZ::Transform& local, const AZ::Transform& world) override;
         // AZ::EntityBus overrides
         void OnEntityNameChanged(const AZStd::string& name) override;
         void UpdateConfiguration();
-        
+
         NamedPose m_config;
     };
 } // namespace SimulationInterfaces

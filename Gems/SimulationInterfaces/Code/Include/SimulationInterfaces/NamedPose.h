@@ -41,6 +41,7 @@ namespace SimulationInterfaces
                 }
             }
         }
+
         NamedPose() = default;
         NamedPose(
             const AZStd::string& name,
@@ -54,6 +55,7 @@ namespace SimulationInterfaces
         {
         }
         virtual ~NamedPose() = default;
+
         AZStd::string m_name;
         AZStd::string m_description;
         AZStd::vector<AZStd::string> m_tags;

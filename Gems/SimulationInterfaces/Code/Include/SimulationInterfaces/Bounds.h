@@ -7,6 +7,7 @@
  */
 
 #pragma once
+
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/vector.h>

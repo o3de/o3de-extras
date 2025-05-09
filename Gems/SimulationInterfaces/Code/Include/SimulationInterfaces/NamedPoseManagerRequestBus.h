@@ -34,10 +34,10 @@ namespace SimulationInterfaces
         virtual ~NamedPoseManagerRequests() = default;
 
         //! Register named pose with given id.
-        virtual AZ::Outcome<void, FailedResult> RegisterNamedPose(AZ::EntityId namedPoseEntityId) = 0;
+        virtual AZ::Outcome<void, FailedResult> RegisterNamedPose(AZ::EntityId& namedPoseEntityId) = 0;
 
         //! Unregister named pose with given id.
-        virtual AZ::Outcome<void, FailedResult> UnregisterNamedPose(AZ::EntityId namedPoseEntityId) = 0;
+        virtual AZ::Outcome<void, FailedResult> UnregisterNamedPose(AZ::EntityId& namedPoseEntityId) = 0;
 
         //! Get named poses matching given TagFiler
         //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/TagsFilter.msg

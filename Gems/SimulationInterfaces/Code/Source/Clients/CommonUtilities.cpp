@@ -7,10 +7,10 @@
  */
 
 #include "CommonUtilities.h"
-#include "AzCore/std/containers/vector.h"
-#include "AzCore/std/string/string.h"
 #include "Components/NamedPoseComponent.h"
 #include "SimulationInterfaces/NamedPoseManagerRequestBus.h"
+#include <AzCore/std/containers/vector.h>
+#include <AzCore/std/string/string.h>
 #include <simulation_interfaces/msg/tags_filter.hpp>
 
 namespace SimulationInterfaces::Utils
@@ -45,7 +45,7 @@ namespace SimulationInterfaces::Utils
         for (auto& tag : tagFilter.m_tags)
         {
             bool tagExistInEntity = AZStd::find(entityTags.begin(), entityTags.end(), tag) != entityTags.end();
-            // if all tags needs to match but entity doesn't have requested one, return with false
+            // if all tags need to match but entity doesn't have requested one, return with false
             if (matchAllTags && !tagExistInEntity)
             {
                 return false;
