@@ -18,13 +18,15 @@ namespace SimulationInterfaces
 
     void NamedPoseComponent::Activate()
     {
-        NamedPoseComponentRequestBus::Handler::BusConnect(GetEntityId());
-        NamedPoseManagerRequestBus::Broadcast(&NamedPoseManagerRequests::RegisterNamedPose, GetEntityId());
+        auto entityId = GetEntityId();
+        NamedPoseComponentRequestBus::Handler::BusConnect(entityId);
+        NamedPoseManagerRequestBus::Broadcast(&NamedPoseManagerRequests::RegisterNamedPose, entityId);
     }
 
     void NamedPoseComponent::Deactivate()
     {
-        NamedPoseManagerRequestBus::Broadcast(&NamedPoseManagerRequests::UnregisterNamedPose, GetEntityId());
+        auto entityId = GetEntityId();
+        NamedPoseManagerRequestBus::Broadcast(&NamedPoseManagerRequests::UnregisterNamedPose, entityId);
         NamedPoseComponentRequestBus::Handler::BusDisconnect();
     }
 
