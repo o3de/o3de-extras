@@ -9,6 +9,12 @@
 set(SUPERLUMINAL_API_PATH "C:/Program Files/Superluminal/Performance/API" CACHE PATH "Path to the Superluminal 3rd party profiler API folder.")
 list(APPEND CMAKE_MODULE_PATH ${SUPERLUMINAL_API_PATH})
 
+if (NOT EXISTS ${SUPERLUMINAL_API_PATH})
+    message(FATAL_ERROR "Superluminal profiler not found. Either update SUPERLUMINAL_API_PATH cmake variable or download Superluminal from https://superluminal.eu/")
+else()
+    message(STATUS "SuperluminalProfiler Gem uses ${SUPERLUMINAL_API_PATH} (License: Commercial)")
+endif()
+
 find_package(SuperluminalAPI REQUIRED)
 
 ly_add_target(
