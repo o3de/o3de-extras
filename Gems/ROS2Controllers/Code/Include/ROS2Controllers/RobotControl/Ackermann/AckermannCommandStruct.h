@@ -9,7 +9,7 @@
 
 #include <AzCore/RTTI/TypeInfo.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Abstracted from ROS message: http://docs.ros.org/en/api/ackermann_msgs/html/msg/AckermannDrive.html
     struct AckermannCommandStruct
@@ -21,4 +21,4 @@ namespace ROS2
         float m_acceleration = 0; //!< desired acceleration (m/s^2)
         float m_jerk = 0; //!< desired jerk (m/s^3)
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

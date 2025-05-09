@@ -12,7 +12,7 @@
 #include <AzCore/Outcome/Outcome.h>
 #include <control_msgs/action/follow_joint_trajectory.hpp>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     // clang-format off
     //! Interface for commanding a system of joints such as robotic arm (manipulator) through FollowJointTrajectory actions.
@@ -55,4 +55,4 @@ namespace ROS2
     };
 
     using JointsTrajectoryRequestBus = AZ::EBus<JointsTrajectoryRequests>;
-} // namespace ROS2
+} // namespace ROS2Controllers

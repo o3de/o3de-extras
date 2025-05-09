@@ -9,7 +9,7 @@
 #include "JointUtilities.h"
 #include <ROS2/Frame/ROS2FrameComponent.h>
 
-namespace ROS2::Utils
+namespace ROS2Controllers::Utils
 {
     AZStd::string GetJointName(AZ::EntityId entityId)
     {
@@ -18,7 +18,7 @@ namespace ROS2::Utils
         AZ_Assert(entity, "Entity %s not found.", entityId.ToString().c_str());
         if (entity)
         {
-            ROS2FrameComponent* component = entity->FindComponent<ROS2FrameComponent>();
+            ROS2::ROS2FrameComponent* component = entity->FindComponent<ROS2::ROS2FrameComponent>();
             if (component)
             {
                 return component->GetJointName().GetStringView();
@@ -26,4 +26,4 @@ namespace ROS2::Utils
         }
         return AZStd::string();
     }
-} // namespace ROS2::Utils
+} // namespace ROS2Controllers::Utils

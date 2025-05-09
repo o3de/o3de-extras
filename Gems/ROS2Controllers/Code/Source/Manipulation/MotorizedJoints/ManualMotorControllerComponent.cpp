@@ -9,7 +9,7 @@
 #include <ROS2Controllers/Manipulation/MotorizedJoints/ManualMotorControllerComponent.h>
 #include <imgui/imgui.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     ManualMotorControllerComponent::ManualMotorControllerComponent()
     {
@@ -51,4 +51,4 @@ namespace ROS2
             m_setSpeed = 0.0f;
         }
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

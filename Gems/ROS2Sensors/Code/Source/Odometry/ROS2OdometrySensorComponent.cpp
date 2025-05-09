@@ -13,7 +13,7 @@
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace
     {
@@ -41,7 +41,7 @@ namespace ROS2
     ROS2OdometrySensorComponent::ROS2OdometrySensorComponent()
         : m_initialTransform(AZ::Transform::CreateIdentity())
     {
-        TopicConfiguration tc;
+        ROS2::TopicConfiguration tc;
         const AZStd::string type = OdometryMsgType;
         tc.m_type = type;
         tc.m_topic = "odom";
@@ -91,26 +91,26 @@ namespace ROS2
         const auto localAngular = transform.TransformVector(rigidbodyPtr->GetAngularVelocity());
         const auto localLinear = transform.TransformVector(rigidbodyPtr->GetLinearVelocity());
 
-        m_odometryMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
-        m_odometryMsg.twist.twist.linear = ROS2Conversions::ToROS2Vector3(localLinear);
-        m_odometryMsg.twist.twist.angular = ROS2Conversions::ToROS2Vector3(localAngular);
+        m_odometryMsg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+        m_odometryMsg.twist.twist.linear = ROS2::ROS2Conversions::ToROS2Vector3(localLinear);
+        m_odometryMsg.twist.twist.angular = ROS2::ROS2Conversions::ToROS2Vector3(localAngular);
 
         const auto odometry = m_initialTransform.GetInverse() * rigidbodyPtr->GetTransform();
 
-        m_odometryMsg.pose.pose = ROS2Conversions::ToROS2Pose(odometry);
+        m_odometryMsg.pose.pose = ROS2::ROS2Conversions::ToROS2Pose(odometry);
         m_odometryPublisher->publish(m_odometryMsg);
     }
     void ROS2OdometrySensorComponent::Activate()
     {
         ROS2SensorComponentBase::Activate();
         // "odom" is globally fixed frame for all robots, no matter the namespace
-        m_odometryMsg.header.frame_id = ROS2Names::GetNamespacedName(GetNamespace(), "odom").c_str();
+        m_odometryMsg.header.frame_id = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), "odom").c_str();
         m_odometryMsg.child_frame_id = GetFrameID().c_str();
-        auto ros2Node = ROS2Interface::Get()->GetNode();
+        auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor");
 
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[OdometryMsgType];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+        const auto fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
 
         StartSensor(
@@ -131,4 +131,4 @@ namespace ROS2
         m_odometryPublisher.reset();
         ROS2SensorComponentBase::Deactivate();
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

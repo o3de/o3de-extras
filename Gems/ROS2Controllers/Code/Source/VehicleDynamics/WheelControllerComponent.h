@@ -12,7 +12,7 @@
 #include <AzCore/Math/Vector3.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     //! A component responsible for control (steering, forward motion) of a single wheel
     class WheelControllerComponent : public AZ::Component
@@ -42,4 +42,4 @@ namespace ROS2::VehicleDynamics
     private:
         AzPhysics::RigidBody* m_rigidBodyPtr{ nullptr };
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

@@ -20,7 +20,7 @@
 #include <sdf/Model.hh>
 #include <sdf/Plugin.hh>
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     namespace SkidSteeringParser
     {
@@ -193,13 +193,13 @@ namespace ROS2::SDFormat
             VehicleDynamics::SkidSteeringModelLimits modelLimits = SkidSteeringParser::CreateModelLimits(element);
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
-            HooksUtils::CreateComponent<ROS2RobotControlComponent>(entity);
-            HooksUtils::CreateComponent<VehicleDynamics::SkidSteeringModelComponent>(
+            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity);
+            HooksUtils::CreateComponent<ROS2Controllers::ROS2RobotControlComponent>(entity);
+            HooksUtils::CreateComponent<ROS2Controllers::VehicleDynamics::SkidSteeringModelComponent>(
                 entity, vehicleConfiguration, VehicleDynamics::SkidSteeringDriveModel(modelLimits));
 
             // Create Skid Steering Control Component
-            if (HooksUtils::CreateComponent<SkidSteeringControlComponent>(entity))
+            if (HooksUtils::CreateComponent<ROS2Controllers::SkidSteeringControlComponent>(entity))
             {
                 return AZ::Success();
             }
@@ -211,4 +211,4 @@ namespace ROS2::SDFormat
 
         return importerHook;
     }
-} // namespace ROS2::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

@@ -16,7 +16,7 @@
 #include <QSettings>
 #include <QVBoxLayout>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     static constexpr const char FileSelectionPageDefaultFile[] = "RobotImporter/SelectFileDefaultFile";
 
@@ -134,4 +134,4 @@ namespace ROS2
     {
         return *m_sdfAssetBuilderSettings;
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

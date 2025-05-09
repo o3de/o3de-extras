@@ -19,13 +19,13 @@
 #include "LidarCore.h"
 #include "LidarRaycaster.h"
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Lidar 2D sensor Component.
     //! Lidars (Light Detection and Ranging) emit laser light and measure it after reflection.
     //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation
     //! and data publishing. It requires ROS2FrameComponent.
-    class ROS2Lidar2DSensorComponent : public ROS2SensorComponentBase<TickBasedSource>
+    class ROS2Lidar2DSensorComponent : public ROS2SensorComponentBase<ROS2::TickBasedSource>
     {
     public:
         AZ_COMPONENT(ROS2Lidar2DSensorComponent, ROS2Sensors::ROS2Lidar2DSensorComponentTypeId, SensorBaseType);
@@ -50,4 +50,4 @@ namespace ROS2
 
         LidarCore m_lidarCore;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

@@ -11,7 +11,7 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     void ROS2RobotImporterSystemComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -40,4 +40,4 @@ namespace ROS2
     {
         incompatible.push_back(AZ_CRC_CE("RobotImporterService"));
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

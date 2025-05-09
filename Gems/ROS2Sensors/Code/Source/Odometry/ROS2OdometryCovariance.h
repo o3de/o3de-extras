@@ -13,7 +13,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <array>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     struct ROS2OdometryCovariance
     {
@@ -26,4 +26,4 @@ namespace ROS2
         AZ::Vector3 m_linearCovariance = AZ::Vector3::CreateZero();
         AZ::Vector3 m_angularCovariance = AZ::Vector3::CreateZero();
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

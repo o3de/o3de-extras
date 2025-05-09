@@ -45,20 +45,20 @@ namespace ROS2Sensors
             m_descriptors.end(),
             {
                 ROS2SensorsSystemComponent::CreateDescriptor(),
-                ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>::CreateDescriptor(),
-                ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::CreateDescriptor(),
-                ROS2::ROS2CameraSensorComponent::CreateDescriptor(),
-                ROS2::ROS2SystemCameraComponent::CreateDescriptor(),
-                ROS2::ROS2ImageEncodingConversionComponent::CreateDescriptor(),
-                ROS2::ROS2ContactSensorComponent::CreateDescriptor(),
-                ROS2::ROS2GNSSSensorComponent::CreateDescriptor(),
-                ROS2::ROS2ImuSensorComponent::CreateDescriptor(),
-                ROS2::ROS2LidarSensorComponent::CreateDescriptor(),
-                ROS2::ROS2Lidar2DSensorComponent::CreateDescriptor(),
-                ROS2::ClassSegmentationConfigurationComponent::CreateDescriptor(),
-                ROS2::LidarRegistrarSystemComponent::CreateDescriptor(),
-                ROS2::ROS2OdometrySensorComponent::CreateDescriptor(),
-                ROS2::ROS2WheelOdometryComponent::CreateDescriptor(),
+                ROS2SensorComponentBase<ROS2::TickBasedSource>::CreateDescriptor(),
+                ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::CreateDescriptor(),
+                ROS2CameraSensorComponent::CreateDescriptor(),
+                ROS2SystemCameraComponent::CreateDescriptor(),
+                ROS2ImageEncodingConversionComponent::CreateDescriptor(),
+                ROS2ContactSensorComponent::CreateDescriptor(),
+                ROS2GNSSSensorComponent::CreateDescriptor(),
+                ROS2ImuSensorComponent::CreateDescriptor(),
+                ROS2LidarSensorComponent::CreateDescriptor(),
+                ROS2Lidar2DSensorComponent::CreateDescriptor(),
+                ClassSegmentationConfigurationComponent::CreateDescriptor(),
+                LidarRegistrarSystemComponent::CreateDescriptor(),
+                ROS2OdometrySensorComponent::CreateDescriptor(),
+                ROS2WheelOdometryComponent::CreateDescriptor(),
             });
     }
 
@@ -66,8 +66,8 @@ namespace ROS2Sensors
     {
         return AZ::ComponentTypeList{
             azrtti_typeid<ROS2SensorsSystemComponent>(),
-            azrtti_typeid<ROS2::ROS2SystemCameraComponent>(),
-            azrtti_typeid<ROS2::LidarRegistrarSystemComponent>(),
+            azrtti_typeid<ROS2SystemCameraComponent>(),
+            azrtti_typeid<LidarRegistrarSystemComponent>(),
         };
     }
 } // namespace ROS2Sensors

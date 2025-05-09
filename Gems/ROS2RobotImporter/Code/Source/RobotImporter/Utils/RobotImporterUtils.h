@@ -21,15 +21,15 @@
 
 #include <sdf/sdf.hh>
 
-namespace ROS2::Utils
+namespace ROS2RobotImporter::Utils
 {
     inline namespace Internal
     {
         bool FileExistsCall(const AZ::IO::PathView& filePath);
     } // namespace Internal
-} // namespace ROS2::Utils
+} // namespace ROS2RobotImporter::Utils
 
-namespace ROS2::Utils
+namespace ROS2RobotImporter::Utils
 {
     //! Determine whether a given link is likely a wheel link.
     //! This can be useful to provide a good default behavior - for example, to add Vehicle Dynamics components to this link's entity.
@@ -217,9 +217,9 @@ namespace ROS2::Utils
 
     using AmentPrefixString = AZStd::fixed_string<32768>;
     AmentPrefixString GetAmentPrefixPath();
-} // namespace ROS2::Utils
+} // namespace ROS2RobotImporter::Utils
 
-namespace ROS2::Utils::SDFormat
+namespace ROS2RobotImporter::Utils::SDFormat
 {
     //! Retrieve plugin's filename. The filepath is converted into the filename if necessary.
     //! @param plugin plugin in the parsed SDFormat data
@@ -251,4 +251,4 @@ namespace ROS2::Utils::SDFormat
     //! @return The output parser config to use with sdformat.
     sdf::ParserConfig CreateSdfParserConfigFromSettings(const SdfAssetBuilderSettings& settings, const AZ::IO::PathView& baseFilePath);
 
-} // namespace ROS2::Utils::SDFormat
+} // namespace ROS2RobotImporter::Utils::SDFormat

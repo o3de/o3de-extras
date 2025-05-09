@@ -8,7 +8,7 @@
 #include <ROS2Sensors/Lidar/ClassSegmentationBus.h>
 #include <ROS2Sensors/Lidar/SegmentationUtils.h>
 
-namespace ROS2::SegmentationUtils
+namespace ROS2Sensors::SegmentationUtils
 {
     uint8_t FetchClassIdForEntity(AZ::EntityId entityId)
     {
@@ -55,4 +55,4 @@ namespace ROS2::SegmentationUtils
 
         return classId.value_or(UnknownClassId);
     }
-} // namespace ROS2::SegmentationUtils
+} // namespace ROS2Sensors::SegmentationUtils

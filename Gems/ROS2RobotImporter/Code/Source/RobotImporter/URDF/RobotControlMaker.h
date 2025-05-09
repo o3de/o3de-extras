@@ -16,7 +16,7 @@
 
 #include <sdf/sdf.hh>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     //! Populates a given entity with all the contents related to robot control.
     //! It is used to create ROS2RobotControlComponent and similar components if
@@ -40,4 +40,4 @@ namespace ROS2
         ControlHookCallOutcome AddPlugin(
             AZ::EntityId entityId, const sdf::Plugin& plugin, const sdf::Model& model, const SDFormat::CreatedEntitiesMap& createdEntities);
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

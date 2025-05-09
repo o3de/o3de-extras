@@ -14,7 +14,7 @@
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <Source/EditorArticulationLinkComponent.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
 
     namespace
@@ -146,4 +146,4 @@ namespace ROS2
             return AZ::Failure("Failed to create component articulation link.");
         }
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

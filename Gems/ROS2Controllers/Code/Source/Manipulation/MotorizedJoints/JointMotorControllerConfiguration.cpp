@@ -8,7 +8,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2Controllers/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     bool JointMotorControllerConfiguration::IsDebugModeVisible() const
     {
@@ -31,4 +31,4 @@ namespace ROS2
             }
         }
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

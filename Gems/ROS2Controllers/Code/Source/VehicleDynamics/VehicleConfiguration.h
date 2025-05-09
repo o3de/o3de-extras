@@ -12,7 +12,7 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzFramework/Physics/Material/PhysicsMaterial.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     //! Drive and steering configuration for a vehicle. The class only holds axle information now but it is meant to be expanded.
     class VehicleConfiguration
@@ -26,4 +26,4 @@ namespace ROS2::VehicleDynamics
         float m_wheelbase = 2.0; //!> The distance in meters between the midpoints of vehicles front and rear wheels
         float m_track = 1.0; //!> The distance in meters between the hub flanges on an axle
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

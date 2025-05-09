@@ -10,14 +10,14 @@
 #include <AzCore/Math/Transform.h>
 #include <Lidar/LidarTemplateUtils.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace
     {
         using Model = LidarTemplate::LidarModel;
 
-        static const AZStd::map<Model, LidarTemplate> templates = {
-            {
+        // clang-format off
+        static const AZStd::map<Model, LidarTemplate> templates = { {
                 Model::Custom3DLidar,
                 {
                     /*.m_model = */ Model::Custom3DLidar,
@@ -192,8 +192,8 @@ namespace ROS2
                         /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
                     },
                 },
-            }
-        };
+            } };
+        // clang-format on
     } // namespace
 
     LidarTemplate LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel model)
@@ -278,4 +278,4 @@ namespace ROS2
 
         return directions;
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

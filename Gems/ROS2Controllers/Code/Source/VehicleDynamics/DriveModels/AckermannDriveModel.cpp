@@ -17,7 +17,7 @@
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <VehicleDynamics/Utilities.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     void AckermannDriveModel::Reflect(AZ::ReflectContext* context)
     {
@@ -43,7 +43,7 @@ namespace ROS2::VehicleDynamics
         }
     }
 
-    AckermannDriveModel::AckermannDriveModel(const AckermannModelLimits& limits, const ROS2::Controllers::PidConfiguration& steeringPid)
+    AckermannDriveModel::AckermannDriveModel(const AckermannModelLimits& limits, const PidConfiguration& steeringPid)
         : m_limits(limits)
         , m_steeringPid(steeringPid)
     {
@@ -164,4 +164,4 @@ namespace ROS2::VehicleDynamics
         return AZStd::pair<AZ::Vector3, AZ::Vector3>{ AZ::Vector3::CreateZero(), AZ::Vector3::CreateZero() };
     }
 
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

@@ -13,7 +13,7 @@
 #include <AzCore/std/containers/unordered_map.h>
 #include <PhysX/ArticulationTypes.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     //! Populates the entity with contents of the <inertial> and <joint> tag in the robot description.
     class ArticulationsMaker
@@ -29,4 +29,4 @@ namespace ROS2
         //! @returns created components Id or string with fail
         ArticulationsMakerResult AddArticulationLink(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId) const;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

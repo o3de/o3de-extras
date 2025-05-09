@@ -28,8 +28,8 @@ namespace ROS2Controllers
                 m_descriptors.end(),
                 {
                     ROS2ControllersEditorSystemComponent::CreateDescriptor(),
-                    ROS2::JointsManipulationEditorComponent::CreateDescriptor(),
-                    ROS2::JointsPositionsEditorComponent::CreateDescriptor(),
+                    JointsManipulationEditorComponent::CreateDescriptor(),
+                    JointsPositionsEditorComponent::CreateDescriptor(),
                 });
         }
 

@@ -16,7 +16,7 @@
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <Utilities/ArticulationsUtilities.h>
 
-namespace ROS2::VehicleDynamics::Utilities
+namespace ROS2Controllers::VehicleDynamics::Utilities
 {
     AxleConfiguration Create2WheelAxle(
         AZ::EntityId leftWheel, AZ::EntityId rightWheel, AZStd::string tag, float wheelRadius, bool steering, bool drive)
@@ -268,4 +268,4 @@ namespace ROS2::VehicleDynamics::Utilities
         }
         return hingeTransform;
     }
-} // namespace ROS2::VehicleDynamics::Utilities
+} // namespace ROS2Controllers::VehicleDynamics::Utilities

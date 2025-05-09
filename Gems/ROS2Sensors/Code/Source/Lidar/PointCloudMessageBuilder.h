@@ -7,11 +7,11 @@
  */
 #pragma once
 
-#include <sensor_msgs/msg/point_cloud2.hpp>
 #include <AzCore/std/optional.h>
 #include <AzCore/std/string/string.h>
+#include <sensor_msgs/msg/point_cloud2.hpp>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     class PointCloud2MessageBuilder
     {
@@ -24,4 +24,4 @@ namespace ROS2
         size_t m_offset = 0U;
         sensor_msgs::msg::PointCloud2 m_message;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

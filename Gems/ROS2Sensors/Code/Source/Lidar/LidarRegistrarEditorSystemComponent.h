@@ -12,7 +12,7 @@
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     class LidarRegistrarEditorSystemComponent : public LidarRegistrarSystemComponent
     {
@@ -33,4 +33,4 @@ namespace ROS2
         void Activate() override;
         void Deactivate() override;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

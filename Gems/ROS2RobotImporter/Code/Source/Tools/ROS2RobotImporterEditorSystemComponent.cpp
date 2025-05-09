@@ -29,7 +29,7 @@
 #include <QWindow>
 #endif
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     void ROS2RobotImporterEditorSystemComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -262,4 +262,4 @@ namespace ROS2
         return m_modelPluginHooks;
     }
 
-} // namespace ROS2
+} // namespace ROS2RobotImporter

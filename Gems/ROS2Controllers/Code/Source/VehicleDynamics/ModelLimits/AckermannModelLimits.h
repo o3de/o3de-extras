@@ -11,7 +11,7 @@
 #include <AzCore/RTTI/TypeInfo.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <VehicleDynamics/VehicleModelLimits.h>
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     //! A structure holding limits of vehicle, including speed and steering limits
     class AckermannModelLimits : public VehicleModelLimits
@@ -34,4 +34,4 @@ namespace ROS2::VehicleDynamics
         float m_steeringLimit = 0.7f; //!< [rad] Applies to absolute value
         float m_acceleration = 10.0f; //!< [m*s^(-2)] Linear acceleration limit
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

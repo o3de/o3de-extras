@@ -18,7 +18,7 @@
 #include <ROS2Controllers/VehicleDynamics/VehicleInputControlBus.h>
 #include <VehicleDynamics/VehicleModelLimits.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     //! A central vehicle (and robot) dynamics component, which can be extended with additional modules.
     class VehicleModelComponent
@@ -59,4 +59,4 @@ namespace ROS2::VehicleDynamics
         VehicleConfiguration m_vehicleConfiguration;
         virtual DriveModel* GetDriveModel() = 0;
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

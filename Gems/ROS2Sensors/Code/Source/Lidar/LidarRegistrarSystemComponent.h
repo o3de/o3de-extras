@@ -13,7 +13,7 @@
 #include <ROS2Sensors/Lidar/LidarRegistrarBus.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! A Component that manages LidarSystems' registration and storage of their metadata.
     class LidarRegistrarSystemComponent
@@ -52,4 +52,4 @@ namespace ROS2
         AZStd::string GetDefaultLidarSystem();
     } // namespace Details
 
-} // namespace ROS2
+} // namespace ROS2Sensors

@@ -13,7 +13,7 @@
 #include <ROS2Sensors/Lidar/SegmentationClassConfiguration.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     class ClassSegmentationConfigurationComponent
         : public AZ::Component
@@ -48,4 +48,4 @@ namespace ROS2
         AZStd::unordered_map<LmbrCentral::Tag, uint8_t> m_tagToClassId;
         AZStd::unordered_map<uint8_t, AZ::Color> m_classIdToColor;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

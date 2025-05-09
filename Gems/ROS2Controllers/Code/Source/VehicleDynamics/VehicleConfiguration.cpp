@@ -13,7 +13,7 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     void VehicleConfiguration::Reflect(AZ::ReflectContext* context)
     {
@@ -47,4 +47,4 @@ namespace ROS2::VehicleDynamics
             }
         }
     }
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

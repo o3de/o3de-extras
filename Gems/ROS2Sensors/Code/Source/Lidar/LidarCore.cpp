@@ -16,7 +16,7 @@
 #include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2Sensors/Lidar/ClassSegmentationBus.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
 
     void LidarCore::Reflect(AZ::ReflectContext* context)
@@ -219,4 +219,4 @@ namespace ROS2
 
         return results.GetValue();
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

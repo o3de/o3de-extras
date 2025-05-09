@@ -11,7 +11,7 @@
 #include <QCloseEvent>
 #include <QVBoxLayout>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     ModifiedURDFWindow::ModifiedURDFWindow()
     {
@@ -41,4 +41,4 @@ namespace ROS2
     {
         return m_urdf;
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

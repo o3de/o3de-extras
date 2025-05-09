@@ -13,7 +13,7 @@
 #include <VehicleDynamics/AxleConfiguration.h>
 #include <VehicleDynamics/Utilities.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
 
     //! Component that contains skid steering model.
@@ -36,4 +36,4 @@ namespace ROS2
         // TwistNotificationBus::Handler overrides
         void TwistReceived(const AZ::Vector3& linear, const AZ::Vector3& angular) override;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

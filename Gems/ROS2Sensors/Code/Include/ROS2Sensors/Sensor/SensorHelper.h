@@ -9,7 +9,7 @@
 
 #include <AzCore/Component/Component.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Function to check if the component is a sensor component.
     //! @param component Component to check
@@ -27,4 +27,4 @@ namespace ROS2
     //! @return Vector of EntityComponentIdPair of all sensors attached to the entity
     AZStd::vector<AZ::EntityComponentIdPair> GetSensorsOfType(const AZ::EntityId& entityId, const AZ::Uuid& sensorType);
 
-} // namespace ROS2
+} // namespace ROS2Sensors

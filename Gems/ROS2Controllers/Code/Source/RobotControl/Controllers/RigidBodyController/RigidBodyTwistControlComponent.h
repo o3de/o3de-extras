@@ -11,7 +11,7 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2Controllers/RobotControl/Twist/TwistBus.h>
-namespace ROS2
+namespace ROS2Controllers
 {
     //! A component with a simple handler for Twist type of control (linear and angular velocities).
     //! Velocities are directly applied to a selected body.
@@ -49,4 +49,4 @@ namespace ROS2
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_sceneFinishSimHandler; //!< Handler called after every physics sub-step
         AzPhysics::SimulatedBodyHandle m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle; //!< Handle to the body to apply velocities to
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

@@ -16,12 +16,12 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     GripperActionServer::GripperActionServer(const AZStd::string& actionName, const AZ::EntityId& entityId)
         : m_entityId(entityId)
     {
-        auto ros2Node = ROS2Interface::Get()->GetNode();
+        auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         actionServer = rclcpp_action::create_server<GripperCommand>(
             ros2Node,
             actionName.data(),
@@ -128,4 +128,4 @@ namespace ROS2
         }
     }
 
-} // namespace ROS2
+} // namespace ROS2Controllers

@@ -14,7 +14,7 @@ namespace AZ
     class ReflectContext;
 }
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     class SdfAssetBuilder;
 
@@ -41,4 +41,4 @@ namespace ROS2
         // Asset builder for Sdf assets
         AZStd::unique_ptr<SdfAssetBuilder> m_sdfAssetBuilder;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

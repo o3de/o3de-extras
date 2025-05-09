@@ -56,7 +56,7 @@ namespace AZStd
     };
 } // namespace AZStd
 
-namespace ROS2::Utils
+namespace ROS2RobotImporter::Utils
 {
     //! Converts each sdf::Error from an sdf::Errors vector into an AZStd::string
     //! @param sdfErrors A span of sdf::Error objects
@@ -66,4 +66,4 @@ namespace ROS2::Utils
     //! @param outputResult Appends to output string each sdf error
     //! @param sdfErrors A span of sdf::Error objects
     void AppendSdfErrorsToString(AZStd::string& outputResult, AZStd::span<const sdf::Error> sdfErrors);
-} // namespace ROS2::Utils
+} // namespace ROS2RobotImporter::Utils

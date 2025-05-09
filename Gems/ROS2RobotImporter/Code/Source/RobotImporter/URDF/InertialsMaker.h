@@ -11,7 +11,7 @@
 #include "UrdfParser.h"
 #include <AzCore/Component/EntityId.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     //! Populates the entity with contents of the <inertial> tag in robot description.
     class InertialsMaker
@@ -22,4 +22,4 @@ namespace ROS2
         //! @param entityId A non-active entity which will be populated according to inertial content.
         void AddInertial(const gz::math::Inertiald& inertial, AZ::EntityId entityId) const;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

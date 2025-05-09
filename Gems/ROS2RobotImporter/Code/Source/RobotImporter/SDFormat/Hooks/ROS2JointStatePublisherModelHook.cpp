@@ -17,7 +17,7 @@
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <Source/EditorArticulationLinkComponent.h>
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     ModelPluginImporterHook ROS2ModelPluginHooks::ROS2JointStatePublisherModel()
     {
@@ -42,14 +42,14 @@ namespace ROS2::SDFormat
                 HooksUtils::ValueOfAny(statePublisherParams, topicParamNames, "joint_states");
 
             // add required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity);
 
             // create controllerComponent based on model joints/articulations
             entity.FindComponent<PhysX::EditorArticulationLinkComponent>()
-                ? HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity)
-                : HooksUtils::CreateComponent<JointsPIDControllerComponent>(entity);
+                ? HooksUtils::CreateComponent<ROS2Controllers::JointsArticulationControllerComponent>(entity)
+                : HooksUtils::CreateComponent<ROS2Controllers::JointsPIDControllerComponent>(entity);
 
-            if (HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity, publisherConfiguration))
+            if (HooksUtils::CreateComponent<ROS2Controllers::JointsManipulationEditorComponent>(entity, publisherConfiguration))
             {
                 return AZ::Success();
             }
@@ -61,4 +61,4 @@ namespace ROS2::SDFormat
 
         return importerHook;
     }
-} // namespace ROS2::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

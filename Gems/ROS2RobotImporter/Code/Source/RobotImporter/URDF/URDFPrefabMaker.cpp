@@ -29,7 +29,7 @@
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     URDFPrefabMaker::URDFPrefabMaker(
         const AZStd::string& modelFilePath,
@@ -458,7 +458,7 @@ namespace ROS2
             AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
             if (childEntityPtr)
             {
-                auto* component = childEntityPtr->FindComponent<ROS2FrameEditorComponent>();
+                auto* component = childEntityPtr->FindComponent<ROS2::ROS2FrameEditorComponent>();
                 if (component)
                 {
                     component->SetJointName(azJointName);
@@ -649,10 +649,10 @@ namespace ROS2
 
         createdEntities.emplace_back(entityId);
 
-        const auto frameComponentId = Utils::CreateComponent(entityId, ROS2FrameEditorComponent::TYPEINFO_Uuid());
+        const auto frameComponentId = ROS2::Utils::CreateComponent(entityId, ROS2::ROS2FrameEditorComponent::TYPEINFO_Uuid());
         if (frameComponentId)
         {
-            auto* component = entity->FindComponent<ROS2FrameEditorComponent>();
+            auto* component = entity->FindComponent<ROS2::ROS2FrameEditorComponent>();
             AZ_Assert(component, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
             component->SetFrameID(AZStd::string(link.Name().c_str(), link.Name().size()));
         }
@@ -777,4 +777,4 @@ namespace ROS2
         Utils::VisitModels(*m_root, GetModelAndStopIteration);
         return sdfModel != nullptr;
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

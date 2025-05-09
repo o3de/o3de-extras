@@ -10,7 +10,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <PhysX/ArticulationJointBus.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void JointsArticulationControllerComponent::Activate()
     {
@@ -74,4 +74,4 @@ namespace ROS2
             }
         }
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

@@ -13,7 +13,7 @@
 #include <ROS2/Utilities/ROS2Names.h>
 #include <rclcpp/rclcpp.hpp>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Component extension enabling polymorphic use of generics.
     class IControlSubscriptionHandler
@@ -23,7 +23,7 @@ namespace ROS2
         //! Only activated IComponentActivationHandler will receive and process control messages.
         //! @param entity Activation context for the owning Component - the entity it belongs to.
         //! @param subscriberConfiguration configuration with topic and qos
-        virtual void Activate(const AZ::Entity* entity, const TopicConfiguration& subscriberConfiguration) = 0;
+        virtual void Activate(const AZ::Entity* entity, const ROS2::TopicConfiguration& subscriberConfiguration) = 0;
         //! Interface handling component deactivation
         virtual void Deactivate() = 0;
         virtual ~IControlSubscriptionHandler() = default;
@@ -35,16 +35,17 @@ namespace ROS2
     class ControlSubscriptionHandler : public IControlSubscriptionHandler
     {
     public:
-        void Activate(const AZ::Entity* entity, const TopicConfiguration& subscriberConfiguration) override final
+        void Activate(const AZ::Entity* entity, const ROS2::TopicConfiguration& subscriberConfiguration) override final
         {
             m_active = true;
             m_entityId = entity->GetId();
             if (!m_controlSubscription)
             {
-                auto ros2Frame = entity->FindComponent<ROS2FrameComponent>();
-                AZStd::string namespacedTopic = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), subscriberConfiguration.m_topic);
+                auto ros2Frame = entity->FindComponent<ROS2::ROS2FrameComponent>();
+                AZStd::string namespacedTopic =
+                    ROS2::ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), subscriberConfiguration.m_topic);
 
-                auto ros2Node = ROS2Interface::Get()->GetNode();
+                auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
                 m_controlSubscription = ros2Node->create_subscription<T>(
                     namespacedTopic.data(),
                     subscriberConfiguration.GetQoS(),
@@ -86,4 +87,4 @@ namespace ROS2
         bool m_active = false;
         typename rclcpp::Subscription<T>::SharedPtr m_controlSubscription;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

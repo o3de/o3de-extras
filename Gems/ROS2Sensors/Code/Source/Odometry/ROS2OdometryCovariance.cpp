@@ -13,7 +13,7 @@
 #include <AzCore/base.h>
 #include <array>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     void ROS2OdometryCovariance::Reflect(AZ::ReflectContext* context)
     {
@@ -58,4 +58,4 @@ namespace ROS2
         // clang-format on
     }
 
-} // namespace ROS2
+} // namespace ROS2Sensors

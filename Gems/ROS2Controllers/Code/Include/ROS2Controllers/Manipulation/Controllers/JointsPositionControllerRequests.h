@@ -12,7 +12,7 @@
 #include <AzCore/std/string/string.h>
 #include <ROS2Controllers/Manipulation/JointInfo.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Interface for controllers that execute the simple movement between two positions one step at a time.
     class JointsPositionControllerRequests : public AZ::EBusTraits
@@ -50,4 +50,4 @@ namespace ROS2
             float deltaTime) = 0;
     };
     using JointsPositionControllerRequestBus = AZ::EBus<JointsPositionControllerRequests>;
-} // namespace ROS2
+} // namespace ROS2Controllers

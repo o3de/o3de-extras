@@ -11,7 +11,7 @@
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/LidarTemplate.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     LidarRegistrarSystemComponent::LidarRegistrarSystemComponent()
     {
@@ -125,4 +125,4 @@ namespace ROS2
         return lidarSystemList.front();
     }
 
-} // namespace ROS2
+} // namespace ROS2Sensors

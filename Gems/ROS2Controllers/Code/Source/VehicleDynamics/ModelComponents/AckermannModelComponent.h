@@ -13,7 +13,7 @@
 #include <VehicleDynamics/DriveModels/AckermannDriveModel.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     class AckermannVehicleModelComponent : public VehicleModelComponent
     {
@@ -36,4 +36,4 @@ namespace ROS2::VehicleDynamics
         // VehicleModelComponent overrides
         DriveModel* GetDriveModel() override;
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

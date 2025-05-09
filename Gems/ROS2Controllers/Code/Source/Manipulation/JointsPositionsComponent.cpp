@@ -17,10 +17,10 @@
 #include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
 #include <Utilities/ArticulationsUtilities.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     JointsPositionsComponent::JointsPositionsComponent(
-        const TopicConfiguration& topicConfiguration, const AZStd::vector<AZStd::string>& jointNames)
+        const ROS2::TopicConfiguration& topicConfiguration, const AZStd::vector<AZStd::string>& jointNames)
         : m_topicConfiguration(topicConfiguration)
         , m_jointNames(jointNames)
     {
@@ -112,4 +112,4 @@ namespace ROS2
         }
     }
 
-} // namespace ROS2
+} // namespace ROS2Controllers

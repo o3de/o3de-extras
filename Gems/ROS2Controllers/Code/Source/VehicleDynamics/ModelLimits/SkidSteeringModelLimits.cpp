@@ -11,7 +11,7 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     void SkidSteeringModelLimits::Reflect(AZ::ReflectContext* context)
     {
@@ -102,4 +102,4 @@ namespace ROS2::VehicleDynamics
         m_angularAcceleration = AZStd::clamp(limit, 0.0f, 100.0f);
     }
 
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

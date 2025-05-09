@@ -14,7 +14,7 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace
     {
@@ -49,7 +49,7 @@ namespace ROS2
     ROS2Lidar2DSensorComponent::ROS2Lidar2DSensorComponent()
         : m_lidarCore(LidarTemplateUtils::Get2DModels())
     {
-        TopicConfiguration ls;
+        ROS2::TopicConfiguration ls;
         AZStd::string type = LaserScanType;
         ls.m_type = type;
         ls.m_topic = "scan";
@@ -68,11 +68,11 @@ namespace ROS2
         ROS2SensorComponentBase::Activate();
         m_lidarCore.Init(GetEntityId());
 
-        auto ros2Node = ROS2Interface::Get()->GetNode();
+        auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
 
-        const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[LaserScanType];
-        AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+        const ROS2::TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[LaserScanType];
+        AZStd::string fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_laserScanPublisher = ros2Node->create_publisher<sensor_msgs::msg::LaserScan>(fullTopic.data(), publisherConfig.GetQoS());
 
         StartSensor(
@@ -120,10 +120,10 @@ namespace ROS2
     {
         const bool isIntensityEnabled = m_lidarCore.m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity;
 
-        auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
+        auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         auto message = sensor_msgs::msg::LaserScan();
         message.header.frame_id = ros2Frame->GetFrameID().data();
-        message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
+        message.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         message.angle_min = AZ::DegToRad(m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minHAngle);
         message.angle_max = AZ::DegToRad(m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxHAngle);
         message.angle_increment = (message.angle_max - message.angle_min) /
@@ -144,4 +144,4 @@ namespace ROS2
 
         m_laserScanPublisher->publish(message);
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

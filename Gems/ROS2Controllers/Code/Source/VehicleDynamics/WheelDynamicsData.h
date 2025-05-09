@@ -11,7 +11,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <PhysX/ArticulationTypes.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     //! Data structure to pass wheel dynamics data for a single wheel entity.
     struct WheelDynamicsData
@@ -34,4 +34,4 @@ namespace ROS2::VehicleDynamics
         PhysX::ArticulationJointAxis m_axis =
             PhysX::ArticulationJointAxis::Twist; //!< The movement axis, in case the joint is an articulation.
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

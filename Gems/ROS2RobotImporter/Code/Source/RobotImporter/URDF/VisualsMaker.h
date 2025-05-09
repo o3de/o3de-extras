@@ -16,7 +16,7 @@
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     //! Populates a given entity with all the contents of the <visual> tag in robot description
     class VisualsMaker
@@ -40,4 +40,4 @@ namespace ROS2
 
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

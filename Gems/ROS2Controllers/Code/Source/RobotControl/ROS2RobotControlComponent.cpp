@@ -16,7 +16,7 @@
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotControl/Twist/TwistSubscriptionHandler.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void ROS2RobotControlComponent::Activate()
     {
@@ -91,7 +91,7 @@ namespace ROS2
         return m_controlConfiguration;
     }
 
-    const TopicConfiguration& ROS2RobotControlComponent::GetSubscriberConfiguration() const
+    const ROS2::TopicConfiguration& ROS2RobotControlComponent::GetSubscriberConfiguration() const
     {
         return m_subscriberConfiguration;
     }
@@ -106,9 +106,9 @@ namespace ROS2
         m_controlConfiguration = controlConfiguration;
     }
 
-    void ROS2RobotControlComponent::SetSubscriberConfiguration(const TopicConfiguration& subscriberConfiguration)
+    void ROS2RobotControlComponent::SetSubscriberConfiguration(const ROS2::TopicConfiguration& subscriberConfiguration)
     {
         m_subscriberConfiguration = subscriberConfiguration;
     }
 
-} // namespace ROS2
+} // namespace ROS2Controllers

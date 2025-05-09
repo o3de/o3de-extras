@@ -25,12 +25,12 @@ namespace AzToolsFramework
     class ReflectedPropertyEditor;
 }
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     struct SdfAssetBuilderSettings;
 }
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     class FileSelectionPage : public QWizardPage
     {
@@ -67,4 +67,4 @@ namespace ROS2
 
         bool m_fileExists{ false };
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

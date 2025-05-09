@@ -17,7 +17,7 @@
 #include <VehicleDynamics/WheelControllerComponent.h>
 #include <VehicleDynamics/WheelDynamicsData.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     //! A simple skid steering system implementation converting speed and steering inputs into wheel rotation
     class SkidSteeringDriveModel : public DriveModel
@@ -68,4 +68,4 @@ namespace ROS2::VehicleDynamics
         float m_currentLinearVelocity{ 0.0f };
         float m_currentAngularVelocity{ 0.0f };
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

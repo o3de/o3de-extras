@@ -18,7 +18,7 @@
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <string.h>
 
-namespace ROS2::Utils
+namespace ROS2RobotImporter::Utils
 {
     inline namespace Internal
     {
@@ -968,9 +968,9 @@ namespace ROS2::Utils
         return amentPrefixPath;
     }
 
-} // namespace ROS2::Utils
+} // namespace ROS2RobotImporter::Utils
 
-namespace ROS2::Utils::SDFormat
+namespace ROS2RobotImporter::Utils::SDFormat
 {
     AZStd::string GetPluginFilename(const sdf::Plugin& plugin)
     {
@@ -1103,4 +1103,4 @@ namespace ROS2::Utils::SDFormat
 
         return sdfConfig;
     }
-} // namespace ROS2::Utils::SDFormat
+} // namespace ROS2RobotImporter::Utils::SDFormat

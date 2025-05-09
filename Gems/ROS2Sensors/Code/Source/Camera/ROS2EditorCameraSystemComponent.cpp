@@ -9,7 +9,7 @@
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     void ROS2EditorCameraSystemComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -55,4 +55,4 @@ namespace ROS2
     {
         BaseSystemComponent::Deactivate();
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

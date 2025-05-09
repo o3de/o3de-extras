@@ -14,7 +14,7 @@
 #include <sdf/NavSat.hh>
 #include <sdf/Sensor.hh>
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     SensorImporterHook ROS2SensorHooks::ROS2GNSSSensor()
     {
@@ -50,9 +50,9 @@ namespace ROS2::SDFormat
             const auto frameConfiguration = HooksUtils::GetFrameConfiguration(gnssPluginParams);
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity, frameConfiguration);
+            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity, frameConfiguration);
 
-            if (HooksUtils::CreateComponent<ROS2GNSSSensorComponent>(entity, sensorConfiguration))
+            if (HooksUtils::CreateComponent<ROS2Sensors::ROS2GNSSSensorComponent>(entity, sensorConfiguration))
             {
                 return AZ::Success();
             }
@@ -64,4 +64,4 @@ namespace ROS2::SDFormat
 
         return importerHook;
     }
-} // namespace ROS2::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

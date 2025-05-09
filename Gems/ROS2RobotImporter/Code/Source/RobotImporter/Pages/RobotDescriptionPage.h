@@ -19,7 +19,7 @@
 #include <QWizardPage>
 #endif
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     class RobotDescriptionPage : public QWizardPage
     {
@@ -44,4 +44,4 @@ namespace ROS2
         bool m_success;
         bool m_warning;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

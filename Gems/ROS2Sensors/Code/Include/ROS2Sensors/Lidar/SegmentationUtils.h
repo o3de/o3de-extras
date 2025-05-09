@@ -9,7 +9,7 @@
 
 #include <AzCore/Component/EntityId.h>
 
-namespace ROS2::SegmentationUtils
+namespace ROS2Sensors::SegmentationUtils
 {
     //! Returns the segmentation class ID of the entity with provided ID.
     //! Entity's class ID is fetched using the Tag component (@see Tag).
@@ -19,4 +19,4 @@ namespace ROS2::SegmentationUtils
     //! @param entityId ID of the entity for which a class ID is to be fetched.
     //! @return Class ID of the entity.
     [[nodiscard]] uint8_t FetchClassIdForEntity(AZ::EntityId entityId);
-} // namespace ROS2::SegmentationUtils
+} // namespace ROS2Sensors::SegmentationUtils

@@ -7,7 +7,7 @@
  */
 #pragma once
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace CameraConstants
     {
@@ -18,4 +18,4 @@ namespace ROS2
         inline constexpr char ColorInfoConfig[] = "Color Camera Info";
         inline constexpr char CameraInfoMessageType[] = "sensor_msgs::msg::CameraInfo";
     } // namespace CameraConstants
-} // namespace ROS2
+} // namespace ROS2Sensors

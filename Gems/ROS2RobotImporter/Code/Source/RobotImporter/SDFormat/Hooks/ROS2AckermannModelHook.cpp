@@ -29,7 +29,7 @@
 #include <sdf/Model.hh>
 #include <sdf/Plugin.hh>
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     namespace AckermannParser
     {
@@ -146,12 +146,12 @@ namespace ROS2::SDFormat
             return AZ::Vector3();
         }
 
-        Controllers::PidConfiguration GetModelPidConfiguration(const sdf::ElementPtr element)
+        PidConfiguration GetModelPidConfiguration(const sdf::ElementPtr element)
         {
             auto pid = element->Get<gz::math::Vector3d>("linear_velocity_pid_gain", gz::math::Vector3d::Zero).first;
             auto iRange = element->Get<gz::math::Vector2d>("linear_velocity_i_range", gz::math::Vector2d::Zero).first;
 
-            Controllers::PidConfiguration config(pid.X(), pid.Y(), pid.Z(), iRange.Y(), iRange.X(), false, 0.0);
+            PidConfiguration config(pid.X(), pid.Y(), pid.Z(), iRange.Y(), iRange.X(), false, 0.0);
             return config;
         }
 
@@ -203,7 +203,7 @@ namespace ROS2::SDFormat
                         IsSteeringWheel(jointNameSteeringRight, jointRight.m_jointName, sdfModel);
                     const bool isDrive = !isSteering;
                     const float wheelRadius = GetWheelRadius(jointLeft.m_entity, jointRight.m_entity);
-                    configuration.m_axles.emplace_back(ROS2::VehicleDynamics::Utilities::Create2WheelAxle(
+                    configuration.m_axles.emplace_back(ROS2Controllers::VehicleDynamics::Utilities::Create2WheelAxle(
                         jointLeft.m_entityId, jointRight.m_entityId, AZStd::move(tag), wheelRadius, isSteering, isDrive));
 
                     const float track = GetTrack(jointLeft.m_entity, jointRight.m_entity);
@@ -297,13 +297,13 @@ namespace ROS2::SDFormat
             VehicleDynamics::VehicleConfiguration vehicleConfiguration =
                 AckermannParser::GetConfiguration(element, sdfModel, createdEntities);
             VehicleDynamics::AckermannModelLimits modelLimits = AckermannParser::GetModelLimits(element);
-            Controllers::PidConfiguration steeringPid = AckermannParser::GetModelPidConfiguration(element);
+            PidConfiguration steeringPid = AckermannParser::GetModelPidConfiguration(element);
             ControlConfiguration controlConfiguration;
             controlConfiguration.m_steering = ControlConfiguration::Steering::Ackermann;
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
-            HooksUtils::CreateComponent<ROS2RobotControlComponent>(entity, controlConfiguration);
+            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity);
+            HooksUtils::CreateComponent<ROS2Controllers::ROS2RobotControlComponent>(entity, controlConfiguration);
             HooksUtils::CreateComponent<VehicleDynamics::AckermannVehicleModelComponent>(
                 entity, vehicleConfiguration, VehicleDynamics::AckermannDriveModel(modelLimits, steeringPid));
 
@@ -320,4 +320,4 @@ namespace ROS2::SDFormat
 
         return importerHook;
     }
-} // namespace ROS2::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

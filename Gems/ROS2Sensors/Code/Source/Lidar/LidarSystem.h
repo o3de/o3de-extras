@@ -10,10 +10,10 @@
 #include <Lidar/LidarRaycaster.h>
 #include <ROS2Sensors/Lidar/LidarSystemBus.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! A class for managing Lidar
-    class LidarSystem : protected ROS2::LidarSystemRequestBus::Handler
+    class LidarSystem : protected LidarSystemRequestBus::Handler
     {
     public:
         LidarSystem() = default;
@@ -36,4 +36,4 @@ namespace ROS2
 
         AZStd::unordered_map<LidarId, LidarRaycaster> m_lidars;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

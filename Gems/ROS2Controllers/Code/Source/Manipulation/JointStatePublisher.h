@@ -17,7 +17,7 @@
 #include <ROS2/Sensor/Events/EventSourceAdapter.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     struct JointStatePublisherContext
     {
@@ -31,7 +31,7 @@ namespace ROS2
     class JointStatePublisher
     {
     public:
-        JointStatePublisher(const PublisherConfiguration& configuration, const JointStatePublisherContext& context);
+        JointStatePublisher(const ROS2::PublisherConfiguration& configuration, const JointStatePublisherContext& context);
         virtual ~JointStatePublisher();
 
         void InitializePublisher();
@@ -39,10 +39,10 @@ namespace ROS2
     private:
         void PublishMessage();
 
-        EventSourceAdapter<PhysicsBasedSource> m_eventSourceAdapter;
-        typename PhysicsBasedSource::AdaptedEventHandlerType m_adaptedEventHandler;
+        ROS2::EventSourceAdapter<ROS2::PhysicsBasedSource> m_eventSourceAdapter;
+        typename ROS2::PhysicsBasedSource::AdaptedEventHandlerType m_adaptedEventHandler;
 
-        PublisherConfiguration m_configuration;
+        ROS2::PublisherConfiguration m_configuration;
         JointStatePublisherContext m_context;
 
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::JointState>> m_jointStatePublisher;
@@ -51,4 +51,4 @@ namespace ROS2
         AZStd::vector<AZStd::string> m_jointNames;
         AZStd::vector<JointInfo> m_jointInfos;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

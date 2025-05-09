@@ -11,7 +11,7 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/RTTI/BehaviorContext.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Interface class for handling Ackermann kinematics steering commands through EBus notifications.
     //! The interface serves to enable control through AckermannDrive (and AckermannDriveStamped) messages.
@@ -27,4 +27,4 @@ namespace ROS2
     };
 
     using AckermannNotificationBus = AZ::EBus<AckermannNotifications>;
-} // namespace ROS2
+} // namespace ROS2Controllers

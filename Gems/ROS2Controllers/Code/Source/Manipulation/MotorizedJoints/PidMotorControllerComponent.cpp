@@ -13,7 +13,7 @@
 #include <ROS2Controllers/Manipulation/MotorizedJoints/PidMotorControllerComponent.h>
 #include <imgui/imgui.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void PidMotorControllerComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -103,4 +103,4 @@ namespace ROS2
         ImGui::SliderFloat("SetPoint", &m_setPoint, limits.first + m_zeroOffset, limits.second + m_zeroOffset);
         ImGui::PopItemWidth();
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

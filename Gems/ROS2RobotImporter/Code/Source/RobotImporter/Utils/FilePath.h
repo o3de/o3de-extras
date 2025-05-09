@@ -10,7 +10,7 @@
 
 #include <AzCore/IO/Path/Path_fwd.h>
 
-namespace ROS2::Utils
+namespace ROS2RobotImporter::Utils
 {
     //! Returns true if the specified file path extension is .xacro
     bool IsFileXacro(AZ::IO::PathView filename);
@@ -24,4 +24,4 @@ namespace ROS2::Utils
 
     //! Returns true if true specified file path is either a Xacro, URDF or SDF file
     bool IsFileXacroOrUrdfOrSdf(AZ::IO::PathView filename);
-} // namespace ROS2::Utils
+} // namespace ROS2RobotImporter::Utils

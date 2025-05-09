@@ -11,7 +11,7 @@
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace
     {
@@ -53,7 +53,7 @@ namespace ROS2
 
     ROS2WheelOdometryComponent::ROS2WheelOdometryComponent()
     {
-        TopicConfiguration tc;
+        ROS2::TopicConfiguration tc;
         const AZStd::string type = WheelOdometryMsgType;
         tc.m_type = type;
         tc.m_topic = "odom";
@@ -69,8 +69,8 @@ namespace ROS2
 
     void ROS2WheelOdometryComponent::OnOdometryEvent()
     {
-        m_odometryMsg.pose.pose.position = ROS2Conversions::ToROS2Point(m_robotPose);
-        m_odometryMsg.pose.pose.orientation = ROS2Conversions::ToROS2Quaternion(m_robotRotation);
+        m_odometryMsg.pose.pose.position = ROS2::ROS2Conversions::ToROS2Point(m_robotPose);
+        m_odometryMsg.pose.pose.orientation = ROS2::ROS2Conversions::ToROS2Quaternion(m_robotRotation);
         m_odometryMsg.pose.covariance = m_poseCovariance.GetRosCovariance();
 
         m_odometryPublisher->publish(m_odometryMsg);
@@ -84,9 +84,9 @@ namespace ROS2
         // VehicleDynamics::VehicleInputControlRequestBus::EventResult(
         //     vt, GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::GetWheelsOdometry);
 
-        m_odometryMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
-        m_odometryMsg.twist.twist.linear = ROS2Conversions::ToROS2Vector3(vt.first);
-        m_odometryMsg.twist.twist.angular = ROS2Conversions::ToROS2Vector3(vt.second);
+        m_odometryMsg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+        m_odometryMsg.twist.twist.linear = ROS2::ROS2Conversions::ToROS2Vector3(vt.first);
+        m_odometryMsg.twist.twist.angular = ROS2::ROS2Conversions::ToROS2Vector3(vt.second);
         m_odometryMsg.twist.covariance = m_twistCovariance.GetRosCovariance();
 
         if (m_sensorConfiguration.m_frequency > 0)
@@ -105,14 +105,14 @@ namespace ROS2
         m_robotRotation = AZ::Quaternion{ 0, 0, 0, 1 };
 
         // "odom" is globally fixed frame for all robots, no matter the namespace
-        m_odometryMsg.header.frame_id = ROS2Names::GetNamespacedName(GetNamespace(), "odom").c_str();
+        m_odometryMsg.header.frame_id = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), "odom").c_str();
         m_odometryMsg.child_frame_id = GetFrameID().c_str();
 
-        auto ros2Node = ROS2Interface::Get()->GetNode();
+        auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor");
 
         const auto& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[WheelOdometryMsgType];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+        const auto fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
 
         StartSensor(
@@ -137,4 +137,4 @@ namespace ROS2
         m_odometryPublisher.reset();
         ROS2SensorComponentBase::Deactivate();
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

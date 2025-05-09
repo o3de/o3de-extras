@@ -10,7 +10,7 @@
 #include <AzCore/Math/Matrix3x3.h>
 
 //! Namespace contains utility functions for camera.
-namespace ROS2::CameraUtils
+namespace ROS2Sensors::CameraUtils
 {
     //! Function computes aspect ratio of the image.
     //! @param width Width of the image in pixels
@@ -33,4 +33,4 @@ namespace ROS2::CameraUtils
     //! @param nearDist Near clipping plane distance in meters.
     //! @return projection matrix for the rendering.
     AZ::Matrix4x4 MakeClipMatrix(int width, int height, float verticalFieldOfViewDeg, float nearDist = 0.1f, float farDist = 100.0f);
-} // namespace ROS2::CameraUtils
+} // namespace ROS2Sensors::CameraUtils

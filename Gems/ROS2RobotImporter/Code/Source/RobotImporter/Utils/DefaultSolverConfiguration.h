@@ -9,10 +9,10 @@
 
 #include <AzCore/base.h>
 
-namespace ROS2::URDF
+namespace ROS2RobotImporter::URDF
 {
     // Here is the recommended, minimal number of iterations for position and velocity solver.
     // It is needed since currently O3DE default values are optimized for the gaming experience, not a simulation.
     constexpr AZ::u8 DefaultNumberPosSolver = 40;
     constexpr AZ::u8 DefaultNumberVelSolver = 10;
-} // namespace ROS2::URDF
+} // namespace ROS2RobotImporter::URDF

@@ -10,7 +10,7 @@
 #include <ROS2Controllers/RobotControl/Ackermann/AckermannBus.h>
 #include <ROS2Controllers/RobotControl/Ackermann/AckermannCommandStruct.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void AckermannSubscriptionHandler::SendToBus(const ackermann_msgs::msg::AckermannDrive& message)
     {
@@ -22,4 +22,4 @@ namespace ROS2
         acs.m_steeringAngleVelocity = message.steering_angle_velocity;
         AckermannNotificationBus::Event(GetEntityId(), &AckermannNotifications::AckermannReceived, acs);
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

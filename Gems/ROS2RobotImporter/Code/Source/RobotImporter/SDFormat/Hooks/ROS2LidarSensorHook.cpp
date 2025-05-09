@@ -15,7 +15,7 @@
 #include <sdf/Lidar.hh>
 #include <sdf/Sensor.hh>
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     SensorImporterHook ROS2SensorHooks::ROS2LidarSensor()
     {
@@ -106,12 +106,12 @@ namespace ROS2::SDFormat
             const auto frameConfiguration = HooksUtils::GetFrameConfiguration(lidarPluginParams);
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity, frameConfiguration);
+            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity, frameConfiguration);
 
             // Create Lidar component
             const auto lidarComponent = is2DLidar
-                ? HooksUtils::CreateComponent<ROS2Lidar2DSensorComponent>(entity, sensorConfiguration, lidarConfiguration)
-                : HooksUtils::CreateComponent<ROS2LidarSensorComponent>(entity, sensorConfiguration, lidarConfiguration);
+                ? HooksUtils::CreateComponent<ROS2Sensors::ROS2Lidar2DSensorComponent>(entity, sensorConfiguration, lidarConfiguration)
+                : HooksUtils::CreateComponent<ROS2Sensors::ROS2LidarSensorComponent>(entity, sensorConfiguration, lidarConfiguration);
             if (lidarComponent)
             {
                 return AZ::Success();
@@ -124,4 +124,4 @@ namespace ROS2::SDFormat
 
         return importerHook;
     }
-} // namespace ROS2::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

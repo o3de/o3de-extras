@@ -10,7 +10,7 @@
 
 #include <sdf/sdf.hh>
 
-namespace ROS2::Utils
+namespace ROS2RobotImporter::Utils
 {
     AZStd::string JoinSdfErrorsToString(AZStd::span<const sdf::Error> sdfErrors)
     {
@@ -33,4 +33,4 @@ namespace ROS2::Utils
             outputResult += '\n';
         }
     }
-} // namespace ROS2::Utils
+} // namespace ROS2RobotImporter::Utils

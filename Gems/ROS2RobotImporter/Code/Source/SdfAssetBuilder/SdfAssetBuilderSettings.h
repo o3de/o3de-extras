@@ -12,7 +12,7 @@
 #include <AzCore/Settings/SettingsRegistry.h>
 #include <AzCore/std/containers/unordered_map.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     struct SdfAssetPathResolverSettings
     {
@@ -62,4 +62,4 @@ namespace ROS2
 
         SdfAssetPathResolverSettings m_resolverSettings;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

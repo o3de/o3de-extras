@@ -9,7 +9,7 @@
 #pragma once
 #include <AzCore/Component/Entity.h>
 
-namespace ROS2::Utils
+namespace ROS2Controllers::Utils
 {
     AZStd::string GetJointName(AZ::EntityId entityId);
 }

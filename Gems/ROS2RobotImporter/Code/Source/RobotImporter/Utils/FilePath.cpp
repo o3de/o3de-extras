@@ -11,7 +11,7 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/std/string/conversions.h>
 
-namespace ROS2::Utils
+namespace ROS2RobotImporter::Utils
 {
     //! @returns the capitalized extention of provided file.
     //! In the case that the file does not have an extension an empty string will be returned.
@@ -53,4 +53,4 @@ namespace ROS2::Utils
         AZ::IO::FixedMaxPathString extension = GetCapitalizedExtension(filename);
         return extension == ".XACRO" || extension == ".URDF" || extension == ".SDF" || extension == ".WORLD";
     }
-} // namespace ROS2::Utils
+} // namespace ROS2RobotImporter::Utils

@@ -21,8 +21,8 @@ namespace ROS2Sensors
     void ROS2SensorsSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         // Reflect structs not strictly owned by any single component
-        ROS2::LidarCore::Reflect(context);
-        ROS2::SensorConfiguration::Reflect(context);
+        LidarCore::Reflect(context);
+        SensorConfiguration::Reflect(context);
 
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {

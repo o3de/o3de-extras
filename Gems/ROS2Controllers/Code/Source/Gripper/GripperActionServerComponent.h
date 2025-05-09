@@ -16,7 +16,7 @@
 #include <control_msgs/action/gripper_command.hpp>
 #include <rclcpp/rclcpp.hpp>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! GripperActionServerComponent is a component that encapsulates gripper action server.
     //! It is responsible for creating and managing the action server, producing feedback and result.
@@ -27,7 +27,7 @@ namespace ROS2
     public:
         using GripperCommand = control_msgs::action::GripperCommand;
         using GoalHandleGripperCommand = rclcpp_action::ServerGoalHandle<control_msgs::action::GripperCommand>;
-        AZ_COMPONENT(GripperActionServerComponent, ROS2Controllers::GripperActionServerComponentTypeId, AZ::Component);
+        AZ_COMPONENT(GripperActionServerComponent, GripperActionServerComponentTypeId, AZ::Component);
         GripperActionServerComponent() = default;
         ~GripperActionServerComponent() = default;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
@@ -48,4 +48,4 @@ namespace ROS2
         AZStd::string m_gripperActionServerName{ "gripper_server" }; //! name of the GripperCommand action server
         AZStd::unique_ptr<GripperActionServer> m_gripperActionServer; //! action server for GripperCommand
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

@@ -17,7 +17,7 @@
 #include <sensor_msgs/msg/image.hpp>
 #include <std_msgs/msg/header.hpp>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Class to create camera sensor using Atom renderer
     //! It creates dedicated rendering pipeline for each camera
@@ -108,4 +108,4 @@ namespace ROS2
     private:
         void ReadBackDepth(AZStd::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback);
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

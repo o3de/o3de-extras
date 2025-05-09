@@ -33,7 +33,7 @@
 #include <SceneAPI/SceneData/Rules/UVsRule.h>
 #include <Source/Pipeline/MeshGroup.h> // PhysX/Code/Source/Pipeline/MeshGroup.h
 
-namespace ROS2::Utils
+namespace ROS2RobotImporter::Utils
 {
 
     //! A helper class that do no extend PhysX::Pipeline::MeshGroup functionality, but gives necessary setters.
@@ -722,4 +722,4 @@ namespace ROS2::Utils
 
         return assetStatus;
     }
-} // namespace ROS2::Utils
+} // namespace ROS2RobotImporter::Utils

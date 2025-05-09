@@ -10,7 +10,7 @@
 #include <ROS2Controllers/RobotControl/ControlSubscriptionHandler.h>
 #include <std_msgs/msg/float64_multi_array.hpp>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     class JointPositionsSubscriptionHandler : public ControlSubscriptionHandler<std_msgs::msg::Float64MultiArray>
     {
@@ -26,4 +26,4 @@ namespace ROS2
 
         MessageCallback m_messageCallback;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

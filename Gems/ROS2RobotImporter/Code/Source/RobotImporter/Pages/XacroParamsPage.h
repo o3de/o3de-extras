@@ -19,7 +19,7 @@
 #include <RobotImporter/xacro/XacroUtils.h>
 #endif
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     class RobotImporterWidget;
 
@@ -39,4 +39,4 @@ namespace ROS2
         Utils::xacro::Params m_defaultParams;
         QTableWidget* m_table{};
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

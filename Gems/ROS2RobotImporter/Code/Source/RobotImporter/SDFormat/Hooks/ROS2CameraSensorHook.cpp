@@ -15,7 +15,7 @@
 #include <sdf/Camera.hh>
 #include <sdf/Sensor.hh>
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     SensorImporterHook ROS2SensorHooks::ROS2CameraSensor()
     {
@@ -107,10 +107,10 @@ namespace ROS2::SDFormat
             const auto frameConfiguration = HooksUtils::GetFrameConfiguration(cameraPluginParams);
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity, frameConfiguration);
+            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity, frameConfiguration);
 
             // Create Camera component
-            if (HooksUtils::CreateComponent<ROS2CameraSensorEditorComponent>(entity, sensorConfiguration, cameraConfiguration))
+            if (HooksUtils::CreateComponent<ROS2Sensors::ROS2CameraSensorEditorComponent>(entity, sensorConfiguration, cameraConfiguration))
             {
                 return AZ::Success();
             }
@@ -122,4 +122,4 @@ namespace ROS2::SDFormat
 
         return importerHook;
     }
-} // namespace ROS2::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

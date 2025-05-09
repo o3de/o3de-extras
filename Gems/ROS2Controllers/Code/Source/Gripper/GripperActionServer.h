@@ -15,7 +15,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! GripperActionServer is a class responsible for managing an action server controlling a gripper
     //! @see <a href="https://docs.ros.org/en/humble/p/rclcpp_action/generated/classrclcpp__action_1_1Server.html"> ROS 2 action
@@ -60,4 +60,4 @@ namespace ROS2
         std::shared_ptr<GoalHandleGripperCommand> m_goalHandle;
         AZ::EntityId m_entityId; //! Entity that has target gripper component
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

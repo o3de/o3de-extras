@@ -13,7 +13,7 @@
 #include <AzCore/std/string/string.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! General configuration for sensors.
     //! All sensors can be set to a certain frequency, have their data published or not,
@@ -27,7 +27,7 @@ namespace ROS2
         //! ROS2 Publishers of this sensor.
         //! Some sensors can have more than one publisher (example: Camera).
         //! @note This map will typically hold 1-3 elements.
-        AZStd::map<AZStd::string, TopicConfiguration> m_publishersConfigurations;
+        AZStd::map<AZStd::string, ROS2::TopicConfiguration> m_publishersConfigurations;
 
         //! Frequency in Hz (1/s).
         //! Applies both to data acquisition and publishing.
@@ -39,4 +39,4 @@ namespace ROS2
         // Frequency limit is once per day.
         static constexpr float m_minFrequency = AZStd::numeric_limits<float>::epsilon();
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

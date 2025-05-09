@@ -9,7 +9,7 @@
 #include "XacroParamsPage.h"
 #include <RobotImporter/RobotImporterWidget.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
 
     XacroParamsPage::XacroParamsPage(RobotImporterWidget* parent)
@@ -76,4 +76,4 @@ namespace ROS2
         return params;
     }
 
-} // namespace ROS2
+} // namespace ROS2RobotImporter

@@ -10,7 +10,7 @@
 #include <ROS2Sensors/Lidar/ClassSegmentationBus.h>
 #include <ROS2Sensors/Lidar/SegmentationClassConfiguration.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     const SegmentationClassConfiguration SegmentationClassConfiguration::UnknownClass =
         SegmentationClassConfiguration{ "Unknown", UnknownClassId, AZ::Colors::White };
@@ -42,4 +42,4 @@ namespace ROS2
             }
         }
     }
-} // namespace ROS2
+} // namespace ROS2Sensors

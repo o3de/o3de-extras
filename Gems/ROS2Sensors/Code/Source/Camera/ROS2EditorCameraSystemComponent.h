@@ -12,7 +12,7 @@
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     /// Editor system component for ROS2 camera simulation.
     class ROS2EditorCameraSystemComponent
@@ -42,4 +42,4 @@ namespace ROS2
         void OnStopPlayInEditor() override;
         //////////////////////////////////////////////////////////////////////////
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

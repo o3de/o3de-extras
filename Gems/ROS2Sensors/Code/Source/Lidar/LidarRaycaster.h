@@ -14,7 +14,7 @@
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <ROS2Sensors/Lidar/LidarRaycasterBus.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! A class for executing lidar raycast.
     class LidarRaycaster : protected LidarRaycasterRequestBus::Handler
@@ -56,4 +56,4 @@ namespace ROS2
         AZStd::unordered_set<AZ::u32> m_ignoredCollisionLayers;
         AZStd::unordered_map<AZ::EntityId, uint8_t> m_entityIdToClassIdCache;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

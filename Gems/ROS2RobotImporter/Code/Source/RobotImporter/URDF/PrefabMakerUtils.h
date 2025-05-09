@@ -17,7 +17,7 @@
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
 
 //! Common utils for Prefab Maker classes
-namespace ROS2::PrefabMakerUtils
+namespace ROS2RobotImporter::PrefabMakerUtils
 {
     //! Add required components to the entity.
     //! Calling this will ensure all the required (default) components are added.
@@ -71,4 +71,4 @@ namespace ROS2::PrefabMakerUtils
     //! Get Asset from path. Version for std::string.
     //! @see GetAssetFromPath.
     AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(const Utils::UrdfAssetMap& sdfAssetsMapping, const std::string& sdfMeshPath);
-} // namespace ROS2::PrefabMakerUtils
+} // namespace ROS2RobotImporter::PrefabMakerUtils

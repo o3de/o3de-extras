@@ -9,7 +9,7 @@
 #include <AzCore/Math/Matrix3x3.h>
 #include <AzCore/Math/MatrixUtils.h>
 
-namespace ROS2::CameraUtils
+namespace ROS2Sensors::CameraUtils
 {
     float GetAspectRatio(float width, float height)
     {
@@ -40,4 +40,4 @@ namespace ROS2::CameraUtils
         return localViewToClipMatrix;
     }
 
-} // namespace ROS2::CameraUtils
+} // namespace ROS2Sensors::CameraUtils

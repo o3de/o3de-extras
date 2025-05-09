@@ -11,7 +11,7 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Interface to communicate with a PID motor controller.
     //! It allows to apply a setpoint and track performance of the controller.
@@ -54,4 +54,4 @@ namespace ROS2
     };
 
     using PidMotorControllerRequestBus = AZ::EBus<PidMotorControllerRequests>;
-} // namespace ROS2
+} // namespace ROS2Controllers

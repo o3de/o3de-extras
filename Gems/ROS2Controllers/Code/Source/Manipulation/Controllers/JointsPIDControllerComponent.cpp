@@ -10,7 +10,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void JointsPIDControllerComponent::Activate()
     {
@@ -49,7 +49,7 @@ namespace ROS2
             "PID not defined for joint %s, using a default, the behavior is likely to be wrong for this joint",
             jointName.c_str());
 
-        Controllers::PidConfiguration defaultConfiguration;
+        PidConfiguration defaultConfiguration;
         defaultConfiguration.InitializePid();
         auto applicablePidConfiguration = jointPIDdefined ? m_pidConfiguration.at(jointName) : defaultConfiguration;
 
@@ -93,4 +93,4 @@ namespace ROS2
             }
         }
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

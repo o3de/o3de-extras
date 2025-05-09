@@ -12,7 +12,7 @@
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/Math/Matrix4x4.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Interface allows to obtain intrinsic parameters of the camera. To obtain extrinsic parameters use TransformProviderRequestBus.
     class CameraCalibrationRequest : public AZ::EBusTraits
@@ -41,4 +41,4 @@ namespace ROS2
     };
 
     using CameraCalibrationRequestBus = AZ::EBus<CameraCalibrationRequest>;
-} // namespace ROS2
+} // namespace ROS2Sensors

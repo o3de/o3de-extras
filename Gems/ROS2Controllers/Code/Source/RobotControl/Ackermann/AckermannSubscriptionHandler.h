@@ -10,11 +10,11 @@
 #include <ROS2Controllers/RobotControl/ControlSubscriptionHandler.h>
 #include <ackermann_msgs/msg/ackermann_drive.hpp>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     class AckermannSubscriptionHandler : public ControlSubscriptionHandler<ackermann_msgs::msg::AckermannDrive>
     {
     private:
         void SendToBus(const ackermann_msgs::msg::AckermannDrive& message) override;
     };
-} // namespace ROS2
+} // namespace ROS2Controllers

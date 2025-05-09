@@ -25,7 +25,7 @@ namespace UnitTest
         double iMin = -1.0;
         double iMax = 1.0;
 
-        ROS2::Controllers::PidConfiguration pid(0.0, iGain, 0.0, iMax, iMin, true, 1.0);
+        ROS2Controllers::PidConfiguration pid(0.0, iGain, 0.0, iMax, iMin, true, 1.0);
         pid.InitializePid();
 
         double output = 0.0;
@@ -43,7 +43,7 @@ namespace UnitTest
         double iMin = -1.0;
         double iMax = 1.0;
 
-        ROS2::Controllers::PidConfiguration pid(0.0, iGain, 0.0, iMax, iMin, false, 0.0);
+        ROS2Controllers::PidConfiguration pid(0.0, iGain, 0.0, iMax, iMin, false, 0.0);
         pid.InitializePid();
 
         double output = 0.0;
@@ -65,7 +65,7 @@ namespace UnitTest
         double iMin = -1.0;
         double iMax = 1.0;
 
-        ROS2::Controllers::PidConfiguration pid(0.0, iGain, 0.0, iMax, iMin, true, 0.0);
+        ROS2Controllers::PidConfiguration pid(0.0, iGain, 0.0, iMax, iMin, true, 0.0);
         pid.InitializePid();
 
         double output = 0.0;
@@ -89,7 +89,7 @@ namespace UnitTest
         double iMin = -0.2;
         double iMax = 0.5;
 
-        ROS2::Controllers::PidConfiguration pid(0.0, iGain, 0.0, iMax, iMin, true, 0.0);
+        ROS2Controllers::PidConfiguration pid(0.0, iGain, 0.0, iMax, iMin, true, 0.0);
         pid.InitializePid();
 
         double output = 0.0;
@@ -109,7 +109,7 @@ namespace UnitTest
 
     TEST_F(PIDTest, pOnly)
     {
-        ROS2::Controllers::PidConfiguration pid(1.0, 0.0, 0.0, 0.0, 0.0, false, 0.0);
+        ROS2Controllers::PidConfiguration pid(1.0, 0.0, 0.0, 0.0, 0.0, false, 0.0);
         pid.InitializePid();
 
         double output = 0.0;
@@ -129,7 +129,7 @@ namespace UnitTest
 
     TEST_F(PIDTest, iOnly)
     {
-        ROS2::Controllers::PidConfiguration pid(0.0, 1.0, 0.0, 5.0, -5.0, false, 0.0);
+        ROS2Controllers::PidConfiguration pid(0.0, 1.0, 0.0, 5.0, -5.0, false, 0.0);
         pid.InitializePid();
 
         double output = 0.0;
@@ -155,7 +155,7 @@ namespace UnitTest
 
     TEST_F(PIDTest, dOnly)
     {
-        ROS2::Controllers::PidConfiguration pid(0.0, 0.0, 1.0, 0.0, 0.0, false, 0.0);
+        ROS2Controllers::PidConfiguration pid(0.0, 0.0, 1.0, 0.0, 0.0, false, 0.0);
         pid.InitializePid();
 
         double output = 0.0;
@@ -178,7 +178,7 @@ namespace UnitTest
 
     TEST_F(PIDTest, completePID)
     {
-        ROS2::Controllers::PidConfiguration pid(1.0, 1.0, 1.0, 5.0, -5.0, false, 0.0);
+        ROS2Controllers::PidConfiguration pid(1.0, 1.0, 1.0, 5.0, -5.0, false, 0.0);
         pid.InitializePid();
 
         double output = 0.0;

@@ -17,7 +17,7 @@
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 
-namespace ROS2::UrdfParser
+namespace ROS2RobotImporter::UrdfParser
 {
     class RedirectSDFOutputStream
     {
@@ -139,7 +139,7 @@ namespace ROS2::UrdfParser
         if (Utils::IsFileUrdf(filePath) && settings.m_fixURDF)
         {
             // modify in memory
-            auto [modifiedXmlStr, modifiedElements] = (ROS2::Utils::ModifyURDFInMemory(xmlStr));
+            auto [modifiedXmlStr, modifiedElements] = (Utils::ModifyURDFInMemory(xmlStr));
 
             auto result = Parse(modifiedXmlStr, parserConfig);
             result.m_urdfModifications = AZStd::move(modifiedElements);
@@ -149,4 +149,4 @@ namespace ROS2::UrdfParser
         return Parse(xmlStr, parserConfig);
     }
 
-} // namespace ROS2::UrdfParser
+} // namespace ROS2RobotImporter::UrdfParser

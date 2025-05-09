@@ -12,7 +12,7 @@
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <ROS2Controllers/VehicleDynamics/VehicleInputControlBus.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void AckermannControlComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -54,4 +54,4 @@ namespace ROS2
         VehicleDynamics::VehicleInputControlRequestBus::Event(
             GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetSteering, acs.m_steeringAngle);
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

@@ -25,7 +25,7 @@
 #include <sdf/Model.hh>
 #include <sdf/Sensor.hh>
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     namespace HooksUtils
     {
@@ -121,7 +121,7 @@ namespace ROS2::SDFormat
         //! Get frame configuration from given plugin params
         //! @param pluginParams parameters of the plugin for which frame is created
         //! @return configuration of the frame
-        ROS2FrameConfiguration GetFrameConfiguration(const HooksUtils::PluginParams& pluginParams);
+        ROS2::ROS2FrameConfiguration GetFrameConfiguration(const HooksUtils::PluginParams& pluginParams);
 
         //! Find all parameters given in plugin element.
         //! Given a ROS 2 remapping argument, extracts only names of
@@ -152,4 +152,4 @@ namespace ROS2::SDFormat
         float GetFrequency(const PluginParams& pluginParams, const float defaultVal = 10.0);
 
     } // namespace HooksUtils
-} // namespace ROS2::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

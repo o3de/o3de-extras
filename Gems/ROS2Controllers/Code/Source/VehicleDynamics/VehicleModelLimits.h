@@ -11,7 +11,7 @@
 #include <AzCore/RTTI/TypeInfo.h>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     //! A structure holding limits of vehicle, including speed and steering limits
     class VehicleModelLimits
@@ -38,4 +38,4 @@ namespace ROS2::VehicleDynamics
         //! @returns A limited value. Always returns either value, -absoluteLimit or absoluteLimit.
         static float LimitValue(float value, float absoluteLimit);
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

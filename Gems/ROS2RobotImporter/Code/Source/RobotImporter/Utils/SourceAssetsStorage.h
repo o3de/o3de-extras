@@ -20,12 +20,12 @@
 #include <AzFramework/Asset/AssetSystemBus.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     struct SdfAssetBuilderSettings;
-} // namespace ROS2
+} // namespace ROS2RobotImporter
 
-namespace ROS2::Utils
+namespace ROS2RobotImporter::Utils
 {
     //! Structure contains essential information about the source and product assets in O3DE.
     //! It is designed to provide necessary information for other classes in URDF converter, eg CollidersMaker or VisualsMaker.
@@ -239,4 +239,4 @@ namespace ROS2::Utils
     //! @returns status of the asset after flushing
     AzFramework::AssetSystem::AssetStatus FlushIOOfAsset(const AZ::IO::Path& path);
 
-} // namespace ROS2::Utils
+} // namespace ROS2RobotImporter::Utils

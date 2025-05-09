@@ -18,7 +18,7 @@
 #include <QWindow>
 #endif
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     class ModifiedURDFWindow : public QWidget
     {
@@ -35,4 +35,4 @@ namespace ROS2
         QTextEdit* m_log;
         std::string m_urdf;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

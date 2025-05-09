@@ -16,16 +16,16 @@
 namespace AZStd
 {
     template<>
-    struct hash<ROS2::EncodingConversion>
+    struct hash<ROS2Sensors::EncodingConversion>
     {
-        size_t operator()(const ROS2::EncodingConversion& data) const
+        size_t operator()(const ROS2Sensors::EncodingConversion& data) const
         {
             return (static_cast<AZ::u16>(data.encodingIn) << 8) | static_cast<AZ::u16>(data.encodingOut);
         }
     };
 } // namespace AZStd
 
-namespace ROS2
+namespace ROS2Sensors
 {
     namespace
     {
@@ -205,4 +205,4 @@ namespace ROS2
         return m_priority;
     }
 
-} // namespace ROS2
+} // namespace ROS2Sensors

@@ -8,7 +8,7 @@
 
 #include "TypeConversions.h"
 
-namespace ROS2::URDF
+namespace ROS2RobotImporter::URDF
 {
     AZ::Vector3 TypeConversions::ConvertVector3(const gz::math::Vector3d& urdfVector)
     {
@@ -32,4 +32,4 @@ namespace ROS2::URDF
         return AZ::Transform(azPosition, azRotation, 1.0f);
     }
 
-} // namespace ROS2::URDF
+} // namespace ROS2RobotImporter::URDF

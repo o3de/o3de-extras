@@ -13,7 +13,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Outcome/Outcome.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     //! Populates a given entity with all the contents of the <joint> tag in robot description.
     //! In URDF/SDF, joints are specified between two given links, but in PhysX they are between two Bodies / Colliders.
@@ -30,4 +30,4 @@ namespace ROS2
         JointsMakerResult AddJointComponent(
             const sdf::Joint* joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId) const;
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

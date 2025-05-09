@@ -19,7 +19,7 @@
 #include <Utilities/JointUtilities.h>
 #include <imgui/imgui.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void FingerGripperComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
@@ -111,7 +111,7 @@ namespace ROS2
 
         for (AZ::EntityId descendant : descendantIds)
         {
-            AZStd::string jointName = ROS2::Utils::GetJointName(descendant);
+            AZStd::string jointName = Utils::GetJointName(descendant);
             if (!jointName.empty())
             {
                 AZ_Printf("FingerGripperComponent", "Adding finger joint %s", jointName.c_str());
@@ -286,4 +286,4 @@ namespace ROS2
             m_stallingFor = 0.0f;
         }
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

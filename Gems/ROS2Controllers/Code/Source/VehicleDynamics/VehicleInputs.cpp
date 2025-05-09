@@ -8,7 +8,7 @@
 
 #include "VehicleInputs.h"
 
-namespace ROS2::VehicleDynamics
+namespace ROS2Controllers::VehicleDynamics
 {
     template<>
     AZ::Vector3& InputZeroedOnTimeout<AZ::Vector3>::Zero(AZ::Vector3& input)
@@ -28,4 +28,4 @@ namespace ROS2::VehicleDynamics
     {
         return VehicleInputs{ m_speed.GetValue(), m_angularRates.GetValue(), m_jointRequestedPosition.GetValue() };
     }
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2Controllers::VehicleDynamics

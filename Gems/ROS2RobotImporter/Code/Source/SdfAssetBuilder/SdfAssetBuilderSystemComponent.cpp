@@ -10,7 +10,7 @@
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSystemComponent.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     // These are defined here instead of in the class declaration in the header because we're
     // keeping SdfAssetBuilder.h private to the implementation and out of the header.
@@ -62,4 +62,4 @@ namespace ROS2
         m_sdfAssetBuilder.reset();
     }
 
-} // namespace ROS2
+} // namespace ROS2RobotImporter

@@ -12,7 +12,7 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
 
-namespace ROS2::Utils
+namespace ROS2RobotImporter::Utils
 {
     //! Modifies in memory URDF to increase chance of successful conversion to SDF.
     //! It does the following:
@@ -23,4 +23,4 @@ namespace ROS2::Utils
     AZStd::pair<std::string, UrdfModifications> ModifyURDFInMemory(const std::string& data);
     AZStd::pair<std::string, UrdfModifications> ModifyURDFInMemory(const AZStd::string& data);
 
-} // namespace ROS2::Utils
+} // namespace ROS2RobotImporter::Utils

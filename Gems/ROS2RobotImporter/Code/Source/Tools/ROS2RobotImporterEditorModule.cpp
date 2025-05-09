@@ -33,16 +33,16 @@ namespace ROS2RobotImporter
             m_descriptors.insert(
                 m_descriptors.end(),
                 {
-                    ROS2::ROS2RobotImporterEditorSystemComponent::CreateDescriptor(),
-                    ROS2::SdfAssetBuilderSystemComponent::CreateDescriptor(),
+                    ROS2RobotImporterEditorSystemComponent::CreateDescriptor(),
+                    SdfAssetBuilderSystemComponent::CreateDescriptor(),
                 });
         }
 
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
             return AZ::ComponentTypeList{
-                azrtti_typeid<ROS2::ROS2RobotImporterEditorSystemComponent>(),
-                azrtti_typeid<ROS2::SdfAssetBuilderSystemComponent>(),
+                azrtti_typeid<ROS2RobotImporterEditorSystemComponent>(),
+                azrtti_typeid<SdfAssetBuilderSystemComponent>(),
             };
         }
     };

@@ -11,7 +11,7 @@
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/RTTI/BehaviorContext.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     //! Interface class for handling Twist commands through EBus notifications.
     //! The interface serves to enable control through Twist (and TwistStamped) messages.
@@ -28,4 +28,4 @@ namespace ROS2
     };
 
     using TwistNotificationBus = AZ::EBus<TwistNotifications>;
-} // namespace ROS2
+} // namespace ROS2Controllers

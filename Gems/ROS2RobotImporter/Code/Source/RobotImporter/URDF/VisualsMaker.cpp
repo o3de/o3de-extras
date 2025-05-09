@@ -24,7 +24,7 @@
 #include <sdf/Material.hh>
 #include <sdf/Pbr.hh>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     VisualsMaker::VisualsMaker() = default;
     VisualsMaker::VisualsMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping)
@@ -574,4 +574,4 @@ namespace ROS2
         auto component = entity->CreateComponent(AZ::Render::EditorMaterialComponentTypeId);
         component->SetConfiguration(config);
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

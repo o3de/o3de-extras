@@ -13,7 +13,7 @@
 #include <ROS2Sensors/Camera/CameraPostProcessingRequestBus.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     enum class ImageEncoding : AZ::u8
     {
@@ -30,7 +30,7 @@ namespace ROS2
         AZ::Outcome<void, AZStd::string> ValidateInputEncoding(void* newValue, const AZ::Uuid& valueType);
         AZ::Outcome<void, AZStd::string> ValidateOutputEncoding(void* newValue, const AZ::Uuid& valueType);
 
-        bool operator==(const ROS2::EncodingConversion& rhs) const
+        bool operator==(const EncodingConversion& rhs) const
         {
             return encodingIn == rhs.encodingIn && encodingOut == rhs.encodingOut;
         }
@@ -62,4 +62,4 @@ namespace ROS2
         AZ::u8 m_priority = CameraPostProcessingRequests::DEFAULT_PRIORITY;
         EncodingConversion m_encodingConvertData;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

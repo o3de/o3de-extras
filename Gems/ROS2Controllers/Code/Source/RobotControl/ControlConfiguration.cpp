@@ -9,7 +9,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2Controllers/RobotControl/ControlConfiguration.h>
 
-namespace ROS2
+namespace ROS2Controllers
 {
     void ControlConfiguration::Reflect(AZ::ReflectContext* context)
     {
@@ -31,4 +31,4 @@ namespace ROS2
             }
         }
     }
-} // namespace ROS2
+} // namespace ROS2Controllers

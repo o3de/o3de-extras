@@ -11,7 +11,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
 
-namespace ROS2
+namespace ROS2Sensors
 {
     //! Configuration reflecting a specific Lidar model.
     //! This is meant to capture differences between different Lidars available on the market.
@@ -87,4 +87,4 @@ namespace ROS2
         AZ::Outcome<void, AZStd::string> ValidateMinRange(void* newValue, const AZ::TypeId& valueType) const;
         AZ::Outcome<void, AZStd::string> ValidateMaxRange(void* newValue, const AZ::TypeId& valueType) const;
     };
-} // namespace ROS2
+} // namespace ROS2Sensors

@@ -26,7 +26,7 @@ namespace sdf
     } // namespace v13
 } // namespace sdf
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     //! Buffer for created Entities per link
     using CreatedEntitiesMap = AZStd::unordered_map<const sdf::Link*, AzToolsFramework::Prefab::PrefabEntityResult>;
@@ -60,5 +60,5 @@ namespace ROS2::SDFormat
     };
 
     //! Buffer for ModelPluginImporterHook data
-    using ModelPluginImporterHooksStorage = AZStd::vector<ROS2::SDFormat::ModelPluginImporterHook>;
-} // namespace ROS2::SDFormat
+    using ModelPluginImporterHooksStorage = AZStd::vector<ROS2RobotImporter::SDFormat::ModelPluginImporterHook>;
+} // namespace ROS2RobotImporter::SDFormat

@@ -27,7 +27,7 @@
 #include <Source/EditorColliderComponent.h>
 #include <Source/EditorMeshColliderComponent.h>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     namespace Internal
     {
@@ -220,4 +220,4 @@ namespace ROS2
             break;
         }
     }
-} // namespace ROS2
+} // namespace ROS2RobotImporter

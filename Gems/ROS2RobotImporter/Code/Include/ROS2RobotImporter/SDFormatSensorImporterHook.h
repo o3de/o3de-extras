@@ -23,7 +23,7 @@ namespace sdf
     } // namespace v13
 } // namespace sdf
 
-namespace ROS2::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     //! Hook used in ROS2 Gem Robot Importer to create ROS2 sensor components based on SDFormat model description.
     //! It implements the parameters mapping between the SDFormat sensor and the particular O3DE component.
@@ -58,5 +58,5 @@ namespace ROS2::SDFormat
     };
 
     //! Buffer for SensorImporterHook data
-    using SensorImporterHooksStorage = AZStd::vector<ROS2::SDFormat::SensorImporterHook>;
-} // namespace ROS2::SDFormat
+    using SensorImporterHooksStorage = AZStd::vector<ROS2RobotImporter::SDFormat::SensorImporterHook>;
+} // namespace ROS2RobotImporter::SDFormat

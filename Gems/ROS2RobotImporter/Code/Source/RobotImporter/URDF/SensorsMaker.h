@@ -16,7 +16,7 @@
 
 #include <sdf/sdf.hh>
 
-namespace ROS2
+namespace ROS2RobotImporter
 {
     //! Populates a given entity with all the contents of the <sensor> tag.
     //! Sensors are specified as children of link or joint in SDFormat.
@@ -45,4 +45,4 @@ namespace ROS2
             const SDFormat::SensorImporterHook* hook,
             AZStd::vector<AZ::EntityId>& createdEntities);
     };
-} // namespace ROS2
+} // namespace ROS2RobotImporter

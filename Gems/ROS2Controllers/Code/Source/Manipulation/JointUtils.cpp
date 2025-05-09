@@ -15,17 +15,17 @@
 #include <Source/EditorHingeJointComponent.h>
 #include <Source/EditorPrismaticJointComponent.h>
 
-namespace ROS2::JointUtils
+namespace ROS2Controllers::JointUtils
 {
 
     bool HasNonFixedJoints(const AZ::Entity* entity)
     {
-        const bool hasPrismaticJoints = Utils::HasComponentOfType(entity, PhysX::EditorPrismaticJointComponent::TYPEINFO_Uuid());
-        const bool hasBallJoints = Utils::HasComponentOfType(entity, PhysX::EditorBallJointComponent::TYPEINFO_Uuid());
-        const bool hasHingeJoints = Utils::HasComponentOfType(entity, PhysX::EditorHingeJointComponent::TYPEINFO_Uuid());
-        const bool hasArticulations = Utils::HasComponentOfType(entity, PhysX::EditorArticulationLinkComponent::TYPEINFO_Uuid());
+        const bool hasPrismaticJoints = ROS2::Utils::HasComponentOfType(entity, PhysX::EditorPrismaticJointComponent::TYPEINFO_Uuid());
+        const bool hasBallJoints = ROS2::Utils::HasComponentOfType(entity, PhysX::EditorBallJointComponent::TYPEINFO_Uuid());
+        const bool hasHingeJoints = ROS2::Utils::HasComponentOfType(entity, PhysX::EditorHingeJointComponent::TYPEINFO_Uuid());
+        const bool hasArticulations = ROS2::Utils::HasComponentOfType(entity, PhysX::EditorArticulationLinkComponent::TYPEINFO_Uuid());
         const bool hasJoints = hasPrismaticJoints || hasBallJoints || hasHingeJoints || hasArticulations;
 
         return hasJoints;
     }
-} // namespace ROS2::JointUtils
+} // namespace ROS2Controllers::JointUtils
