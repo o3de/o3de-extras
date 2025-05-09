@@ -31,7 +31,7 @@ namespace ROS2SimulationInterfaces
         AZ::Outcome<NamedPoseList, FailedResult> namedPosesO3DE;
         TagFilter tagFilter;
         tagFilter.m_mode = request.tags.filter_mode;
-        for (auto& tag : request.tags.tags)
+        for (const auto& tag : request.tags.tags)
         {
             tagFilter.m_tags.emplace(tag.c_str());
         }
@@ -46,13 +46,13 @@ namespace ROS2SimulationInterfaces
         else
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
-            for (auto& namedPose : namedPosesO3DE.GetValue())
+            for (const auto& namedPose : namedPosesO3DE.GetValue())
             {
                 simulation_interfaces::msg::NamedPose ros2NamedPose;
                 ros2NamedPose.pose = ROS2::ROS2Conversions::ToROS2Pose(namedPose.m_pose);
                 ros2NamedPose.description = namedPose.m_description.c_str();
                 ros2NamedPose.name = namedPose.m_name.c_str();
-                for (auto& tag : namedPose.m_tags)
+                for (const auto& tag : namedPose.m_tags)
                 {
                     ros2NamedPose.tags.emplace_back(tag.c_str());
                 }

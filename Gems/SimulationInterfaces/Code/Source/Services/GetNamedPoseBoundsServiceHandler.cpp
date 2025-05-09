@@ -48,7 +48,7 @@ namespace ROS2SimulationInterfaces
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
             response.bounds.type = namedPoseBoundsO3DE.GetValue().m_boundsType;
-            for (auto& point : namedPoseBoundsO3DE.GetValue().m_points)
+            for (const auto& point : namedPoseBoundsO3DE.GetValue().m_points)
             {
                 response.bounds.points.emplace_back(ROS2::ROS2Conversions::ToROS2Vector3(point));
             }

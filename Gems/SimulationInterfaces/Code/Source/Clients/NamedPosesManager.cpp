@@ -50,7 +50,7 @@ namespace SimulationInterfaces
             }
             if (parentSimulatedBody->m_bodyHandle == AzPhysics::InvalidSimulatedBodyHandle)
             {
-                auto msg = AZStd::string::format("Entity is not valid simulated body");
+                auto msg = AZStd::string::format("Entity is not a valid simulated body");
                 return AZ::Failure(msg);
             }
             return AZ::Success(parentSimulatedBody);
@@ -125,7 +125,7 @@ namespace SimulationInterfaces
         NamedPoseManagerRequestBus::Handler::BusDisconnect();
     }
 
-    AZ::Outcome<void, FailedResult> NamedPoseManager::RegisterNamedPose(AZ::EntityId namedPoseEntityId)
+    AZ::Outcome<void, FailedResult> NamedPoseManager::RegisterNamedPose(AZ::EntityId& namedPoseEntityId)
     {
         // check if given entity has named pose component
         AZ::Entity* entity = nullptr;
@@ -155,11 +155,11 @@ namespace SimulationInterfaces
         return AZ::Success();
     }
 
-    AZ::Outcome<void, FailedResult> NamedPoseManager::UnregisterNamedPose(AZ::EntityId namedPoseEntityId)
+    AZ::Outcome<void, FailedResult> NamedPoseManager::UnregisterNamedPose(AZ::EntityId& namedPoseEntityId)
     {
         if (!namedPoseEntityId.IsValid())
         {
-            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "given ID is invalid"));
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Given ID is invalid"));
         }
         AZStd::string name;
         AZ::ComponentApplicationBus::BroadcastResult(name, &AZ::ComponentApplicationRequests::GetEntityName, namedPoseEntityId);
@@ -266,7 +266,7 @@ namespace SimulationInterfaces
                 return bounds;
             }
         // this type of collider is currently unsupported by the PhysX engine, but this implementation uses provided abstractions and is
-        // independent  from selected physic engine.
+        // independent from selected physics engine.
         case Physics::ShapeType::ConvexHull:
             {
                 bounds.m_boundsType = simulation_interfaces::msg::Bounds::TYPE_CONVEX_HULL;
