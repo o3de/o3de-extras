@@ -20,14 +20,17 @@
 
 namespace TracyProfiler
 {
-    class CpuProfiler final : public AZ::Debug::Profiler
+    //! Listen to 03DE frame/profiling events and forward them to the Tracy profiling library
+    class TracyProfilerEventForwarder final
+        : public AZ::Debug::Profiler
+        , public AZ::TickBus::Handler
     {
     public:
-        AZ_RTTI(CpuProfiler, "{9467E3F6-0581-4E46-A98A-F3C249FD7B24}", AZ::Debug::Profiler);
-        AZ_CLASS_ALLOCATOR(CpuProfiler, AZ::SystemAllocator);
+        AZ_RTTI(TracyProfilerEventForwarder, "{9467E3F6-0581-4E46-A98A-F3C249FD7B24}", AZ::Debug::Profiler);
+        AZ_CLASS_ALLOCATOR(TracyProfilerEventForwarder, AZ::SystemAllocator);
 
-        CpuProfiler() = default;
-        ~CpuProfiler() = default;
+        TracyProfilerEventForwarder() = default;
+        ~TracyProfilerEventForwarder() = default;
 
         //! Registers/un-registers the AZ::Debug::Profiler instance to the interface
         void Init();
@@ -37,11 +40,15 @@ namespace TracyProfiler
         void BeginRegion(const AZ::Debug::Budget* budget, const char* eventName, ...) final override;
         void EndRegion(const AZ::Debug::Budget* budget) final override;
 
+        //! AZ::TickBus::Handler overrides
+        int GetTickOrder() override;
+        void OnTick(float deltaTime, AZ::ScriptTimePoint timePoint) override;
+
     private:
         using EventIdStack = AZStd::vector<TracyCZoneCtx>;
         static thread_local EventIdStack ms_threadLocalStorage;
 
-        // This lock will only be contested when the CpuProfiler's Shutdown() method has been called
+        // This lock will only be contested when the TracyProfilerEventForwarder's Shutdown() method has been called
         AZStd::shared_mutex m_shutdownMutex;
 
         bool m_initialized = false;

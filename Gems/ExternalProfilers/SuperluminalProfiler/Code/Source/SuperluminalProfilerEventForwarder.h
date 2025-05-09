@@ -16,18 +16,17 @@
 #include <AzCore/std/parallel/mutex.h>
 #include <AzCore/std/parallel/shared_mutex.h>
 
-namespace OptickProfiler
+namespace SuperluminalProfiler
 {
-    class CpuProfiler final
-        : public AZ::Debug::Profiler
-        , public AZ::SystemTickBus::Handler
+    //! Listen to 03DE frame/profiling events and forward them to the Superluminal profiling library
+    class SuperluminalProfilerEventForwarder final : public AZ::Debug::Profiler
     {
     public:
-        AZ_RTTI(CpuProfiler, "{E4076EA4-EF44-499A-9750-37B623BBBF7C}", AZ::Debug::Profiler);
-        AZ_CLASS_ALLOCATOR(CpuProfiler, AZ::SystemAllocator);
+        AZ_RTTI(SuperluminalProfilerEventForwarder, "{A05E7DC4-AB00-41BC-A739-8E58908CB84F}", AZ::Debug::Profiler);
+        AZ_CLASS_ALLOCATOR(SuperluminalProfilerEventForwarder, AZ::SystemAllocator);
 
-        CpuProfiler() = default;
-        ~CpuProfiler() = default;
+        SuperluminalProfilerEventForwarder() = default;
+        ~SuperluminalProfilerEventForwarder() = default;
 
         //! Registers/un-registers the AZ::Debug::Profiler instance to the interface
         void Init();
@@ -37,13 +36,14 @@ namespace OptickProfiler
         void BeginRegion(const AZ::Debug::Budget* budget, const char* eventName, ...) final override;
         void EndRegion(const AZ::Debug::Budget* budget) final override;
 
-        //! AZ::SystemTickBus::Handler overrides
-        void OnSystemTick() final override;
+        //! Check to see if a programmatic capture is currently in progress, implies
+        //! that the profiler is active if returns True.
+        bool IsContinuousCaptureInProgress() const;
 
     private:
-        // This lock will only be contested when the CpuProfiler's Shutdown() method has been called
+        // This lock will only be contested when the SuperluminalProfilerEventForwarder's Shutdown() method has been called
         AZStd::shared_mutex m_shutdownMutex;
 
         bool m_initialized = false;
     };
-} // namespace OptickProfiler
+} // namespace SuperluminalProfiler

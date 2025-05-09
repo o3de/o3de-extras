@@ -10,19 +10,17 @@
 include(FetchContent)
 FetchContent_Declare(
     Tracy
-    GIT_REPOSITORY "https://github.com/wolfpld/tracy"
+    GIT_REPOSITORY "https://github.com/wolfpld/tracy.git"
     GIT_TAG "5d542dc09f3d9378d005092a4ad446bd405f819a" # version 0.11.1
 )
 
 set(TRACY_ENABLE ON)
 set(TRACY_CALLSTACK ON)
 set(TRACY_ON_DEMAND ON)
-ly_append_configurations_options(
-    DEFINES
-        TRACY_ENABLE
-)
 
 FetchContent_MakeAvailable(Tracy)
+
+message(STATUS "TracyProfiler gem uses https://github.com/wolfpld/tracy version 0.11.1 (License: BSD-3-Clause)")
 
 # Let's not clutter the root of any IDE folder structure with 3rd party dependencies
 # Setting the FOLDER makes it show up there in the solution build in VS and similarly
@@ -44,6 +42,9 @@ ly_add_target(
         PRIVATE
             Source
             ${Tracy_SOURCE_DIR}/public/tracy
+    COMPILE_DEFINITIONS
+        PRIVATE
+            TRACY_ENABLE
     BUILD_DEPENDENCIES
         PUBLIC
             AZ::AzCore
@@ -61,6 +62,9 @@ ly_add_target(
             Include
         PRIVATE
             Source
+    COMPILE_DEFINITIONS
+        PRIVATE
+            TRACY_ENABLE
     BUILD_DEPENDENCIES
         PRIVATE
             Gem::${gem_name}.Static

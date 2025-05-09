@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "CpuProfiler.h"
+#include "SuperluminalProfilerEventForwarder.h"
 
 #include <AzCore/Component/Component.h>
 #include <AzCore/Debug/ProfilerBus.h>
@@ -47,7 +47,7 @@ namespace SuperluminalProfiler
 
     private:
         AZStd::atomic_bool m_cpuCaptureInProgress{ false };
-        CpuProfiler m_cpuProfiler;
+        SuperluminalProfilerEventForwarder m_eventForwarder;
     };
 
 } // namespace SuperluminalProfiler

@@ -6,22 +6,23 @@
  *
  */
 
-#include <CpuProfiler.h>
+#include <TracyProfilerEventForwarder.h>
 
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/Serialization/SerializeContext.h>
 
 namespace TracyProfiler
 {
-    thread_local CpuProfiler::EventIdStack CpuProfiler::ms_threadLocalStorage;
+    thread_local TracyProfilerEventForwarder::EventIdStack TracyProfilerEventForwarder::ms_threadLocalStorage;
 
-    void CpuProfiler::Init()
+    void TracyProfilerEventForwarder::Init()
     {
         AZ::Interface<AZ::Debug::Profiler>::Register(this);
+        AZ::TickBus::Handler::BusConnect();
         m_initialized = true;
     }
 
-    void CpuProfiler::Shutdown()
+    void TracyProfilerEventForwarder::Shutdown()
     {
         if (!m_initialized)
         {
@@ -33,9 +34,11 @@ namespace TracyProfiler
 
         // Wait for the remaining threads that might still be processing its profiling calls
         AZStd::unique_lock<AZStd::shared_mutex> shutdownLock(m_shutdownMutex);
+
+        AZ::TickBus::Handler::BusDisconnect();
     }
 
-    void CpuProfiler::BeginRegion(const AZ::Debug::Budget* budget, const char* eventName, ...)
+    void TracyProfilerEventForwarder::BeginRegion(const AZ::Debug::Budget* budget, const char* eventName, ...)
     {
         // Try to lock here, the shutdownMutex will only be contested when the CpuProfiler is shutting down.
         if (m_shutdownMutex.try_lock_shared())
@@ -53,7 +56,7 @@ namespace TracyProfiler
         }
     }
 
-    void CpuProfiler::EndRegion([[maybe_unused]] const AZ::Debug::Budget* budget)
+    void TracyProfilerEventForwarder::EndRegion([[maybe_unused]] const AZ::Debug::Budget* budget)
     {
         // Try to lock here, the shutdownMutex will only be contested when the CpuProfiler is shutting down.
         if (m_shutdownMutex.try_lock_shared() && !ms_threadLocalStorage.empty())
@@ -65,4 +68,16 @@ namespace TracyProfiler
             m_shutdownMutex.unlock_shared();
         }
     }
+
+    int TracyProfilerEventForwarder::GetTickOrder()
+    {
+        return AZ::ComponentTickBus::TICK_LAST;
+    }
+
+    void TracyProfilerEventForwarder::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint timePoint)
+    {
+        // From Tracy documentation about FrameMark : "Ideally, that would be right after the swap buffers command"
+        TracyCFrameMark;
+    }
+
 } // namespace TracyProfiler

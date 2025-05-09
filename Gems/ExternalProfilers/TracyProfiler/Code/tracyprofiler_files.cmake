@@ -7,8 +7,8 @@
 #
 
 set(FILES
-    Source/CpuProfiler.h
-    Source/CpuProfiler.cpp
+    Source/TracyProfilerEventForwarder.h
+    Source/TracyProfilerEventForwarder.cpp
     Source/ProfilerSystemComponent.cpp
     Source/ProfilerSystemComponent.h
 )

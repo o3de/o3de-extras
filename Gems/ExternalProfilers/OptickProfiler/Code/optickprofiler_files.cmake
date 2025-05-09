@@ -7,8 +7,8 @@
 #
 
 set(FILES
-    Source/CpuProfiler.h
-    Source/CpuProfiler.cpp
+    Source/OptickProfilerEventForwarder.h
+    Source/OptickProfilerEventForwarder.cpp
     Source/ProfilerSystemComponent.cpp
     Source/ProfilerSystemComponent.h
 )

@@ -6,17 +6,24 @@
 #
 #
 
+# Expose some internal of Optick for better integration with 03DE
+set(OPTICK_GIT_PATCH "${CMAKE_CURRENT_SOURCE_DIR}/optick.patch")
+
 # Add Optick dependency using FetchContent
 include(FetchContent)
 FetchContent_Declare(
     Optick
-    GIT_REPOSITORY "https://github.com/bombomby/optick"
+    GIT_REPOSITORY "https://github.com/bombomby/optick.git"
     GIT_TAG "8abd28dee1a4034c973a3d32cd1777118e72df7e" # version 1.4.0+
+    PATCH_COMMAND cmake -P "${LY_ROOT_FOLDER}/cmake/PatchIfNotAlreadyPatched.cmake" ${OPTICK_GIT_PATCH}
 )
 
 set(OPTICK_ENABLED ON)
 set(OPTICK_BUILD_GUI_APP OFF)
 set(OPTICK_INSTALL_TARGETS OFF)
+
+message(STATUS "OptickProfiler Gem uses https://github.com/bombomby/optick.git version 1.4.0 (License: MIT)")
+message(STATUS "      With patch: ${OPTICK_GIT_PATCH}")
 
 FetchContent_MakeAvailable(Optick)
 

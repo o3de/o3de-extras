@@ -1,0 +1,28 @@
+diff --git a/src/optick.h b/src/optick.h
+index 96b28b9..8782d73 100644
+--- a/src/optick.h
++++ b/src/optick.h
+@@ -787,6 +787,7 @@ struct OPTICK_API GPUContextScope
+ };
+ ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ OPTICK_API const EventDescription* GetFrameDescription(FrameType::Type frame = FrameType::CPU);
++OPTICK_API void AttachTag(EventStorage* storage, const EventDescription& description, uint32_t val, int64_t timestamp);
+ ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ typedef void* (*AllocateFn)(size_t);
+ typedef void  (*DeallocateFn)(void*);
+diff --git a/src/optick_core.cpp b/src/optick_core.cpp
+index a992c4f..b5b3537 100644
+--- a/src/optick_core.cpp
++++ b/src/optick_core.cpp
+@@ -1823,6 +1823,11 @@ OPTICK_API const EventDescription* GetFrameDescription(FrameType::Type frame)
+ 	return Core::Get().GetFrameDescription(frame);
+ }
+ ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
++OPTICK_API void AttachTag(EventStorage* storage, const EventDescription& description, uint32_t val, int64_t timestamp)
++{
++    storage->tagU32Buffer.Add(TagU32(description, val, timestamp));
++}
++////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ OPTICK_API void SetAllocator(AllocateFn allocateFn, DeallocateFn deallocateFn, InitThreadCb initThreadCb)
+ {
+ 	Memory::SetAllocator(allocateFn, deallocateFn, initThreadCb);

@@ -7,8 +7,8 @@
 #
 
 set(FILES
-    Source/CpuProfiler.h
-    Source/CpuProfiler.cpp
+    Source/SuperluminalProfilerEventForwarder.h
+    Source/SuperluminalProfilerEventForwarder.cpp
     Source/ProfilerSystemComponent.cpp
     Source/ProfilerSystemComponent.h
 )

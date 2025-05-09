@@ -6,7 +6,7 @@
  *
  */
 
-#include <CpuProfiler.h>
+#include <SuperluminalProfilerEventForwarder.h>
 
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -14,13 +14,13 @@
 
 namespace SuperluminalProfiler
 {
-    void CpuProfiler::Init()
+    void SuperluminalProfilerEventForwarder::Init()
     {
         AZ::Interface<AZ::Debug::Profiler>::Register(this);
         m_initialized = true;
     }
 
-    void CpuProfiler::Shutdown()
+    void SuperluminalProfilerEventForwarder::Shutdown()
     {
         if (!m_initialized)
         {
@@ -34,7 +34,7 @@ namespace SuperluminalProfiler
         AZStd::unique_lock<AZStd::shared_mutex> shutdownLock(m_shutdownMutex);
     }
 
-    void CpuProfiler::BeginRegion(const AZ::Debug::Budget* budget, const char* eventName, ...)
+    void SuperluminalProfilerEventForwarder::BeginRegion(const AZ::Debug::Budget* budget, const char* eventName, ...)
     {
         // Try to lock here, the shutdownMutex will only be contested when the CpuProfiler is shutting down.
         if (m_shutdownMutex.try_lock_shared())
@@ -44,7 +44,7 @@ namespace SuperluminalProfiler
         }
     }
 
-    void CpuProfiler::EndRegion([[maybe_unused]] const AZ::Debug::Budget* budget)
+    void SuperluminalProfilerEventForwarder::EndRegion([[maybe_unused]] const AZ::Debug::Budget* budget)
     {
         // Try to lock here, the shutdownMutex will only be contested when the CpuProfiler is shutting down.
         if (m_shutdownMutex.try_lock_shared())

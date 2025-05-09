@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "CpuProfiler.h"
+#include "OptickProfilerEventForwarder.h"
 
 #include <AzCore/Component/Component.h>
 #include <AzCore/Debug/ProfilerBus.h>
@@ -48,7 +48,7 @@ namespace OptickProfiler
     private:
         AZStd::string m_captureFile;
         AZStd::atomic_bool m_cpuCaptureInProgress{ false };
-        CpuProfiler m_cpuProfiler;
+        OptickProfilerEventForwarder m_eventForwarder;
     };
 
 } // namespace OptickProfiler

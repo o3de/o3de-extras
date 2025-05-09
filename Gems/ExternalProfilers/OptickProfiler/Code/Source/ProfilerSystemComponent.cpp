@@ -63,12 +63,12 @@ namespace OptickProfiler
 
     void ProfilerSystemComponent::Activate()
     {
-        m_cpuProfiler.Init();
+        m_eventForwarder.Init();
     }
 
     void ProfilerSystemComponent::Deactivate()
     {
-        m_cpuProfiler.Shutdown();
+        m_eventForwarder.Shutdown();
     }
 
     bool ProfilerSystemComponent::IsActive() const
