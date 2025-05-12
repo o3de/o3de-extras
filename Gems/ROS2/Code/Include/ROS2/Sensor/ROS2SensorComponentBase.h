@@ -11,7 +11,6 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/ROS2TypeIds.h>
 #include <ROS2/Sensor/Events/EventSourceAdapter.h>
 #include <ROS2/Sensor/SensorConfiguration.h>

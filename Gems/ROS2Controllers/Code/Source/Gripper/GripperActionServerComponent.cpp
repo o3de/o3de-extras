@@ -14,7 +14,6 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2Controllers

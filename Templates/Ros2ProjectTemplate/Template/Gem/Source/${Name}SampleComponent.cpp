@@ -19,7 +19,6 @@
 #include <imgui/imgui.h>
 
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 

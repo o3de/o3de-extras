@@ -12,7 +12,6 @@
 #include <AzCore/std/containers/set.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <ROS2/Frame/ROS2Transform.h>
-#include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2
 {

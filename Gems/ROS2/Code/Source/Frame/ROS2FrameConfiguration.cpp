@@ -11,7 +11,6 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
-#include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2
