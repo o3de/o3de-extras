@@ -41,7 +41,7 @@ namespace ROS2RobotImporter
         : m_root(root)
         , m_visualsMaker(urdfAssetsMapping)
         , m_collidersMaker(urdfAssetsMapping)
-        , m_prefabPath(std::move(prefabPath))
+        , m_prefabPath(AZStd::move(prefabPath))
         , m_urdfAssetsMapping(urdfAssetsMapping)
         , m_spawnPosition(spawnPosition)
         , m_useArticulations(useArticulations)
@@ -649,13 +649,10 @@ namespace ROS2RobotImporter
 
         createdEntities.emplace_back(entityId);
 
-        const auto frameComponentId = ROS2::Utils::CreateComponent(entityId, ROS2::ROS2FrameEditorComponent::TYPEINFO_Uuid());
-        if (frameComponentId)
-        {
-            auto* component = entity->FindComponent<ROS2::ROS2FrameEditorComponent>();
-            AZ_Assert(component, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
-            component->SetFrameID(AZStd::string(link.Name().c_str(), link.Name().size()));
-        }
+        [[maybe_unused]] const auto frameComponentId =
+            entity->CreateComponent<ROS2::ROS2FrameEditorComponent>(AZStd::string(link.Name().c_str()));
+        AZ_Assert(frameComponentId, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
+
         auto createdVisualEntities = m_visualsMaker.AddVisuals(&link, entityId);
         createdEntities.insert(createdEntities.end(), createdVisualEntities.begin(), createdVisualEntities.end());
 

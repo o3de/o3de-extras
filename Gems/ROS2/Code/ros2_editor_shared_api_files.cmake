@@ -5,5 +5,4 @@
 
 set(FILES
     Source/Frame/ROS2FrameEditorComponent.cpp
-    Source/ROS2GemUtilities.cpp
 )
