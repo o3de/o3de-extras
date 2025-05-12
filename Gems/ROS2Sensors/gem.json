@@ -18,7 +18,7 @@
         "Linux"
     ],
     "icon_path": "preview.png",
-    "requirements": "Requires ROS 2 Gem and PhysX5 Gem",
+    "requirements": "Requires ROS 2 Gem, LevelGeoreferencing Gem, and PhysX5 Gem",
     "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
     "dependencies": [
         "LevelGeoreferencing",
