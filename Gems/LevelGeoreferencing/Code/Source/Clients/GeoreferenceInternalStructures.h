@@ -1,11 +1,11 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root
-* of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
-*/
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root
+ * of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #pragma once
 #include <AzCore/Math/Vector3.h>
@@ -26,4 +26,4 @@ namespace Georeferencing::WGS
         double m_y = 0.0; //! Y coordinate in meters.
         double m_z = 0.0; //! Z coordinate in meters.
     };
-}
+} // namespace Georeferencing::WGS
