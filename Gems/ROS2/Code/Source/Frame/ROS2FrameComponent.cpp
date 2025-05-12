@@ -19,7 +19,6 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
@@ -28,6 +27,12 @@ namespace ROS2
 {
     namespace Internal
     {
+        bool HasComponentOfType(const AZ::Entity* entity, const AZ::Uuid typeId)
+        {
+            auto components = AZ::EntityUtils::FindDerivedComponents(entity, typeId);
+            return !components.empty();
+        }
+
         AZ::TransformInterface* GetEntityTransformInterface(const AZ::Entity* entity)
         {
             if (!entity)
@@ -36,8 +41,7 @@ namespace ROS2
                 return nullptr;
             }
 
-            auto* interface = Utils::GetGameOrEditorComponent<AzFramework::TransformComponent>(entity);
-
+            auto* interface = entity->FindComponent<AzFramework::TransformComponent>();
             return interface;
         }
 
@@ -59,7 +63,7 @@ namespace ROS2
             AZ::ComponentApplicationBus::BroadcastResult(parentEntity, &AZ::ComponentApplicationRequests::FindEntity, parentEntityId);
             AZ_Assert(parentEntity, "No parent entity id : %s", parentEntityId.ToString().c_str());
 
-            auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(parentEntity);
+            auto* component = parentEntity->FindComponent<ROS2FrameComponent>();
             if (component == nullptr)
             { // Parent entity has no ROS2Frame, but there can still be a ROS2Frame in its ancestors
                 return GetFirstROS2FrameAncestor(parentEntity);
@@ -151,11 +155,11 @@ namespace ROS2
             {
                 // Quickfix: Use hard-coded uuids to avoid linking to PhysX.
                 const bool hasJoints =
-                    Utils::HasComponentOfType(m_entity, AZ::Uuid("{B01FD1D2-1D91-438D-874A-BF5EB7E919A8}")); // PhysX::JointComponent;
-                const bool hasFixedJoints =
-                    Utils::HasComponentOfType(m_entity, AZ::Uuid("{02E6C633-8F44-4CEE-AE94-DCB06DE36422}")); // PhysX::FixedJointComponent
-                const bool hasArticulations =
-                    Utils::HasComponentOfType(m_entity, AZ::Uuid("{48751E98-B35F-4A2F-A908-D9CDD5230264}")); // PhysX::ArticulationComponent
+                    Internal::HasComponentOfType(m_entity, AZ::Uuid("{B01FD1D2-1D91-438D-874A-BF5EB7E919A8}")); // PhysX::JointComponent;
+                const bool hasFixedJoints = Internal::HasComponentOfType(
+                    m_entity, AZ::Uuid("{02E6C633-8F44-4CEE-AE94-DCB06DE36422}")); // PhysX::FixedJointComponent
+                const bool hasArticulations = Internal::HasComponentOfType(
+                    m_entity, AZ::Uuid("{48751E98-B35F-4A2F-A908-D9CDD5230264}")); // PhysX::ArticulationComponent
                 m_isDynamic = (hasJoints && !hasFixedJoints) || hasArticulations;
             }
 

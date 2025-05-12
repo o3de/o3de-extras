@@ -19,7 +19,6 @@
 #include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
-#include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2
 {
@@ -93,8 +92,7 @@ namespace ROS2
             return nullptr;
         }
 
-        auto* interface = Utils::GetGameOrEditorComponent<AzToolsFramework::Components::TransformComponent>(entity);
-
+        auto* interface = entity->FindComponent<AzToolsFramework::Components::TransformComponent>();
         return interface;
     }
 
