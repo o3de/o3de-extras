@@ -15,7 +15,6 @@
 #include <AzCore/std/functional.h>
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
-#include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <ROS2Controllers/Manipulation/JointInfo.h>
 #include <Source/ArticulationLinkComponent.h>
