@@ -16,9 +16,9 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzToolsFramework/UI/PropertyEditor/PropertyEditorAPI.h>
-#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
@@ -36,7 +36,7 @@ namespace ROS2
 
     void ROS2FrameEditorComponent::Activate()
     {
-        ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
+        ROS2FrameEditorComponentBus::Handler::BusConnect(GetEntityId());
         AZ::EntityBus::Handler::BusConnect(GetEntityId());
         if (auto* frameSystemInterface = ROS2FrameSystemInterface::Get())
         {
@@ -51,7 +51,7 @@ namespace ROS2
             frameSystemInterface->UnregisterFrame(GetEntityId());
         }
         AZ::EntityBus::Handler::BusDisconnect();
-        ROS2FrameComponentBus::Handler::BusDisconnect();
+        ROS2FrameEditorComponentBus::Handler::BusDisconnect();
     }
 
     AZStd::string ROS2FrameEditorComponent::GetGlobalFrameName() const
@@ -89,7 +89,8 @@ namespace ROS2
             &AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Events::OnEntityComponentPropertyChanged,
             GetEntity()->FindComponent<ROS2FrameEditorComponent>()->GetId());
 
-        ROS2FrameComponentNotificationBus::Event(GetEntityId(), &ROS2FrameComponentNotificationBus::Events::OnConfigurationChange);
+        ROS2FrameEditorComponentNotificationBus::Event(
+            GetEntityId(), &ROS2FrameEditorComponentNotificationBus::Events::OnConfigurationChange);
     }
 
     void ROS2FrameEditorComponent::UpdateNamespaceConfiguration(

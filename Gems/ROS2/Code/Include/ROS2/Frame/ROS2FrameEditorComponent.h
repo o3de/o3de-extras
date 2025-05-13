@@ -12,8 +12,8 @@
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
-#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
+#include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2TypeIds.h>
 
@@ -26,7 +26,7 @@ namespace ROS2
     //! @note A robot should have this component on every level of entity hierarchy (for each joint, fixed or dynamic)
     class ROS2FrameEditorComponent
         : public AzToolsFramework::Components::EditorComponentBase
-        , public ROS2FrameComponentBus::Handler
+        , public ROS2FrameEditorComponentBus::Handler
         , public AZ::EntityBus::Handler
     {
     public:
@@ -64,7 +64,7 @@ namespace ROS2
         //! @param strategy Namespace strategy to use.
         void UpdateNamespaceConfiguration(const AZStd::string& ros2Namespace, const NamespaceConfiguration::NamespaceStrategy& strategy);
 
-        // ROS2FrameComponentBus::Handler overrides
+        // ROS2FrameEditorComponentBus::Handler overrides
         AZStd::string GetFrameID() const override;
         AZ::Name GetJointName() const override;
         AZStd::string GetNamespace() const override;

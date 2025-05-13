@@ -17,7 +17,7 @@ namespace ROS2
 {
     //! Interface for the ROS2FrameEditorComponent.
     //! Used to change and get information about the ROS2FrameEditorComponent.
-    class ROS2FrameComponentRequests : public AZ::ComponentBus
+    class ROS2FrameEditorComponentRequests : public AZ::ComponentBus
     {
     public:
         // One handler per address is supported.
@@ -62,9 +62,9 @@ namespace ROS2
         virtual bool IsTopLevel() const = 0;
     };
 
-    using ROS2FrameComponentBus = AZ::EBus<ROS2FrameComponentRequests>;
+    using ROS2FrameEditorComponentBus = AZ::EBus<ROS2FrameEditorComponentRequests>;
 
-    class ROS2FrameComponentNotifications : public AZ::ComponentBus
+    class ROS2FrameEditorComponentNotifications : public AZ::ComponentBus
     {
     public:
         static const AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
@@ -82,5 +82,5 @@ namespace ROS2
         virtual void OnChildRemoved(AZ::EntityId removedChild) = 0;
     };
 
-    using ROS2FrameComponentNotificationBus = AZ::EBus<ROS2FrameComponentNotifications>;
+    using ROS2FrameEditorComponentNotificationBus = AZ::EBus<ROS2FrameEditorComponentNotifications>;
 } // namespace ROS2
