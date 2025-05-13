@@ -22,7 +22,6 @@ namespace ROS2
         }
 
         return AZStd::string::format("%s/%s", ns.c_str(), name.c_str());
-        ;
     }
 
     AZStd::string ROS2Names::RosifyName(const AZStd::string& input)

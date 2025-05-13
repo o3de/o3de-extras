@@ -8,7 +8,6 @@
 
 #include "ROS2GNSSSensorComponent.h"
 #include <AzCore/Math/Matrix4x4.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
 #include <Georeferencing/GeoreferenceBus.h>

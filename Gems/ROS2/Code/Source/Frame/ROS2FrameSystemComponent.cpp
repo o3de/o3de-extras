@@ -18,7 +18,6 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 
 namespace ROS2
 {
