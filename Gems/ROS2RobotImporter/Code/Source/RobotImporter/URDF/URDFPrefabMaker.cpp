@@ -24,7 +24,6 @@
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
-#include <ROS2/ROS2GemUtilities.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>

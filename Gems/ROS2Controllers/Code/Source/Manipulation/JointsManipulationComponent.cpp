@@ -16,7 +16,6 @@
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h>
@@ -107,11 +106,9 @@ namespace ROS2Controllers
                 }
                 const AZStd::string jointName(frameComponent->GetJointName().GetCStr());
 
-                auto* hingeComponent =
-                    azrtti_cast<PhysX::JointComponent*>(ROS2::Utils::GetGameOrEditorComponent<PhysX::HingeJointComponent>(entity));
-                auto* prismaticComponent =
-                    azrtti_cast<PhysX::JointComponent*>(ROS2::Utils::GetGameOrEditorComponent<PhysX::PrismaticJointComponent>(entity));
-                auto* articulationComponent = ROS2::Utils::GetGameOrEditorComponent<PhysX::ArticulationLinkComponent>(entity);
+                auto* hingeComponent = entity->FindComponent<PhysX::HingeJointComponent>();
+                auto* prismaticComponent = entity->FindComponent<PhysX::PrismaticJointComponent>();
+                auto* articulationComponent = entity->FindComponent<PhysX::ArticulationLinkComponent>();
                 [[maybe_unused]] bool classicJoint = hingeComponent || prismaticComponent;
                 AZ_Warning(
                     "JointsManipulationComponent",
