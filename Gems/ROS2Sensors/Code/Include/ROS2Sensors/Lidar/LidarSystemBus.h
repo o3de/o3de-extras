@@ -10,6 +10,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <ROS2Sensors/Lidar/LidarRaycasterBus.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
 {
@@ -17,7 +18,7 @@ namespace ROS2Sensors
     class LidarSystemRequests
     {
     public:
-        AZ_RTTI(LidarSystemRequests, "{007871d1-2783-4382-977b-558f436c54a5}");
+        AZ_RTTI(LidarSystemRequests, LidarSystemBusTypeId);
 
         //! Creates a new Lidar.
         //! @param lidarEntityId EntityId holding the ROS2LidarSensorComponent.

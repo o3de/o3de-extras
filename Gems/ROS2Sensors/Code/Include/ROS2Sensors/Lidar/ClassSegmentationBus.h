@@ -13,6 +13,7 @@
 #include <AzCore/Math/Color.h>
 #include <LmbrCentral/Scripting/TagComponentBus.h>
 #include <ROS2Sensors/Lidar/SegmentationClassConfiguration.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
 {
@@ -24,7 +25,7 @@ namespace ROS2Sensors
     class ClassSegmentationRequests
     {
     public:
-        AZ_RTTI(ClassSegmentationRequests, "{69b4109e-25ff-482f-b92e-f19cdf06bce2}");
+        AZ_RTTI(ClassSegmentationRequests, ClassSegmentationBusTypeId);
 
         //! Returns the color of segmentation class with the provided class ID.
         //! If no segmentation class is found with provided class ID, returns AZ::Colors::White.

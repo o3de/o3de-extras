@@ -10,6 +10,7 @@
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
 {
@@ -20,7 +21,7 @@ namespace ROS2Sensors
     struct LidarTemplate
     {
     public:
-        AZ_TYPE_INFO(LidarTemplate, "{9E9EF583-733D-4450-BBA0-ADD4D1BEFBF2}");
+        AZ_TYPE_INFO(LidarTemplate, LidarTemplateTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
         enum class LidarModel
@@ -39,7 +40,7 @@ namespace ROS2Sensors
         struct NoiseParameters
         {
         public:
-            AZ_TYPE_INFO(NoiseParameters, "{58c007ad-320f-49df-bc20-6419159ee176}");
+            AZ_TYPE_INFO(NoiseParameters, LidarTemplateNoiseParametersTypeId);
             static void Reflect(AZ::ReflectContext* context);
 
             //! Angular noise standard deviation, in degrees

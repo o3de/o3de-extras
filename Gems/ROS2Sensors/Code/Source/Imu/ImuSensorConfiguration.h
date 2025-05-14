@@ -11,13 +11,14 @@
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
 {
     //! A structure capturing configuration of a IMU sensor.
     struct ImuSensorConfiguration
     {
-        AZ_TYPE_INFO(ImuSensorConfiguration, "{6788e84f-b985-4413-8e2b-46fbfb667c95}");
+        AZ_TYPE_INFO(ImuSensorConfiguration, ImuSensorConfigurationTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
         //! Length of filter that removes numerical noise

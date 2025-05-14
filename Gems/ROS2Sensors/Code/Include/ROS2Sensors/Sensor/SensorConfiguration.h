@@ -12,6 +12,7 @@
 #include <AzCore/std/containers/map.h>
 #include <AzCore/std/string/string.h>
 #include <ROS2/Communication/TopicConfiguration.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
 {
@@ -21,7 +22,7 @@ namespace ROS2Sensors
     struct SensorConfiguration
     {
     public:
-        AZ_TYPE_INFO(SensorConfiguration, "{4755363D-0B5A-42D7-BBEF-152D87BA10D7}");
+        AZ_TYPE_INFO(SensorConfiguration, SensorConfigurationTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
         //! ROS2 Publishers of this sensor.

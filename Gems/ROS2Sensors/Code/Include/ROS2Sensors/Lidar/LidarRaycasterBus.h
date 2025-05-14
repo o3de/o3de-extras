@@ -14,6 +14,7 @@
 #include <AzCore/Outcome/Outcome.h>
 #include <ROS2/Communication/QoS.h>
 #include <ROS2Sensors/Lidar/RaycastResults.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
 {
@@ -98,7 +99,7 @@ namespace ROS2Sensors
     class LidarRaycasterRequests
     {
     public:
-        AZ_RTTI(LidarRaycasterRequests, "{253a02c8-b6cb-493c-b16f-012ccf9db226}");
+        AZ_RTTI(LidarRaycasterRequests, LidarRaycasterBusTypeId);
 
         //! Configures ray orientations.
         //! @param orientations Vector of orientations as Euler angles in radians. Each ray direction is computed by transforming a unit

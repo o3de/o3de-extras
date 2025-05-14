@@ -8,9 +8,11 @@
 #pragma once
 
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/Math/Color.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
 {
@@ -18,7 +20,7 @@ namespace ROS2Sensors
     class SegmentationClassConfiguration
     {
     public:
-        AZ_TYPE_INFO(SegmentationClassConfiguration, "{e46e75f4-1e0e-48ca-a22f-43afc8f25133}");
+        AZ_TYPE_INFO(SegmentationClassConfiguration, SegmentationClassConfigurationTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
         static const SegmentationClassConfiguration UnknownClass;

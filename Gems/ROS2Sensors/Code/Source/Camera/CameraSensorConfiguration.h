@@ -10,13 +10,14 @@
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
 {
     //! A structure capturing configuration of a single camera sensor with up to two image sources (color and depth).
     struct CameraSensorConfiguration
     {
-        AZ_TYPE_INFO(CameraSensorConfiguration, "{386A2640-442B-473D-BC2A-665D049D7EF5}");
+        AZ_TYPE_INFO(CameraSensorConfiguration, CameraSensorConfigurationTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
         static constexpr int m_minWidth = 1;
