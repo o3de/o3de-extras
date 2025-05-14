@@ -10,6 +10,7 @@
 
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/ROS2Bus.h>
+#include <ROS2/ROS2TypeIds.h>
 #include <ROS2/Sensor/Events/SensorEventSource.h>
 
 namespace ROS2
@@ -201,5 +202,5 @@ namespace ROS2
         int m_tickCounter{ 0 }; ///< Internal counter for controlling adapter frequency.
     };
 
-    AZ_TYPE_INFO_TEMPLATE(EventSourceAdapter, "{DC8BB5F7-8E0E-42A1-BD82-5FCD9D31B9DD}", AZ_TYPE_INFO_CLASS)
+    AZ_TYPE_INFO_TEMPLATE(EventSourceAdapter, EventSourceAdapterTypeId, AZ_TYPE_INFO_CLASS)
 } // namespace ROS2

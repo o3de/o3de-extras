@@ -16,6 +16,7 @@
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2GemUtilities.h>
+#include <ROS2/ROS2TypeIds.h>
 
 namespace ROS2
 {
@@ -30,7 +31,7 @@ namespace ROS2
         , public AZ::EntityBus::Handler
     {
     public:
-        AZ_COMPONENT(ROS2FrameEditorComponent, "{f76d6f29-73c3-40b2-bcc2-47fc824c25df}", AzToolsFramework::Components::EditorComponentBase);
+        AZ_COMPONENT(ROS2FrameEditorComponent, ROS2FrameEditorComponentTypeId, AzToolsFramework::Components::EditorComponentBase);
 
         ROS2FrameEditorComponent() = default;
         ~ROS2FrameEditorComponent() = default;

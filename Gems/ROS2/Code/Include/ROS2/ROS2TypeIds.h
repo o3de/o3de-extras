@@ -22,4 +22,25 @@ namespace ROS2
 
     // Interface TypeIds
     inline constexpr const char* ROS2RequestsTypeId = "{A9BDBFF6-E644-430D-8096-CDB53C88E8FC}";
+
+    // Communication Interface TypeIds
+    inline constexpr const char* PublisherConfigurationTypeId = "{E50D1926-0322-4832-BD72-C48F854131C8}";
+    inline constexpr const char* QoSTypeId = "{46692EA4-EA4C-495E-AD3C-426EAB8954D3}";
+    inline constexpr const char* TopicConfigurationTypeId = "{7535D58F-5284-4657-A799-1F69D3F5AA42}";
+
+    // Frame Interface TypeIds
+    inline constexpr const char* NamespaceConfigurationTypeId = "{5E5BC6EA-DD01-480E-A4D1-6857CF70FDC8}";
+    inline constexpr const char* ROS2FrameComponentTypeId = "{AC74CBC1-A5DC-4014-85D7-0E7934F352BD}";
+    inline constexpr const char* ROS2FrameConfigurationTypeId = "{04882F01-5451-4EFA-B4F8-CD57E4B6CADF}";
+    inline constexpr const char* ROS2FrameEditorComponentTypeId = "{F76D6F29-73C3-40B2-BCC2-47FC824C25DF}";
+
+    // Sensors Events TypeIds
+    inline constexpr const char* EventSourceAdapterTypeId = "{DC8BB5F7-8E0E-42A1-BD82-5FCD9D31B9DD}";
+    inline constexpr const char* TickBasedSourceTypeId = "{AD3CC041-5F7C-45E8-AA2D-5D8A1D4CC466}";
+    inline constexpr const char* PhysicsBasedSourceTypeId = "{48BB21A8-F14E-4869-95DC-28EEA279Cf53}";
+
+    // Spawner Bus TypeIds
+    inline constexpr const char* SpawnerRequestsTypeId = "{3C42A3A1-1B8E-4800-9473-E4441315D7C8}";
+    inline constexpr const char* SpawnerNotificationTypeId = "{0D22B024-48C7-457C-BFFB-D292045B68EC}";
+    inline constexpr const char* SpawnerBusHandlerTypeId = "{9EB89664-0BE5-4E89-8E17-01B21073EBB8}";
 } // namespace ROS2

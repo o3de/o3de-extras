@@ -10,6 +10,7 @@
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
+#include <ROS2/ROS2TypeIds.h>
 
 namespace ROS2
 {
@@ -20,7 +21,7 @@ namespace ROS2
     struct NamespaceConfiguration
     {
     public:
-        AZ_TYPE_INFO(NamespaceConfiguration, "{5E5BC6EA-DD01-480E-A4D1-6857CF70FDC8}");
+        AZ_TYPE_INFO(NamespaceConfiguration, NamespaceConfigurationTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
         //! A choice of methods to handle namespaces.
