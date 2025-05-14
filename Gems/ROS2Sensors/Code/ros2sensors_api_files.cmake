@@ -11,7 +11,6 @@ set(FILES
     Include/ROS2Sensors/Sensor/SensorConfiguration.h
     Include/ROS2Sensors/Sensor/SensorConfigurationRequestBus.h
     Include/ROS2Sensors/Sensor/ROS2SensorComponentBase.h
-    Include/ROS2Sensors/Sensor/SensorHelper.h
     Include/ROS2Sensors/Camera/CameraCalibrationRequestBus.h
     Include/ROS2Sensors/Camera/CameraPostProcessingRequestBus.h
     Include/ROS2Sensors/GNSS/GNSSPostProcessingRequestBus.h
