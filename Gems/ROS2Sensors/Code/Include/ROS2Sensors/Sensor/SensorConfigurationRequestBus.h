@@ -10,7 +10,6 @@
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
-#include <AzCore/Interface/Interface.h>
 #include <ROS2Sensors/Sensor/SensorConfiguration.h>
 namespace ROS2Sensors
 {

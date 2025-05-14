@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include <AzCore/Math/Matrix3x3.h>
+#include <AzCore/Math/Vector3.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>

@@ -22,6 +22,7 @@ namespace ROS2Sensors
     inline constexpr const char* ROS2SensorsEditorModuleTypeId = ROS2SensorsModuleTypeId;
 
     // ROS2Sensors Interface TypeIds
+    inline constexpr const char* ImuConfigurationRequestTypeId = "{8D426B46-DF12-419A-96FB-4E2834567ECD}";
     inline constexpr const char* SensorConfigurationTypeId = "{4755363D-0B5A-42D7-BBEF-152D87BA10D7}";
     inline constexpr const char* SensorConfigurationRequestTypeId = "{01904EAB-FA33-7487-B634-E3F8361EB5FB}";
     inline constexpr const char* ROS2SensorComponentBaseTypeId = "{2DF9A652-DF5D-43B1-932F-B6A838E36E97}";
@@ -42,7 +43,6 @@ namespace ROS2Sensors
     // Sensor Configurations TypeIds
     inline constexpr const char* CameraSensorConfigurationTypeId = "{386A2640-442B-473D-BC2A-665D049D7EF5}";
     inline constexpr const char* ImuSensorConfigurationTypeId = "{6788E84F-B985-4413-8E2B-46FBFB667C95}";
-    inline constexpr const char* LidarSensorConfigurationTypeId = "{e46e75f4-1e0e-48ca-a22f-43afccff25101}";
     inline constexpr const char* LidarTemplateTypeId = "{9E9EF583-733D-4450-BBA0-ADD4D1BEFBF2}";
     inline constexpr const char* LidarTemplateNoiseParametersTypeId = "{58C007AD-320F-49DF-BC20-6419159EE176}";
     inline constexpr const char* ROS2OdometryCovarianceTypeId = "{DB015832-F621-11ED-B67E-0242AC120002}";

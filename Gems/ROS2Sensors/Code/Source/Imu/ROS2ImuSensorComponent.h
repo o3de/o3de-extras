@@ -14,6 +14,7 @@
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2Sensors/Imu/ImuConfigurationRequestBus.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
@@ -25,7 +26,9 @@ namespace ROS2Sensors
     //! An IMU (Inertial Measurement Unit) sensor Component.
     //! IMUs typically include gyroscopes, accelerometers and magnetometers. This component encapsulates data
     //! acquisition and its publishing to ROS2 ecosystem. IMU Component requires ROS2FrameComponent.
-    class ROS2ImuSensorComponent : public ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
+    class ROS2ImuSensorComponent
+        : public ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
+        , protected ImuConfigurationRequestBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2ImuSensorComponent, ROS2Sensors::ROS2ImuSensorComponentTypeId, SensorBaseType);
@@ -41,6 +44,28 @@ namespace ROS2Sensors
         //////////////////////////////////////////////////////////////////////////
 
     private:
+        //////////////////////////////////////////////////////////////////////////
+        // ImuConfigurationRequest::Handler overrides
+        int GetFilterSize() const override;
+        void SetFilterSize(int filterSize) override;
+        int GetMinFilterSize() const override;
+        void SetMinFilterSize(int minFilterSize) override;
+        int GetMaxFilterSize() const override;
+        void SetMaxFilterSize(int maxFilterSize) override;
+        bool GetIncludeGravity() const override;
+        void SetIncludeGravity(bool includeGravity) override;
+        bool GetAbsoluteRotation() const override;
+        void SetAbsoluteRotation(bool absoluteRotation) override;
+        AZ::Vector3 GetOrientationVariance() const override;
+        void SetOrientationVariance(const AZ::Vector3& orientationVariance) override;
+        AZ::Vector3 GetAngularVelocityVariance() const override;
+        void SetAngularVelocityVariance(const AZ::Vector3& angularVelocityVariance) override;
+        AZ::Vector3 GetLinearAccelerationVariance() const override;
+        void SetLinearAccelerationVariance(const AZ::Vector3& linearAccelerationVariance) override;
+        //////////////////////////////////////////////////////////////////////////
+
+        ImuSensorConfiguration m_imuConfiguration;
+
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> m_imuPublisher;
         sensor_msgs::msg::Imu m_imuMsg;
         AZ::Vector3 m_previousLinearVelocity = AZ::Vector3::CreateZero();
@@ -49,13 +74,10 @@ namespace ROS2Sensors
         AZStd::deque<AZ::Vector3> m_filterAcceleration;
         AZStd::deque<AZ::Vector3> m_filterAngularVelocity;
 
-        ImuSensorConfiguration m_imuConfiguration;
-
         AZ::Matrix3x3 m_orientationCovariance = AZ::Matrix3x3::CreateZero();
         AZ::Matrix3x3 m_angularVelocityCovariance = AZ::Matrix3x3::CreateZero();
         AZ::Matrix3x3 m_linearAccelerationCovariance = AZ::Matrix3x3::CreateZero();
 
-    private:
         void OnPhysicsEvent(AzPhysics::SceneHandle sceneHandle);
 
         void OnImuEvent(float imuDeltaTime, AzPhysics::SceneHandle sceneHandle, float physicsDeltaTime);
