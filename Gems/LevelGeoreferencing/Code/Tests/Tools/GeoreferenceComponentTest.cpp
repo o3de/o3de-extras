@@ -53,7 +53,7 @@ namespace UnitTest
 
     void GeoreferenceComponentTestEnvironment::AddGemsAndComponents()
     {
-        AddActiveGems(AZStd::to_array<AZStd::string_view>({ "Georeferencing" }));
+        AddActiveGems(AZStd::to_array<AZStd::string_view>({ "LevelGeoreferencing" }));
         AddDynamicModulePaths({});
         AddComponentDescriptors(AZStd::initializer_list<AZ::ComponentDescriptor*>{
             Georeferencing::GeoReferenceLevelComponent::CreateDescriptor(),
@@ -216,7 +216,6 @@ namespace UnitTest
         AZ::Vector3 resultLevel;
         Georeferencing::GeoreferenceRequestsBus::BroadcastResult(
             resultLevel, &Georeferencing::GeoreferenceRequests::ConvertFromWGS84ToLevel, queryCoordinate);
-        printf("resultLevel: %f %f %f\n", resultLevel.GetX(), resultLevel.GetY(), resultLevel.GetZ());
         EXPECT_LT(resultLevel.GetX(), 0.0);
         EXPECT_NEAR(resultLevel.GetY(), 0.0, OneMillimeter);
     }
