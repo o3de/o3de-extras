@@ -64,5 +64,4 @@ set(FILES
     Source/Odometry/ROS2WheelOdometry.cpp
     Source/Odometry/ROS2WheelOdometry.h
     Source/Odometry/ROS2OdometryCovariance.cpp
-    Source/Odometry/ROS2OdometryCovariance.h
 )

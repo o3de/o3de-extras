@@ -14,7 +14,7 @@
 
 namespace ROS2Sensors
 {
-    //! Interface that allows to get and set Imu configuration.
+    //! Interface that allows to get and set Imu sensor's configuration.
     class ImuConfigurationRequest : public AZ::EBusTraits
     {
     public:

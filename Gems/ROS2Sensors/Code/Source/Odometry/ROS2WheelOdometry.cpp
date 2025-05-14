@@ -7,9 +7,9 @@
  */
 
 #include "ROS2WheelOdometry.h"
-#include "Odometry/ROS2OdometryCovariance.h"
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
 
 namespace ROS2Sensors
 {
@@ -137,4 +137,25 @@ namespace ROS2Sensors
         m_odometryPublisher.reset();
         ROS2SensorComponentBase::Deactivate();
     }
+
+    ROS2OdometryCovariance ROS2WheelOdometryComponent::GetPoseCovariance() const
+    {
+        return m_poseCovariance;
+    }
+
+    void ROS2WheelOdometryComponent::SetPoseCovariance(const ROS2OdometryCovariance& covariance)
+    {
+        m_poseCovariance = covariance;
+    }
+
+    ROS2OdometryCovariance ROS2WheelOdometryComponent::GetTwistCovariance() const
+    {
+        return m_twistCovariance;
+    }
+
+    void ROS2WheelOdometryComponent::SetTwistCovariance(const ROS2OdometryCovariance& covariance)
+    {
+        m_twistCovariance = covariance;
+    }
+
 } // namespace ROS2Sensors

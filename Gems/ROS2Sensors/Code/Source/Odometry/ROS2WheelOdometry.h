@@ -9,11 +9,11 @@
 
 #include <AzCore/Math/Transform.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
+#include <ROS2Sensors/Odometry/WheelOdometryConfigurationReqeustBus.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
-
-#include "ROS2OdometryCovariance.h"
 
 namespace ROS2Sensors
 {
@@ -21,7 +21,9 @@ namespace ROS2Sensors
     //! It constructs and publishes an odometry message, which contains information about the vehicle's velocity and position in space.
     //! This is a physical sensor that takes a vehicle's configuration and computes updates from the wheels' rotations.
     //! @see <a href="https://index.ros.org/p/nav_msgs/">nav_msgs package</a>.
-    class ROS2WheelOdometryComponent : public ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
+    class ROS2WheelOdometryComponent
+        : public ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
+        , protected WheelOdometryConfigurationRequestBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2WheelOdometryComponent, ROS2Sensors::ROS2WheelOdometryComponentTypeId, SensorBaseType);
@@ -36,10 +38,19 @@ namespace ROS2Sensors
         //////////////////////////////////////////////////////////////////////////
 
     private:
+        //////////////////////////////////////////////////////////////////////////
+        // Component overrides
+        ROS2OdometryCovariance GetPoseCovariance() const override;
+        void SetPoseCovariance(const ROS2OdometryCovariance& covariance) override;
+        ROS2OdometryCovariance GetTwistCovariance() const override;
+        void SetTwistCovariance(const ROS2OdometryCovariance& covariance) override;
+
+        //////////////////////////////////////////////////////////////////////////
+
         std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> m_odometryPublisher;
         nav_msgs::msg::Odometry m_odometryMsg;
-        AZ::Vector3 m_robotPose{ 0 };
-        AZ::Quaternion m_robotRotation{ 0, 0, 0, 1 };
+        AZ::Vector3 m_robotPose = AZ::Vector3::CreateZero();
+        AZ::Quaternion m_robotRotation = AZ::Quaternion::CreateIdentity();
         ROS2OdometryCovariance m_poseCovariance;
         ROS2OdometryCovariance m_twistCovariance;
 
