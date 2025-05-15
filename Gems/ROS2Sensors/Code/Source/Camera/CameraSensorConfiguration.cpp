@@ -6,9 +6,9 @@
  *
  */
 
-#include "CameraSensorConfiguration.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
+#include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
 
 namespace ROS2Sensors
 {

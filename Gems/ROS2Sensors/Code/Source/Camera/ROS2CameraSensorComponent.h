@@ -15,10 +15,10 @@
 #include <AzCore/std/containers/vector.h>
 
 #include "CameraSensor.h"
-#include "CameraSensorConfiguration.h"
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2Sensors/Camera/CameraCalibrationRequestBus.h>
+#include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 
@@ -72,6 +72,9 @@ namespace ROS2Sensors
 
         ///! Requests message publication from camera sensor.
         void FrequencyTick();
+
+        //! Sets the camera sensor and image source.
+        void SetCameraSensorConfiguration();
 
         CameraSensorConfiguration m_cameraConfiguration;
         AZStd::string m_frameName;

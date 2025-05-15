@@ -32,6 +32,7 @@ namespace ROS2Sensors
     void ROS2ImuSensorComponent::Reflect(AZ::ReflectContext* context)
     {
         ImuSensorConfiguration::Reflect(context);
+        ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::Reflect(context);
 
         if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
@@ -82,6 +83,7 @@ namespace ROS2Sensors
     void ROS2ImuSensorComponent::Activate()
     {
         ROS2SensorComponentBase::Activate();
+
         auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
         m_imuMsg.header.frame_id = GetFrameID().c_str();
@@ -89,9 +91,7 @@ namespace ROS2Sensors
         const auto fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
 
-        m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
-        m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
-        m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
+        ConfigureSensor();
 
         StartSensor(
             m_sensorConfiguration.m_frequency,
@@ -203,6 +203,13 @@ namespace ROS2Sensors
         covarianceMatrix.SetElement(1, 1, variance.GetY());
         covarianceMatrix.SetElement(2, 2, variance.GetZ());
         return covarianceMatrix;
+    }
+
+    void ROS2ImuSensorComponent::ConfigureSensor()
+    {
+        m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
+        m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
+        m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
     }
 
     int ROS2ImuSensorComponent::GetFilterSize() const

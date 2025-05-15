@@ -37,16 +37,10 @@ namespace ROS2Sensors
 
     ROS2SensorsModuleInterface::ROS2SensorsModuleInterface()
     {
-        // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
-        // Add ALL components descriptors associated with this gem to m_descriptors.
-        // This will associate the AzTypeInfo information for the components with the the SerializeContext, BehaviorContext and EditContext.
-        // This happens through the [MyComponent]::Reflect() function.
         m_descriptors.insert(
             m_descriptors.end(),
             {
                 ROS2SensorsSystemComponent::CreateDescriptor(),
-                ROS2SensorComponentBase<ROS2::TickBasedSource>::CreateDescriptor(),
-                ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::CreateDescriptor(),
                 ROS2CameraSensorComponent::CreateDescriptor(),
                 ROS2SystemCameraComponent::CreateDescriptor(),
                 ROS2ImageEncodingConversionComponent::CreateDescriptor(),

@@ -24,6 +24,8 @@ namespace ROS2Sensors
 
     void ROS2GNSSSensorComponent::Reflect(AZ::ReflectContext* context)
     {
+        ROS2SensorComponentBase<ROS2::TickBasedSource>::Reflect(context);
+
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2GNSSSensorComponent, SensorBaseType>()->Version(4);

@@ -22,7 +22,6 @@ set(FILES
     Source/Camera/CameraSensorDescription.cpp
     Source/Camera/CameraSensorDescription.h
     Source/Camera/CameraSensorConfiguration.cpp
-    Source/Camera/CameraSensorConfiguration.h
     Source/Camera/CameraUtilities.cpp
     Source/Camera/CameraUtilities.h
     Source/Camera/ROS2CameraSensorComponent.cpp
@@ -34,7 +33,6 @@ set(FILES
     Source/GNSS/ROS2GNSSSensorComponent.cpp
     Source/GNSS/ROS2GNSSSensorComponent.h
     Source/Imu/ImuSensorConfiguration.cpp
-    Source/Imu/ImuSensorConfiguration.h
     Source/Imu/ROS2ImuSensorComponent.cpp
     Source/Imu/ROS2ImuSensorComponent.h
     Source/Lidar/ClassSegmentationConfigurationComponent.cpp

@@ -22,6 +22,7 @@ namespace ROS2Sensors
     void ROS2CameraSensorComponent::Reflect(AZ::ReflectContext* context)
     {
         CameraSensorConfiguration::Reflect(context);
+        ROS2SensorComponentBase<ROS2::TickBasedSource>::Reflect(context);
 
         auto* serialize = azrtti_cast<AZ::SerializeContext*>(context);
         if (serialize)
@@ -34,18 +35,8 @@ namespace ROS2Sensors
     void ROS2CameraSensorComponent::Activate()
     {
         ROS2SensorComponentBase::Activate();
-        if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
-        {
-            SetImageSource<CameraRGBDSensor>();
-        }
-        else if (m_cameraConfiguration.m_colorCamera)
-        {
-            SetImageSource<CameraColorSensor>();
-        }
-        else if (m_cameraConfiguration.m_depthCamera)
-        {
-            SetImageSource<CameraDepthSensor>();
-        }
+
+        SetCameraSensorConfiguration();
 
         const auto* component = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(component, "Entity has no ROS2FrameComponent");
@@ -135,5 +126,21 @@ namespace ROS2Sensors
             return cameraName;
         }
         return AZStd::string{};
+    }
+
+    void ROS2CameraSensorComponent::SetCameraSensorConfiguration()
+    {
+        if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
+        {
+            SetImageSource<CameraRGBDSensor>();
+        }
+        else if (m_cameraConfiguration.m_colorCamera)
+        {
+            SetImageSource<CameraColorSensor>();
+        }
+        else if (m_cameraConfiguration.m_depthCamera)
+        {
+            SetImageSource<CameraDepthSensor>();
+        }
     }
 } // namespace ROS2Sensors

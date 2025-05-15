@@ -15,11 +15,10 @@
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
 #include <ROS2Sensors/Imu/ImuConfigurationRequestBus.h>
+#include <ROS2Sensors/Imu/ImuSensorConfiguration.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
-
-#include "ImuSensorConfiguration.h"
 
 namespace ROS2Sensors
 {
@@ -63,6 +62,8 @@ namespace ROS2Sensors
         AZ::Vector3 GetLinearAccelerationVariance() const override;
         void SetLinearAccelerationVariance(const AZ::Vector3& linearAccelerationVariance) override;
         //////////////////////////////////////////////////////////////////////////
+
+        void ConfigureSensor();
 
         ImuSensorConfiguration m_imuConfiguration;
 

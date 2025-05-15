@@ -142,7 +142,7 @@ namespace ROS2Sensors
             m_eventSourceAdapter.Start();
         }
 
-        //! Stops sensor and disconnects event callbacks passed through RSO2::ROS2SensorComponentBase::StartSensor.
+        //! Stops sensor and disconnects event callbacks passed through ROS2::ROS2SensorComponentBase::StartSensor.
         void StopSensor()
         {
             m_eventSourceAdapter.Stop();
