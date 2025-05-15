@@ -17,7 +17,7 @@
 #include "CameraSensor.h"
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
-#include <ROS2Sensors/Camera/CameraCalibrationRequestBus.h>
+#include <ROS2Sensors/Camera/CameraConfigurationRequestBus.h>
 #include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
@@ -33,7 +33,7 @@ namespace ROS2Sensors
     //! Camera frustum is facing negative Z axis; image plane is parallel to X,Y plane: X - right, Y - up
     class ROS2CameraSensorComponent
         : public ROS2SensorComponentBase<ROS2::TickBasedSource>
-        , public CameraCalibrationRequestBus::Handler
+        , protected CameraConfigurationRequestBus::Handler
     {
     public:
         ROS2CameraSensorComponent() = default;
@@ -50,13 +50,24 @@ namespace ROS2Sensors
         void Activate() override;
         void Deactivate() override;
 
-        // CameraCalibrationRequestBus::Handler overrides ...
-        AZ::Matrix3x3 GetCameraMatrix() const override;
-        int GetWidth() const override;
-        int GetHeight() const override;
-        float GetVerticalFOV() const override;
-
     private:
+        // CameraConfigurationRequestBus::Handler overrides ..
+        AZ::Matrix3x3 GetCameraMatrix() const override;
+        float GetVerticalFOV() const override;
+        void SetVerticalFOV(float value) override;
+        int GetWidth() const override;
+        void SetWidth(int value) override;
+        int GetHeight() const override;
+        void SetHeight(int value) override;
+        bool IsColorCamera() const override;
+        void SetColorCamera(bool value) override;
+        bool IsDepthCamera() const override;
+        void SetDepthCamera(bool value) override;
+        float GetNearClipDistance() const override;
+        void SetNearClipDistance(float value) override;
+        float GetFarClipDistance() const override;
+        void SetFarClipDistance(float value) override;
+
         //! Helper that adds an image source.
         //! @tparam CameraType type of camera sensor (eg 'CameraColorSensor')
         template<typename CameraType>

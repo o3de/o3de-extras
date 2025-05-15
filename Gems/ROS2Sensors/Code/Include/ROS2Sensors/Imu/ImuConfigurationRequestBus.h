@@ -10,7 +10,6 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/RTTI/RTTI.h>
-#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
 {

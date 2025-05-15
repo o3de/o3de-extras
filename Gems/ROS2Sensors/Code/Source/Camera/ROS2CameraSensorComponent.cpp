@@ -41,7 +41,7 @@ namespace ROS2Sensors
         const auto* component = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(component, "Entity has no ROS2FrameComponent");
         m_frameName = component->GetFrameID();
-        CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
+        CameraConfigurationRequestBus::Handler::BusConnect(GetEntityId());
 
         StartSensor(
             m_sensorConfiguration.m_frequency,
@@ -59,29 +59,8 @@ namespace ROS2Sensors
     {
         StopSensor();
         m_cameraSensor.reset();
-        CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
+        CameraConfigurationRequestBus::Handler::BusDisconnect(GetEntityId());
         ROS2SensorComponentBase::Deactivate();
-    }
-
-    AZ::Matrix3x3 ROS2CameraSensorComponent::GetCameraMatrix() const
-    {
-        return CameraUtils::MakeCameraIntrinsics(
-            m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg);
-    }
-
-    int ROS2CameraSensorComponent::GetWidth() const
-    {
-        return m_cameraConfiguration.m_width;
-    }
-
-    int ROS2CameraSensorComponent::GetHeight() const
-    {
-        return m_cameraConfiguration.m_height;
-    }
-
-    float ROS2CameraSensorComponent::GetVerticalFOV() const
-    {
-        return m_cameraConfiguration.m_verticalFieldOfViewDeg;
     }
 
     void ROS2CameraSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -142,5 +121,81 @@ namespace ROS2Sensors
         {
             SetImageSource<CameraDepthSensor>();
         }
+    }
+
+    AZ::Matrix3x3 ROS2CameraSensorComponent::GetCameraMatrix() const
+    {
+        return CameraUtils::MakeCameraIntrinsics(
+            m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg);
+    }
+
+    float ROS2CameraSensorComponent::GetVerticalFOV() const
+    {
+        return m_cameraConfiguration.m_verticalFieldOfViewDeg;
+    }
+
+    void ROS2CameraSensorComponent::SetVerticalFOV(float value)
+    {
+        m_cameraConfiguration.m_verticalFieldOfViewDeg = value;
+    }
+
+    int ROS2CameraSensorComponent::GetWidth() const
+    {
+        return m_cameraConfiguration.m_width;
+    }
+
+    void ROS2CameraSensorComponent::SetWidth(int value)
+    {
+        m_cameraConfiguration.m_width = value;
+    }
+
+    int ROS2CameraSensorComponent::GetHeight() const
+    {
+        return m_cameraConfiguration.m_height;
+    }
+
+    void ROS2CameraSensorComponent::SetHeight(int value)
+    {
+        m_cameraConfiguration.m_height = value;
+    }
+
+    bool ROS2CameraSensorComponent::IsColorCamera() const
+    {
+        return m_cameraConfiguration.m_colorCamera;
+    }
+
+    void ROS2CameraSensorComponent::SetColorCamera(bool value)
+    {
+        m_cameraConfiguration.m_colorCamera = value;
+    }
+
+    bool ROS2CameraSensorComponent::IsDepthCamera() const
+    {
+        return m_cameraConfiguration.m_depthCamera;
+    }
+
+    void ROS2CameraSensorComponent::SetDepthCamera(bool value)
+    {
+        m_cameraConfiguration.m_depthCamera = value;
+    }
+
+    float ROS2CameraSensorComponent::GetNearClipDistance() const
+    {
+        return m_cameraConfiguration.m_nearClipDistance;
+    }
+
+    void ROS2CameraSensorComponent::SetNearClipDistance(float value)
+    {
+        m_cameraConfiguration.m_nearClipDistance = value;
+    }
+
+    float ROS2CameraSensorComponent::GetFarClipDistance() const
+    {
+        return m_cameraConfiguration.m_farClipDistance;
+    }
+
+    void ROS2CameraSensorComponent::SetFarClipDistance(float value)
+    {
+        m_cameraConfiguration.m_farClipDistance = value;
     }
 } // namespace ROS2Sensors

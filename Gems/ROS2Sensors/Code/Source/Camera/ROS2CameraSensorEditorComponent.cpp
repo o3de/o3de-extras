@@ -9,7 +9,7 @@
 #include "ROS2CameraSensorEditorComponent.h"
 #include "CameraConstants.h"
 #include "CameraUtilities.h"
-#include "ROS2CameraSensorComponent.h"
+#include "ROS2CameraSensorEditorComponent.h"
 #include <AzCore/Component/TransformBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 
@@ -31,7 +31,7 @@ namespace ROS2Sensors
     ROS2CameraSensorEditorComponent::ROS2CameraSensorEditorComponent(
         const SensorConfiguration& sensorConfiguration, const CameraSensorConfiguration& cameraConfiguration)
         : m_sensorConfiguration(sensorConfiguration)
-        , m_cameraSensorConfiguration(cameraConfiguration)
+        , m_cameraConfiguration(cameraConfiguration)
     {
     }
 
@@ -41,7 +41,7 @@ namespace ROS2Sensors
         {
             serialize->Class<ROS2CameraSensorEditorComponent, AzToolsFramework::Components::EditorComponentBase>()
                 ->Version(4)
-                ->Field("CameraSensorConfig", &ROS2CameraSensorEditorComponent::m_cameraSensorConfiguration)
+                ->Field("CameraSensorConfig", &ROS2CameraSensorEditorComponent::m_cameraConfiguration)
                 ->Field("SensorConfig", &ROS2CameraSensorEditorComponent::m_sensorConfiguration);
 
             if (AZ::EditContext* editContext = serialize->GetEditContext())
@@ -59,7 +59,7 @@ namespace ROS2Sensors
                         "Sensor configuration")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &ROS2CameraSensorEditorComponent::m_cameraSensorConfiguration,
+                        &ROS2CameraSensorEditorComponent::m_cameraConfiguration,
                         "Camera configuration",
                         "Camera configuration.");
             }
@@ -70,14 +70,14 @@ namespace ROS2Sensors
     {
         AzFramework::EntityDebugDisplayEventBus::Handler::BusConnect(this->GetEntityId());
         AzToolsFramework::Components::EditorComponentBase::Activate();
-        CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
+        CameraConfigurationRequestBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2CameraSensorEditorComponent::Deactivate()
     {
         AzToolsFramework::Components::EditorComponentBase::Deactivate();
         AzFramework::EntityDebugDisplayEventBus::Handler::BusDisconnect();
-        CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
+        CameraConfigurationRequestBus::Handler::BusDisconnect(GetEntityId());
     }
 
     void ROS2CameraSensorEditorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -97,31 +97,84 @@ namespace ROS2Sensors
 
     void ROS2CameraSensorEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
-        gameEntity->CreateComponent<ROS2CameraSensorComponent>(m_sensorConfiguration, m_cameraSensorConfiguration);
+        gameEntity->CreateComponent<ROS2CameraSensorEditorComponent>(m_sensorConfiguration, m_cameraConfiguration);
     }
 
     AZ::Matrix3x3 ROS2CameraSensorEditorComponent::GetCameraMatrix() const
     {
         return CameraUtils::MakeCameraIntrinsics(
-            m_cameraSensorConfiguration.m_width,
-            m_cameraSensorConfiguration.m_height,
-            m_cameraSensorConfiguration.m_verticalFieldOfViewDeg);
-    };
-
-    int ROS2CameraSensorEditorComponent::GetWidth() const
-    {
-        return m_cameraSensorConfiguration.m_width;
-    };
-
-    int ROS2CameraSensorEditorComponent::GetHeight() const
-    {
-        return m_cameraSensorConfiguration.m_height;
-    };
+            m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg);
+    }
 
     float ROS2CameraSensorEditorComponent::GetVerticalFOV() const
     {
-        return m_cameraSensorConfiguration.m_verticalFieldOfViewDeg;
-    };
+        return m_cameraConfiguration.m_verticalFieldOfViewDeg;
+    }
+
+    void ROS2CameraSensorEditorComponent::SetVerticalFOV(float value)
+    {
+        m_cameraConfiguration.m_verticalFieldOfViewDeg = value;
+    }
+
+    int ROS2CameraSensorEditorComponent::GetWidth() const
+    {
+        return m_cameraConfiguration.m_width;
+    }
+
+    void ROS2CameraSensorEditorComponent::SetWidth(int value)
+    {
+        m_cameraConfiguration.m_width = value;
+    }
+
+    int ROS2CameraSensorEditorComponent::GetHeight() const
+    {
+        return m_cameraConfiguration.m_height;
+    }
+
+    void ROS2CameraSensorEditorComponent::SetHeight(int value)
+    {
+        m_cameraConfiguration.m_height = value;
+    }
+
+    bool ROS2CameraSensorEditorComponent::IsColorCamera() const
+    {
+        return m_cameraConfiguration.m_colorCamera;
+    }
+
+    void ROS2CameraSensorEditorComponent::SetColorCamera(bool value)
+    {
+        m_cameraConfiguration.m_colorCamera = value;
+    }
+
+    bool ROS2CameraSensorEditorComponent::IsDepthCamera() const
+    {
+        return m_cameraConfiguration.m_depthCamera;
+    }
+
+    void ROS2CameraSensorEditorComponent::SetDepthCamera(bool value)
+    {
+        m_cameraConfiguration.m_depthCamera = value;
+    }
+
+    float ROS2CameraSensorEditorComponent::GetNearClipDistance() const
+    {
+        return m_cameraConfiguration.m_nearClipDistance;
+    }
+
+    void ROS2CameraSensorEditorComponent::SetNearClipDistance(float value)
+    {
+        m_cameraConfiguration.m_nearClipDistance = value;
+    }
+
+    float ROS2CameraSensorEditorComponent::GetFarClipDistance() const
+    {
+        return m_cameraConfiguration.m_farClipDistance;
+    }
+
+    void ROS2CameraSensorEditorComponent::SetFarClipDistance(float value)
+    {
+        m_cameraConfiguration.m_farClipDistance = value;
+    }
 
     void ROS2CameraSensorEditorComponent::DisplayEntityViewport(
         [[maybe_unused]] const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay)
@@ -133,11 +186,11 @@ namespace ROS2Sensors
         const AZ::u32 stateBefore = debugDisplay.GetState();
         AZ::Transform transform = GetEntity()->GetTransform()->GetWorldTM();
 
-        const float distance = m_cameraSensorConfiguration.m_farClipDistance * 0.1f;
-        const float tangent = static_cast<float>(tan(0.5f * AZ::DegToRad(m_cameraSensorConfiguration.m_verticalFieldOfViewDeg)));
+        const float distance = m_cameraConfiguration.m_farClipDistance * 0.1f;
+        const float tangent = static_cast<float>(tan(0.5f * AZ::DegToRad(m_cameraConfiguration.m_verticalFieldOfViewDeg)));
 
         float height = distance * tangent;
-        float width = height * m_cameraSensorConfiguration.m_width / m_cameraSensorConfiguration.m_height;
+        float width = height * m_cameraConfiguration.m_width / m_cameraConfiguration.m_height;
 
         AZ::Vector3 farPoints[4];
         farPoints[0] = AZ::Vector3(width, height, distance);
@@ -146,10 +199,10 @@ namespace ROS2Sensors
         farPoints[3] = AZ::Vector3(width, -height, distance);
 
         AZ::Vector3 nearPoints[4];
-        nearPoints[0] = farPoints[0].GetNormalizedSafe() * m_cameraSensorConfiguration.m_nearClipDistance;
-        nearPoints[1] = farPoints[1].GetNormalizedSafe() * m_cameraSensorConfiguration.m_nearClipDistance;
-        nearPoints[2] = farPoints[2].GetNormalizedSafe() * m_cameraSensorConfiguration.m_nearClipDistance;
-        nearPoints[3] = farPoints[3].GetNormalizedSafe() * m_cameraSensorConfiguration.m_nearClipDistance;
+        nearPoints[0] = farPoints[0].GetNormalizedSafe() * m_cameraConfiguration.m_nearClipDistance;
+        nearPoints[1] = farPoints[1].GetNormalizedSafe() * m_cameraConfiguration.m_nearClipDistance;
+        nearPoints[2] = farPoints[2].GetNormalizedSafe() * m_cameraConfiguration.m_nearClipDistance;
+        nearPoints[3] = farPoints[3].GetNormalizedSafe() * m_cameraConfiguration.m_nearClipDistance;
 
         // dimension of drawing
         const float arrowRise = 0.11f;

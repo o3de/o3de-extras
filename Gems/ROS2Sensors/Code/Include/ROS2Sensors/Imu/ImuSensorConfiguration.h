@@ -10,7 +10,6 @@
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <AzCore/std/string/string.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
