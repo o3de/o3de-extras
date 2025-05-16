@@ -44,13 +44,10 @@ set(FILES
     Source/Lidar/LidarRegistrarSystemComponent.cpp
     Source/Lidar/LidarRegistrarSystemComponent.h
     Source/Lidar/LidarSensorConfiguration.cpp
-    Source/Lidar/LidarSensorConfiguration.h
     Source/Lidar/LidarSystem.cpp
     Source/Lidar/LidarSystem.h
     Source/Lidar/LidarTemplate.cpp
-    Source/Lidar/LidarTemplate.h
     Source/Lidar/LidarTemplateUtils.cpp
-    Source/Lidar/LidarTemplateUtils.h
     Source/Lidar/PointCloudMessageBuilder.cpp
     Source/Lidar/PointCloudMessageBuilder.h
     Source/Lidar/ROS2Lidar2DSensorComponent.cpp

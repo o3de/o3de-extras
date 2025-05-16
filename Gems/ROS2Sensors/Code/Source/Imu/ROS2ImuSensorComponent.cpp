@@ -107,13 +107,18 @@ namespace ROS2Sensors
             {
                 OnPhysicsEvent(sceneHandle);
             });
+
+        ImuConfigurationRequestBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2ImuSensorComponent::Deactivate()
     {
+        ImuConfigurationRequestBus::Handler::BusDisconnect(GetEntityId());
+
         StopSensor();
         m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
         m_imuPublisher.reset();
+
         ROS2SensorComponentBase::Deactivate();
     }
 

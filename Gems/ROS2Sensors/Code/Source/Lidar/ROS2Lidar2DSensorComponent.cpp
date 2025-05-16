@@ -89,10 +89,13 @@ namespace ROS2Sensors
                 }
                 m_lidarCore.VisualizeResults();
             });
+
+        LidarConfigurationRequestBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2Lidar2DSensorComponent::Deactivate()
     {
+        LidarConfigurationRequestBus::Handler::BusDisconnect(GetEntityId());
         StopSensor();
         m_laserScanPublisher.reset();
         m_lidarCore.Deinit();
@@ -143,5 +146,81 @@ namespace ROS2Sensors
         }
 
         m_laserScanPublisher->publish(message);
+    }
+
+    AZStd::string ROS2Lidar2DSensorComponent::GetName() const
+    {
+        return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_name;
+    }
+
+    void ROS2Lidar2DSensorComponent::SetName(const AZStd::string& name)
+    {
+        m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_name = name;
+        // TODO: Update the lidar core configuration if needed
+    }
+
+    bool ROS2Lidar2DSensorComponent::Is2D() const
+    {
+        return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_is2D;
+    }
+
+    float ROS2Lidar2DSensorComponent::GetMinHAngle() const
+    {
+        return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minHAngle;
+    }
+
+    void ROS2Lidar2DSensorComponent::SetMinHAngle(float angle)
+    {
+        m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minHAngle = angle;
+    }
+
+    float ROS2Lidar2DSensorComponent::GetMaxHAngle() const
+    {
+        return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxHAngle;
+    }
+
+    void ROS2Lidar2DSensorComponent::SetMaxHAngle(float angle)
+    {
+        m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxHAngle = angle;
+    }
+
+    unsigned int ROS2Lidar2DSensorComponent::GetNumberOfIncrements() const
+    {
+        return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_numberOfIncrements;
+    }
+
+    void ROS2Lidar2DSensorComponent::SetNumberOfIncrements(unsigned int increments)
+    {
+        m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_numberOfIncrements = increments;
+    }
+
+    float ROS2Lidar2DSensorComponent::GetMinRange() const
+    {
+        return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minRange;
+    }
+
+    void ROS2Lidar2DSensorComponent::SetMinRange(float range)
+    {
+        m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minRange = range;
+    }
+
+    float ROS2Lidar2DSensorComponent::GetMaxRange() const
+    {
+        return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxRange;
+    }
+
+    void ROS2Lidar2DSensorComponent::SetMaxRange(float range)
+    {
+        m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxRange = range;
+    }
+
+    const LidarTemplate::NoiseParameters& ROS2Lidar2DSensorComponent::GetNoiseParameters() const
+    {
+        return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_noiseParameters;
+    }
+
+    void ROS2Lidar2DSensorComponent::SetNoiseParameters(const LidarTemplate::NoiseParameters& params)
+    {
+        m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_noiseParameters = params;
     }
 } // namespace ROS2Sensors

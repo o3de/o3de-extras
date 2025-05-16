@@ -129,10 +129,13 @@ namespace ROS2Sensors
             {
                 OnPhysicsEvent(physicsDeltaTime);
             });
+
+        WheelOdometryConfigurationRequestBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2WheelOdometryComponent::Deactivate()
     {
+        WheelOdometryConfigurationRequestBus::Handler::BusDisconnect(GetEntityId());
         StopSensor();
         m_odometryPublisher.reset();
         ROS2SensorComponentBase::Deactivate();

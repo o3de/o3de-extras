@@ -17,8 +17,12 @@ set(FILES
     Include/ROS2Sensors/Imu/ImuConfigurationRequestBus.h
     Include/ROS2Sensors/Imu/ImuSensorConfiguration.h
     Include/ROS2Sensors/Lidar/ClassSegmentationBus.h
+    Include/ROS2Sensors/Lidar/LidarConfigurationRequestBus.h
+    Include/ROS2Sensors/Lidar/LidarSensorConfiguration.h
     Include/ROS2Sensors/Lidar/LidarRaycasterBus.h
-    Include/ROS2Sensors/Lidar/LidarSystemBus.h
     Include/ROS2Sensors/Lidar/LidarRegistrarBus.h
-    Include/ROS2Sensors//Odometry/ROS2OdometryCovariance.h
+    Include/ROS2Sensors/Lidar/LidarSystemBus.h
+    Include/ROS2Sensors/Lidar/LidarTemplate.h
+    Include/ROS2Sensors/Lidar/LidarTemplateUtils.h
+    Include/ROS2Sensors/Odometry/ROS2OdometryCovariance.h
 )

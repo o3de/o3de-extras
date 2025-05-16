@@ -7,7 +7,7 @@
  */
 
 #include <AzCore/Serialization/EditContext.h>
-#include <Lidar/LidarTemplate.h>
+#include <ROS2Sensors/Lidar/LidarTemplate.h>
 
 namespace ROS2Sensors
 {

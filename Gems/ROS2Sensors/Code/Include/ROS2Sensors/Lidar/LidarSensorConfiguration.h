@@ -12,8 +12,8 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
-#include <Lidar/LidarTemplate.h>
-#include <Lidar/LidarTemplateUtils.h>
+#include <ROS2Sensors/Lidar/LidarTemplate.h>
+#include <ROS2Sensors/Lidar/LidarTemplateUtils.h>
 
 namespace ROS2Sensors
 {

@@ -6,9 +6,10 @@
  *
  */
 
-#include "LidarSensorConfiguration.h"
+#include "Lidar/LidarRegistrarSystemComponent.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
+#include <ROS2Sensors/Lidar/LidarSensorConfiguration.h>
 
 namespace ROS2Sensors
 {
