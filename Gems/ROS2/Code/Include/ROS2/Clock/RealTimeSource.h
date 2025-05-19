@@ -14,7 +14,7 @@ namespace ROS2
     //! The RealTimeSource starts from 0 at the start of the simulation.
     //! This time source could be affected by the jitter in the data, simulation
     //! computations or other similar events. On the other hand RealTimeSource
-    //! can remain consistent with the other independent clocks if it is synchronised
+    //! can remain consistent with the other independent clocks if it is synchronized
     //! (e.g. through NTP).
     class RealTimeSource : public ITimeSource
     {
@@ -22,8 +22,8 @@ namespace ROS2
         virtual ~RealTimeSource() = default;
 
         // ITimeSource overrides ...
-        virtual void Activate() override {};
-        virtual void Deactivate() override {};
+        virtual void Activate() override{};
+        virtual void Deactivate() override{};
 
         //! Get simulation time as ROS 2 message.
         //! @see ROS2Requests::GetROSTimestamp() for more details.

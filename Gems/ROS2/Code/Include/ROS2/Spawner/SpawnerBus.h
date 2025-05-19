@@ -12,6 +12,7 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/RTTI/BehaviorContext.h>
+#include <ROS2/ROS2TypeIds.h>
 #include <ROS2/Spawner/SpawnerInfo.h>
 
 namespace ROS2
@@ -20,7 +21,7 @@ namespace ROS2
     class SpawnerRequests : public AZ::ComponentBus
     {
     public:
-        AZ_RTTI(SpawnerRequests, "{3C42A3A1-1B8E-4800-9473-E4441315D7C8}");
+        AZ_RTTI(SpawnerRequests, SpawnerRequestsTypeId);
 
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
 
@@ -37,7 +38,7 @@ namespace ROS2
     class SpawnerNotifications : public AZ::EBusTraits
     {
     public:
-        AZ_RTTI(SpawnerNotifications, "{0D22B024-48C7-457C-BFFB-D292045B68EC}");
+        AZ_RTTI(SpawnerNotifications, SpawnerNotificationTypeId);
 
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;

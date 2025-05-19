@@ -12,6 +12,7 @@
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/Common/PhysicsTypes.h>
 #include <ROS2/ROS2Bus.h>
+#include <ROS2/ROS2TypeIds.h>
 #include <ROS2/Sensor/Events/SensorEventSource.h>
 
 namespace ROS2
@@ -23,7 +24,7 @@ namespace ROS2
     class PhysicsBasedSource final : public SensorEventSource<AZ::OrderedEvent, AZ::OrderedEventHandler, AzPhysics::SceneHandle, float>
     {
     public:
-        AZ_TYPE_INFO(PhysicsBasedSource, "{48BB21A8-F14E-4869-95DC-28EEA279Cf53}");
+        AZ_TYPE_INFO(PhysicsBasedSource, PhysicsBasedSourceTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
         // Overrides of ROS2::SensorEventSource.
