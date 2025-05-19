@@ -141,7 +141,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Include
                 Source
         BUILD_DEPENDENCIES
-                
+
             PUBLIC
                 AZ::AzToolsFramework
                 Gem::ROS2.API
@@ -254,6 +254,9 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                         AZ::AzManipulatorTestFramework.Static
                         Gem::${gem_name}.API
                         Gem::${gem_name}.Editor.Private.Object
+                RUNTIME_DEPENDENCIES
+                    Gem::PhysX5
+                    Gem::LmbrCentral
             )
 
             # Add ${gem_name}.Editor.Tests to googletest
@@ -282,11 +285,15 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                         AZ::AzManipulatorTestFramework.Static
                         Gem::${gem_name}.API
                         Gem::${gem_name}.Editor.Private.Object
+                RUNTIME_DEPENDENCIES
+                    Gem::PhysX5
+                    Gem::LmbrCentral
+                    ${PROJECT_NAME}.Assets
             )
 
-            # Add ${gem_name}.Editor.Tests to googletest
+            # Add ${gem_name}.TestApp to googletest
             ly_add_googletest(
-                    NAME Gem::${gem_name}.TestApp
+                NAME Gem::${gem_name}.TestApp
             )
 
             ly_add_target(
@@ -313,12 +320,14 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                         Gem::SimulationInterfaces.API
                         Gem::ROS2.Static
                         Gem::${gem_name}.Editor.Private.Object
+                RUNTIME_DEPENDENCIES
+                    Gem::ROS2
                 )
 
-                # Add ${gem_name}.Editor.Tests to googletest
-                ly_add_googletest(
-                        NAME Gem::${gem_name}.ROS2Tests
-                )
+            # Add ${gem_name}.ROS2Tests to googletest
+            ly_add_googletest(
+                NAME Gem::${gem_name}.ROS2Tests
+            )
         endif()
     endif()
 endif()
