@@ -148,15 +148,55 @@ namespace ROS2Sensors
         m_laserScanPublisher->publish(message);
     }
 
-    AZStd::string ROS2Lidar2DSensorComponent::GetName() const
+    void ROS2Lidar2DSensorComponent::SetConfiguration(const LidarSensorConfiguration& configuration)
+    {
+        m_lidarCore.Deinit();
+        m_lidarCore.m_lidarConfiguration = configuration;
+        m_lidarCore.Init(GetEntityId());
+    }
+
+    const LidarSensorConfiguration ROS2Lidar2DSensorComponent::GetConfiguration() const
+    {
+        return m_lidarCore.m_lidarConfiguration;
+    }
+
+    AZStd::string ROS2Lidar2DSensorComponent::GetModelName() const
     {
         return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_name;
     }
 
-    void ROS2Lidar2DSensorComponent::SetName(const AZStd::string& name)
+    void ROS2Lidar2DSensorComponent::SetModelName(const AZStd::string& name)
     {
+        m_lidarCore.Deinit();
+        m_lidarCore.m_lidarConfiguration.m_lidarModelName = name;
+        m_lidarCore.m_lidarConfiguration.FetchLidarModelConfiguration();
+        // Unknown lidar models are set to custom lidar model with a given name
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_name = name;
-        // TODO: Update the lidar core configuration if needed
+        m_lidarCore.Init(GetEntityId());
+    }
+
+    bool ROS2Lidar2DSensorComponent::IsSegmentationEnabled() const
+    {
+        return m_lidarCore.m_lidarConfiguration.m_isSegmentationEnabled;
+    }
+
+    void ROS2Lidar2DSensorComponent::SetSegmentationEnabled(bool enabled)
+    {
+        m_lidarCore.Deinit();
+        m_lidarCore.m_lidarConfiguration.m_isSegmentationEnabled = enabled;
+        m_lidarCore.Init(GetEntityId());
+    }
+
+    bool ROS2Lidar2DSensorComponent::IsAddPointsAtMaxEnabled() const
+    {
+        return m_lidarCore.m_lidarConfiguration.m_addPointsAtMax;
+    }
+
+    void ROS2Lidar2DSensorComponent::SetAddPointsAtMaxEnabled(bool addPoints)
+    {
+        m_lidarCore.Deinit();
+        m_lidarCore.m_lidarConfiguration.m_addPointsAtMax = addPoints;
+        m_lidarCore.Init(GetEntityId());
     }
 
     bool ROS2Lidar2DSensorComponent::Is2D() const
@@ -171,7 +211,9 @@ namespace ROS2Sensors
 
     void ROS2Lidar2DSensorComponent::SetMinHAngle(float angle)
     {
+        m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minHAngle = angle;
+        m_lidarCore.Init(GetEntityId());
     }
 
     float ROS2Lidar2DSensorComponent::GetMaxHAngle() const
@@ -181,7 +223,9 @@ namespace ROS2Sensors
 
     void ROS2Lidar2DSensorComponent::SetMaxHAngle(float angle)
     {
+        m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxHAngle = angle;
+        m_lidarCore.Init(GetEntityId());
     }
 
     unsigned int ROS2Lidar2DSensorComponent::GetNumberOfIncrements() const
@@ -191,7 +235,9 @@ namespace ROS2Sensors
 
     void ROS2Lidar2DSensorComponent::SetNumberOfIncrements(unsigned int increments)
     {
+        m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_numberOfIncrements = increments;
+        m_lidarCore.Init(GetEntityId());
     }
 
     float ROS2Lidar2DSensorComponent::GetMinRange() const
@@ -201,7 +247,9 @@ namespace ROS2Sensors
 
     void ROS2Lidar2DSensorComponent::SetMinRange(float range)
     {
+        m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minRange = range;
+        m_lidarCore.Init(GetEntityId());
     }
 
     float ROS2Lidar2DSensorComponent::GetMaxRange() const
@@ -211,7 +259,9 @@ namespace ROS2Sensors
 
     void ROS2Lidar2DSensorComponent::SetMaxRange(float range)
     {
+        m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxRange = range;
+        m_lidarCore.Init(GetEntityId());
     }
 
     const LidarTemplate::NoiseParameters& ROS2Lidar2DSensorComponent::GetNoiseParameters() const
@@ -221,6 +271,8 @@ namespace ROS2Sensors
 
     void ROS2Lidar2DSensorComponent::SetNoiseParameters(const LidarTemplate::NoiseParameters& params)
     {
+        m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_noiseParameters = params;
+        m_lidarCore.Init(GetEntityId());
     }
 } // namespace ROS2Sensors

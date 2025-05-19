@@ -11,6 +11,7 @@
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/std/string/string.h>
+#include <ROS2Sensors/Lidar/LidarSensorConfiguration.h>
 #include <ROS2Sensors/Lidar/LidarTemplate.h>
 
 namespace ROS2Sensors
@@ -22,10 +23,29 @@ namespace ROS2Sensors
         using BusIdType = AZ::EntityId;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
 
+        //! Returns the current configuration of the component.
+        virtual const LidarSensorConfiguration GetConfiguration() const = 0;
+
+        //! Sets the configuration of the component.
+        //! Each component should handle the configuration change without fully reinitializing the ROS2 publisher.
+        //! This will allow to change the configuration of the component at runtime.
+        //! @param configuration The new configuration to set.
+        virtual void SetConfiguration(const LidarSensorConfiguration& configuration) = 0;
+
         //! Get the name of the lidar model.
-        virtual AZStd::string GetName() const = 0;
-        //! Set the name of the lidar model. The name might be parsed into a model name and a version.
-        virtual void SetName(const AZStd::string& name) = 0;
+        virtual AZStd::string GetModelName() const = 0;
+        //! Set the name of the lidar model. Unknown name will set a custom lidar model.
+        virtual void SetModelName(const AZStd::string& name) = 0;
+
+        //! Check if segmentation is enabled in lidar.
+        virtual bool IsSegmentationEnabled() const = 0;
+        //! Set if segmentation is enabled in lidar.
+        virtual void SetSegmentationEnabled(bool enabled) = 0;
+
+        //! Check if the lidar output should include points at maximum range.
+        virtual bool IsAddPointsAtMaxEnabled() const = 0;
+        //! Set if the lidar output should include points at maximum range.
+        virtual void SetAddPointsAtMaxEnabled(bool addPoints) = 0;
 
         //! Check if the lidar is 2D.
         virtual bool Is2D() const = 0;
@@ -41,42 +61,42 @@ namespace ROS2Sensors
         virtual void SetMaxHAngle(float angle) = 0;
 
         //! Get the minimum vertical angle (azimuth of the ray), in degrees.
-        //! Only valid for 3D Lidars.
+        //! Override for 3D Lidars.
         virtual float GetMinVAngle() const
         {
             AZ_Warning("LidarConfigurationRequestBus", false, "GetMinVAngle() is not implemented.");
             return 0.0f;
         }
         //! Set the minimum vertical angle (azimuth of the ray), in degrees.
-        //! Only valid for 3D Lidars.
+        //! Override for 3D Lidars.
         virtual void SetMinVAngle(float angle)
         {
             AZ_Warning("LidarConfigurationRequestBus", false, "SetMinVAngle() is not implemented.");
         }
 
         //! Get the maximum vertical angle (azimuth of the ray), in degrees.
-        //! Only valid for 3D Lidars.
+        //! Override for 3D Lidars.
         virtual float GetMaxVAngle() const
         {
             AZ_Warning("LidarConfigurationRequestBus", false, "GetMaxVAngle() is not implemented.");
             return 0.0f;
         }
         //! Set the maximum vertical angle (azimuth of the ray), in degrees.
-        //! Only valid for 3D Lidars.
+        //! Override for 3D Lidars.
         virtual void SetMaxVAngle(float angle)
         {
             AZ_Warning("LidarConfigurationRequestBus", false, "SetMaxVAngle() is not implemented.");
         }
 
         //! Get the number of laser layers (resolution in horizontal direction).
-        //! Only valid for 3D Lidars.
+        //! Override for 3D Lidars.
         virtual unsigned int GetLayers() const
         {
             AZ_Warning("LidarConfigurationRequestBus", false, "GetLayers() is not implemented.");
             return 0;
         }
         //! Set the number of laser layers (resolution in horizontal direction).
-        //! Only valid for 3D Lidars.
+        //! Override for 3D Lidars.
         virtual void SetLayers(unsigned int layers)
         {
             AZ_Warning("LidarConfigurationRequestBus", false, "SetLayers() is not implemented.");

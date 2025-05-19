@@ -49,6 +49,7 @@ namespace ROS2Sensors
         RaycastResultFlags GetResultFlags() const;
 
         //! Configuration according to which the lidar performs its raycasts.
+        //! Note: the configuration can be changed only when the lidar is not active.
         LidarSensorConfiguration m_lidarConfiguration;
 
     private:

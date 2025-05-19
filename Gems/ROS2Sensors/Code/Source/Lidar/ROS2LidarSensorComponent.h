@@ -45,8 +45,14 @@ namespace ROS2Sensors
     private:
         //////////////////////////////////////////////////////////////////////////
         // LidarConfigurationRequestBus::Handler overrides
-        AZStd::string GetName() const override;
-        void SetName(const AZStd::string& name) override;
+        const LidarSensorConfiguration GetConfiguration() const override;
+        void SetConfiguration(const LidarSensorConfiguration& configuration) override;
+        AZStd::string GetModelName() const override;
+        void SetModelName(const AZStd::string& name) override;
+        bool IsSegmentationEnabled() const override;
+        void SetSegmentationEnabled(bool enabled) override;
+        bool IsAddPointsAtMaxEnabled() const override;
+        void SetAddPointsAtMaxEnabled(bool addPoints) override;
         bool Is2D() const override;
         float GetMinHAngle() const override;
         void SetMinHAngle(float angle) override;

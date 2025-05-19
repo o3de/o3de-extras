@@ -7,6 +7,8 @@
  */
 #pragma once
 
+#include "LidarCore.h"
+#include "LidarRaycaster.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
@@ -16,9 +18,6 @@
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
-
-#include "LidarCore.h"
-#include "LidarRaycaster.h"
 
 namespace ROS2Sensors
 {
@@ -46,8 +45,14 @@ namespace ROS2Sensors
     private:
         //////////////////////////////////////////////////////////////////////////
         // LidarConfigurationRequestBus::Handler overrides
-        AZStd::string GetName() const override;
-        void SetName(const AZStd::string& name) override;
+        const LidarSensorConfiguration GetConfiguration() const override;
+        void SetConfiguration(const LidarSensorConfiguration& configuration) override;
+        AZStd::string GetModelName() const override;
+        void SetModelName(const AZStd::string& name) override;
+        bool IsSegmentationEnabled() const override;
+        void SetSegmentationEnabled(bool enabled) override;
+        bool IsAddPointsAtMaxEnabled() const override;
+        void SetAddPointsAtMaxEnabled(bool addPoints) override;
         bool Is2D() const override;
         float GetMinHAngle() const override;
         void SetMinHAngle(float angle) override;

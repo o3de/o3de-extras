@@ -107,7 +107,7 @@ namespace ROS2Sensors
     AZStd::vector<AZStd::string> LidarSensorConfiguration::GetAvailableModels() const
     {
         AZStd::vector<AZStd::string> result;
-        for (const auto model : m_availableModels)
+        for (const auto& model : m_availableModels)
         {
             auto templ = LidarTemplateUtils::GetTemplate(model);
             result.push_back({ templ.m_name });
@@ -117,7 +117,14 @@ namespace ROS2Sensors
 
     void LidarSensorConfiguration::FetchLidarModelConfiguration()
     {
-        for (const auto model : m_availableModels)
+        if (m_availableModels.empty())
+        {
+            AZ_Warning("LidarSensorConfiguration", false, "Lidar configuration created with an empty models list");
+            return;
+        }
+
+        m_lidarModel = m_availableModels.front();
+        for (const auto& model : m_availableModels)
         {
             auto templ = LidarTemplateUtils::GetTemplate(model);
             if (m_lidarModelName == templ.m_name)

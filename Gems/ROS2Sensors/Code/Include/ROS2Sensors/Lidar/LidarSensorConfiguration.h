@@ -14,6 +14,7 @@
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <ROS2Sensors/Lidar/LidarTemplate.h>
 #include <ROS2Sensors/Lidar/LidarTemplateUtils.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
 {
@@ -21,7 +22,7 @@ namespace ROS2Sensors
     class LidarSensorConfiguration
     {
     public:
-        AZ_TYPE_INFO(LidarSensorConfiguration, "{e46e75f4-1e0e-48ca-a22f-43afc8f25101}");
+        AZ_TYPE_INFO(LidarSensorConfiguration, LidarSensorConfigurationTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
         LidarSensorConfiguration(AZStd::vector<LidarTemplate::LidarModel> availableModels = {});
@@ -29,11 +30,15 @@ namespace ROS2Sensors
         //! Update the lidar system features based on the current lidar system selected.
         void FetchLidarImplementationFeatures();
 
+        //! Update the lidar configuration based on the current lidar model selected.
+        void FetchLidarModelConfiguration();
+
         LidarSystemFeatures m_lidarSystemFeatures;
 
         AZStd::string m_lidarSystem;
         LidarTemplate::LidarModel m_lidarModel = LidarTemplate::LidarModel::Custom2DLidar;
         LidarTemplate m_lidarParameters = LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel::Custom2DLidar);
+        AZStd::string m_lidarModelName = "CustomLidar2D";
 
         AZStd::unordered_set<AZ::u32> m_ignoredCollisionLayers;
         AZStd::vector<AZ::EntityId> m_excludedEntities;
@@ -47,8 +52,6 @@ namespace ROS2Sensors
         bool IsEntityExclusionVisible() const;
         bool IsMaxPointsConfigurationVisible() const;
         bool IsSegmentationConfigurationVisible() const;
-        //! Update the lidar configuration based on the current lidar model selected.
-        void FetchLidarModelConfiguration();
 
         AZ::Crc32 OnLidarModelSelected();
         AZ::Crc32 OnLidarImplementationSelected();
@@ -58,8 +61,7 @@ namespace ROS2Sensors
         //! Get all available lidar systems.
         AZStd::vector<AZStd::string> FetchLidarSystemList();
 
-        const AZStd::vector<LidarTemplate::LidarModel> m_availableModels;
-        AZStd::string m_lidarModelName = "CustomLidar2D";
+        AZStd::vector<LidarTemplate::LidarModel> m_availableModels;
 
         void UpdateShowNoise();
     };

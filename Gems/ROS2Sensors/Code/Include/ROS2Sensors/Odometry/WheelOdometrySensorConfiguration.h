@@ -19,7 +19,7 @@ namespace ROS2Sensors
     //! A structure capturing configuration of a wheel odometry sensor.
     struct WheelOdometrySensorConfiguration
     {
-        AZ_RTTI(WheelOdometrySensorConfiguration, ROS2WheelOdometryConfigurationTypeId);
+        AZ_RTTI(WheelOdometrySensorConfiguration, WheelOdometrySensorConfigurationTypeId);
 
         WheelOdometrySensorConfiguration() = default;
         virtual ~WheelOdometrySensorConfiguration() = default;
