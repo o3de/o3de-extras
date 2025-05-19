@@ -10,13 +10,26 @@
 #include <AzCore/Math/Transform.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
 #include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
-#include <ROS2Sensors/Odometry/WheelOdometryConfigurationReqeustBus.h>
+#include <ROS2Sensors/Odometry/WheelOdometryConfigurationRequestBus.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
 
 namespace ROS2Sensors
 {
+    class JsonROS2WheelOdometryComponentConfigSerializer : public AZ::BaseJsonSerializer
+    {
+    public:
+        AZ_RTTI(JsonROS2WheelOdometryComponentConfigSerializer, "{3f7f9be6-d964-4a55-b856-c03cc5754df0}", AZ::BaseJsonSerializer);
+        AZ_CLASS_ALLOCATOR_DECL;
+
+        AZ::JsonSerializationResult::Result Load(
+            void* outputValue,
+            const AZ::Uuid& outputValueTypeId,
+            const rapidjson::Value& inputValue,
+            AZ::JsonDeserializerContext& context) override;
+    };
+
     //! Wheel odometry sensor component.
     //! It constructs and publishes an odometry message, which contains information about the vehicle's velocity and position in space.
     //! This is a physical sensor that takes a vehicle's configuration and computes updates from the wheels' rotations.
@@ -25,6 +38,8 @@ namespace ROS2Sensors
         : public ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
         , protected WheelOdometryConfigurationRequestBus::Handler
     {
+        friend class JsonROS2WheelOdometryComponentConfigSerializer;
+
     public:
         AZ_COMPONENT(ROS2WheelOdometryComponent, ROS2Sensors::ROS2WheelOdometryComponentTypeId, SensorBaseType);
         ROS2WheelOdometryComponent();
@@ -39,7 +54,9 @@ namespace ROS2Sensors
 
     private:
         //////////////////////////////////////////////////////////////////////////
-        // Component overrides
+        // WheelOdometryConfigurationRequestBus::Handler overrides
+        const WheelOdometrySensorConfiguration GetConfiguration() const override;
+        void SetConfiguration(const WheelOdometrySensorConfiguration& configuration) override;
         ROS2OdometryCovariance GetPoseCovariance() const override;
         void SetPoseCovariance(const ROS2OdometryCovariance& covariance) override;
         ROS2OdometryCovariance GetTwistCovariance() const override;
@@ -51,8 +68,7 @@ namespace ROS2Sensors
         nav_msgs::msg::Odometry m_odometryMsg;
         AZ::Vector3 m_robotPose = AZ::Vector3::CreateZero();
         AZ::Quaternion m_robotRotation = AZ::Quaternion::CreateIdentity();
-        ROS2OdometryCovariance m_poseCovariance;
-        ROS2OdometryCovariance m_twistCovariance;
+        WheelOdometrySensorConfiguration m_odometryConfiguration;
 
         void OnOdometryEvent();
         void OnPhysicsEvent(float physicsDeltaTime);

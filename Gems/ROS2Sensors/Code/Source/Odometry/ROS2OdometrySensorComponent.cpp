@@ -22,8 +22,6 @@ namespace ROS2Sensors
 
     void ROS2OdometrySensorComponent::Reflect(AZ::ReflectContext* context)
     {
-        ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::Reflect(context);
-
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2OdometrySensorComponent, SensorBaseType>()->Version(2);

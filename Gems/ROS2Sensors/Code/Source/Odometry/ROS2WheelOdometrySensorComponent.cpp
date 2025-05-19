@@ -6,7 +6,10 @@
  *
  */
 
-#include "ROS2WheelOdometry.h"
+#include "ROS2WheelOdometrySensorComponent.h"
+#include <AzCore/Serialization/Json/JsonSerialization.h>
+#include <AzCore/Serialization/Json/JsonSerializationResult.h>
+#include <AzCore/Serialization/Json/RegistrationContext.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
@@ -18,16 +21,94 @@ namespace ROS2Sensors
         const char* WheelOdometryMsgType = "nav_msgs::msg::Odometry";
     }
 
+    // Manual conversion between version without a configuration struct and with a configuration struct.
+    // This is done to maintain backwards compatibility with older versions of the component.
+    // This function checks if in the prefab there exits a member called "Twist covariance" or "Pose covariance".
+    // If it does, it will load the values into the new configuration struct.
+    // If it doesn't, it will treat the loaded json as it would load the new version of the component.
+    // Checking old members is used instead of checking if there is a member called "Odometry configuration"
+    // because is default values are used O3DE does not create an empty member and initializes the component with default values.
+    // Meaning if there does not exist a member called "Odometry configuration" this component could use old values or default ones.
+    AZ::JsonSerializationResult::Result JsonROS2WheelOdometryComponentConfigSerializer::Load(
+        void* outputValue, const AZ::Uuid& outputValueTypeId, const rapidjson::Value& inputValue, AZ::JsonDeserializerContext& context)
+    {
+        namespace JSR = AZ::JsonSerializationResult;
+
+        auto configInstance = reinterpret_cast<ROS2WheelOdometryComponent*>(outputValue);
+        AZ_Assert(configInstance, "Output value for JsonROS2WheelOdometryComponentConfigSerializer can't be null.");
+
+        JSR::ResultCode result(JSR::Tasks::ReadField);
+
+        const bool hasOldMembers = inputValue.HasMember("Twist covariance") || inputValue.HasMember("Pose covariance");
+        if (hasOldMembers)
+        {
+            {
+                JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                    &configInstance->m_odometryConfiguration.m_poseCovariance,
+                    azrtti_typeid<decltype(configInstance->m_odometryConfiguration.m_poseCovariance)>(),
+                    inputValue,
+                    "Pose covariance",
+                    context);
+
+                result.Combine(componentIdLoadResult);
+            }
+
+            {
+                JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                    &configInstance->m_odometryConfiguration.m_twistCovariance,
+                    azrtti_typeid<decltype(configInstance->m_odometryConfiguration.m_twistCovariance)>(),
+                    inputValue,
+                    "Twist covariance",
+                    context);
+
+                result.Combine(componentIdLoadResult);
+            }
+        }
+        else
+        {
+            {
+                JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                    &configInstance->m_odometryConfiguration,
+                    azrtti_typeid<decltype(configInstance->m_odometryConfiguration)>(),
+                    inputValue,
+                    "Odometry configuration",
+                    context);
+
+                result.Combine(componentIdLoadResult);
+            }
+        }
+        {
+            JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                &configInstance->m_sensorConfiguration,
+                azrtti_typeid<decltype(configInstance->m_sensorConfiguration)>(),
+                inputValue,
+                "Sensor configuration",
+                context);
+
+            result.Combine(componentIdLoadResult);
+        }
+
+        return context.Report(
+            result,
+            result.GetProcessing() != JSR::Processing::Halted ? "Successfully loaded ROS2FrameComponent information."
+                                                              : "Failed to load ROS2FrameComponent information.");
+    }
+
+    AZ_CLASS_ALLOCATOR_IMPL(JsonROS2WheelOdometryComponentConfigSerializer, AZ::SystemAllocator);
+
     void ROS2WheelOdometryComponent::Reflect(AZ::ReflectContext* context)
     {
-        ROS2OdometryCovariance::Reflect(context);
+        if (auto jsonContext = azrtti_cast<AZ::JsonRegistrationContext*>(context))
+        {
+            jsonContext->Serializer<JsonROS2WheelOdometryComponentConfigSerializer>()->HandlesType<ROS2WheelOdometryComponent>();
+        }
+
+        WheelOdometrySensorConfiguration::Reflect(context);
 
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2WheelOdometryComponent, SensorBaseType>()
-                ->Version(2)
-                ->Field("Twist covariance", &ROS2WheelOdometryComponent::m_twistCovariance)
-                ->Field("Pose covariance", &ROS2WheelOdometryComponent::m_poseCovariance);
+            serialize->Class<ROS2WheelOdometryComponent, SensorBaseType>()->Version(3)->Field(
+                "Odometry configuration", &ROS2WheelOdometryComponent::m_odometryConfiguration);
 
             if (auto* editContext = serialize->GetEditContext())
             {
@@ -39,14 +120,10 @@ namespace ROS2Sensors
                     ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2WheelOdometrySensor.svg")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &ROS2WheelOdometryComponent::m_twistCovariance,
-                        "Twist covariance",
-                        "Set ROS twist covariance")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &ROS2WheelOdometryComponent::m_poseCovariance,
-                        "Pose covariance",
-                        "Set ROS pose covariance");
+                        &ROS2WheelOdometryComponent::m_odometryConfiguration,
+                        "Odometry configuration",
+                        "Odometry sensor configuration")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
     }
@@ -71,7 +148,7 @@ namespace ROS2Sensors
     {
         m_odometryMsg.pose.pose.position = ROS2::ROS2Conversions::ToROS2Point(m_robotPose);
         m_odometryMsg.pose.pose.orientation = ROS2::ROS2Conversions::ToROS2Quaternion(m_robotRotation);
-        m_odometryMsg.pose.covariance = m_poseCovariance.GetRosCovariance();
+        m_odometryMsg.pose.covariance = m_odometryConfiguration.m_poseCovariance.GetRosCovariance();
 
         m_odometryPublisher->publish(m_odometryMsg);
     }
@@ -87,7 +164,7 @@ namespace ROS2Sensors
         m_odometryMsg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         m_odometryMsg.twist.twist.linear = ROS2::ROS2Conversions::ToROS2Vector3(vt.first);
         m_odometryMsg.twist.twist.angular = ROS2::ROS2Conversions::ToROS2Vector3(vt.second);
-        m_odometryMsg.twist.covariance = m_twistCovariance.GetRosCovariance();
+        m_odometryMsg.twist.covariance = m_odometryConfiguration.m_twistCovariance.GetRosCovariance();
 
         if (m_sensorConfiguration.m_frequency > 0)
         {
@@ -141,24 +218,34 @@ namespace ROS2Sensors
         ROS2SensorComponentBase::Deactivate();
     }
 
+    const WheelOdometrySensorConfiguration ROS2WheelOdometryComponent::GetConfiguration() const
+    {
+        return m_odometryConfiguration;
+    }
+
+    void ROS2WheelOdometryComponent::SetConfiguration(const WheelOdometrySensorConfiguration& configuration)
+    {
+        m_odometryConfiguration = configuration;
+    }
+
     ROS2OdometryCovariance ROS2WheelOdometryComponent::GetPoseCovariance() const
     {
-        return m_poseCovariance;
+        return m_odometryConfiguration.m_poseCovariance;
     }
 
     void ROS2WheelOdometryComponent::SetPoseCovariance(const ROS2OdometryCovariance& covariance)
     {
-        m_poseCovariance = covariance;
+        m_odometryConfiguration.m_poseCovariance = covariance;
     }
 
     ROS2OdometryCovariance ROS2WheelOdometryComponent::GetTwistCovariance() const
     {
-        return m_twistCovariance;
+        return m_odometryConfiguration.m_twistCovariance;
     }
 
     void ROS2WheelOdometryComponent::SetTwistCovariance(const ROS2OdometryCovariance& covariance)
     {
-        m_twistCovariance = covariance;
+        m_odometryConfiguration.m_twistCovariance = covariance;
     }
 
 } // namespace ROS2Sensors

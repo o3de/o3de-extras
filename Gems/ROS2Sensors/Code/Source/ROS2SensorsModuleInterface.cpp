@@ -27,7 +27,7 @@
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
-#include <Odometry/ROS2WheelOdometry.h>
+#include <Odometry/ROS2WheelOdometrySensorComponent.h>
 
 namespace ROS2Sensors
 {
@@ -41,6 +41,8 @@ namespace ROS2Sensors
             m_descriptors.end(),
             {
                 ROS2SensorsSystemComponent::CreateDescriptor(),
+                ROS2SensorComponentBase<ROS2::TickBasedSource>::CreateDescriptor(),
+                ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::CreateDescriptor(),
                 ROS2CameraSensorComponent::CreateDescriptor(),
                 ROS2SystemCameraComponent::CreateDescriptor(),
                 ROS2ImageEncodingConversionComponent::CreateDescriptor(),

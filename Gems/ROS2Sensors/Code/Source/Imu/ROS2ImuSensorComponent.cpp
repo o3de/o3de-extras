@@ -32,7 +32,6 @@ namespace ROS2Sensors
     void ROS2ImuSensorComponent::Reflect(AZ::ReflectContext* context)
     {
         ImuSensorConfiguration::Reflect(context);
-        ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::Reflect(context);
 
         if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {

@@ -25,4 +25,6 @@ set(FILES
     Include/ROS2Sensors/Lidar/LidarTemplate.h
     Include/ROS2Sensors/Lidar/LidarTemplateUtils.h
     Include/ROS2Sensors/Odometry/ROS2OdometryCovariance.h
+    Include/ROS2Sensors/Odometry/WheelOdometrySensorConfiguration.h
+    Include/ROS2Sensors/Odometry/WheelOdometryConfigurationRequestBus.h
 )

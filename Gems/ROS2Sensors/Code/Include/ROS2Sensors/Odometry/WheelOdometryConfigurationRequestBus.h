@@ -11,6 +11,7 @@
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
+#include <ROS2Sensors/Odometry/WheelOdometrySensorConfiguration.h>
 
 namespace ROS2Sensors
 {
@@ -20,6 +21,15 @@ namespace ROS2Sensors
     public:
         using BusIdType = AZ::EntityId;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
+
+        //! Returns the current configuration of the component.
+        virtual const WheelOdometrySensorConfiguration GetConfiguration() const = 0;
+
+        //! Sets the configuration of the component.
+        //! Each component should handle the configuration change without fully reinitializing the ROS2 publisher.
+        //! This will allow to change the configuration of the component at runtime.
+        //! @param configuration The new configuration to set.
+        virtual void SetConfiguration(const WheelOdometrySensorConfiguration& configuration) = 0;
 
         //! Get the pose covariance.
         virtual ROS2OdometryCovariance GetPoseCovariance() const = 0;

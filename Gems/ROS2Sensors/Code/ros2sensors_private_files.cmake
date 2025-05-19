@@ -56,7 +56,8 @@ set(FILES
     Source/Lidar/ROS2LidarSensorComponent.h
     Source/Odometry/ROS2OdometrySensorComponent.cpp
     Source/Odometry/ROS2OdometrySensorComponent.h
-    Source/Odometry/ROS2WheelOdometry.cpp
-    Source/Odometry/ROS2WheelOdometry.h
+    Source/Odometry/ROS2WheelOdometrySensorComponent.cpp
+    Source/Odometry/ROS2WheelOdometrySensorComponent.h
+    Source/Odometry/WheelOdometrySensorConfiguration.cpp
     Source/Odometry/ROS2OdometryCovariance.cpp
 )

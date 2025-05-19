@@ -79,7 +79,7 @@ ly_add_target(
             AZ::AzFramework
             Gem::Atom_Feature_Common.Public # Camera Sensor
             Gem::PhysX5.Static # Imu Sensor
-            Gem::ROS2
+            Gem::ROS2.Static
             Gem::LevelGeoreferencing.API
             ${gem_name}.Lidar.Static
 )
@@ -267,6 +267,9 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 BUILD_DEPENDENCIES
                     PRIVATE
                         AZ::AzTest
+                        AZ::AzTestShared
+                        AZ::AzToolsFramework
+                        AZ::AzManipulatorTestFramework.Static
                         Gem::${gem_name}.Editor.Private.Object
             )
 

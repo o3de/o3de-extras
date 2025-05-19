@@ -25,8 +25,6 @@ namespace ROS2Sensors
 
     void ROS2LidarSensorComponent::Reflect(AZ::ReflectContext* context)
     {
-        ROS2SensorComponentBase<ROS2::TickBasedSource>::Reflect(context);
-
         if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<ROS2LidarSensorComponent, SensorBaseType>()->Version(3)->Field(
