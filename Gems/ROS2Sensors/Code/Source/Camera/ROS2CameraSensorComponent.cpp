@@ -123,6 +123,24 @@ namespace ROS2Sensors
         }
     }
 
+    void ROS2CameraSensorComponent::SetConfiguration(const CameraSensorConfiguration& configuration)
+    {
+        m_cameraConfiguration = configuration;
+        m_cameraSensor.reset();
+        // SetCameraSensorConfiguration() is called in the next tick to ensure that the camera sensor is
+        // reset.
+        AZ::SystemTickBus::QueueFunction(
+            [this]()
+            {
+                SetCameraSensorConfiguration();
+            });
+    }
+
+    const CameraSensorConfiguration ROS2CameraSensorComponent::GetConfiguration() const
+    {
+        return m_cameraConfiguration;
+    }
+
     AZ::Matrix3x3 ROS2CameraSensorComponent::GetCameraMatrix() const
     {
         return CameraUtils::MakeCameraIntrinsics(
@@ -156,7 +174,9 @@ namespace ROS2Sensors
 
     void ROS2CameraSensorComponent::SetHeight(int value)
     {
-        m_cameraConfiguration.m_height = value;
+        auto cameraConfiguration = m_cameraConfiguration;
+        cameraConfiguration.m_height = value;
+        SetConfiguration(cameraConfiguration);
     }
 
     bool ROS2CameraSensorComponent::IsColorCamera() const
@@ -166,7 +186,9 @@ namespace ROS2Sensors
 
     void ROS2CameraSensorComponent::SetColorCamera(bool value)
     {
+        auto cameraConfiguration = m_cameraConfiguration;
         m_cameraConfiguration.m_colorCamera = value;
+        SetConfiguration(cameraConfiguration);
     }
 
     bool ROS2CameraSensorComponent::IsDepthCamera() const
@@ -176,7 +198,9 @@ namespace ROS2Sensors
 
     void ROS2CameraSensorComponent::SetDepthCamera(bool value)
     {
-        m_cameraConfiguration.m_depthCamera = value;
+        auto cameraConfiguration = m_cameraConfiguration;
+        cameraConfiguration.m_depthCamera = value;
+        SetConfiguration(cameraConfiguration);
     }
 
     float ROS2CameraSensorComponent::GetNearClipDistance() const
@@ -186,7 +210,9 @@ namespace ROS2Sensors
 
     void ROS2CameraSensorComponent::SetNearClipDistance(float value)
     {
-        m_cameraConfiguration.m_nearClipDistance = value;
+        auto cameraConfiguration = m_cameraConfiguration;
+        cameraConfiguration.m_nearClipDistance = value;
+        SetConfiguration(cameraConfiguration);
     }
 
     float ROS2CameraSensorComponent::GetFarClipDistance() const
@@ -196,6 +222,8 @@ namespace ROS2Sensors
 
     void ROS2CameraSensorComponent::SetFarClipDistance(float value)
     {
-        m_cameraConfiguration.m_farClipDistance = value;
+        auto cameraConfiguration = m_cameraConfiguration;
+        cameraConfiguration.m_farClipDistance = value;
+        SetConfiguration(cameraConfiguration);
     }
 } // namespace ROS2Sensors

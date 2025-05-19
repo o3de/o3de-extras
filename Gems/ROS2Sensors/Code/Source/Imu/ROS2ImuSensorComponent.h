@@ -45,6 +45,8 @@ namespace ROS2Sensors
     private:
         //////////////////////////////////////////////////////////////////////////
         // ImuConfigurationRequest::Handler overrides
+        void SetConfiguration(const ImuSensorConfiguration& configuration) override;
+        const ImuSensorConfiguration GetConfiguration() const override;
         int GetFilterSize() const override;
         void SetFilterSize(int filterSize) override;
         int GetMinFilterSize() const override;

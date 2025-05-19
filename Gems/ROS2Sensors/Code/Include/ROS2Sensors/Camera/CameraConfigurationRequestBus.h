@@ -11,6 +11,7 @@
 #include <AzCore/Math/Matrix3x3.h>
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/RTTI/RTTI.h>
+#include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
 
 namespace ROS2Sensors
 {
@@ -20,6 +21,15 @@ namespace ROS2Sensors
     public:
         using BusIdType = AZ::EntityId;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
+
+        //! Returns the current configuration of the component.
+        virtual const CameraSensorConfiguration GetConfiguration() const = 0;
+
+        //! Sets the configuration of the component.
+        //! Each component should handle the configuration change without fully reinitializing the ROS2 publisher.
+        //! This will allow to change the configuration of the component at runtime.
+        //! @param configuration The new configuration to set.
+        virtual void SetConfiguration(const CameraSensorConfiguration& configuration) = 0;
 
         //! Returns the intrinsic calibration matrix of the camera as:
         //!  [fx  0 cx]

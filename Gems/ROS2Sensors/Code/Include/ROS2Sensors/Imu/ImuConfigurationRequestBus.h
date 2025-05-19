@@ -10,6 +10,7 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/RTTI/RTTI.h>
+#include <ROS2Sensors/Imu/ImuSensorConfiguration.h>
 
 namespace ROS2Sensors
 {
@@ -19,6 +20,15 @@ namespace ROS2Sensors
     public:
         using BusIdType = AZ::EntityId;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
+
+        //! Returns the current configuration of the component.
+        virtual const ImuSensorConfiguration GetConfiguration() const = 0;
+
+        //! Sets the configuration of the component.
+        //! Each component should handle the configuration change without fully reinitializing the ROS2 publisher.
+        //! This will allow to change the configuration of the component at runtime.
+        //! @param configuration The new configuration to set.
+        virtual void SetConfiguration(const ImuSensorConfiguration& configuration) = 0;
 
         /// Gets the current filter size used for IMU data processing.
         virtual int GetFilterSize() const = 0;

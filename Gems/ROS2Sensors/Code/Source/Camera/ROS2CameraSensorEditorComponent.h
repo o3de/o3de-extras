@@ -47,6 +47,8 @@ namespace ROS2Sensors
 
     private:
         // CameraConfigurationRequestBus::Handler overrides ..
+        void SetConfiguration(const CameraSensorConfiguration& configuration) override;
+        const CameraSensorConfiguration GetConfiguration() const override;
         AZ::Matrix3x3 GetCameraMatrix() const override;
         float GetVerticalFOV() const override;
         void SetVerticalFOV(float value) override;

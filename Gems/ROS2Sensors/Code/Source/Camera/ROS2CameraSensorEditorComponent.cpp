@@ -9,7 +9,7 @@
 #include "ROS2CameraSensorEditorComponent.h"
 #include "CameraConstants.h"
 #include "CameraUtilities.h"
-#include "ROS2CameraSensorEditorComponent.h"
+#include "ROS2CameraSensorComponent.h"
 #include <AzCore/Component/TransformBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 
@@ -97,7 +97,17 @@ namespace ROS2Sensors
 
     void ROS2CameraSensorEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
-        gameEntity->CreateComponent<ROS2CameraSensorEditorComponent>(m_sensorConfiguration, m_cameraConfiguration);
+        gameEntity->CreateComponent<ROS2CameraSensorComponent>(m_sensorConfiguration, m_cameraConfiguration);
+    }
+
+    void ROS2CameraSensorEditorComponent::SetConfiguration(const CameraSensorConfiguration& configuration)
+    {
+        m_cameraConfiguration = configuration;
+    }
+
+    const CameraSensorConfiguration ROS2CameraSensorEditorComponent::GetConfiguration() const
+    {
+        return m_cameraConfiguration;
     }
 
     AZ::Matrix3x3 ROS2CameraSensorEditorComponent::GetCameraMatrix() const
