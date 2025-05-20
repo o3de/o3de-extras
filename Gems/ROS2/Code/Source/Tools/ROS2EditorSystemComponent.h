@@ -9,7 +9,6 @@
 
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
-
 #include <Clients/ROS2SystemComponent.h>
 
 namespace ROS2

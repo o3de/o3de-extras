@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
-    Source/Clients/ROS2Module.cpp
     Source/Clients/ROS2SystemComponent.cpp
     Source/Clients/ROS2SystemComponent.h
     Source/Clock/ROS2Clock.cpp
@@ -17,11 +16,11 @@ set(FILES
     Source/Frame/NamespaceConfiguration.cpp
     Source/Frame/ROS2FrameComponent.cpp
     Source/Frame/ROS2FrameConfiguration.cpp
-    Source/Frame/ROS2FrameEditorComponent.cpp
     Source/Frame/ROS2Transform.cpp
+    Source/ROS2ModuleInterface.cpp
+    Source/ROS2ModuleInterface.h
     Source/Sensor/Events/PhysicsBasedSource.cpp
     Source/Sensor/Events/TickBasedSource.cpp
     Source/Utilities/ROS2Conversions.cpp
     Source/Utilities/ROS2Names.cpp
-    Source/ROS2GemUtilities.cpp
 )

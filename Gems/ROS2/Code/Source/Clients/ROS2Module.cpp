@@ -6,7 +6,6 @@
  *
  */
 
-#include "ROS2SystemComponent.h"
 #include <ROS2/ROS2TypeIds.h>
 #include <ROS2ModuleInterface.h>
 

@@ -23,9 +23,6 @@ namespace ROS2
 
         ROS2ModuleInterface();
 
-        /**
-         * Add required SystemComponents to the SystemEntity.
-         */
         AZ::ComponentTypeList GetRequiredSystemComponents() const override;
     };
 } // namespace ROS2
