@@ -10,8 +10,10 @@
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
-#include <ROS2Sensors/Sensor/SensorConfiguration.h>
-namespace ROS2Sensors
+#include <ROS2/ROS2TypeIds.h>
+#include <ROS2/Sensor/SensorConfiguration.h>
+
+namespace ROS2
 {
     //! Interface that allows to get sensor configuration and switch publish state.
     class SensorConfigurationRequest : public AZ::EBusTraits
@@ -43,4 +45,4 @@ namespace ROS2Sensors
     };
 
     using SensorConfigurationRequestBus = AZ::EBus<SensorConfigurationRequest>;
-} // namespace ROS2Sensors
+} // namespace ROS2

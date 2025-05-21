@@ -50,7 +50,7 @@ namespace ROS2Sensors
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(GNSSMsgType, pc));
     }
 
-    ROS2GNSSSensorComponent::ROS2GNSSSensorComponent(const SensorConfiguration& sensorConfiguration)
+    ROS2GNSSSensorComponent::ROS2GNSSSensorComponent(const ROS2::SensorConfiguration& sensorConfiguration)
     {
         m_sensorConfiguration = sensorConfiguration;
     }

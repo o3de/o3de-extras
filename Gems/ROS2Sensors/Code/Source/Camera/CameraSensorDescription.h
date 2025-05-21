@@ -7,8 +7,8 @@
  */
 #pragma once
 
+#include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
-#include <ROS2Sensors/Sensor/SensorConfiguration.h>
 
 #include <AzCore/Math/Matrix4x4.h>
 #include <AzCore/std/containers/array.h>
@@ -35,10 +35,10 @@ namespace ROS2Sensors
             const AZStd::string& cameraName,
             const AZStd::string& effectiveNamespace,
             const CameraSensorConfiguration& configuration,
-            const SensorConfiguration& sensorConfiguration);
+            const ROS2::SensorConfiguration& sensorConfiguration);
 
         const CameraSensorConfiguration m_cameraConfiguration; //!< Configuration of the camera.
-        const SensorConfiguration m_sensorConfiguration; //!< Generic sensor configuration.
+        const ROS2::SensorConfiguration m_sensorConfiguration; //!< Generic sensor configuration.
         const AZStd::string m_cameraName; //!< Camera name to differentiate cameras in a multi-camera setup.
         const AZStd::string m_cameraNamespace; //!< Effective camera namespace for frames and topics.
 

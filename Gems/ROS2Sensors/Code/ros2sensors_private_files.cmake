@@ -11,7 +11,6 @@ set(FILES
     Source/ROS2SensorsModuleInterface.h
     Source/Clients/ROS2SensorsSystemComponent.cpp
     Source/Clients/ROS2SensorsSystemComponent.h
-    Source/Sensor/SensorConfiguration.cpp
     Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.cpp
     Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
     Source/Camera/CameraConstants.h

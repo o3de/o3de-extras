@@ -10,11 +10,7 @@
 #include <AzCore/Memory/Memory.h>
 
 #include <Clients/ROS2SensorsSystemComponent.h>
-#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
-#include <ROS2/Sensor/Events/TickBasedSource.h>
-
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
-#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 
 #include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
 #include <Camera/ROS2CameraSensorComponent.h>
@@ -41,8 +37,6 @@ namespace ROS2Sensors
             m_descriptors.end(),
             {
                 ROS2SensorsSystemComponent::CreateDescriptor(),
-                ROS2SensorComponentBase<ROS2::TickBasedSource>::CreateDescriptor(),
-                ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::CreateDescriptor(),
                 ROS2CameraSensorComponent::CreateDescriptor(),
                 ROS2SystemCameraComponent::CreateDescriptor(),
                 ROS2ImageEncodingConversionComponent::CreateDescriptor(),

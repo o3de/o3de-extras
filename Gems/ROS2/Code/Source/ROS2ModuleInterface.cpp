@@ -9,10 +9,12 @@
 #include "ROS2ModuleInterface.h"
 #include <AzCore/Memory/Memory.h>
 
-#include <ROS2/ROS2TypeIds.h>
-
 #include <Clients/ROS2SystemComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/ROS2TypeIds.h>
+#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2/Sensor/Events/TickBasedSource.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <SimulationUtils/FollowingCameraComponent.h>
 #include <Spawner/ROS2SpawnPointComponent.h>
 #include <Spawner/ROS2SpawnerComponent.h>
@@ -33,6 +35,8 @@ namespace ROS2
                 ROS2SpawnerComponent::CreateDescriptor(),
                 ROS2SpawnPointComponent::CreateDescriptor(),
                 FollowingCameraComponent::CreateDescriptor(),
+                ROS2SensorComponentBase<TickBasedSource>::CreateDescriptor(),
+                ROS2SensorComponentBase<PhysicsBasedSource>::CreateDescriptor(),
             });
     }
 

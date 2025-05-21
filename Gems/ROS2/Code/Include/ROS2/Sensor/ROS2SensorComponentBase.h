@@ -12,12 +12,12 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
+#include <ROS2/ROS2TypeIds.h>
 #include <ROS2/Sensor/Events/EventSourceAdapter.h>
-#include <ROS2Sensors/ROS2SensorsTypeIds.h>
-#include <ROS2Sensors/Sensor/SensorConfiguration.h>
-#include <ROS2Sensors/Sensor/SensorConfigurationRequestBus.h>
+#include <ROS2/Sensor/SensorConfiguration.h>
+#include <ROS2/Sensor/SensorConfigurationRequestBus.h>
 
-namespace ROS2Sensors
+namespace ROS2
 {
     //! Base sensor component class for all specific sensor implementations. Developer working on the new sensor should derive from this
     //! class, defining necessary event source type (EventSourceT template parameter). Available sources are e.g. TickBasedSource or
@@ -176,4 +176,4 @@ namespace ROS2Sensors
     };
 
     AZ_COMPONENT_IMPL_INLINE((ROS2SensorComponentBase, AZ_CLASS), "ROS2SensorComponentBase", ROS2SensorComponentBaseTypeId, AZ::Component)
-} // namespace ROS2Sensors
+} // namespace ROS2

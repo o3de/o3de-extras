@@ -67,7 +67,7 @@ namespace ROS2Sensors
     }
 
     ROS2ImuSensorComponent::ROS2ImuSensorComponent(
-        const SensorConfiguration& sensorConfiguration, const ImuSensorConfiguration& imuConfiguration)
+        const ROS2::SensorConfiguration& sensorConfiguration, const ImuSensorConfiguration& imuConfiguration)
         : m_imuConfiguration(imuConfiguration)
     {
         m_sensorConfiguration = sensorConfiguration;

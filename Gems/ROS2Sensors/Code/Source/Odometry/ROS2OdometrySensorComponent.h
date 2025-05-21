@@ -11,7 +11,8 @@
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Math/Vector3.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
-#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
 
@@ -21,10 +22,12 @@ namespace ROS2Sensors
     //! It constructs and publishes an odometry message, which contains information about vehicle velocity and position in space.
     //! This is a ground truth "sensor", which can be helpful for development and machine learning.
     //! @see <a href="https://index.ros.org/p/nav_msgs/"> nav_msgs package. </a>
-    class ROS2OdometrySensorComponent : public ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
+    class ROS2OdometrySensorComponent : public ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2OdometrySensorComponent, ROS2Sensors::ROS2OdometrySensorComponent, SensorBaseType);
+        using SensorBaseType = ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>;
+
+        AZ_COMPONENT(ROS2OdometrySensorComponent, ROS2OdometrySensorComponentTypeId, SensorBaseType);
         ROS2OdometrySensorComponent();
         ~ROS2OdometrySensorComponent() = default;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);

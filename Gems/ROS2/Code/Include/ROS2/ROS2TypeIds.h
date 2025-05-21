@@ -34,7 +34,10 @@ namespace ROS2
     inline constexpr const char* ROS2FrameConfigurationTypeId = "{04882F01-5451-4EFA-B4F8-CD57E4B6CADF}";
     inline constexpr const char* ROS2FrameEditorComponentTypeId = "{F76D6F29-73C3-40B2-BCC2-47FC824C25DF}";
 
-    // Sensors Events TypeIds
+    // Sensors Interface TypeIds
+    inline constexpr const char* SensorConfigurationTypeId = "{4755363D-0B5A-42D7-BBEF-152D87BA10D7}";
+    inline constexpr const char* SensorConfigurationRequestTypeId = "{01904EAB-FA33-7487-B634-E3F8361EB5FB}";
+    inline constexpr const char* ROS2SensorComponentBaseTypeId = "{2DF9A652-DF5D-43B1-932F-B6A838E36E97}";
     inline constexpr const char* EventSourceAdapterTypeId = "{DC8BB5F7-8E0E-42A1-BD82-5FCD9D31B9DD}";
     inline constexpr const char* TickBasedSourceTypeId = "{AD3CC041-5F7C-45E8-AA2D-5D8A1D4CC466}";
     inline constexpr const char* PhysicsBasedSourceTypeId = "{48BB21A8-F14E-4869-95DC-28EEA279Cf53}";
