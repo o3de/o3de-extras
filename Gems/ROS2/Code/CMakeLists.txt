@@ -88,7 +88,7 @@ ly_add_target(
             AZ::AzCore
 )
 
-target_interface_depends_on_ros2_packages(${gem_name}.API rclcpp builtin_interfaces geometry_msgs)
+target_interface_depends_on_ros2_packages(${gem_name}.API rclcpp builtin_interfaces control_msgs geometry_msgs)
 
 # The ${gem_name}.Private.Object target is an internal target
 # It should not be used outside of this Gems CMakeLists.txt
