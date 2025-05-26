@@ -1,0 +1,762 @@
+{
+    "ContainerEntity": {
+        "Id": "ContainerEntity",
+        "Name": "rosbot_xl_velodyne",
+        "Components": {
+            "Component_[12235031124202050534]": {
+                "$type": "EditorLockComponent",
+                "Id": 12235031124202050534
+            },
+            "Component_[15241232308724939901]": {
+                "$type": "EditorInspectorComponent",
+                "Id": 15241232308724939901
+            },
+            "Component_[1921734905530075438]": {
+                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                "Id": 1921734905530075438,
+                "Parent Entity": ""
+            },
+            "Component_[2337711988520043526]": {
+                "$type": "EditorVisibilityComponent",
+                "Id": 2337711988520043526
+            },
+            "Component_[3608898425222506107]": {
+                "$type": "EditorEntitySortComponent",
+                "Id": 3608898425222506107,
+                "Child Entity Order": [
+                    "Entity_[465452541274]",
+                    "Instance_[3280422216631]/ContainerEntity"
+                ]
+            },
+            "Component_[5327346244572264003]": {
+                "$type": "EditorEntityIconComponent",
+                "Id": 5327346244572264003
+            },
+            "Component_[6162685714088959329]": {
+                "$type": "EditorPendingCompositionComponent",
+                "Id": 6162685714088959329
+            },
+            "Component_[9210490803617746761]": {
+                "$type": "EditorOnlyEntityComponent",
+                "Id": 9210490803617746761
+            },
+            "Component_[9336351917138125189]": {
+                "$type": "EditorPrefabComponent",
+                "Id": 9336351917138125189
+            },
+            "Component_[9714767418951436743]": {
+                "$type": "EditorDisabledCompositionComponent",
+                "Id": 9714767418951436743
+            }
+        }
+    },
+    "Entities": {
+        "Entity_[465452541274]": {
+            "Id": "Entity_[465452541274]",
+            "Name": "rosbot_xl",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 2383491808723318171
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 18108304331946507488
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 18162337217067356831
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 5225736643448429803
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 11117548785735244679
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 4526456886531647600
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3703178989277381678
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 6702016649435686463
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 13117328618696151745,
+                    "Parent Entity": "ContainerEntity"
+                }
+            }
+        }
+    },
+    "Instances": {
+        "Instance_[3280422216631]": {
+            "Source": "RosbotXL/ROSbotXL.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[5400616650014]/Components/Component_[1770764664089996465]/Child Entity Order/0",
+                    "value": "Entity_[1872743799425]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[1872743799425]",
+                    "value": {
+                        "Id": "Entity_[1872743799425]",
+                        "Name": "velodyne_puck_link",
+                        "Components": {
+                            "EditorColliderComponent": {
+                                "$type": "EditorColliderComponent",
+                                "Id": 11825588923887480335,
+                                "ColliderConfiguration": {
+                                    "CollisionLayer": {
+                                        "Index": 1
+                                    },
+                                    "CollisionGroupId": {
+                                        "GroupId": "{00000000-0000-0000-0000-000000000000}"
+                                    },
+                                    "Visible": false,
+                                    "Trigger": false,
+                                    "Simulated": true,
+                                    "DummySimulated": false,
+                                    "InSceneQueries": true,
+                                    "Exclusive": true,
+                                    "Position": [
+                                        0.0,
+                                        0.0,
+                                        0.035999998450279236
+                                    ],
+                                    "Rotation": [
+                                        0.0,
+                                        0.0,
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "MaterialSlots": {
+                                        "Slots": [
+                                            {
+                                                "Name": "Entire object",
+                                                "MaterialAsset": {
+                                                    "assetId": {
+                                                        "guid": "{00000000-0000-0000-0000-000000000000}",
+                                                        "subId": 0
+                                                    },
+                                                    "loadBehavior": "QueueLoad",
+                                                    "assetHint": ""
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "propertyVisibilityFlags": 255,
+                                    "ColliderTag": "",
+                                    "RestOffset": 0.0,
+                                    "ContactOffset": 0.019999999552965164
+                                },
+                                "ShapeConfiguration": {
+                                    "ShapeType": 3,
+                                    "Sphere": {
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "Radius": 0.5
+                                    },
+                                    "Box": {
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "Configuration": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "Capsule": {
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "Height": 1.0,
+                                        "Radius": 0.25
+                                    },
+                                    "Cylinder": {
+                                        "Configuration": {
+                                            "Scale": [
+                                                1.0,
+                                                1.0,
+                                                1.0
+                                            ],
+                                            "CookedData": "TlhTAUNWWE0OAAAAAAAAAElDRQFDTEhMCQAAACAAAAAwAAAAEgAAAGAAAAAac6E8CONCvbx0kzzzKBU98CgVvbx0kzzzKBU98CgVvRovXT0ac6E8CONCvRovXT2fC+gxqvFSvRovXT2fC+gxqvFSvbx0kzwI40K9GHOhvBovXT2q8VK9abKasRovXT2q8VK9abKasbx0kzwI40K9GHOhvLx0kzzwKBW98igVvbx0kzzwKBW98igVvRovXT0J40K9FHOhPLx0kzwJ40K9FHOhPBovXT3yKBW98CgVPRovXT3yKBW98CgVPbx0kzwXc6G8CONCPbx0kzwXc6G8CONCPRovXT1pshqxqvFSPRovXT1pshqxqvFSPbx0kzwVc6E8CeNCPbx0kzwVc6E8CeNCPRovXT3xKBU98SgVPRovXT3xKBU98SgVPbx0kzwI40I9FnOhPLx0kzwI40I9FnOhPBovXT2q8VI9AAAAABovXT2q8VI9AAAAALx0kzwSc6G8CeNCvRovXT0Sc6G8CeNCvbx0kzwJ40I9EXOhvBovXT0J40I9EXOhvLx0kzwAAAAAAAAAAAAAgD8cL129AAAQAN05Dj8v21S/AAAAAArkTr0QAAQQxcVHPsAUe78AAAAACuROvRQABBDAFHu/xcVHvgAAAAAL5E69GAAEGC/bVL/dOQ6/AAAAAAnkTr0cAAQWwBR7v7jFRz4AAAAACuROvSAABBow21S/2zkOPwAAAAAK5E69JAAEAd05Dr8x21Q/AAAAAAvkTr0oAAQAxcVHvsAUez8AAAAACuROvSwABAC4xUc+wBR7PwAAAAAK5E69MAAEBN05Dj8x21Q/AAAAAAvkTr00AAQKMNtUP9s5Dj8AAAAACOROvTgABAbAFHs/xcVHPgAAAAAK5E69PAAEBtk5Dr8y21S/AAAAAAjkTr1AAAQUuMVHvsAUe78AAAAAC+ROvUQABBK/FHs/vsVHvgAAAAAJ5E69SAAEBzXbVD/XOQ6/AAAAAArkTr1MAAQMAAAAAAAAAAAAAIC/vnSTPFAAEAIcBAMCHhoZFhUSEQ4NBwYLAAECAwADBAUGBwgJBgkKCwwIBw0MDQ4PEA8OERAREhMUExIVFBUWFxgXFhkYGRobHAsKHRwdBQQfGxoeHx4CAR8BAAUdCgkIDA8QExQXGBsADgACAAEAEAAPAAwACwAKAAkACAAHAAYABQADAAQADQERARABAgIOAhEDBQMRAwQEEQQNBREFBgYHBhEHEQcICAkIEQkRCQoKCwoRCxELDAwPDBENEQ0ODhEPEQ8QEBEBAhEBEBEAARAAAQIAAg4CDhEAAwQAAwUDBREDBBEEDREABA0FBhEABQYABgcGBxEHCBEABwgACAkICREJChEACQoACgsKCxELDBEACwwADA8MDxEADQ4NDhEADxAPEBEAAAAAqvFSvarxUr28dJM8qvFSParxUj0aL109c0GZOTbgIDXeTD0nBWc2KN5MPSc24CA1SpeXJwVnNihKl5cnUNXKNHRxdbD2ztuvvHQTPQAAgL8AAIC/unSTPBZ6Sj2JRCo8iUQqPA==",
+                                            "Type": 1
+                                        },
+                                        "Subdivision": 16,
+                                        "Height": 0.035999998450279236,
+                                        "Radius": 0.051500000059604645
+                                    },
+                                    "PhysicsAsset": {
+                                        "Asset": {
+                                            "assetId": {
+                                                "guid": "{00000000-0000-0000-0000-000000000000}",
+                                                "subId": 0
+                                            },
+                                            "loadBehavior": "QueueLoad",
+                                            "assetHint": ""
+                                        },
+                                        "Configuration": {
+                                            "Scale": [
+                                                1.0,
+                                                1.0,
+                                                1.0
+                                            ],
+                                            "PhysicsAsset": {
+                                                "assetId": {
+                                                    "guid": "{00000000-0000-0000-0000-000000000000}",
+                                                    "subId": 0
+                                                },
+                                                "loadBehavior": "PreLoad",
+                                                "assetHint": ""
+                                            },
+                                            "AssetScale": [
+                                                1.0,
+                                                1.0,
+                                                1.0
+                                            ],
+                                            "UseMaterialsFromAsset": true,
+                                            "SubdivisionLevel": 4
+                                        }
+                                    },
+                                    "HasNonUniformScale": false,
+                                    "SubdivisionLevel": 4
+                                },
+                                "DebugDrawSettings": {
+                                    "LocallyEnabled": true
+                                },
+                                "ComponentMode": {},
+                                "HasNonUniformScale": false
+                            },
+                            "EditorDisabledCompositionComponent": {
+                                "$type": "EditorDisabledCompositionComponent",
+                                "Id": 6532855611535461336,
+                                "DisabledComponents": []
+                            },
+                            "EditorEntityIconComponent": {
+                                "$type": "EditorEntityIconComponent",
+                                "Id": 1326458056966829278,
+                                "EntityIconAssetId": {
+                                    "guid": "{00000000-0000-0000-0000-000000000000}",
+                                    "subId": 0
+                                }
+                            },
+                            "EditorEntitySortComponent": {
+                                "$type": "EditorEntitySortComponent",
+                                "Id": 8659165872350439627,
+                                "Child Entity Order": [
+                                    "Entity_[589864549490]",
+                                    "Entity_[1139620363378]"
+                                ]
+                            },
+                            "EditorFixedJointComponent": {
+                                "$type": "EditorFixedJointComponent",
+                                "Id": 9188361864360229182,
+                                "Configuration": {
+                                    "Local Position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Local Rotation": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Fix Joint Location": false,
+                                    "Parent Entity": "Entity_[5430681421086]",
+                                    "Child Entity": "Entity_[1872743799425]",
+                                    "Breakable": false,
+                                    "Maximum Force": 1.0,
+                                    "Maximum Torque": 1.0,
+                                    "Display Debug": "Selected",
+                                    "Select Lead on Snap": true,
+                                    "Self Collide": false
+                                },
+                                "Component Mode": {}
+                            },
+                            "EditorLockComponent": {
+                                "$type": "EditorLockComponent",
+                                "Id": 12221959046552877394,
+                                "Locked": false
+                            },
+                            "EditorOnlyEntityComponent": {
+                                "$type": "EditorOnlyEntityComponent",
+                                "Id": 10398764927974514042,
+                                "IsEditorOnly": false
+                            },
+                            "EditorPendingCompositionComponent": {
+                                "$type": "EditorPendingCompositionComponent",
+                                "Id": 9124468710033830604,
+                                "PendingComponents": []
+                            },
+                            "EditorRigidBodyComponent": {
+                                "$type": "EditorRigidBodyComponent",
+                                "Id": 17512468621938055674,
+                                "Configuration": {
+                                    "name": "",
+                                    "position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "orientation": [
+                                        0.0,
+                                        0.0,
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "entityId": "",
+                                    "startSimulationEnabled": true,
+                                    "Kinematic": false,
+                                    "Initial linear velocity": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Initial angular velocity": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Linear damping": 0.05000000074505806,
+                                    "Angular damping": 0.15000000596046448,
+                                    "Sleep threshold": 0.004999999888241291,
+                                    "Start Asleep": false,
+                                    "Interpolate Motion": false,
+                                    "Gravity Enabled": true,
+                                    "CCD Enabled": false,
+                                    "Compute Mass": false,
+                                    "Lock Linear X": false,
+                                    "Lock Linear Y": false,
+                                    "Lock Linear Z": false,
+                                    "Lock Angular X": false,
+                                    "Lock Angular Y": false,
+                                    "Lock Angular Z": false,
+                                    "Mass": 0.8299999833106995,
+                                    "Compute COM": false,
+                                    "Centre of mass offset": [
+                                        0.0,
+                                        0.0,
+                                        0.035999998450279236
+                                    ],
+                                    "Compute inertia": false,
+                                    "Inertia tensor": [
+                                        0.0011109999613836408,
+                                        0.0,
+                                        0.0,
+                                        0.0,
+                                        0.001108999946154654,
+                                        0.0,
+                                        0.0,
+                                        0.0,
+                                        0.0014929999597370625
+                                    ],
+                                    "Maximum Angular Velocity": 100.0,
+                                    "Include All Shapes In Mass": false,
+                                    "CCD Min Advance": 0.15000000596046448,
+                                    "CCD Friction": false,
+                                    "Open PhysX Configuration": false,
+                                    "Debug Draw Center of Mass": false
+                                },
+                                "PhysXSpecificConfiguration": {
+                                    "SolverPositionIterations": 40,
+                                    "SolverVelocityIterations": 10
+                                }
+                            },
+                            "EditorVisibilityComponent": {
+                                "$type": "EditorVisibilityComponent",
+                                "Id": 15833557083549644820,
+                                "VisibilityFlag": true
+                            },
+                            "ROS2FrameEditorComponent": {
+                                "$type": "ROS2FrameEditorComponent",
+                                "Id": 5683252651632775966,
+                                "ROS2FrameConfiguration": {
+                                    "Namespace Configuration": {
+                                        "Namespace Strategy": 0,
+                                        "Namespace": ""
+                                    },
+                                    "Frame Name": "velodyne_puck_link",
+                                    "Joint Name": "",
+                                    "Publish Transform": true
+                                }
+                            },
+                            "TransformComponent": {
+                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                                "Id": 13823668089967528270,
+                                "Parent Entity": "Entity_[5400616650014]",
+                                "Transform Data": {
+                                    "Translate": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Rotate": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "Locked": false,
+                                    "UniformScale": 1.0
+                                },
+                                "Parent Activation Transform Mode": 0,
+                                "IsStatic": false,
+                                "InterpolatePosition": 0,
+                                "InterpolateRotation": 0
+                            }
+                        },
+                        "IsRuntimeActive": true
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[1139620363378]",
+                    "value": {
+                        "Id": "Entity_[1139620363378]",
+                        "Name": "velodyne",
+                        "Components": {
+                            "EditorDisabledCompositionComponent": {
+                                "$type": "EditorDisabledCompositionComponent",
+                                "Id": 9997223080195196098,
+                                "DisabledComponents": []
+                            },
+                            "EditorEntityIconComponent": {
+                                "$type": "EditorEntityIconComponent",
+                                "Id": 11034415201163609422,
+                                "EntityIconAssetId": {
+                                    "guid": "{00000000-0000-0000-0000-000000000000}",
+                                    "subId": 0
+                                }
+                            },
+                            "EditorEntitySortComponent": {
+                                "$type": "EditorEntitySortComponent",
+                                "Id": 7668530697178510261,
+                                "Child Entity Order": []
+                            },
+                            "EditorLockComponent": {
+                                "$type": "EditorLockComponent",
+                                "Id": 11646251589982941495,
+                                "Locked": false
+                            },
+                            "EditorOnlyEntityComponent": {
+                                "$type": "EditorOnlyEntityComponent",
+                                "Id": 7139247376574023086,
+                                "IsEditorOnly": false
+                            },
+                            "EditorPendingCompositionComponent": {
+                                "$type": "EditorPendingCompositionComponent",
+                                "Id": 1222862428576899176,
+                                "PendingComponents": []
+                            },
+                            "EditorVisibilityComponent": {
+                                "$type": "EditorVisibilityComponent",
+                                "Id": 6056145116580678657,
+                                "VisibilityFlag": true
+                            },
+                            "ROS2FrameEditorComponent": {
+                                "$type": "ROS2FrameEditorComponent",
+                                "Id": 18396442326868045181,
+                                "ROS2FrameConfiguration": {
+                                    "Namespace Configuration": {
+                                        "Namespace Strategy": 0,
+                                        "Namespace": ""
+                                    },
+                                    "Frame Name": "velodyne",
+                                    "Joint Name": "",
+                                    "Publish Transform": true
+                                }
+                            },
+                            "ROS2LidarSensorComponent": {
+                                "$type": "GenericComponentWrapper",
+                                "Id": 13214832828698258327,
+                                "m_template": {
+                                    "$type": "ROS2LidarSensorComponent",
+                                    "Id": 0,
+                                    "SensorConfiguration": {
+                                        "Visualize": true,
+                                        "Publishing Enabled": true,
+                                        "Frequency (HZ)": 10.0,
+                                        "Publishers": {
+                                            "sensor_msgs::msg::PointCloud2": {
+                                                "Type": "sensor_msgs::msg::PointCloud2",
+                                                "Topic": "pc",
+                                                "QoS": {
+                                                    "Reliability": 2,
+                                                    "Durability": 2,
+                                                    "Depth": 5
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "lidarCore": {
+                                        "lidarConfiguration": {
+                                            "lidarModelName": "Velodyne Puck (VLP-16)",
+                                            "lidarImplementation": "Scene Queries",
+                                            "LidarParameters": {
+                                                "Name": "Velodyne Puck (VLP-16)",
+                                                "Layers": 16,
+                                                "Points per layer": 1800,
+                                                "Min horizontal angle": -180.0,
+                                                "Max horizontal angle": 180.0,
+                                                "Min vertical angle": 15.0,
+                                                "Max vertical angle": -15.0,
+                                                "Min range": 0.0,
+                                                "Max range": 100.0,
+                                                "Enable Noise": true,
+                                                "Noise Parameters": {
+                                                    "Angular noise standard deviation": 0.0,
+                                                    "Distance noise standard deviation base": 0.029999999329447743,
+                                                    "Distance noise standard deviation slope": 0.0010000000474974513
+                                                }
+                                            },
+                                            "IgnoredLayerIndices": [
+                                                1
+                                            ],
+                                            "ExcludedEntities": [],
+                                            "IsSegmentationEnabled": false,
+                                            "PointsAtMax": false
+                                        }
+                                    }
+                                }
+                            },
+                            "TransformComponent": {
+                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                                "Id": 10324025846280462019,
+                                "Parent Entity": "Entity_[1872743799425]",
+                                "Transform Data": {
+                                    "Translate": [
+                                        0.0,
+                                        0.0,
+                                        0.03799999877810478
+                                    ],
+                                    "Rotate": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "Locked": false,
+                                    "UniformScale": 1.0
+                                },
+                                "Parent Activation Transform Mode": 0,
+                                "IsStatic": false,
+                                "InterpolatePosition": 0,
+                                "InterpolateRotation": 0
+                            }
+                        },
+                        "IsRuntimeActive": true
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[589864549490]",
+                    "value": {
+                        "Id": "Entity_[589864549490]",
+                        "Name": "velodyne_visual",
+                        "Components": {
+                            "AZ::Render::EditorMeshComponent": {
+                                "$type": "AZ::Render::EditorMeshComponent",
+                                "Id": 14542129736382376367,
+                                "Controller": {
+                                    "Configuration": {
+                                        "ModelAsset": {
+                                            "assetId": {
+                                                "guid": "{1CBC0D46-97B2-5370-9198-E204CA5DD11A}",
+                                                "subId": 283661751
+                                            },
+                                            "loadBehavior": "QueueLoad",
+                                            "assetHint": "components/velodynepucklidar/models/velodynepuck.dae.azmodel"
+                                        },
+                                        "SortKey": 0,
+                                        "ExcludeFromReflectionCubeMaps": false,
+                                        "UseForwardPassIBLSpecular": false,
+                                        "IsRayTracingEnabled": true,
+                                        "IsAlwaysDynamic": false,
+                                        "SupportRayIntersection": false,
+                                        "LodType": 0,
+                                        "LodOverride": 0,
+                                        "MinimumScreenCoverage": 0.0009259000071324408,
+                                        "QualityDecayRate": 0.5,
+                                        "LightingChannelConfig": {
+                                            "lightingChannelFlags": [
+                                                true,
+                                                false,
+                                                false,
+                                                false,
+                                                false
+                                            ]
+                                        }
+                                    }
+                                },
+                                "meshStats": {}
+                            },
+                            "EditorDisabledCompositionComponent": {
+                                "$type": "EditorDisabledCompositionComponent",
+                                "Id": 3335243259488187731,
+                                "DisabledComponents": []
+                            },
+                            "EditorEntityIconComponent": {
+                                "$type": "EditorEntityIconComponent",
+                                "Id": 4895670341075036316,
+                                "EntityIconAssetId": {
+                                    "guid": "{00000000-0000-0000-0000-000000000000}",
+                                    "subId": 0
+                                }
+                            },
+                            "EditorEntitySortComponent": {
+                                "$type": "EditorEntitySortComponent",
+                                "Id": 10320384200477498899,
+                                "Child Entity Order": []
+                            },
+                            "EditorLockComponent": {
+                                "$type": "EditorLockComponent",
+                                "Id": 17854099279499829268,
+                                "Locked": false
+                            },
+                            "EditorMaterialComponent": {
+                                "$type": "EditorMaterialComponent",
+                                "Id": 3322443948818266055,
+                                "Controller": {
+                                    "Configuration": {
+                                        "materials": [
+                                            {
+                                                "Key": {
+                                                    "lodIndex": 18446744073709551615,
+                                                    "materialSlotStableId": 1166427667
+                                                },
+                                                "Value": {
+                                                    "MaterialAsset": {
+                                                        "assetId": {
+                                                            "guid": "{30C0F30E-03F8-519C-8E02-9D7F1AFCD553}",
+                                                            "subId": 0
+                                                        },
+                                                        "loadBehavior": "QueueLoad",
+                                                        "assetHint": "components/velodynepucklidar/models/materials/velodynepuck_black.azmaterial"
+                                                    },
+                                                    "PropertyOverrides": [],
+                                                    "ModelUvOverrides": []
+                                                }
+                                            },
+                                            {
+                                                "Key": {
+                                                    "lodIndex": 18446744073709551615,
+                                                    "materialSlotStableId": 1786081827
+                                                },
+                                                "Value": {
+                                                    "MaterialAsset": {
+                                                        "assetId": {
+                                                            "guid": "{25081A86-ACCB-56DA-A67C-0F9FF08C9A2F}",
+                                                            "subId": 0
+                                                        },
+                                                        "loadBehavior": "QueueLoad",
+                                                        "assetHint": ""
+                                                    },
+                                                    "PropertyOverrides": [],
+                                                    "ModelUvOverrides": []
+                                                }
+                                            },
+                                            {
+                                                "Key": {
+                                                    "lodIndex": 18446744073709551615,
+                                                    "materialSlotStableId": 3117550393
+                                                },
+                                                "Value": {
+                                                    "MaterialAsset": {
+                                                        "assetId": {
+                                                            "guid": "{63B231D3-4F5A-50A1-8166-EEF295B83366}",
+                                                            "subId": 0
+                                                        },
+                                                        "loadBehavior": "QueueLoad",
+                                                        "assetHint": "components/velodynepucklidar/models/materials/velodynepuck_white.azmaterial"
+                                                    },
+                                                    "PropertyOverrides": [],
+                                                    "ModelUvOverrides": []
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "materialSlotsByLodEnabled": false
+                            },
+                            "EditorOnlyEntityComponent": {
+                                "$type": "EditorOnlyEntityComponent",
+                                "Id": 8511876103205280622,
+                                "IsEditorOnly": false
+                            },
+                            "EditorPendingCompositionComponent": {
+                                "$type": "EditorPendingCompositionComponent",
+                                "Id": 16142531784796619038,
+                                "PendingComponents": []
+                            },
+                            "EditorVisibilityComponent": {
+                                "$type": "EditorVisibilityComponent",
+                                "Id": 7234248107007015217,
+                                "VisibilityFlag": true
+                            },
+                            "TransformComponent": {
+                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                                "Id": 18182308154738976179,
+                                "Parent Entity": "Entity_[1872743799425]",
+                                "Transform Data": {
+                                    "Translate": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Rotate": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "Locked": false,
+                                    "UniformScale": 1.0
+                                },
+                                "Parent Activation Transform Mode": 0,
+                                "IsStatic": false,
+                                "InterpolatePosition": 0,
+                                "InterpolateRotation": 0
+                            }
+                        },
+                        "IsRuntimeActive": true
+                    }
+                }
+            ]
+        }
+    }
+}

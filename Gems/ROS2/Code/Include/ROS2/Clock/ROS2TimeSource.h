@@ -25,6 +25,12 @@ namespace ROS2
         //! Get ROS 2 time as ROS2 message.
         //! @see ROS2Requests::GetROSTimestamp() for more details.
         virtual builtin_interfaces::msg::Time GetROSTimestamp() const override;
+
+        //! Sets the time source to the given time.
+        //! @param time The time to set the time source to.
+        //! @return An outcome indicating success or failure.
+        virtual AZ::Outcome<void, AZStd::string> AdjustTime(const builtin_interfaces::msg::Time& time) override;
+
     };
 
 } // namespace ROS2

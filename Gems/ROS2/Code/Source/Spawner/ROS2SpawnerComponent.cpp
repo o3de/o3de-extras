@@ -8,16 +8,19 @@
 
 #include "ROS2SpawnerComponent.h"
 #include "Spawner/ROS2SpawnerComponentController.h"
+#include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Quaternion.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/conversions.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Spawnable/Spawnable.h>
+#include <Georeferencing/GeoreferenceBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Georeference/GeoreferenceBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
+#include <ROS2/Spawner/SpawnerBus.h>
+#include <ROS2/Spawner/SpawnerBusHandler.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
@@ -98,6 +101,11 @@ namespace ROS2
         {
             serialize->Class<ROS2SpawnerComponent, ROS2SpawnerComponentBase>()->Version(1);
         }
+
+        if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            behaviorContext->EBus<SpawnerNotificationBus>("ROS2SpawnerNotificationBus")->Handler<SpawnerNotificationsBusHandler>();
+        }
     }
 
     void ROS2SpawnerComponent::GetAvailableSpawnableNames(
@@ -118,7 +126,7 @@ namespace ROS2
 
         SpawnEntityResponse response;
 
-        if (isWGS && !GeoreferenceRequestsBus::HasHandlers())
+        if (isWGS && !Georeferencing::GeoreferenceRequestsBus::HasHandlers())
         {
             response.success = false;
             response.status_message = "Level is not geographically positioned. Action aborted.";
@@ -199,15 +207,16 @@ namespace ROS2
 
         if (isWGS)
         {
-            ROS2::WGS::WGS84Coordinate coordinate;
+            Georeferencing::WGS::WGS84Coordinate coordinate;
             AZ::Vector3 coordinateInLevel = AZ::Vector3(-1);
             AZ::Quaternion rotationInENU = AZ::Quaternion::CreateIdentity();
             coordinate.m_latitude = request->initial_pose.position.x;
             coordinate.m_longitude = request->initial_pose.position.y;
             coordinate.m_altitude = request->initial_pose.position.z;
-            ROS2::GeoreferenceRequestsBus::BroadcastResult(rotationInENU, &ROS2::GeoreferenceRequests::GetRotationFromLevelToENU);
-            ROS2::GeoreferenceRequestsBus::BroadcastResult(
-                coordinateInLevel, &ROS2::GeoreferenceRequests::ConvertFromWGS84ToLevel, coordinate);
+            Georeferencing::GeoreferenceRequestsBus::BroadcastResult(
+                rotationInENU, &Georeferencing::GeoreferenceRequests::GetRotationFromLevelToENU);
+            Georeferencing::GeoreferenceRequestsBus::BroadcastResult(
+                coordinateInLevel, &Georeferencing::GeoreferenceRequests::ConvertFromWGS84ToLevel, coordinate);
 
             rotationInENU = (rotationInENU.GetInverseFast() *
                              AZ::Quaternion(
@@ -244,12 +253,23 @@ namespace ROS2
             PreSpawn(id, view, transform, spawnableName, spawnableNamespace);
         };
 
-        optionalArgs.m_completionCallback = [service_handle, header, ticketName](auto id, auto view)
+        optionalArgs.m_completionCallback =
+            [service_handle, header, ticketName, spawnableName, parentId = GetEntityId()](auto id, auto view)
         {
+            AZ::EntityId rootEntityId;
+            if (!view.empty())
+            {
+                const AZ::Entity* root = *view.begin();
+                auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
+                transformInterface->SetParent(parentId);
+                rootEntityId = root->GetId();
+            }
             SpawnEntityResponse response;
             response.success = true;
             response.status_message = ticketName.c_str();
             service_handle->send_response(*header, response);
+
+            SpawnerNotificationBus::Broadcast(&SpawnerNotificationBus::Events::OnSpawned, spawnableName, rootEntityId, ticketName);
         };
 
         spawner->SpawnAllEntities(m_tickets.at(ticketName), optionalArgs);
@@ -270,7 +290,6 @@ namespace ROS2
 
         auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
         transformInterface->SetWorldTM(transform);
-        transformInterface->SetParent(GetEntityId());
 
         AZStd::string instanceName = AZStd::string::format("%s_%d", spawnableName.c_str(), m_counter++);
         for (AZ::Entity* entity : view)
@@ -304,11 +323,13 @@ namespace ROS2
 
         AzFramework::DespawnAllEntitiesOptionalArgs optionalArgs;
 
-        optionalArgs.m_completionCallback = [service_handle, header](auto id)
+        optionalArgs.m_completionCallback = [service_handle, header, deleteName](auto id)
         {
             DeleteEntityResponse response;
             response.success = true;
             service_handle->send_response(*header, response);
+
+            SpawnerNotificationBus::Broadcast(&SpawnerNotificationBus::Events::OnDespawned, deleteName);
         };
 
         spawner->DespawnAllEntities(m_tickets.at(deleteName), optionalArgs);

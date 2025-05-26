@@ -8,8 +8,10 @@
 #pragma once
 
 #include "ITimeSource.h"
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/chrono/chrono.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
+#include <AzCore/std/string/string.h>
 #include <rclcpp/publisher.hpp>
 #include <rosgraph_msgs/msg/clock.hpp>
 
@@ -21,8 +23,6 @@ namespace ROS2
     //! the /use_sim_time parameter set to true.
     class ROS2Clock
     {
-        static constexpr size_t FramesNumberForStats = 60;
-
     public:
         ROS2Clock();
         ROS2Clock(AZStd::unique_ptr<ITimeSource> timeSource, bool publishClock);
@@ -32,6 +32,11 @@ namespace ROS2
         void Deactivate();
 
         builtin_interfaces::msg::Time GetROSTimestamp() const;
+
+        //! Sets the time source to the given time.
+        //! @param time The time to set the time source to.
+        //! @return An outcome indicating success or failure.
+        AZ::Outcome<void, AZStd::string> AdjustTime(const builtin_interfaces::msg::Time& time) const;
 
         //! Update time in the ROS 2 ecosystem.
         //! This will publish current time to the ROS 2 `/clock` topic, if Clock is configured to do it.

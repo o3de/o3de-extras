@@ -102,7 +102,7 @@ ly_add_target(
         PRIVATE
             Gem::${gem_name}.Private.Object
             AZ::AtomCore
-            Gem::Atom_Feature_Common.Static
+            Gem::Atom_Feature_Common.Public
             Gem::ImGui.Static
 )
 

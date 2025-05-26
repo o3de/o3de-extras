@@ -33,15 +33,10 @@ set(FILES
         Source/Communication/QoS.cpp
         Source/Communication/PublisherConfiguration.cpp
         Source/Communication/TopicConfiguration.cpp
-        Source/ContactSensor/ROS2ContactSensorComponent.cpp
-        Source/ContactSensor/ROS2ContactSensorComponent.h
         Source/Frame/NamespaceConfiguration.cpp
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2FrameConfiguration.cpp
         Source/Frame/ROS2Transform.cpp
-        Source/Georeference/GeoreferenceStructures.cpp
-        Source/Georeference/GeoreferenceLevelComponent.cpp
-        Source/Georeference/GeoreferenceLevelComponent.h
         Source/Gripper/GripperActionServer.cpp
         Source/Gripper/GripperActionServer.h
         Source/Gripper/GripperActionServerComponent.cpp
@@ -50,8 +45,6 @@ set(FILES
         Source/Gripper/VacuumGripperComponent.cpp
         Source/Gripper/FingerGripperComponent.h
         Source/Gripper/FingerGripperComponent.cpp
-        Source/Georeference/GNSSFormatConversions.cpp
-        Source/Georeference/GNSSFormatConversions.h
         Source/GNSS/ROS2GNSSSensorComponent.cpp
         Source/GNSS/ROS2GNSSSensorComponent.h
         Source/Imu/ImuSensorConfiguration.cpp
@@ -70,12 +63,19 @@ set(FILES
         Source/Lidar/LidarTemplate.h
         Source/Lidar/LidarTemplateUtils.cpp
         Source/Lidar/LidarTemplateUtils.h
+        Source/Lidar/PointCloudMessageBuilder.cpp
+        Source/Lidar/PointCloudMessageBuilder.h
+        Source/Lidar/RaycastResults.cpp
         Source/Lidar/LidarCore.cpp
         Source/Lidar/LidarCore.h
         Source/Lidar/ROS2Lidar2DSensorComponent.cpp
         Source/Lidar/ROS2Lidar2DSensorComponent.h
         Source/Lidar/ROS2LidarSensorComponent.cpp
         Source/Lidar/ROS2LidarSensorComponent.h
+        Source/Lidar/ClassSegmentationConfigurationComponent.cpp
+        Source/Lidar/ClassSegmentationConfigurationComponent.h
+        Source/Lidar/SegmentationClassConfiguration.cpp
+        Source/Lidar/SegmentationUtils.cpp
         Source/Manipulation/Controllers/JointsArticulationControllerComponent.cpp
         Source/Manipulation/Controllers/JointsArticulationControllerComponent.h
         Source/Manipulation/Controllers/JointsPIDControllerComponent.cpp
@@ -128,14 +128,6 @@ set(FILES
         Source/SimulationUtils/FollowingCameraConfiguration.h
         Source/SimulationUtils/FollowingCameraComponent.cpp
         Source/SimulationUtils/FollowingCameraComponent.h
-        Source/Spawner/ROS2SpawnerComponent.cpp
-        Source/Spawner/ROS2SpawnerComponent.h
-        Source/Spawner/ROS2SpawnPointComponent.cpp
-        Source/Spawner/ROS2SpawnPointComponent.h
-        Source/Spawner/ROS2SpawnerComponentController.cpp
-        Source/Spawner/ROS2SpawnerComponentController.h
-        Source/Spawner/ROS2SpawnPointComponentController.cpp
-        Source/Spawner/ROS2SpawnPointComponentController.h
         Source/SystemComponents/ROS2SystemComponent.cpp
         Source/SystemComponents/ROS2SystemComponent.h
         Source/Utilities/ArticulationsUtilities.cpp
@@ -176,3 +168,19 @@ set(FILES
         Source/VehicleDynamics/WheelControllerComponent.h
         Source/VehicleDynamics/WheelDynamicsData.h
         )
+
+# optional, legacy features compilation
+if (WITH_GAZEBO_MSGS)
+        list(APPEND FILES
+                Source/ContactSensor/ROS2ContactSensorComponent.cpp
+                Source/ContactSensor/ROS2ContactSensorComponent.h
+                Source/Spawner/ROS2SpawnerComponent.cpp
+                Source/Spawner/ROS2SpawnerComponent.h
+                Source/Spawner/ROS2SpawnPointComponent.cpp
+                Source/Spawner/ROS2SpawnPointComponent.h
+                Source/Spawner/ROS2SpawnerComponentController.cpp
+                Source/Spawner/ROS2SpawnerComponentController.h
+                Source/Spawner/ROS2SpawnPointComponentController.cpp
+                Source/Spawner/ROS2SpawnPointComponentController.h
+        )
+endif ()

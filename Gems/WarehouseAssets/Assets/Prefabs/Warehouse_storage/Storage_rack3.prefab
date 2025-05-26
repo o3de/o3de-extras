@@ -373,6 +373,11 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
                     "value": -0.000047206878662109375
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Rotate/2",
+                    "value": 180.0
                 }
             ]
         },
@@ -418,6 +423,11 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
                     "value": 0.5281124114990234
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Rotate/2",
+                    "value": 181.0
                 }
             ]
         },
@@ -743,6 +753,11 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
                     "value": 1.0888690948486328
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Rotate/2",
+                    "value": 180.0
                 }
             ]
         },
@@ -922,7 +937,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[4983371344376764259]/Transform Data/Rotate/2",
-                    "value": 89.99994659423828
+                    "value": -91.0
                 }
             ]
         },
@@ -1062,7 +1077,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[4983371344376764259]/Transform Data/Rotate/2",
-                    "value": 89.99994659423828
+                    "value": -90.0
                 }
             ]
         },

@@ -9,7 +9,6 @@
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <Camera/ROS2EditorCameraSystemComponent.h>
 #include <Frame/ROS2FrameSystemComponent.h>
-#include <Georeference/GeoreferenceLevelEditorComponent.h>
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
 #include <Manipulation/JointsPositionsEditorComponent.h>
@@ -18,10 +17,11 @@
 #include <ROS2ModuleInterface.h>
 #include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSystemComponent.h>
+#include <SystemComponents/ROS2EditorSystemComponent.h>
+#ifdef WITH_GAZEBO_MSGS
 #include <Spawner/ROS2SpawnPointEditorComponent.h>
 #include <Spawner/ROS2SpawnerEditorComponent.h>
-#include <SystemComponents/ROS2EditorSystemComponent.h>
-
+#endif
 void InitROS2Resources()
 {
     // Registration of Qt (ROS2.qrc) resources
@@ -47,12 +47,13 @@ namespace ROS2
                   LidarRegistrarEditorSystemComponent::CreateDescriptor(),
                   ROS2RobotImporterEditorSystemComponent::CreateDescriptor(),
                   ROS2CameraSensorEditorComponent::CreateDescriptor(),
+#ifdef WITH_GAZEBO_MSGS
                   ROS2SpawnerEditorComponent::CreateDescriptor(),
                   ROS2SpawnPointEditorComponent::CreateDescriptor(),
+#endif
                   SdfAssetBuilderSystemComponent::CreateDescriptor(),
                   JointsManipulationEditorComponent::CreateDescriptor(),
                   JointsPositionsEditorComponent::CreateDescriptor(),
-                  GeoReferenceLevelEditorComponent::CreateDescriptor(),
                   ROS2FrameSystemComponent::CreateDescriptor(),
                   ROS2FrameEditorComponent::CreateDescriptor() });
         }

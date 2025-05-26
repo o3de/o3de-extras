@@ -18,9 +18,6 @@ set(FILES
         Include/ROS2/Frame/ROS2FrameComponent.h
         Include/ROS2/Frame/ROS2FrameConfiguration.h
         Include/ROS2/Frame/ROS2Transform.h
-        Include/ROS2/Georeference/GeoreferenceBus.h
-        Include/ROS2/Georeference/GeoreferenceStructures.h
-        Include/ROS2/Georeference/GeoreferenceStructures.h
         Include/ROS2/GNSS/GNSSPostProcessingRequestBus.h
         Include/ROS2/Gripper/GripperRequestBus.h
         Include/ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h
@@ -37,9 +34,13 @@ set(FILES
         Include/ROS2/RobotImporter/SDFormatModelPluginImporterHook.h
         Include/ROS2/RobotImporter/SDFormatSensorImporterHook.h
         Include/ROS2/ROS2SensorTypesIds.h
+        Include/ROS2/Lidar/ClassSegmentationBus.h
         Include/ROS2/Lidar/LidarRaycasterBus.h
         Include/ROS2/Lidar/LidarSystemBus.h
         Include/ROS2/Lidar/LidarRegistrarBus.h
+        Include/ROS2/Lidar/RaycastResults.h
+        Include/ROS2/Lidar/SegmentationClassConfiguration.h
+        Include/ROS2/Lidar/SegmentationUtils.h
         Include/ROS2/ROS2Bus.h
         Include/ROS2/ROS2GemUtilities.h
         Include/ROS2/Sensor/Events/EventSourceAdapter.h
@@ -51,8 +52,9 @@ set(FILES
         Include/ROS2/Sensor/SensorConfigurationRequestBus.h
         Include/ROS2/Sensor/SensorHelper.h
         Include/ROS2/Spawner/SpawnerBus.h
+        Include/ROS2/Spawner/SpawnerBusHandler.h
         Include/ROS2/Utilities/Controllers/PidConfiguration.h
         Include/ROS2/Utilities/ROS2Conversions.h
         Include/ROS2/Utilities/ROS2Names.h
         Include/ROS2/VehicleDynamics/VehicleInputControlBus.h
-        )
+)

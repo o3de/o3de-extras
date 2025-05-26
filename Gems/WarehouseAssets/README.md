@@ -112,6 +112,15 @@ The structure of prefabs in the warehouse scene is highly nested. For example, t
 
 ![](docs/images/WarehouseSceneSampleTree.png)
 
+### Warehouse scene small
+
+![](docs/images/WarehouseSceneSmall.png)
+
+The `WarehouseScene_small.prefab` contains a smaller version of the Warehouse scene. It is built with the same types of assets as the larger one, only set up in a smaller area. The only different models are side walls and roof. It has also similar arrangement of objects shown in the following image:
+
+![](docs/images/WarehouseSceneSmallStructure.png)
+
+
 ## Tips on using Warehouse Assets Gem
 
 ### Creating Warehouse scene

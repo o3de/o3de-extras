@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder LevelGeoreferencing/Assets": {
+                    "watch": "@GEMROOT:LevelGeoreferencing@/Assets",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder LevelGeoreferencing/Registry": {
+                    "watch": "@GEMROOT:LevelGeoreferencing@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}

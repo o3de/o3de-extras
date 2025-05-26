@@ -3,7 +3,6 @@ set(ENABLED_GEMS
     OpenXRTest
     Atom
     AudioSystem
-    AWSCore
     CameraFramework
     DebugDraw
     EditorPythonBindings

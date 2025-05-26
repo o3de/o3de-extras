@@ -10,8 +10,6 @@ set(FILES
     Source/Camera/ROS2CameraSensorEditorComponent.h
     Source/Camera/ROS2EditorCameraSystemComponent.cpp
     Source/Camera/ROS2EditorCameraSystemComponent.h
-    Source/Georeference/GeoreferenceLevelEditorComponent.cpp
-    Source/Georeference/GeoreferenceLevelEditorComponent.h
     Source/Lidar/LidarRegistrarEditorSystemComponent.cpp
     Source/Lidar/LidarRegistrarEditorSystemComponent.h
     Source/Manipulation/JointsPositionsEditorComponent.cpp
@@ -86,10 +84,6 @@ set(FILES
     Source/RobotImporter/Utils/TypeConversions.cpp
     Source/RobotImporter/Utils/TypeConversions.h
     Source/ROS2GemUtilities.cpp
-    Source/Spawner/ROS2SpawnerEditorComponent.cpp
-    Source/Spawner/ROS2SpawnerEditorComponent.h
-    Source/Spawner/ROS2SpawnPointEditorComponent.cpp
-    Source/Spawner/ROS2SpawnPointEditorComponent.h
     Source/SdfAssetBuilder/SdfAssetBuilder.cpp
     Source/SdfAssetBuilder/SdfAssetBuilder.h
     Source/SdfAssetBuilder/SdfAssetBuilderSettings.cpp
@@ -103,3 +97,14 @@ set(FILES
     Source/SystemComponents/ROS2EditorSystemComponent.cpp
     Source/SystemComponents/ROS2EditorSystemComponent.h
 )
+
+# optional, legacy features compilation
+if (WITH_GAZEBO_MSGS)
+    list(APPEND FILES
+        Source/Spawner/ROS2SpawnerEditorComponent.cpp
+        Source/Spawner/ROS2SpawnerEditorComponent.h
+        Source/Spawner/ROS2SpawnPointEditorComponent.cpp
+        Source/Spawner/ROS2SpawnPointEditorComponent.h
+    )
+endif ()
+

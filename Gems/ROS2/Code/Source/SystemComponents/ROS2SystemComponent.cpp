@@ -9,8 +9,8 @@
 
 #include "ROS2SystemComponent.h"
 #include <Lidar/LidarCore.h>
-#include <ROS2/Clock/RealTimeSource.h>
 #include <ROS2/Clock/ROS2TimeSource.h>
+#include <ROS2/Clock/RealTimeSource.h>
 #include <ROS2/Clock/SimulationTimeSource.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/QoS.h>
@@ -27,14 +27,17 @@
 #include <AzCore/Settings/SettingsRegistry.h>
 #include <AzCore/Time/ITime.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
+#include <AzCore/std/sort.h>
 #include <AzCore/std/string/string_view.h>
 #include <AzFramework/API/ApplicationAPI.h>
 #include <ROS2/Sensor/SensorConfigurationRequestBus.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 
 namespace ROS2
 {
     constexpr AZStd::string_view ClockTypeConfigurationKey = "/O3DE/ROS2/ClockType";
     constexpr AZStd::string_view PublishClockConfigurationKey = "/O3DE/ROS2/PublishClock";
+    constexpr size_t FramesNumberForStats = 60;
 
     void ROS2SystemComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -78,7 +81,6 @@ namespace ROS2
     void ROS2SystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC("AssetDatabaseService", 0x3abf5601));
-        required.push_back(AZ_CRC("RPISystem", 0xf2add773));
     }
 
     void ROS2SystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
@@ -105,8 +107,8 @@ namespace ROS2
     void ROS2SystemComponent::Init()
     {
         rclcpp::init(0, 0);
-        
-        // handle signals, e.g. via `Ctrl+C` hotkey or `kill` command 
+
+        // handle signals, e.g. via `Ctrl+C` hotkey or `kill` command
         auto handler = [](int sig){
             rclcpp::shutdown(); // shutdown rclcpp
             std::raise(sig); // shutdown o3de
@@ -230,6 +232,25 @@ namespace ROS2
             m_simulationClock->Tick();
             m_executor->spin_some();
         }
+        // Calculate simulation loop time
+        const auto simulationTimestamp = m_simulationClock->GetROSTimestamp();
+        const float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simulationTimestamp);
+
+        // Filter out the outliers
+        m_simulationLoopTimes.push_back(deltaSimTime);
+        if (m_simulationLoopTimes.size() > FramesNumberForStats)
+        {
+            m_simulationLoopTimes.pop_front();
+        }
+        AZStd::vector<float> frameTimeSorted{ m_simulationLoopTimes.begin(), m_simulationLoopTimes.end() };
+        AZStd::sort(frameTimeSorted.begin(), frameTimeSorted.end());
+        m_simulationLoopTimeMedian = frameTimeSorted[frameTimeSorted.size() / 2];
+
+        m_lastSimulationTime = simulationTimestamp;
     }
 
+    float ROS2SystemComponent::GetExpectedSimulationLoopTime() const
+    {
+        return m_simulationLoopTimeMedian;
+    }
 } // namespace ROS2

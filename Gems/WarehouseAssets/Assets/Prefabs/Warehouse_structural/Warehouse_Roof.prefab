@@ -71,7 +71,6 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 14735622265906696355,
                     "Child Entity Order": [
-                        "Entity_[71229578283278]",
                         "Instance_[372106884808041]/ContainerEntity",
                         "Instance_[379056141892969]/ContainerEntity",
                         "Instance_[379043256991081]/ContainerEntity",
@@ -85,7 +84,8 @@
                         "Instance_[379077616729449]/ContainerEntity",
                         "Instance_[379081911696745]/ContainerEntity",
                         "Instance_[379004602285417]/ContainerEntity",
-                        "Instance_[383918044872041]/ContainerEntity"
+                        "Instance_[383918044872041]/ContainerEntity",
+                        "Entity_[86999952209936]"
                     ]
                 },
                 "Component_[14845953584109227989]": {
@@ -542,7 +542,7 @@
                                             "assetId": {
                                                 "guid": "{4D881031-88E9-5300-B525-6F6E35182D97}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules_roof.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules_roof.azmaterial"
                                         }
                                     }
                                 }
@@ -662,92 +662,81 @@
                 }
             }
         },
-        "Entity_[71229578283278]": {
-            "Id": "Entity_[71229578283278]",
-            "Name": "Diffuse_Probe_Grid",
+        "Entity_[86999952209936]": {
+            "Id": "Entity_[86999952209936]",
+            "Name": "AmbientLight",
             "Components": {
-                "Component_[10308599564098416545]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 10308599564098416545
-                },
-                "Component_[10881479552903226344]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 10881479552903226344
-                },
-                "Component_[11565677356361031789]": {
-                    "$type": "EditorBoxShapeComponent",
-                    "Id": 11565677356361031789,
-                    "Visible": false,
-                    "BoxShape": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 12572880716463854509,
+                    "Controller": {
                         "Configuration": {
-                            "Dimensions": [
-                                62.0,
-                                22.0,
-                                12.0
-                            ]
+                            "LightType": 4,
+                            "Intensity": 1000.0,
+                            "AttenuationRadius": 100.0,
+                            "LightEmitsBothDirections": true
                         }
                     }
                 },
-                "Component_[12442620377381822784]": {
-                    "$type": "AZ::Render::EditorDiffuseProbeGridComponent",
-                    "Id": 12442620377381822784,
-                    "Controller": {
-                        "Configuration": {
-                            "Extents": [
-                                62.0,
-                                22.0,
-                                12.0
-                            ],
-                            "AmbientMultiplier": 0.10000000149011612,
-                            "ViewBias": 0.6299999952316284,
-                            "NormalBias": 0.09000000357627869,
-                            "NumRaysPerProbe": 6,
-                            "FrameUpdateCount": 10,
-                            "VisualizationShowInactiveProbes": true
-                        }
-                    },
-                    "ambientMultiplier": 0.10000000149011612,
-                    "viewBias": 0.6299999952316284,
-                    "normalBias": 0.09000000357627869,
-                    "numRaysPerProbe": 6,
-                    "frameUpdateCount": 10,
-                    "showInactiveProbes": true
-                },
-                "Component_[12475620659785731834]": {
+                "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 12475620659785731834
+                    "Id": 5012176908400113712
                 },
-                "Component_[14858834917892295691]": {
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 14639696786789718998
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 16262441089098733440
+                },
+                "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 14858834917892295691
+                    "Id": 15584802486133863655
                 },
-                "Component_[15618394151388159302]": {
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1783806224195766737
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 14113399281945250979
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 15042391761087969289
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 16910421164613332629
+                },
+                "LmbrCentral::EditorQuadShapeComponent": {
+                    "$type": "LmbrCentral::EditorQuadShapeComponent",
+                    "Id": 5615524693329679849,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "QuadShape": {
+                        "Configuration": {
+                            "Width": 59.0,
+                            "Height": 20.0
+                        }
+                    }
+                },
+                "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 15618394151388159302,
+                    "Id": 9425040075533765247,
                     "Parent Entity": "Entity_[372102589840745]",
                     "Transform Data": {
                         "Translate": [
-                            -8.78240966796875,
-                            8.074762344360352,
-                            6.547865867614746
+                            -8.787923812866211,
+                            8.387847900390625,
+                            7.223517417907715
                         ]
                     }
-                },
-                "Component_[16370221188325776121]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 16370221188325776121
-                },
-                "Component_[18349399000808978574]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 18349399000808978574
-                },
-                "Component_[18381635255069232652]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 18381635255069232652
-                },
-                "Component_[6608027017492800694]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 6608027017492800694
                 }
             }
         }
@@ -1124,17 +1113,17 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
-                    "value": 19.8397216796875
+                    "value": 19.79036521911621
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
-                    "value": 8.162531852722168
+                    "value": 8.162530899047852
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
-                    "value": 8.231513023376465
+                    "value": 7.263463973999023
                 },
                 {
                     "op": "replace",
@@ -1155,6 +1144,21 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/UniformScale",
                     "value": 1.5
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[138630885591220]/Components/Component_[14236052505126209256]/Controller/Configuration/Intensity",
+                    "value": 100.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[138630885591220]/Components/Component_[14236052505126209256]/Controller/Configuration/AttenuationRadius",
+                    "value": 15.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[138630885591220]/Components/Component_[15716882828909872893]/QuadShape/Configuration/Width",
+                    "value": 13.0
                 }
             ]
         },
@@ -1169,7 +1173,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
-                    "value": -37.103424072265625
+                    "value": -36.764888763427734
                 },
                 {
                     "op": "replace",
@@ -1179,7 +1183,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
-                    "value": 8.231513023376465
+                    "value": 7.683370590209961
                 },
                 {
                     "op": "replace",
@@ -1200,6 +1204,26 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/UniformScale",
                     "value": 1.5
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[138630885591220]/Components/Component_[14236052505126209256]/Controller/Configuration/Intensity",
+                    "value": 80.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[138630885591220]/Components/Component_[14236052505126209256]/Controller/Configuration/AttenuationRadius",
+                    "value": 15.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[138630885591220]/Components/Component_[15533668683364229856]/Transform Data/Translate/1",
+                    "value": -0.19248294830322263
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[138630885591220]/Components/Component_[15716882828909872893]/QuadShape/Configuration/Width",
+                    "value": 13.0
                 }
             ]
         },

@@ -13,6 +13,7 @@
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/std/functional.h>
+#include <AzToolsFramework/API/ToolsApplicationAPI.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <ROS2/Manipulation/JointInfo.h>
@@ -95,6 +96,7 @@ namespace ROS2
 
     AZ::Crc32 JointsManipulationEditorComponent::ReloadJoints()
     {
+        AzToolsFramework::ScopedUndoBatch undo("ReloadJoints");
         // create backup of the configuration
         AZStd::unordered_map<AZStd::string, float> configBackup;
         for (const auto& [jointName, jointValue] : m_initialPositions)
@@ -111,7 +113,7 @@ namespace ROS2
 
             const bool hasNonFixedJoints = JointUtils::HasNonFixedJoints(entity);
 
-            AZStd::string jointName(frameEditorComponent->GetJointName().GetCStr());
+            const AZStd::string jointName(frameEditorComponent->GetConfiguration().m_jointName);
             if (!jointName.empty() && hasNonFixedJoints)
             {
                 m_initialPositions.emplace_back(AZStd::make_pair(jointName, configBackup[jointName]));
@@ -122,14 +124,15 @@ namespace ROS2
             {
                 for (const auto& entityId : childrenEntityIds)
                 {
-                    AZ::Entity* entity = nullptr;
-                    AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationBus::Events::FindEntity, entityId);
-                    getAllJointsHierarchy(entity);
+                    AZ::Entity* childEntity = nullptr;
+                    AZ::ComponentApplicationBus::BroadcastResult(childEntity, &AZ::ComponentApplicationBus::Events::FindEntity, entityId);
+                    AZ_Assert(childEntity, "Entity not found!");
+                    getAllJointsHierarchy(childEntity);
                 }
             }
         };
         getAllJointsHierarchy(GetEntity());
-
+        undo.MarkEntityDirty(GetEntity()->GetId());
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 } // namespace ROS2

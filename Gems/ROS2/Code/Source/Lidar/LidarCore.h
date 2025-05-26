@@ -37,7 +37,7 @@ namespace ROS2
 
         //! Perform a raycast.
         //! @return Results of the raycast.
-        RaycastResult PerformRaycast();
+        AZStd::optional<RaycastResults> PerformRaycast();
         //! Visualize the results of the last performed raycast.
         void VisualizeResults() const;
 
@@ -45,12 +45,20 @@ namespace ROS2
         //! @return Used raycaster's id.
         LidarId GetLidarRaycasterId() const;
 
+        //! Get the result flags used by this lidar.
+        //! @return Used result flags.
+        RaycastResultFlags GetResultFlags() const;
+
         //! Configuration according to which the lidar performs its raycasts.
         LidarSensorConfiguration m_lidarConfiguration;
 
     private:
+        static RaycastResultFlags GetRaycastResultFlagsForConfig(const LidarSensorConfiguration& configuration);
+
         void ConnectToLidarRaycaster();
         void ConfigureLidarRaycaster();
+
+        void UpdatePoints(const RaycastResults& results);
 
         //! An unordered map of lidar implementations to their raycasters created by this LidarSensorComponent.
         AZStd::unordered_map<AZStd::string, LidarId> m_implementationToRaycasterMap;
@@ -59,8 +67,9 @@ namespace ROS2
         AZ::RPI::AuxGeomDrawPtr m_drawQueue;
 
         AZStd::vector<AZ::Vector3> m_lastRotations;
-        RaycastResult m_lastScanResults;
+        AZStd::vector<AZ::Vector3> m_lastPoints;
 
         AZ::EntityId m_entityId;
+        RaycastResultFlags m_resultFlags;
     };
 } // namespace ROS2
