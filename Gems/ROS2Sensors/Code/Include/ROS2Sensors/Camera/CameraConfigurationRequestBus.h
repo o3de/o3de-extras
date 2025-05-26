@@ -23,7 +23,7 @@ namespace ROS2Sensors
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
 
         //! Returns the current configuration of the component.
-        virtual const CameraSensorConfiguration GetConfiguration() const = 0;
+        virtual const CameraSensorConfiguration GetConfiguration() = 0;
 
         //! Sets the configuration of the component.
         //! Each component should handle the configuration change without fully reinitializing the ROS2 publisher.
@@ -38,40 +38,40 @@ namespace ROS2Sensors
         //! where:
         //!  - fx, fy : the focal lengths in meters
         //!  - cx, cy : principal point in pixels.
-        virtual AZ::Matrix3x3 GetCameraMatrix() const = 0;
+        virtual AZ::Matrix3x3 GetCameraMatrix() = 0;
 
         /// Gets the vertical field of view in degrees.
-        virtual float GetVerticalFOV() const = 0;
+        virtual float GetVerticalFOV() = 0;
         /// Sets the vertical field of view in degrees.
         virtual void SetVerticalFOV(float value) = 0;
 
         /// Gets the camera image width in pixels.
-        virtual int GetWidth() const = 0;
+        virtual int GetWidth() = 0;
         /// Sets the camera image width in pixels.
         virtual void SetWidth(int value) = 0;
 
         /// Gets the camera image height in pixels.
-        virtual int GetHeight() const = 0;
+        virtual int GetHeight() = 0;
         /// Sets the camera image height in pixels.
         virtual void SetHeight(int value) = 0;
 
         /// Checks if the color camera is enabled.
-        virtual bool IsColorCamera() const = 0;
+        virtual bool IsColorCamera() = 0;
         /// Enables or disables the color camera.
         virtual void SetColorCamera(bool value) = 0;
 
         /// Checks if the depth camera is enabled.
-        virtual bool IsDepthCamera() const = 0;
+        virtual bool IsDepthCamera() = 0;
         /// Enables or disables the depth camera.
         virtual void SetDepthCamera(bool value) = 0;
 
         /// Gets the near clip distance of the camera.
-        virtual float GetNearClipDistance() const = 0;
+        virtual float GetNearClipDistance() = 0;
         /// Sets the near clip distance of the camera.
         virtual void SetNearClipDistance(float value) = 0;
 
         /// Gets the far clip distance of the camera.
-        virtual float GetFarClipDistance() const = 0;
+        virtual float GetFarClipDistance() = 0;
         /// Sets the far clip distance of the camera.
         virtual void SetFarClipDistance(float value) = 0;
     };

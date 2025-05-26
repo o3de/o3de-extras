@@ -296,12 +296,12 @@ namespace ROS2Sensors
         m_lidarCore.Init(GetEntityId());
     }
 
-    const LidarSensorConfiguration ROS2LidarSensorComponent::GetConfiguration() const
+    const LidarSensorConfiguration ROS2LidarSensorComponent::GetConfiguration()
     {
         return m_lidarCore.m_lidarConfiguration;
     }
 
-    AZStd::string ROS2LidarSensorComponent::GetModelName() const
+    AZStd::string ROS2LidarSensorComponent::GetModelName()
     {
         return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_name;
     }
@@ -316,7 +316,7 @@ namespace ROS2Sensors
         m_lidarCore.Init(GetEntityId());
     }
 
-    bool ROS2LidarSensorComponent::IsSegmentationEnabled() const
+    bool ROS2LidarSensorComponent::IsSegmentationEnabled()
     {
         return m_lidarCore.m_lidarConfiguration.m_isSegmentationEnabled;
     }
@@ -328,7 +328,7 @@ namespace ROS2Sensors
         m_lidarCore.Init(GetEntityId());
     }
 
-    bool ROS2LidarSensorComponent::IsAddPointsAtMaxEnabled() const
+    bool ROS2LidarSensorComponent::IsAddPointsAtMaxEnabled()
     {
         return m_lidarCore.m_lidarConfiguration.m_addPointsAtMax;
     }
@@ -340,12 +340,12 @@ namespace ROS2Sensors
         m_lidarCore.Init(GetEntityId());
     }
 
-    bool ROS2LidarSensorComponent::Is2D() const
+    bool ROS2LidarSensorComponent::Is2D()
     {
         return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_is2D;
     }
 
-    float ROS2LidarSensorComponent::GetMinHAngle() const
+    float ROS2LidarSensorComponent::GetMinHAngle()
     {
         return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minHAngle;
     }
@@ -357,7 +357,7 @@ namespace ROS2Sensors
         m_lidarCore.Init(GetEntityId());
     }
 
-    float ROS2LidarSensorComponent::GetMaxHAngle() const
+    float ROS2LidarSensorComponent::GetMaxHAngle()
     {
         return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxHAngle;
     }
@@ -369,7 +369,7 @@ namespace ROS2Sensors
         m_lidarCore.Init(GetEntityId());
     }
 
-    float ROS2LidarSensorComponent::GetMinVAngle() const
+    float ROS2LidarSensorComponent::GetMinVAngle()
     {
         return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minVAngle;
     }
@@ -381,7 +381,7 @@ namespace ROS2Sensors
         m_lidarCore.Init(GetEntityId());
     }
 
-    float ROS2LidarSensorComponent::GetMaxVAngle() const
+    float ROS2LidarSensorComponent::GetMaxVAngle()
     {
         return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxVAngle;
     }
@@ -393,7 +393,7 @@ namespace ROS2Sensors
         m_lidarCore.Init(GetEntityId());
     }
 
-    unsigned int ROS2LidarSensorComponent::GetLayers() const
+    unsigned int ROS2LidarSensorComponent::GetLayers()
     {
         return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_layers;
     }
@@ -405,7 +405,7 @@ namespace ROS2Sensors
         m_lidarCore.Init(GetEntityId());
     }
 
-    unsigned int ROS2LidarSensorComponent::GetNumberOfIncrements() const
+    unsigned int ROS2LidarSensorComponent::GetNumberOfIncrements()
     {
         return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_numberOfIncrements;
     }
@@ -417,7 +417,7 @@ namespace ROS2Sensors
         m_lidarCore.Init(GetEntityId());
     }
 
-    float ROS2LidarSensorComponent::GetMinRange() const
+    float ROS2LidarSensorComponent::GetMinRange()
     {
         return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minRange;
     }
@@ -429,7 +429,7 @@ namespace ROS2Sensors
         m_lidarCore.Init(GetEntityId());
     }
 
-    float ROS2LidarSensorComponent::GetMaxRange() const
+    float ROS2LidarSensorComponent::GetMaxRange()
     {
         return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxRange;
     }
@@ -441,7 +441,7 @@ namespace ROS2Sensors
         m_lidarCore.Init(GetEntityId());
     }
 
-    const LidarTemplate::NoiseParameters& ROS2LidarSensorComponent::GetNoiseParameters() const
+    const LidarTemplate::NoiseParameters& ROS2LidarSensorComponent::GetNoiseParameters()
     {
         return m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_noiseParameters;
     }

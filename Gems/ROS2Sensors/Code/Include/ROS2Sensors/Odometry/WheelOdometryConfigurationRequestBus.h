@@ -23,7 +23,7 @@ namespace ROS2Sensors
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
 
         //! Returns the current configuration of the component.
-        virtual const WheelOdometrySensorConfiguration GetConfiguration() const = 0;
+        virtual const WheelOdometrySensorConfiguration GetConfiguration() = 0;
 
         //! Sets the configuration of the component.
         //! Each component should handle the configuration change without fully reinitializing the ROS2 publisher.
@@ -32,13 +32,13 @@ namespace ROS2Sensors
         virtual void SetConfiguration(const WheelOdometrySensorConfiguration& configuration) = 0;
 
         //! Get the pose covariance.
-        virtual ROS2OdometryCovariance GetPoseCovariance() const = 0;
+        virtual ROS2OdometryCovariance GetPoseCovariance() = 0;
 
         //! Set the pose covariance.
         virtual void SetPoseCovariance(const ROS2OdometryCovariance& covariance) = 0;
 
         //! Get the twist covariance.
-        virtual ROS2OdometryCovariance GetTwistCovariance() const = 0;
+        virtual ROS2OdometryCovariance GetTwistCovariance() = 0;
 
         //! Set the twist covariance.
         virtual void SetTwistCovariance(const ROS2OdometryCovariance& covariance) = 0;

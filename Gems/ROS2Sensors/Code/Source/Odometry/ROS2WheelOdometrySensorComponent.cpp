@@ -218,7 +218,7 @@ namespace ROS2Sensors
         ROS2SensorComponentBase::Deactivate();
     }
 
-    const WheelOdometrySensorConfiguration ROS2WheelOdometryComponent::GetConfiguration() const
+    const WheelOdometrySensorConfiguration ROS2WheelOdometryComponent::GetConfiguration()
     {
         return m_odometryConfiguration;
     }
@@ -228,7 +228,7 @@ namespace ROS2Sensors
         m_odometryConfiguration = configuration;
     }
 
-    ROS2OdometryCovariance ROS2WheelOdometryComponent::GetPoseCovariance() const
+    ROS2OdometryCovariance ROS2WheelOdometryComponent::GetPoseCovariance()
     {
         return m_odometryConfiguration.m_poseCovariance;
     }
@@ -238,7 +238,7 @@ namespace ROS2Sensors
         m_odometryConfiguration.m_poseCovariance = covariance;
     }
 
-    ROS2OdometryCovariance ROS2WheelOdometryComponent::GetTwistCovariance() const
+    ROS2OdometryCovariance ROS2WheelOdometryComponent::GetTwistCovariance()
     {
         return m_odometryConfiguration.m_twistCovariance;
     }

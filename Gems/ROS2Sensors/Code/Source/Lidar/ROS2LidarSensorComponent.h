@@ -45,32 +45,32 @@ namespace ROS2Sensors
     private:
         //////////////////////////////////////////////////////////////////////////
         // LidarConfigurationRequestBus::Handler overrides
-        const LidarSensorConfiguration GetConfiguration() const override;
+        const LidarSensorConfiguration GetConfiguration() override;
         void SetConfiguration(const LidarSensorConfiguration& configuration) override;
-        AZStd::string GetModelName() const override;
+        AZStd::string GetModelName() override;
         void SetModelName(const AZStd::string& name) override;
-        bool IsSegmentationEnabled() const override;
+        bool IsSegmentationEnabled() override;
         void SetSegmentationEnabled(bool enabled) override;
-        bool IsAddPointsAtMaxEnabled() const override;
+        bool IsAddPointsAtMaxEnabled() override;
         void SetAddPointsAtMaxEnabled(bool addPoints) override;
-        bool Is2D() const override;
-        float GetMinHAngle() const override;
+        bool Is2D() override;
+        float GetMinHAngle() override;
         void SetMinHAngle(float angle) override;
-        float GetMaxHAngle() const override;
+        float GetMaxHAngle() override;
         void SetMaxHAngle(float angle) override;
-        float GetMinVAngle() const override;
+        float GetMinVAngle() override;
         void SetMinVAngle(float angle) override;
-        float GetMaxVAngle() const override;
+        float GetMaxVAngle() override;
         void SetMaxVAngle(float angle) override;
-        unsigned int GetLayers() const override;
+        unsigned int GetLayers() override;
         void SetLayers(unsigned int layers) override;
-        unsigned int GetNumberOfIncrements() const override;
+        unsigned int GetNumberOfIncrements() override;
         void SetNumberOfIncrements(unsigned int increments) override;
-        float GetMinRange() const override;
+        float GetMinRange() override;
         void SetMinRange(float range) override;
-        float GetMaxRange() const override;
+        float GetMaxRange() override;
         void SetMaxRange(float range) override;
-        const LidarTemplate::NoiseParameters& GetNoiseParameters() const override;
+        const LidarTemplate::NoiseParameters& GetNoiseParameters() override;
         void SetNoiseParameters(const LidarTemplate::NoiseParameters& params) override;
         //////////////////////////////////////////////////////////////////////////
 

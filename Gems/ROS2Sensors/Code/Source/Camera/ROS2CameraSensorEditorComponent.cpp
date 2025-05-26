@@ -105,18 +105,18 @@ namespace ROS2Sensors
         m_cameraConfiguration = configuration;
     }
 
-    const CameraSensorConfiguration ROS2CameraSensorEditorComponent::GetConfiguration() const
+    const CameraSensorConfiguration ROS2CameraSensorEditorComponent::GetConfiguration()
     {
         return m_cameraConfiguration;
     }
 
-    AZ::Matrix3x3 ROS2CameraSensorEditorComponent::GetCameraMatrix() const
+    AZ::Matrix3x3 ROS2CameraSensorEditorComponent::GetCameraMatrix()
     {
         return CameraUtils::MakeCameraIntrinsics(
             m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg);
     }
 
-    float ROS2CameraSensorEditorComponent::GetVerticalFOV() const
+    float ROS2CameraSensorEditorComponent::GetVerticalFOV()
     {
         return m_cameraConfiguration.m_verticalFieldOfViewDeg;
     }
@@ -126,7 +126,7 @@ namespace ROS2Sensors
         m_cameraConfiguration.m_verticalFieldOfViewDeg = value;
     }
 
-    int ROS2CameraSensorEditorComponent::GetWidth() const
+    int ROS2CameraSensorEditorComponent::GetWidth()
     {
         return m_cameraConfiguration.m_width;
     }
@@ -136,7 +136,7 @@ namespace ROS2Sensors
         m_cameraConfiguration.m_width = value;
     }
 
-    int ROS2CameraSensorEditorComponent::GetHeight() const
+    int ROS2CameraSensorEditorComponent::GetHeight()
     {
         return m_cameraConfiguration.m_height;
     }
@@ -146,7 +146,7 @@ namespace ROS2Sensors
         m_cameraConfiguration.m_height = value;
     }
 
-    bool ROS2CameraSensorEditorComponent::IsColorCamera() const
+    bool ROS2CameraSensorEditorComponent::IsColorCamera()
     {
         return m_cameraConfiguration.m_colorCamera;
     }
@@ -156,7 +156,7 @@ namespace ROS2Sensors
         m_cameraConfiguration.m_colorCamera = value;
     }
 
-    bool ROS2CameraSensorEditorComponent::IsDepthCamera() const
+    bool ROS2CameraSensorEditorComponent::IsDepthCamera()
     {
         return m_cameraConfiguration.m_depthCamera;
     }
@@ -166,7 +166,7 @@ namespace ROS2Sensors
         m_cameraConfiguration.m_depthCamera = value;
     }
 
-    float ROS2CameraSensorEditorComponent::GetNearClipDistance() const
+    float ROS2CameraSensorEditorComponent::GetNearClipDistance()
     {
         return m_cameraConfiguration.m_nearClipDistance;
     }
@@ -176,7 +176,7 @@ namespace ROS2Sensors
         m_cameraConfiguration.m_nearClipDistance = value;
     }
 
-    float ROS2CameraSensorEditorComponent::GetFarClipDistance() const
+    float ROS2CameraSensorEditorComponent::GetFarClipDistance()
     {
         return m_cameraConfiguration.m_farClipDistance;
     }

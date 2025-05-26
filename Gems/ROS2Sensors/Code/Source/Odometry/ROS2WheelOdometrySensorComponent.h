@@ -55,11 +55,11 @@ namespace ROS2Sensors
     private:
         //////////////////////////////////////////////////////////////////////////
         // WheelOdometryConfigurationRequestBus::Handler overrides
-        const WheelOdometrySensorConfiguration GetConfiguration() const override;
+        const WheelOdometrySensorConfiguration GetConfiguration() override;
         void SetConfiguration(const WheelOdometrySensorConfiguration& configuration) override;
-        ROS2OdometryCovariance GetPoseCovariance() const override;
+        ROS2OdometryCovariance GetPoseCovariance() override;
         void SetPoseCovariance(const ROS2OdometryCovariance& covariance) override;
-        ROS2OdometryCovariance GetTwistCovariance() const override;
+        ROS2OdometryCovariance GetTwistCovariance() override;
         void SetTwistCovariance(const ROS2OdometryCovariance& covariance) override;
 
         //////////////////////////////////////////////////////////////////////////

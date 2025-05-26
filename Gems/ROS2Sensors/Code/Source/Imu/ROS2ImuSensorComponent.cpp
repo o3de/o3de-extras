@@ -216,7 +216,7 @@ namespace ROS2Sensors
         m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
     }
 
-    const ImuSensorConfiguration ROS2ImuSensorComponent::GetConfiguration() const
+    const ImuSensorConfiguration ROS2ImuSensorComponent::GetConfiguration()
     {
         return m_imuConfiguration;
     }
@@ -227,7 +227,7 @@ namespace ROS2Sensors
         ConfigureSensor();
     }
 
-    int ROS2ImuSensorComponent::GetFilterSize() const
+    int ROS2ImuSensorComponent::GetFilterSize()
     {
         return m_imuConfiguration.m_filterSize;
     }
@@ -236,7 +236,7 @@ namespace ROS2Sensors
         m_imuConfiguration.m_filterSize = filterSize;
     }
 
-    int ROS2ImuSensorComponent::GetMinFilterSize() const
+    int ROS2ImuSensorComponent::GetMinFilterSize()
     {
         return m_imuConfiguration.m_minFilterSize;
     }
@@ -245,7 +245,7 @@ namespace ROS2Sensors
         m_imuConfiguration.m_minFilterSize = minFilterSize;
     }
 
-    int ROS2ImuSensorComponent::GetMaxFilterSize() const
+    int ROS2ImuSensorComponent::GetMaxFilterSize()
     {
         return m_imuConfiguration.m_maxFilterSize;
     }
@@ -254,7 +254,7 @@ namespace ROS2Sensors
         m_imuConfiguration.m_maxFilterSize = maxFilterSize;
     }
 
-    bool ROS2ImuSensorComponent::GetIncludeGravity() const
+    bool ROS2ImuSensorComponent::GetIncludeGravity()
     {
         return m_imuConfiguration.m_includeGravity;
     }
@@ -263,7 +263,7 @@ namespace ROS2Sensors
         m_imuConfiguration.m_includeGravity = includeGravity;
     }
 
-    bool ROS2ImuSensorComponent::GetAbsoluteRotation() const
+    bool ROS2ImuSensorComponent::GetAbsoluteRotation()
     {
         return m_imuConfiguration.m_absoluteRotation;
     }
@@ -272,7 +272,7 @@ namespace ROS2Sensors
         m_imuConfiguration.m_absoluteRotation = absoluteRotation;
     }
 
-    AZ::Vector3 ROS2ImuSensorComponent::GetOrientationVariance() const
+    AZ::Vector3 ROS2ImuSensorComponent::GetOrientationVariance()
     {
         return m_imuConfiguration.m_orientationVariance;
     }
@@ -282,7 +282,7 @@ namespace ROS2Sensors
         ConfigureSensor();
     }
 
-    AZ::Vector3 ROS2ImuSensorComponent::GetAngularVelocityVariance() const
+    AZ::Vector3 ROS2ImuSensorComponent::GetAngularVelocityVariance()
     {
         return m_imuConfiguration.m_angularVelocityVariance;
     }
@@ -292,7 +292,7 @@ namespace ROS2Sensors
         ConfigureSensor();
     }
 
-    AZ::Vector3 ROS2ImuSensorComponent::GetLinearAccelerationVariance() const
+    AZ::Vector3 ROS2ImuSensorComponent::GetLinearAccelerationVariance()
     {
         return m_imuConfiguration.m_linearAccelerationVariance;
     }

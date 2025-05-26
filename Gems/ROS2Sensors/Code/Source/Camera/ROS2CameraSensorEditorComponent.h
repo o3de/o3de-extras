@@ -48,21 +48,21 @@ namespace ROS2Sensors
     private:
         // CameraConfigurationRequestBus::Handler overrides ..
         void SetConfiguration(const CameraSensorConfiguration& configuration) override;
-        const CameraSensorConfiguration GetConfiguration() const override;
-        AZ::Matrix3x3 GetCameraMatrix() const override;
-        float GetVerticalFOV() const override;
+        const CameraSensorConfiguration GetConfiguration() override;
+        AZ::Matrix3x3 GetCameraMatrix() override;
+        float GetVerticalFOV() override;
         void SetVerticalFOV(float value) override;
-        int GetWidth() const override;
+        int GetWidth() override;
         void SetWidth(int value) override;
-        int GetHeight() const override;
+        int GetHeight() override;
         void SetHeight(int value) override;
-        bool IsColorCamera() const override;
+        bool IsColorCamera() override;
         void SetColorCamera(bool value) override;
-        bool IsDepthCamera() const override;
+        bool IsDepthCamera() override;
         void SetDepthCamera(bool value) override;
-        float GetNearClipDistance() const override;
+        float GetNearClipDistance() override;
         void SetNearClipDistance(float value) override;
-        float GetFarClipDistance() const override;
+        float GetFarClipDistance() override;
         void SetFarClipDistance(float value) override;
 
         // EntityDebugDisplayEventBus::Handler overrides

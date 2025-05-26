@@ -44,24 +44,24 @@ namespace ROS2Sensors
 
     private:
         //////////////////////////////////////////////////////////////////////////
-        // ImuConfigurationRequest::Handler overrides
+        // ImuConfigurationRequestBus::Handler overrides
         void SetConfiguration(const ImuSensorConfiguration& configuration) override;
-        const ImuSensorConfiguration GetConfiguration() const override;
-        int GetFilterSize() const override;
+        const ImuSensorConfiguration GetConfiguration() override;
+        int GetFilterSize() override;
         void SetFilterSize(int filterSize) override;
-        int GetMinFilterSize() const override;
+        int GetMinFilterSize() override;
         void SetMinFilterSize(int minFilterSize) override;
-        int GetMaxFilterSize() const override;
+        int GetMaxFilterSize() override;
         void SetMaxFilterSize(int maxFilterSize) override;
-        bool GetIncludeGravity() const override;
+        bool GetIncludeGravity() override;
         void SetIncludeGravity(bool includeGravity) override;
-        bool GetAbsoluteRotation() const override;
+        bool GetAbsoluteRotation() override;
         void SetAbsoluteRotation(bool absoluteRotation) override;
-        AZ::Vector3 GetOrientationVariance() const override;
+        AZ::Vector3 GetOrientationVariance() override;
         void SetOrientationVariance(const AZ::Vector3& orientationVariance) override;
-        AZ::Vector3 GetAngularVelocityVariance() const override;
+        AZ::Vector3 GetAngularVelocityVariance() override;
         void SetAngularVelocityVariance(const AZ::Vector3& angularVelocityVariance) override;
-        AZ::Vector3 GetLinearAccelerationVariance() const override;
+        AZ::Vector3 GetLinearAccelerationVariance() override;
         void SetLinearAccelerationVariance(const AZ::Vector3& linearAccelerationVariance) override;
         //////////////////////////////////////////////////////////////////////////
 
