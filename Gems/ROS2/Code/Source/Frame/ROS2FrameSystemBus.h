@@ -7,13 +7,13 @@
  */
 #pragma once
 
+#include <AzCore/Component/EntityId.h>
+#include <AzCore/EBus/EBus.h>
 #include <AzCore/EBus/Policies.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <AzCore/std/string/string.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <AzCore/Component/EntityId.h>
-#include <AzCore/EBus/EBus.h>
 
 namespace ROS2
 {
@@ -66,7 +66,7 @@ namespace ROS2
     {
     public:
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
-        static constexpr AZ::EBusHandlerPolicy AddressPolicy = AZ::EBusHandlerPolicy::Single;
+        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
     };
 
     using ROS2FrameSystemInterface = AZ::Interface<ROS2FrameSystemRequests>;
