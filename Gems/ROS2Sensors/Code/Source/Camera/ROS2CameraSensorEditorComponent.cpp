@@ -75,9 +75,9 @@ namespace ROS2Sensors
 
     void ROS2CameraSensorEditorComponent::Deactivate()
     {
+        CameraConfigurationRequestBus::Handler::BusDisconnect(GetEntityId());
         AzToolsFramework::Components::EditorComponentBase::Deactivate();
         AzFramework::EntityDebugDisplayEventBus::Handler::BusDisconnect();
-        CameraConfigurationRequestBus::Handler::BusDisconnect(GetEntityId());
     }
 
     void ROS2CameraSensorEditorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
