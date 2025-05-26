@@ -20,14 +20,15 @@
         ""
     ],
     "icon_path": "preview.png",
-    "requirements": "Requires ROS 2 Gem",
-    "documentation_url": "",
+    "requirements": "Requires ROS 2 Gem and SimulationInterfaces package installed and sourced.",
+    "documentation_url": "https://www.docs.o3de.org/docs/user-guide/interactivity/robotics/simulation-interfaces/",
     "dependencies": [
         "ROS2>=3.3.0",
         "DebugDraw"
     ],
-    "repo_uri": "",
     "compatible_engines": [],
     "engine_api_dependencies": [],
-    "restricted": "SimulationInterfaces"
+    "restricted": "SimulationInterfaces",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-1.0.0-gem.zip"
 }
