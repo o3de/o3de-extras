@@ -231,33 +231,28 @@ namespace ROS2Sensors
     {
         return m_imuConfiguration.m_filterSize;
     }
+
     void ROS2ImuSensorComponent::SetFilterSize(int filterSize)
     {
+        if (filterSize < m_imuConfiguration.m_minFilterSize || filterSize > m_imuConfiguration.m_maxFilterSize)
+        {
+            AZ_Error(
+                "ROS2ImuSensorComponent",
+                false,
+                "Filter size %d is out of bounds [%d, %d].",
+                filterSize,
+                m_imuConfiguration.m_minFilterSize,
+                m_imuConfiguration.m_maxFilterSize);
+            return;
+        }
         m_imuConfiguration.m_filterSize = filterSize;
-    }
-
-    int ROS2ImuSensorComponent::GetMinFilterSize()
-    {
-        return m_imuConfiguration.m_minFilterSize;
-    }
-    void ROS2ImuSensorComponent::SetMinFilterSize(int minFilterSize)
-    {
-        m_imuConfiguration.m_minFilterSize = minFilterSize;
-    }
-
-    int ROS2ImuSensorComponent::GetMaxFilterSize()
-    {
-        return m_imuConfiguration.m_maxFilterSize;
-    }
-    void ROS2ImuSensorComponent::SetMaxFilterSize(int maxFilterSize)
-    {
-        m_imuConfiguration.m_maxFilterSize = maxFilterSize;
     }
 
     bool ROS2ImuSensorComponent::GetIncludeGravity()
     {
         return m_imuConfiguration.m_includeGravity;
     }
+
     void ROS2ImuSensorComponent::SetIncludeGravity(bool includeGravity)
     {
         m_imuConfiguration.m_includeGravity = includeGravity;
@@ -267,6 +262,7 @@ namespace ROS2Sensors
     {
         return m_imuConfiguration.m_absoluteRotation;
     }
+
     void ROS2ImuSensorComponent::SetAbsoluteRotation(bool absoluteRotation)
     {
         m_imuConfiguration.m_absoluteRotation = absoluteRotation;
@@ -276,6 +272,7 @@ namespace ROS2Sensors
     {
         return m_imuConfiguration.m_orientationVariance;
     }
+
     void ROS2ImuSensorComponent::SetOrientationVariance(const AZ::Vector3& orientationVariance)
     {
         m_imuConfiguration.m_orientationVariance = orientationVariance;
@@ -286,6 +283,7 @@ namespace ROS2Sensors
     {
         return m_imuConfiguration.m_angularVelocityVariance;
     }
+
     void ROS2ImuSensorComponent::SetAngularVelocityVariance(const AZ::Vector3& angularVelocityVariance)
     {
         m_imuConfiguration.m_angularVelocityVariance = angularVelocityVariance;
@@ -296,6 +294,7 @@ namespace ROS2Sensors
     {
         return m_imuConfiguration.m_linearAccelerationVariance;
     }
+
     void ROS2ImuSensorComponent::SetLinearAccelerationVariance(const AZ::Vector3& linearAccelerationVariance)
     {
         m_imuConfiguration.m_linearAccelerationVariance = linearAccelerationVariance;

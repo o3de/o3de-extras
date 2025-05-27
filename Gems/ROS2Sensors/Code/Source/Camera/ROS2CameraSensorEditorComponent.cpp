@@ -123,6 +123,18 @@ namespace ROS2Sensors
 
     void ROS2CameraSensorEditorComponent::SetVerticalFOV(float value)
     {
+        if (value < CameraSensorConfiguration::m_minVerticalFieldOfViewDeg ||
+            value > CameraSensorConfiguration::m_maxVerticalFieldOfViewDeg)
+        {
+            AZ_Warning(
+                "ROS2CameraSensorEditorComponent",
+                false,
+                "Vertical field of view value %f is out of bounds [%f, %f].",
+                value,
+                CameraSensorConfiguration::m_minVerticalFieldOfViewDeg,
+                CameraSensorConfiguration::m_maxVerticalFieldOfViewDeg);
+            return;
+        }
         m_cameraConfiguration.m_verticalFieldOfViewDeg = value;
     }
 
@@ -133,6 +145,16 @@ namespace ROS2Sensors
 
     void ROS2CameraSensorEditorComponent::SetWidth(int value)
     {
+        if (value < CameraSensorConfiguration::m_minWidth)
+        {
+            AZ_Warning(
+                "ROS2CameraSensorEditorComponent",
+                false,
+                "Width value %d is less than the minimum allowed width %d.",
+                value,
+                CameraSensorConfiguration::m_minWidth);
+            return;
+        }
         m_cameraConfiguration.m_width = value;
     }
 
@@ -143,6 +165,16 @@ namespace ROS2Sensors
 
     void ROS2CameraSensorEditorComponent::SetHeight(int value)
     {
+        if (value < CameraSensorConfiguration::m_minHeight)
+        {
+            AZ_Warning(
+                "ROS2CameraSensorEditorComponent",
+                false,
+                "Height value %d is less than the minimum allowed height %d.",
+                value,
+                CameraSensorConfiguration::m_minHeight);
+            return;
+        }
         m_cameraConfiguration.m_height = value;
     }
 

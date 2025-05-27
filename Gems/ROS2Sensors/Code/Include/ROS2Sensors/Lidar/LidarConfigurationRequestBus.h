@@ -29,6 +29,7 @@ namespace ROS2Sensors
         //! Sets the configuration of the component.
         //! Each component should handle the configuration change without fully reinitializing the ROS2 publisher.
         //! This will allow to change the configuration of the component at runtime.
+        //! Note: this method does not verify the configuration, so it is up to the caller to ensure that the configuration is valid.
         //! @param configuration The new configuration to set.
         virtual void SetConfiguration(const LidarSensorConfiguration& configuration) = 0;
 

@@ -49,10 +49,6 @@ namespace ROS2Sensors
         const ImuSensorConfiguration GetConfiguration() override;
         int GetFilterSize() override;
         void SetFilterSize(int filterSize) override;
-        int GetMinFilterSize() override;
-        void SetMinFilterSize(int minFilterSize) override;
-        int GetMaxFilterSize() override;
-        void SetMaxFilterSize(int maxFilterSize) override;
         bool GetIncludeGravity() override;
         void SetIncludeGravity(bool includeGravity) override;
         bool GetAbsoluteRotation() override;

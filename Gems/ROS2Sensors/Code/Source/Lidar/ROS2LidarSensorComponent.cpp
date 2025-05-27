@@ -352,6 +352,12 @@ namespace ROS2Sensors
 
     void ROS2LidarSensorComponent::SetMinHAngle(float angle)
     {
+        if (angle < -180.0f || angle > 180.0f)
+        {
+            AZ_Error("ROS2LidarSensorComponent", false, "Min horizontal angle must be between -180 and 180 degrees.");
+            return;
+        }
+
         m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minHAngle = angle;
         m_lidarCore.Init(GetEntityId());
@@ -364,6 +370,12 @@ namespace ROS2Sensors
 
     void ROS2LidarSensorComponent::SetMaxHAngle(float angle)
     {
+        if (angle < -180.0f || angle > 180.0f)
+        {
+            AZ_Error("ROS2LidarSensorComponent", false, "Max horizontal angle must be between -180 and 180 degrees.");
+            return;
+        }
+
         m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxHAngle = angle;
         m_lidarCore.Init(GetEntityId());
@@ -376,6 +388,11 @@ namespace ROS2Sensors
 
     void ROS2LidarSensorComponent::SetMinVAngle(float angle)
     {
+        if (angle < -90.0f || angle > 90.0f)
+        {
+            AZ_Error("ROS2LidarSensorComponent", false, "Min vertical angle must be between -90 and 90 degrees.");
+            return;
+        }
         m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minVAngle = angle;
         m_lidarCore.Init(GetEntityId());
@@ -388,6 +405,12 @@ namespace ROS2Sensors
 
     void ROS2LidarSensorComponent::SetMaxVAngle(float angle)
     {
+        if (angle < -90.0f || angle > 90.0f)
+        {
+            AZ_Error("ROS2LidarSensorComponent", false, "Max vertical angle must be between -90 and 90 degrees.");
+            return;
+        }
+
         m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxVAngle = angle;
         m_lidarCore.Init(GetEntityId());
@@ -424,6 +447,13 @@ namespace ROS2Sensors
 
     void ROS2LidarSensorComponent::SetMinRange(float range)
     {
+        const float maxRange = m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxRange;
+        if (range < 0.0f || range > maxRange)
+        {
+            AZ_Error("ROS2LidarSensorComponent", false, "Min range cannot be less than 0 or greater than max range (%f).", maxRange);
+            return;
+        }
+
         m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minRange = range;
         m_lidarCore.Init(GetEntityId());
@@ -436,6 +466,13 @@ namespace ROS2Sensors
 
     void ROS2LidarSensorComponent::SetMaxRange(float range)
     {
+        const float minRange = m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minRange;
+        if (range < minRange)
+        {
+            AZ_Error("ROS2LidarSensorComponent", false, "Max range cannot be less than min range (%f).", minRange);
+            return;
+        }
+
         m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxRange = range;
         m_lidarCore.Init(GetEntityId());
@@ -448,6 +485,13 @@ namespace ROS2Sensors
 
     void ROS2LidarSensorComponent::SetNoiseParameters(const LidarTemplate::NoiseParameters& params)
     {
+        if (params.m_angularNoiseStdDev < 0.0f || params.m_angularNoiseStdDev > 180.0f || params.m_distanceNoiseStdDevBase < 0.0f ||
+            params.m_distanceNoiseStdDevRisePerMeter < 0.0f)
+        {
+            AZ_Error("ROS2LidarSensorComponent", false, "Invalid noise parameters provided.");
+            return;
+        }
+
         m_lidarCore.Deinit();
         m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_noiseParameters = params;
         m_lidarCore.Init(GetEntityId());
