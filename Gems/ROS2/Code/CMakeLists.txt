@@ -71,6 +71,24 @@ ly_add_target(
             AZ::AzToolsFramework
             Gem::${gem_name}.Private.Object
 )
+ly_add_target(
+    NAME ${gem_name}.Editor.Static STATIC
+    NAMESPACE Gem
+    FILES_CMAKE
+        ros2_editor_api_files.cmake
+        ros2_editor_shared_api_files.cmake
+    INCLUDE_DIRECTORIES
+        PUBLIC
+            Include
+        PRIVATE
+            Source
+    BUILD_DEPENDENCIES
+        PUBLIC
+            AZ::AzCore
+            AZ::AzToolsFramework
+            Gem::${gem_name}.Editor.Private.Object
+)
+
 
 # The ${gem_name}.API target declares the common interface that users of this gem should depend on in their targets
 ly_add_target(
@@ -219,6 +237,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::${gem_name}.Editor.API
             PRIVATE
                 Gem::${gem_name}.Editor.Private.Object
+                Gem::${gem_name}.Editor.Static
     )
 
     # Include the gem name into the Editor Module source file
@@ -305,6 +324,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                         Legacy::Editor.Headers
                         AZ::AzManipulatorTestFramework.Static
                         Gem::${gem_name}.Editor.Private.Object
+                        Gem::${gem_name}.Editor.Static
                         Gem::${gem_name}.Static
                 RUNTIME_DEPENDENCIES
                     Legacy::Editor
