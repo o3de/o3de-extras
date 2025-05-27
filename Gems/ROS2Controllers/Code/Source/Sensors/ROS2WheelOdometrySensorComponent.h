@@ -10,12 +10,13 @@
 #include <AzCore/Math/Transform.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
-#include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
-#include <ROS2Sensors/Odometry/WheelOdometryConfigurationRequestBus.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
+#include <ROS2Controllers/Sensors/ROS2OdometryCovariance.h>
+#include <ROS2Controllers/Sensors/WheelOdometryConfigurationRequestBus.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
 
-namespace ROS2Sensors
+namespace ROS2Controllers
 {
     class JsonROS2WheelOdometryComponentConfigSerializer : public AZ::BaseJsonSerializer
     {
@@ -75,4 +76,4 @@ namespace ROS2Sensors
         void OnOdometryEvent();
         void OnPhysicsEvent(float physicsDeltaTime);
     };
-} // namespace ROS2Sensors
+} // namespace ROS2Controllers

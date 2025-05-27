@@ -25,6 +25,12 @@ namespace ROS2Controllers
     // Interface TypeIds
     inline constexpr const char* ROS2ControllersRequestsTypeId = "{2E0AB230-743E-4BCA-8194-D1BC7C9341EA}";
 
+    // Sensors TypeIds
+    inline constexpr const char* ROS2WheelOdometryComponentTypeId = "{9BDB8C23-AC76-4C25-8D35-37AAA9F43FAC}";
+    inline constexpr const char* ROS2OdometrySensorComponentTypeId = "{61387448-63AA-4563-AF87-60C72B05B863}";
+    inline constexpr const char* ROS2OdometryCovarianceTypeId = "{DB015832-F621-11ED-B67E-0242AC120002}";
+    inline constexpr const char* WheelOdometrySensorConfigurationTypeId = "{9DC58D89-E674-4D7F-9EA9-AFE3AE7FD2EB}";
+
     // Controllers Components TypeIds
     inline constexpr const char* FingerGripperComponentTypeId = "{AE5F8EC2-26EE-11EE-BE56-0242AC120002}";
     inline constexpr const char* GripperActionServerComponentTypeId = "{6A4417AC-1D85-4AB0-A116-1E77D40FC816}";

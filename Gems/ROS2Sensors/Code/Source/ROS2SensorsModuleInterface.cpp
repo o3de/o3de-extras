@@ -23,7 +23,6 @@
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
-#include <Odometry/ROS2WheelOdometrySensorComponent.h>
 
 namespace ROS2Sensors
 {
@@ -48,7 +47,6 @@ namespace ROS2Sensors
                 ClassSegmentationConfigurationComponent::CreateDescriptor(),
                 LidarRegistrarSystemComponent::CreateDescriptor(),
                 ROS2OdometrySensorComponent::CreateDescriptor(),
-                ROS2WheelOdometryComponent::CreateDescriptor(),
             });
     }
 

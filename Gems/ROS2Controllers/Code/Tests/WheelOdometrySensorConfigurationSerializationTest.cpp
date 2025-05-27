@@ -8,20 +8,20 @@
 
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzTest/AzTest.h>
-#include <Odometry/ROS2WheelOdometrySensorComponent.h>
+#include <Sensors/ROS2WheelOdometrySensorComponent.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
 namespace UnitTest
 {
-    class ROS2SensorsTestFixture : public ::testing::Test
+    class ROS2ControllersTestFixture : public ::testing::Test
     {
     };
 
     // Store test for the old schema, where there is no configuration class.
-    TEST_F(ROS2SensorsTestFixture, Deserialize_WhenOldSchemaProvided_StoresSuccessfully)
+    TEST_F(ROS2ControllersTestFixture, Deserialize_WhenOldSchemaProvided_StoresSuccessfully)
     {
-        ROS2Sensors::ROS2WheelOdometryComponent wheelOdometryComponent;
+        ROS2Controllers::ROS2WheelOdometryComponent wheelOdometryComponent;
 
         rapidjson::Document jsonDocument(rapidjson::kObjectType);
         jsonDocument.Parse(R"({
@@ -77,9 +77,9 @@ namespace UnitTest
     }
 
     // Store test for the new schema, where there is a configuration class.
-    TEST_F(ROS2SensorsTestFixture, Deserialize_WhenNewSchemaProvided_StoresSuccessfully)
+    TEST_F(ROS2ControllersTestFixture, Deserialize_WhenNewSchemaProvided_StoresSuccessfully)
     {
-        ROS2Sensors::ROS2WheelOdometryComponent wheelOdometryComponent;
+        ROS2Controllers::ROS2WheelOdometryComponent wheelOdometryComponent;
 
         rapidjson::Document jsonDocument(rapidjson::kObjectType);
         jsonDocument.Parse(R"({

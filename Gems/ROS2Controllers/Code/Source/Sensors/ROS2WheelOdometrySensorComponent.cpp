@@ -12,9 +12,9 @@
 #include <AzCore/Serialization/Json/RegistrationContext.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
-#include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
+#include <ROS2Controllers/Sensors/ROS2OdometryCovariance.h>
 
-namespace ROS2Sensors
+namespace ROS2Controllers
 {
     namespace
     {
@@ -248,4 +248,4 @@ namespace ROS2Sensors
         m_odometryConfiguration.m_twistCovariance = covariance;
     }
 
-} // namespace ROS2Sensors
+} // namespace ROS2Controllers

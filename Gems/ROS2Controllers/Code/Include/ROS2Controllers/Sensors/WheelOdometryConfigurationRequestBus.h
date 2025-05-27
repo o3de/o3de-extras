@@ -10,10 +10,10 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/RTTI/RTTI.h>
-#include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
-#include <ROS2Sensors/Odometry/WheelOdometrySensorConfiguration.h>
+#include <ROS2Controllers/Sensors/ROS2OdometryCovariance.h>
+#include <ROS2Controllers/Sensors/WheelOdometrySensorConfiguration.h>
 
-namespace ROS2Sensors
+namespace ROS2Controllers
 {
     //! Interface that allows to get and set WheelOdometry sensor's configuration.
     class WheelOdometryConfigurationRequest : public AZ::EBusTraits
@@ -45,4 +45,4 @@ namespace ROS2Sensors
     };
 
     using WheelOdometryConfigurationRequestBus = AZ::EBus<WheelOdometryConfigurationRequest>;
-} // namespace ROS2Sensors
+} // namespace ROS2Controllers

@@ -54,6 +54,10 @@ set(FILES
     Source/RobotControl/ROS2RobotControlComponent.cpp
     Source/RobotControl/ROS2RobotControlComponent.h
     Source/RobotControl/Twist/TwistSubscriptionHandler.cpp
+    Source/Sensors/ROS2OdometryCovariance.cpp
+    Source/Sensors/ROS2WheelOdometrySensorComponent.cpp
+    Source/Sensors/ROS2WheelOdometrySensorComponent.h
+    Source/Sensors/WheelOdometrySensorConfiguration.cpp
     Source/Utilities/ArticulationsUtilities.cpp
     Source/Utilities/ArticulationsUtilities.h
     Source/Utilities/JointUtilities.cpp
