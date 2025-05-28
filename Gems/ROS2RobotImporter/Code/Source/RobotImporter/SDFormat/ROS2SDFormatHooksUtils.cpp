@@ -20,15 +20,17 @@
 
 namespace ROS2RobotImporter::SDFormat
 {
-    // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
-    // void HooksUtils::AddTopicConfiguration(
-    //     SensorConfiguration& sensorConfig, const AZStd::string& topic, const AZStd::string& messageType, const AZStd::string& configName)
-    // {
-    //     TopicConfiguration config;
-    //     config.m_topic = topic;
-    //     config.m_type = messageType;
-    //     sensorConfig.m_publishersConfigurations.insert(AZStd::make_pair(configName, config));
-    // }
+    void HooksUtils::AddTopicConfiguration(
+        ROS2::SensorConfiguration& sensorConfig,
+        const AZStd::string& topic,
+        const AZStd::string& messageType,
+        const AZStd::string& configName)
+    {
+        ROS2::TopicConfiguration config;
+        config.m_topic = topic;
+        config.m_type = messageType;
+        sensorConfig.m_publishersConfigurations.insert(AZStd::make_pair(configName, config));
+    }
 
     AZ::EntityId HooksUtils::GetJointEntityId(
         const std::string& jointName, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
@@ -100,6 +102,48 @@ namespace ROS2RobotImporter::SDFormat
             AZ_Trace(
                 "CreatePrefabFromUrdfOrSdf", "Setting transform failed: %s does not have transform interface\n", sdfSensor.Name().c_str());
         }
+    }
+
+    AZ::Component* HooksUtils::CreateComponent(AZ::Entity& entity, const AZ::TypeId& componentTypeId)
+    {
+        // Do not create a component if the same type is already added.
+        if (entity.FindComponent(componentTypeId))
+        {
+            return nullptr;
+        }
+
+        // Create component.
+        // If it's not an "editor component" then wrap it in a GenericComponentWrapper.
+        AZ::Component* component = nullptr;
+        AZ::ComponentDescriptorBus::EventResult(component, componentTypeId, &AZ::ComponentDescriptorBus::Events::CreateComponent);
+        if (component)
+        {
+            if (!component->RTTI_IsTypeOf(AzToolsFramework::Components::EditorComponentBase::RTTI_Type()))
+            {
+                AZ::Component* gameComponent = component;
+                component = aznew AzToolsFramework::Components::GenericComponentWrapper(gameComponent);
+            }
+
+            if (!entity.IsComponentReadyToAdd(component) || !entity.AddComponent(component))
+            {
+                delete component;
+                component = nullptr;
+            }
+        }
+
+        return component;
+    }
+
+    AZ::Component* HooksUtils::CreateComponent(const AZ::EntityId& entityId, const AZ::TypeId& componentTypeId)
+    {
+        AZ::Entity* entity = nullptr;
+        AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
+        if (entity != nullptr)
+        {
+            return CreateComponent(*entity, componentTypeId);
+        }
+
+        return nullptr;
     }
 
     namespace HooksUtils::PluginParser

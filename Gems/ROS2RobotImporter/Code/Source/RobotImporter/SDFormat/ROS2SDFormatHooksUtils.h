@@ -18,7 +18,7 @@
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2RobotImporter/SDFormatModelPluginImporterHook.h>
 // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
-// #include <ROS2/Sensor/SensorConfiguration.h>
+#include <ROS2/Sensor/SensorConfiguration.h>
 #include <Source/EditorArticulationLinkComponent.h>
 #include <Source/EditorHingeJointComponent.h>
 
@@ -34,13 +34,11 @@ namespace ROS2RobotImporter::SDFormat
         //! @param topic ROS 2 topic name
         //! @param messageType ROS 2 message type
         //! @param configName name under which topic configuration is stored in sensor's configuration
-
-        // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
-        // void AddTopicConfiguration(
-        //     SensorConfiguration& sensorConfig,
-        //     const AZStd::string& topic,
-        //     const AZStd::string& messageType,
-        //     const AZStd::string& configName);
+        void AddTopicConfiguration(
+            ROS2::SensorConfiguration& sensorConfig,
+            const AZStd::string& topic,
+            const AZStd::string& messageType,
+            const AZStd::string& configName);
 
         //! Find O3DE entity id of the SDFormat joint based on its name and a map of all created entities.
         //! @param jointName name of the joint in query
@@ -57,6 +55,20 @@ namespace ROS2RobotImporter::SDFormat
         //! @param entity entity to which the transform is set
         //! @param sdfSensor reference to SDFormat sensor possibly containing <pose> tag
         void SetSensorEntityTransform(AZ::Entity& entity, const sdf::Sensor& sdfSensor);
+
+        //! Create a component and attach the component to the entity.
+        //! This method ensures that game components are wrapped into GenericComponentWrapper.
+        //! @param entity entity to which the new component is added
+        //! @param componentTypeId type of the component to be created
+        //! @return A pointer to the component. Returns a null pointer if the component could not be created.
+        AZ::Component* CreateComponent(AZ::Entity& entity, const AZ::TypeId& componentTypeId);
+
+        //! Create a component and attach the component to the entity.
+        //! This method ensures that game components are wrapped into GenericComponentWrapper.
+        //! @param entityId entity id to which the new component is added
+        //! @param componentTypeId type of the component to be created
+        //! @return A pointer to the component. Returns a null pointer if the component could not be created.
+        AZ::Component* CreateComponent(const AZ::EntityId& entityId, const AZ::TypeId& componentTypeId);
 
         //! Create a component and attach the component to the entity.
         //! This method ensures that game components are wrapped into GenericComponentWrapper.

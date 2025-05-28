@@ -6,8 +6,9 @@
  *
  */
 
-#include <GNSS/ROS2GNSSSensorComponent.h>
+#include <AzCore/Math/Uuid.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 
@@ -36,14 +37,13 @@ namespace ROS2RobotImporter::SDFormat
             const auto gnssPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
             const auto element = sdfSensor.Element();
 
-            SensorConfiguration sensorConfiguration;
+            ROS2::SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = HooksUtils::GetFrequency(gnssPluginParams);
-            const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
+            element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
 
             // setting gnss topic
             const AZStd::string messageTopic = HooksUtils::GetTopicName(gnssPluginParams, element, "gnss");
-            element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
-
+            const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
             // Get frame configuration
@@ -52,8 +52,9 @@ namespace ROS2RobotImporter::SDFormat
             // Create required components
             HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity, frameConfiguration);
 
-            if (HooksUtils::CreateComponent<ROS2Sensors::ROS2GNSSSensorComponent>(entity, sensorConfiguration))
+            if (HooksUtils::CreateComponent(entity, AZ::Uuid::CreateString(ROS2Sensors::ROS2GNSSSensorComponentTypeId)))
             {
+                // TODO: configure parameters of the GNSS sensor component (ROS2::SensorConfiguration sensorConfiguration)
                 return AZ::Success();
             }
             else

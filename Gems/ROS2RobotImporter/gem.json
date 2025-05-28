@@ -18,10 +18,11 @@
         "Linux"
     ],
     "icon_path": "preview.png",
-    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem",
+    "requirements": "Requires ROS 2 Gem, ROS2Sensors Gem and ROS2Controllers Gem.",
     "documentation_url": "Link to any documentation of your Gem",
     "dependencies": [
-        "ROS2>=3.3.0"
+        "ROS2>=3.3.0",
+        "ROS2Sensors"
     ],
     "repo_uri": "https://github.com/o3de/o3de-extras/",
     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2RobotImporter",
