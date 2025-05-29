@@ -60,20 +60,6 @@ namespace ROS2RobotImporter::SDFormat
         //! Create a component and attach the component to the entity.
         //! This method ensures that game components are wrapped into GenericComponentWrapper.
         //! @param entity entity to which the new component is added
-        //! @param componentTypeId type of the component to be created
-        //! @return A pointer to the component. Returns a null pointer if the component could not be created.
-        AZ::Component* CreateComponent(AZ::Entity& entity, const AZ::TypeId& componentTypeId);
-
-        //! Create a component and attach the component to the entity.
-        //! This method ensures that game components are wrapped into GenericComponentWrapper.
-        //! @param entityId entity id to which the new component is added
-        //! @param componentTypeId type of the component to be created
-        //! @return A pointer to the component. Returns a null pointer if the component could not be created.
-        AZ::Component* CreateComponent(const AZ::EntityId& entityId, const AZ::TypeId& componentTypeId);
-
-        //! Create a component and attach the component to the entity.
-        //! This method ensures that game components are wrapped into GenericComponentWrapper.
-        //! @param entity entity to which the new component is added
         //! @param args constructor arguments used to create the new component
         //! @return A pointer to the component. Returns a null pointer if the component could not be created.
         template<class ComponentType, typename... Args>

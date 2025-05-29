@@ -11,6 +11,7 @@
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <ROS2Sensors/Imu/ImuSensorConfiguration.h>
+#include <ROS2Sensors/ROS2SensorsEditorBus.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
@@ -104,20 +105,17 @@ namespace ROS2RobotImporter::SDFormat
             HooksUtils::CreateComponent<PhysX::EditorArticulationLinkComponent>(entity);
 
             // Create Imu component
-            if (auto* sensor = HooksUtils::CreateComponent(entity, AZ::Uuid::CreateString(ROS2Sensors::ROS2ImuSensorComponentTypeId)))
+            auto interface = ROS2Sensors::ROS2SensorsEditorInterface::Get();
+            AZ_Warning("ROS2RobotImporter", interface, "ROS2SensorsInterface is not available. Cannot create Imu sensor component.");
+            if (interface)
             {
-                // TODO: configure the Imu component with the ImuSensorConfiguration
-                if (HooksUtils::SetSensorComponentBaseConfiguration<ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>>(
-                        sensor, sensorConfiguration))
+                if (auto* sensor = interface->CreateROS2ImuSensorComponent(entity, sensorConfiguration, imuConfiguration))
                 {
                     return AZ::Success();
                 }
-                return AZ::Failure(AZStd::string("Failed to set configuration for ROS 2 Imu Sensor component"));
             }
-            else
-            {
-                return AZ::Failure(AZStd::string("Failed to create ROS 2 Imu Sensor component"));
-            }
+
+            return AZ::Failure(AZStd::string("Failed to create ROS 2 Imu Sensor component"));
         };
 
         return importerHook;

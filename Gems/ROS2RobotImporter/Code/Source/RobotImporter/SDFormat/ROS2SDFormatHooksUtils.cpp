@@ -104,48 +104,6 @@ namespace ROS2RobotImporter::SDFormat
         }
     }
 
-    AZ::Component* HooksUtils::CreateComponent(AZ::Entity& entity, const AZ::TypeId& componentTypeId)
-    {
-        // Do not create a component if the same type is already added.
-        if (entity.FindComponent(componentTypeId))
-        {
-            return nullptr;
-        }
-
-        // Create component.
-        // If it's not an "editor component" then wrap it in a GenericComponentWrapper.
-        AZ::Component* component = nullptr;
-        AZ::ComponentDescriptorBus::EventResult(component, componentTypeId, &AZ::ComponentDescriptorBus::Events::CreateComponent);
-        if (component)
-        {
-            if (!component->RTTI_IsTypeOf(AzToolsFramework::Components::EditorComponentBase::RTTI_Type()))
-            {
-                AZ::Component* gameComponent = component;
-                component = aznew AzToolsFramework::Components::GenericComponentWrapper(gameComponent);
-            }
-
-            if (!entity.IsComponentReadyToAdd(component) || !entity.AddComponent(component))
-            {
-                delete component;
-                component = nullptr;
-            }
-        }
-
-        return component;
-    }
-
-    AZ::Component* HooksUtils::CreateComponent(const AZ::EntityId& entityId, const AZ::TypeId& componentTypeId)
-    {
-        AZ::Entity* entity = nullptr;
-        AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
-        if (entity != nullptr)
-        {
-            return CreateComponent(*entity, componentTypeId);
-        }
-
-        return nullptr;
-    }
-
     namespace HooksUtils::PluginParser
     {
         // Inserts name (key) and value (val) of given parameter to map.

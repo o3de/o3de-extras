@@ -57,6 +57,7 @@ ly_add_target(
     BUILD_DEPENDENCIES
         INTERFACE
            AZ::AzCore
+           Gem::ROS2.API
 )
 
 # The ${gem_name}.Private.Object target is an internal target

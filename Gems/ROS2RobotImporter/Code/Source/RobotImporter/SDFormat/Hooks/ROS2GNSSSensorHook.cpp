@@ -10,6 +10,7 @@
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
+#include <ROS2Sensors/ROS2SensorsEditorBus.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
@@ -52,19 +53,18 @@ namespace ROS2RobotImporter::SDFormat
             // Create required components
             HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity, frameConfiguration);
 
-            if (auto* sensor = HooksUtils::CreateComponent(entity, AZ::Uuid::CreateString(ROS2Sensors::ROS2GNSSSensorComponentTypeId)))
+            // Create GNSS component
+            auto interface = ROS2Sensors::ROS2SensorsEditorInterface::Get();
+            AZ_Warning("ROS2RobotImporter", interface, "ROS2SensorsInterface is not available. Cannot create GNSS sensor component.");
+            if (interface)
             {
-                if (HooksUtils::SetSensorComponentBaseConfiguration<ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>>(
-                        sensor, sensorConfiguration))
+                if (auto* sensor = interface->CreateROS2GnssSensorComponent(entity, sensorConfiguration))
                 {
                     return AZ::Success();
                 }
-                return AZ::Failure(AZStd::string("Failed to set configuration for ROS 2 GNSS Sensor component"));
             }
-            else
-            {
-                return AZ::Failure(AZStd::string("Failed to create ROS 2 GNSS Sensor component"));
-            }
+
+            return AZ::Failure(AZStd::string("Failed to create ROS 2 Imu Sensor component"));
         };
 
         return importerHook;
