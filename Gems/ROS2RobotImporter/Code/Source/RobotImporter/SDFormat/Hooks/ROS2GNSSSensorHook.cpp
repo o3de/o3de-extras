@@ -10,7 +10,6 @@
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
-#include <ROS2/Sensor/SensorConfigurationRequestBus.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
@@ -39,11 +38,10 @@ namespace ROS2RobotImporter::SDFormat
             const auto gnssPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
             const auto element = sdfSensor.Element();
 
+            // Get base sensor configuration
             ROS2::SensorConfiguration sensorConfiguration;
             element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
             element->Get<float>("update_rate", sensorConfiguration.m_frequency, 10.0f);
-
-            // setting GNSS topic
             const AZStd::string messageTopic = HooksUtils::GetTopicName(gnssPluginParams, element, "gnss");
             const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);

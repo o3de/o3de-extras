@@ -157,7 +157,6 @@ namespace ROS2RobotImporter::SDFormat
                 return true;
             }
 
-            AZ_Error("ROS2RobotImporter", false, "Failed to cast sensor component to BaseComponentT type.");
             return false;
         }
 

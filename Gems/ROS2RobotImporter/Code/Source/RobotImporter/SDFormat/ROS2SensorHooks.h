@@ -23,8 +23,8 @@ namespace ROS2RobotImporter::SDFormat
         //! Retrieve a sensor importer hook which is used to map SDFormat sensor of type navsat into O3DE ROS2GNSSSensorComponent
         SensorImporterHook ROS2GNSSSensor();
 
-        // //! Retrieve a sensor importer hook which is used to map SDFormat sensor of type imu into O3DE ROS2ImuSensorComponent
-        // SensorImporterHook ROS2ImuSensor();
+        //! Retrieve a sensor importer hook which is used to map SDFormat sensor of type imu into O3DE ROS2ImuSensorComponent
+        SensorImporterHook ROS2ImuSensor();
 
         // //! Retrieve a sensor importer hook which is used to map SDFormat sensor of type lidar into O3DE ROS2LidarSensorComponent
         // SensorImporterHook ROS2LidarSensor();

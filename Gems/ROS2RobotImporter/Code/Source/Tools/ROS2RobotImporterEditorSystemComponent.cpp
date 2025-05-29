@@ -70,7 +70,7 @@ namespace ROS2RobotImporter
         // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
         // m_sensorHooks.emplace_back(SDFormat::ROS2SensorHooks::ROS2CameraSensor());
         m_sensorHooks.emplace_back(SDFormat::ROS2SensorHooks::ROS2GNSSSensor());
-        // m_sensorHooks.emplace_back(SDFormat::ROS2SensorHooks::ROS2ImuSensor());
+        m_sensorHooks.emplace_back(SDFormat::ROS2SensorHooks::ROS2ImuSensor());
         // m_sensorHooks.emplace_back(SDFormat::ROS2SensorHooks::ROS2LidarSensor());
         // m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2AckermannModel());
         // m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2SkidSteeringModel());

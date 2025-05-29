@@ -6,8 +6,12 @@
  *
  */
 
-#include <Imu/ROS2ImuSensorComponent.h>
+#include <AzCore/Math/Uuid.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
+#include <ROS2Sensors/Imu/ImuSensorConfiguration.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 #include <Source/EditorArticulationLinkComponent.h>
@@ -39,8 +43,8 @@ namespace ROS2RobotImporter::SDFormat
                                                                                     ">visualize" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_imu_sensor.so" };
         importerHook.m_supportedPluginParams =
-            AZStd::unordered_set<AZStd::string>{ ">topicName",     ">ros>remapping", ">ros>argument",   ">ros>frame_name",
-                                                 ">ros>namespace", ">frameName",     ">robotNamespace", ">updateRate" };
+            AZStd::unordered_set<AZStd::string>{ ">topicName",     ">ros>remapping", ">ros>argument",  ">ros>frame_name",
+                                                 ">ros>namespace", ">frameName",     ">robotNamespace" };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -50,7 +54,7 @@ namespace ROS2RobotImporter::SDFormat
                 return AZ::Failure(AZStd::string("Failed to read parsed SDFormat data of %s imu sensor", sdfSensor.Name().c_str()));
             }
 
-            ImuSensorConfiguration imuConfiguration;
+            ROS2Sensors::ImuSensorConfiguration imuConfiguration;
             const auto& angVelXNoise = imuSensor->AngularVelocityXNoise();
             const auto& angVelYNoise = imuSensor->AngularVelocityYNoise();
             const auto& angVelZNoise = imuSensor->AngularVelocityZNoise();
@@ -84,14 +88,12 @@ namespace ROS2RobotImporter::SDFormat
             const auto imuPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
             const auto element = sdfSensor.Element();
 
-            SensorConfiguration sensorConfiguration;
-            sensorConfiguration.m_frequency = HooksUtils::GetFrequency(imuPluginParams);
-            const AZStd::string messageType = "sensor_msgs::msg::Imu";
-
-            // setting imu topic
-            const AZStd::string messageTopic = HooksUtils::GetTopicName(imuPluginParams, element, "imu");
+            // Get base sensor configuration
+            ROS2::SensorConfiguration sensorConfiguration;
             element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
-
+            element->Get<float>("update_rate", sensorConfiguration.m_frequency, 10.0f);
+            const AZStd::string messageTopic = HooksUtils::GetTopicName(imuPluginParams, element, "imu");
+            const AZStd::string messageType = "sensor_msgs::msg::Imu";
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
             // Get frame configuration
@@ -102,9 +104,15 @@ namespace ROS2RobotImporter::SDFormat
             HooksUtils::CreateComponent<PhysX::EditorArticulationLinkComponent>(entity);
 
             // Create Imu component
-            if (HooksUtils::CreateComponent<ROS2Sensors::ROS2ImuSensorComponent>(entity, sensorConfiguration, imuConfiguration))
+            if (auto* sensor = HooksUtils::CreateComponent(entity, AZ::Uuid::CreateString(ROS2Sensors::ROS2ImuSensorComponentTypeId)))
             {
-                return AZ::Success();
+                // TODO: configure the Imu component with the ImuSensorConfiguration
+                if (HooksUtils::SetSensorComponentBaseConfiguration<ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>>(
+                        sensor, sensorConfiguration))
+                {
+                    return AZ::Success();
+                }
+                return AZ::Failure(AZStd::string("Failed to set configuration for ROS 2 Imu Sensor component"));
             }
             else
             {
