@@ -11,7 +11,6 @@
 #include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <ROS2Sensors/ROS2SensorsEditorBus.h>
-#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 

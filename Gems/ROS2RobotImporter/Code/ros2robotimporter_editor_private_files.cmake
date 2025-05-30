@@ -31,7 +31,7 @@ set(FILES
     Source/RobotImporter/RobotImporterWidget.h
     # temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
     # Source/RobotImporter/SDFormat/Hooks/ROS2AckermannModelHook.cpp
-    # Source/RobotImporter/SDFormat/Hooks/ROS2CameraSensorHook.cpp
+    Source/RobotImporter/SDFormat/Hooks/ROS2CameraSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2GNSSSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2ImuSensorHook.cpp
     # Source/RobotImporter/SDFormat/Hooks/ROS2LidarSensorHook.cpp

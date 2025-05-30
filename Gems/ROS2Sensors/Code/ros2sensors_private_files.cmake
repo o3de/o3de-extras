@@ -13,7 +13,6 @@ set(FILES
     Source/Clients/ROS2SensorsSystemComponent.h
     Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.cpp
     Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
-    Source/Camera/CameraConstants.h
     Source/Camera/CameraPublishers.cpp
     Source/Camera/CameraPublishers.h
     Source/Camera/CameraSensor.cpp

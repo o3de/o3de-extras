@@ -12,7 +12,6 @@
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <ROS2Sensors/Imu/ImuSensorConfiguration.h>
 #include <ROS2Sensors/ROS2SensorsEditorBus.h>
-#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 #include <Source/EditorArticulationLinkComponent.h>
