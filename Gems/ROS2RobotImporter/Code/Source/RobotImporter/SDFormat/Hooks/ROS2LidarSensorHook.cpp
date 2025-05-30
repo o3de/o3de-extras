@@ -6,9 +6,10 @@
  *
  */
 
-#include <Lidar/ROS2Lidar2DSensorComponent.h>
-#include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2Sensors/Lidar/LidarSensorConfiguration.h>
+#include <ROS2Sensors/Lidar/LidarTemplateUtils.h>
+#include <ROS2Sensors/ROS2SensorsEditorBus.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 
@@ -60,19 +61,18 @@ namespace ROS2RobotImporter::SDFormat
             const auto lidarPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
             const auto element = sdfSensor.Element();
 
-            SensorConfiguration sensorConfiguration;
-            sensorConfiguration.m_frequency = HooksUtils::GetFrequency(lidarPluginParams);
+            // Get base sensor configuration
+            ROS2::SensorConfiguration sensorConfiguration;
+            element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
+            element->Get<float>("update_rate", sensorConfiguration.m_frequency, 10.0f);
             const bool is2DLidar = (lidarSensor->VerticalScanSamples() == 1);
             const AZStd::string messageType = is2DLidar ? "sensor_msgs::msg::LaserScan" : "sensor_msgs::msg::PointCloud2";
-
-            // setting lidar topic
             const AZStd::string messageTopic = HooksUtils::GetTopicName(lidarPluginParams, element, (is2DLidar ? "scan" : "pc"));
-            element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
-
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
-            LidarSensorConfiguration lidarConfiguration{ is2DLidar ? LidarTemplateUtils::Get2DModels()
-                                                                   : LidarTemplateUtils::Get3DModels() };
+            // Get Lidar sensor configuration
+            ROS2Sensors::LidarSensorConfiguration lidarConfiguration{ is2DLidar ? ROS2Sensors::LidarTemplateUtils::Get2DModels()
+                                                                                : ROS2Sensors::LidarTemplateUtils::Get3DModels() };
             lidarConfiguration.m_lidarParameters.m_name = AZStd::string(sdfSensor.Name().c_str());
             lidarConfiguration.m_lidarParameters.m_minHAngle = lidarSensor->HorizontalScanMinAngle().Degree();
             lidarConfiguration.m_lidarParameters.m_maxHAngle = lidarSensor->HorizontalScanMaxAngle().Degree();
@@ -83,10 +83,11 @@ namespace ROS2RobotImporter::SDFormat
             lidarConfiguration.m_lidarParameters.m_minRange = lidarSensor->RangeMin();
             lidarConfiguration.m_lidarParameters.m_maxRange = lidarSensor->RangeMax();
 
-            const auto lidarSystems = LidarRegistrarInterface::Get()->GetRegisteredLidarSystems();
-            if (!lidarSystems.empty())
+            auto* lidarRegistrar = ROS2Sensors::LidarRegistrarInterface::Get();
+            if (lidarRegistrar)
             {
-                const AZStd::string query = (sdfSensor.Type() == sdf::SensorType::GPU_LIDAR ? "RobotecGPULidar" : LidarSystem::SystemName);
+                const auto lidarSystems = lidarRegistrar->GetRegisteredLidarSystems();
+                const AZStd::string query = (sdfSensor.Type() == sdf::SensorType::GPU_LIDAR ? "RobotecGPULidar" : "Scene Queries");
                 if (const auto it = AZStd::find(lidarSystems.begin(), lidarSystems.end(), query); it != lidarSystems.end())
                 {
                     lidarConfiguration.m_lidarSystem = *it;
@@ -109,17 +110,18 @@ namespace ROS2RobotImporter::SDFormat
             HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity, frameConfiguration);
 
             // Create Lidar component
-            const auto lidarComponent = is2DLidar
-                ? HooksUtils::CreateComponent<ROS2Sensors::ROS2Lidar2DSensorComponent>(entity, sensorConfiguration, lidarConfiguration)
-                : HooksUtils::CreateComponent<ROS2Sensors::ROS2LidarSensorComponent>(entity, sensorConfiguration, lidarConfiguration);
-            if (lidarComponent)
+            auto interface = ROS2Sensors::ROS2SensorsEditorInterface::Get();
+            AZ_Warning("ROS2RobotImporter", interface, "ROS2SensorsInterface is not available. Cannot create Lidar sensor component.");
+            if (interface)
             {
-                return AZ::Success();
+                if (auto* sensor = is2DLidar ? interface->CreateROS2Lidar2DSensorComponent(entity, sensorConfiguration, lidarConfiguration)
+                                             : interface->CreateROS2LidarSensorComponent(entity, sensorConfiguration, lidarConfiguration))
+                {
+                    return AZ::Success();
+                }
             }
-            else
-            {
-                return AZ::Failure(AZStd::string("Failed to create ROS 2 Lidar Sensor component"));
-            }
+
+            return AZ::Failure(AZStd::string("Failed to create ROS 2 Imu Sensor component"));
         };
 
         return importerHook;

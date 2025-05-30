@@ -7,6 +7,8 @@
 #
 
 set(FILES
+    Source/Lidar/LidarSensorConfiguration.cpp
+    Source/Lidar/LidarTemplateUtils.cpp
     Source/Lidar/RaycastResults.cpp
     Source/Lidar/SegmentationClassConfiguration.cpp
     Source/Lidar/SegmentationUtils.cpp

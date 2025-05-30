@@ -58,6 +58,7 @@ ly_add_target(
             AZ::AzCore
             AZ::AzFramework
             Gem::ROS2.Static
+            Gem::ROS2Sensors.Lidar.Static
 )
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface

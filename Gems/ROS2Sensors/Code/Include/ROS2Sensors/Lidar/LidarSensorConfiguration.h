@@ -55,6 +55,8 @@ namespace ROS2Sensors
 
         AZ::Crc32 OnLidarModelSelected();
         AZ::Crc32 OnLidarImplementationSelected();
+        void UpdateShowNoise();
+        AZStd::string GetDefaultLidarSystem();
 
         //! Get all models this configuration can be set to (for example all 2D lidar models).
         AZStd::vector<AZStd::string> GetAvailableModels() const;
@@ -62,7 +64,5 @@ namespace ROS2Sensors
         AZStd::vector<AZStd::string> FetchLidarSystemList();
 
         AZStd::vector<LidarTemplate::LidarModel> m_availableModels;
-
-        void UpdateShowNoise();
     };
 } // namespace ROS2Sensors

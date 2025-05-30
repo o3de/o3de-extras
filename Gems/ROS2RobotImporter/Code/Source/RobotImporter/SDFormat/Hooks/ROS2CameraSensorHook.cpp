@@ -47,6 +47,7 @@ namespace ROS2RobotImporter::SDFormat
                 return AZ::Failure(AZStd::string("Failed to read parsed SDFormat data of %s camera sensor", sdfSensor.Name().c_str()));
             }
 
+            // Get camera sensor configuration
             ROS2Sensors::CameraSensorConfiguration cameraConfiguration;
             cameraConfiguration.m_depthCamera = cameraSensor->HasDepthCamera();
             cameraConfiguration.m_colorCamera = (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA) ? true : false;
@@ -72,6 +73,7 @@ namespace ROS2RobotImporter::SDFormat
             const auto cameraPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
             const auto element = sdfSensor.Element();
 
+            // Get base sensor configuration
             ROS2::SensorConfiguration sensorConfiguration;
             element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
             element->Get<float>("update_rate", sensorConfiguration.m_frequency, 10.0f);

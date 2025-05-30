@@ -46,10 +46,4 @@ namespace ROS2Sensors
         LidarSystem m_physxLidarSystem;
         AZStd::unordered_map<AZ::Crc32, LidarSystemMetaData> m_registeredLidarSystems;
     };
-
-    namespace Details
-    {
-        AZStd::string GetDefaultLidarSystem();
-    } // namespace Details
-
 } // namespace ROS2Sensors
