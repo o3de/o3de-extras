@@ -11580,50 +11580,5 @@
         }
     ],
     "projects_data": [
-        {
-            "project_name": "OpenXRTest",
-            "version": "1.0.0",
-            "project_id": "{947211d5-689a-437f-8ad7-7f558edcd40a}",
-            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-            "origin": "https://github.com/o3de/o3de-extras",
-            "license": "For terms please see the LICENSE*.TXT files at the root of this distribution.",
-            "display_name": "OpenXRTest",
-            "summary": "A sample project that uses OpenXR.",
-            "canonical_tags": [
-                "Project"
-            ],
-            "user_tags": [
-                "OpenXRTest"
-            ],
-            "icon_path": "preview.png",
-            "engine": "o3de",
-            "external_subdirectories": [
-                "Gem"
-            ],
-            "restricted": "OpenXRTest",
-            "gem_names": [
-                "XR",
-                "OpenXRVk"
-            ],
-            "versions_data": [
-                {
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrtest-1.0.0-project.zip",
-                    "gem_names": [
-                        "XR>=1.0.1",
-                        "OpenXRVk>=1.0.1"
-                    ],
-                    "version": "1.0.0"
-                },
-                {
-                    "version": "1.0.1",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrtest-1.0.1-project.zip",
-                    "gem_names": [
-                        "XR>=1.0.1",
-                        "OpenXRVk>=1.0.1"
-                    ],
-                    "sha256": "a08e465949826c204af2a9f32a15b616bf1b81c0cdfde62eb070558b7228312f"
-                }
-            ]
-        }
     ]
 }
