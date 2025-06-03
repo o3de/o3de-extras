@@ -5,4 +5,5 @@
 
 set(FILES
     Include/ROS2/Frame/ROS2FrameEditorComponent.h
+    Include/ROS2/ROS2GemUtilities.h
 )

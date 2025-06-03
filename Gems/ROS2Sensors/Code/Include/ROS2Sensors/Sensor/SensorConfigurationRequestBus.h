@@ -10,7 +10,6 @@
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
-#include <AzCore/Interface/Interface.h>
 #include <ROS2Sensors/Sensor/SensorConfiguration.h>
 namespace ROS2Sensors
 {
@@ -18,7 +17,7 @@ namespace ROS2Sensors
     class SensorConfigurationRequest : public AZ::EBusTraits
     {
     public:
-        AZ_RTTI(SensorConfigurationRequest, "{01904eab-fa33-7487-b634-e3f8361eb5fb}");
+        AZ_RTTI(SensorConfigurationRequest, SensorConfigurationRequestTypeId);
         using BusIdType = AZ::EntityComponentIdPair;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
 

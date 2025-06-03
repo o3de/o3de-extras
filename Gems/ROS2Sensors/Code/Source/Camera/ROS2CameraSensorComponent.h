@@ -15,10 +15,10 @@
 #include <AzCore/std/containers/vector.h>
 
 #include "CameraSensor.h"
-#include "CameraSensorConfiguration.h"
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
-#include <ROS2Sensors/Camera/CameraCalibrationRequestBus.h>
+#include <ROS2Sensors/Camera/CameraConfigurationRequestBus.h>
+#include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 
@@ -33,7 +33,7 @@ namespace ROS2Sensors
     //! Camera frustum is facing negative Z axis; image plane is parallel to X,Y plane: X - right, Y - up
     class ROS2CameraSensorComponent
         : public ROS2SensorComponentBase<ROS2::TickBasedSource>
-        , public CameraCalibrationRequestBus::Handler
+        , protected CameraConfigurationRequestBus::Handler
     {
     public:
         ROS2CameraSensorComponent() = default;
@@ -50,13 +50,26 @@ namespace ROS2Sensors
         void Activate() override;
         void Deactivate() override;
 
-        // CameraCalibrationRequestBus::Handler overrides ...
-        AZ::Matrix3x3 GetCameraMatrix() const override;
-        int GetWidth() const override;
-        int GetHeight() const override;
-        float GetVerticalFOV() const override;
-
     private:
+        // CameraConfigurationRequestBus::Handler overrides ..
+        void SetConfiguration(const CameraSensorConfiguration& configuration) override;
+        const CameraSensorConfiguration GetConfiguration() override;
+        AZ::Matrix3x3 GetCameraMatrix() override;
+        float GetVerticalFOV() override;
+        void SetVerticalFOV(float value) override;
+        int GetWidth() override;
+        void SetWidth(int value) override;
+        int GetHeight() override;
+        void SetHeight(int value) override;
+        bool IsColorCamera() override;
+        void SetColorCamera(bool value) override;
+        bool IsDepthCamera() override;
+        void SetDepthCamera(bool value) override;
+        float GetNearClipDistance() override;
+        void SetNearClipDistance(float value) override;
+        float GetFarClipDistance() override;
+        void SetFarClipDistance(float value) override;
+
         //! Helper that adds an image source.
         //! @tparam CameraType type of camera sensor (eg 'CameraColorSensor')
         template<typename CameraType>
@@ -72,6 +85,9 @@ namespace ROS2Sensors
 
         ///! Requests message publication from camera sensor.
         void FrequencyTick();
+
+        //! Sets the camera sensor and image source.
+        void SetCameraSensorConfiguration();
 
         CameraSensorConfiguration m_cameraConfiguration;
         AZStd::string m_frameName;

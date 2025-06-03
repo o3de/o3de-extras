@@ -4,8 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
-    Source/ROS2ModuleInterface.cpp
-    Source/ROS2ModuleInterface.h
     ../Assets/Passes/PipelineRenderToTextureROSColor.pass
     ../Assets/Passes/PipelineRenderToTextureROSDepth.pass
     ../Assets/Passes/PipelineROSColor.pass

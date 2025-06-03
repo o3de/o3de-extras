@@ -10,6 +10,7 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/string/string.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
 {
@@ -41,7 +42,7 @@ namespace ROS2Sensors
     class LidarRegistrarRequests
     {
     public:
-        AZ_RTTI(LidarRegistrarRequests, "{22030dc7-a1db-43bd-b748-0fb9ec43ce2e}");
+        AZ_RTTI(LidarRegistrarRequests, LidarRegistrarBusTypeId);
 
         //! Registers a new lidar system under the provided name.
         //! To obtain the busId of a lidarSystem use the AZ_CRC macro as follows.

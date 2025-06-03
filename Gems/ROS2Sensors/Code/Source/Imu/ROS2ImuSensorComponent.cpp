@@ -82,6 +82,7 @@ namespace ROS2Sensors
     void ROS2ImuSensorComponent::Activate()
     {
         ROS2SensorComponentBase::Activate();
+
         auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
         m_imuMsg.header.frame_id = GetFrameID().c_str();
@@ -89,9 +90,7 @@ namespace ROS2Sensors
         const auto fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
 
-        m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
-        m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
-        m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
+        ConfigureSensor();
 
         StartSensor(
             m_sensorConfiguration.m_frequency,
@@ -107,13 +106,18 @@ namespace ROS2Sensors
             {
                 OnPhysicsEvent(sceneHandle);
             });
+
+        ImuConfigurationRequestBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2ImuSensorComponent::Deactivate()
     {
+        ImuConfigurationRequestBus::Handler::BusDisconnect(GetEntityId());
+
         StopSensor();
         m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
         m_imuPublisher.reset();
+
         ROS2SensorComponentBase::Deactivate();
     }
 
@@ -203,6 +207,98 @@ namespace ROS2Sensors
         covarianceMatrix.SetElement(1, 1, variance.GetY());
         covarianceMatrix.SetElement(2, 2, variance.GetZ());
         return covarianceMatrix;
+    }
+
+    void ROS2ImuSensorComponent::ConfigureSensor()
+    {
+        m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
+        m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
+        m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
+    }
+
+    const ImuSensorConfiguration ROS2ImuSensorComponent::GetConfiguration()
+    {
+        return m_imuConfiguration;
+    }
+
+    void ROS2ImuSensorComponent::SetConfiguration(const ImuSensorConfiguration& configuration)
+    {
+        m_imuConfiguration = configuration;
+        ConfigureSensor();
+    }
+
+    int ROS2ImuSensorComponent::GetFilterSize()
+    {
+        return m_imuConfiguration.m_filterSize;
+    }
+
+    void ROS2ImuSensorComponent::SetFilterSize(int filterSize)
+    {
+        if (filterSize < m_imuConfiguration.m_minFilterSize || filterSize > m_imuConfiguration.m_maxFilterSize)
+        {
+            AZ_Error(
+                "ROS2ImuSensorComponent",
+                false,
+                "Filter size %d is out of bounds [%d, %d].",
+                filterSize,
+                m_imuConfiguration.m_minFilterSize,
+                m_imuConfiguration.m_maxFilterSize);
+            return;
+        }
+        m_imuConfiguration.m_filterSize = filterSize;
+    }
+
+    bool ROS2ImuSensorComponent::GetIncludeGravity()
+    {
+        return m_imuConfiguration.m_includeGravity;
+    }
+
+    void ROS2ImuSensorComponent::SetIncludeGravity(bool includeGravity)
+    {
+        m_imuConfiguration.m_includeGravity = includeGravity;
+    }
+
+    bool ROS2ImuSensorComponent::GetAbsoluteRotation()
+    {
+        return m_imuConfiguration.m_absoluteRotation;
+    }
+
+    void ROS2ImuSensorComponent::SetAbsoluteRotation(bool absoluteRotation)
+    {
+        m_imuConfiguration.m_absoluteRotation = absoluteRotation;
+    }
+
+    AZ::Vector3 ROS2ImuSensorComponent::GetOrientationVariance()
+    {
+        return m_imuConfiguration.m_orientationVariance;
+    }
+
+    void ROS2ImuSensorComponent::SetOrientationVariance(const AZ::Vector3& orientationVariance)
+    {
+        m_imuConfiguration.m_orientationVariance = orientationVariance;
+        ConfigureSensor();
+    }
+
+    AZ::Vector3 ROS2ImuSensorComponent::GetAngularVelocityVariance()
+    {
+        return m_imuConfiguration.m_angularVelocityVariance;
+    }
+
+    void ROS2ImuSensorComponent::SetAngularVelocityVariance(const AZ::Vector3& angularVelocityVariance)
+    {
+        m_imuConfiguration.m_angularVelocityVariance = angularVelocityVariance;
+        ConfigureSensor();
+    }
+
+    AZ::Vector3 ROS2ImuSensorComponent::GetLinearAccelerationVariance()
+    {
+        return m_imuConfiguration.m_linearAccelerationVariance;
+    }
+
+    void ROS2ImuSensorComponent::SetLinearAccelerationVariance(const AZ::Vector3& linearAccelerationVariance)
+    {
+        m_imuConfiguration.m_linearAccelerationVariance = linearAccelerationVariance;
+        ConfigureSensor();
     }
 
 } // namespace ROS2Sensors

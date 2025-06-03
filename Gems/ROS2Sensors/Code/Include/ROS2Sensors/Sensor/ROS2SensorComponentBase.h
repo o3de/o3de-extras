@@ -142,7 +142,7 @@ namespace ROS2Sensors
             m_eventSourceAdapter.Start();
         }
 
-        //! Stops sensor and disconnects event callbacks passed through RSO2::ROS2SensorComponentBase::StartSensor.
+        //! Stops sensor and disconnects event callbacks passed through ROS2::ROS2SensorComponentBase::StartSensor.
         void StopSensor()
         {
             m_eventSourceAdapter.Stop();
@@ -175,6 +175,5 @@ namespace ROS2Sensors
         typename EventSourceT::AdaptedEventHandlerType m_adaptedEventHandler;
     };
 
-    AZ_COMPONENT_IMPL_INLINE(
-        (ROS2SensorComponentBase, AZ_CLASS), "ROS2SensorComponentBase", "{2DF9A652-DF5D-43B1-932F-B6A838E36E97}", AZ::Component)
+    AZ_COMPONENT_IMPL_INLINE((ROS2SensorComponentBase, AZ_CLASS), "ROS2SensorComponentBase", ROS2SensorComponentBaseTypeId, AZ::Component)
 } // namespace ROS2Sensors

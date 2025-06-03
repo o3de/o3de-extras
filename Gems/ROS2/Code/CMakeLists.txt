@@ -18,6 +18,7 @@ include(${pal_dir}/PAL_${PAL_PLATFORM_NAME_LOWERCASE}.cmake)
 
 # Check to see if building the Gem Modules are supported for the current platform
 if(NOT PAL_TRAIT_ROS2_SUPPORTED)
+    message(FATAL_ERROR "The ROS2 Gem is not supported on ${PAL_PLATFORM_NAME}")
     return()
 endif()
 
@@ -87,7 +88,7 @@ ly_add_target(
             AZ::AzCore
 )
 
-target_interface_depends_on_ros2_packages(${gem_name}.API rclcpp builtin_interfaces geometry_msgs)
+target_interface_depends_on_ros2_packages(${gem_name}.API rclcpp builtin_interfaces control_msgs geometry_msgs)
 
 # The ${gem_name}.Private.Object target is an internal target
 # It should not be used outside of this Gems CMakeLists.txt
@@ -128,8 +129,8 @@ ly_add_target(
     BUILD_DEPENDENCIES
         PUBLIC
             Gem::${gem_name}.API
-            Gem::${gem_name}.Static
         PRIVATE
+            Gem::${gem_name}.Static
             Gem::${gem_name}.Private.Object
 )
 
@@ -199,8 +200,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         BUILD_DEPENDENCIES
             PUBLIC
                 AZ::AzToolsFramework
-                ${gem_name}.Private.Object
-                ${gem_name}.Static
+                Gem::${gem_name}.Static
     )
 
     ly_add_target(

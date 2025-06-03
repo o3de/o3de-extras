@@ -12,10 +12,10 @@
 #include <AzToolsFramework/API/ComponentEntitySelectionBus.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 
-#include "CameraSensorConfiguration.h"
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Frame/ROS2Transform.h>
-#include <ROS2Sensors/Camera/CameraCalibrationRequestBus.h>
+#include <ROS2Sensors/Camera/CameraConfigurationRequestBus.h>
+#include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
 #include <ROS2Sensors/Sensor/SensorConfiguration.h>
 
 namespace ROS2Sensors
@@ -25,7 +25,7 @@ namespace ROS2Sensors
     //! Component draws camera frustum in the Editor
     class ROS2CameraSensorEditorComponent
         : public AzToolsFramework::Components::EditorComponentBase
-        , public CameraCalibrationRequestBus::Handler
+        , public CameraConfigurationRequestBus::Handler
         , protected AzFramework::EntityDebugDisplayEventBus::Handler
     {
     public:
@@ -45,13 +45,26 @@ namespace ROS2Sensors
         // AzToolsFramework::Components::EditorComponentBase overrides
         void BuildGameEntity(AZ::Entity* gameEntity) override;
 
-        // CameraCalibrationRequestBus::Handler overrides
-        AZ::Matrix3x3 GetCameraMatrix() const override;
-        int GetWidth() const override;
-        int GetHeight() const override;
-        float GetVerticalFOV() const override;
-
     private:
+        // CameraConfigurationRequestBus::Handler overrides ..
+        void SetConfiguration(const CameraSensorConfiguration& configuration) override;
+        const CameraSensorConfiguration GetConfiguration() override;
+        AZ::Matrix3x3 GetCameraMatrix() override;
+        float GetVerticalFOV() override;
+        void SetVerticalFOV(float value) override;
+        int GetWidth() override;
+        void SetWidth(int value) override;
+        int GetHeight() override;
+        void SetHeight(int value) override;
+        bool IsColorCamera() override;
+        void SetColorCamera(bool value) override;
+        bool IsDepthCamera() override;
+        void SetDepthCamera(bool value) override;
+        float GetNearClipDistance() override;
+        void SetNearClipDistance(float value) override;
+        float GetFarClipDistance() override;
+        void SetFarClipDistance(float value) override;
+
         // EntityDebugDisplayEventBus::Handler overrides
         void DisplayEntityViewport(const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay) override;
 
@@ -59,6 +72,6 @@ namespace ROS2Sensors
             const AZStd::string& topic, const AZStd::string& messageType, const AZStd::string& configName) const;
 
         SensorConfiguration m_sensorConfiguration;
-        CameraSensorConfiguration m_cameraSensorConfiguration;
+        CameraSensorConfiguration m_cameraConfiguration;
     };
 } // namespace ROS2Sensors

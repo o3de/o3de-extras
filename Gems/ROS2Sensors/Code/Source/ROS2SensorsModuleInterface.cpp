@@ -27,7 +27,7 @@
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
-#include <Odometry/ROS2WheelOdometry.h>
+#include <Odometry/ROS2WheelOdometrySensorComponent.h>
 
 namespace ROS2Sensors
 {
@@ -37,10 +37,6 @@ namespace ROS2Sensors
 
     ROS2SensorsModuleInterface::ROS2SensorsModuleInterface()
     {
-        // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
-        // Add ALL components descriptors associated with this gem to m_descriptors.
-        // This will associate the AzTypeInfo information for the components with the the SerializeContext, BehaviorContext and EditContext.
-        // This happens through the [MyComponent]::Reflect() function.
         m_descriptors.insert(
             m_descriptors.end(),
             {

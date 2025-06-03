@@ -5,7 +5,6 @@
 
 set(FILES
     Include/ROS2/ROS2Bus.h
-    Include/ROS2/ROS2GemUtilities.h
     Include/ROS2/ROS2TypeIds.h
     Include/ROS2/Clock/ROS2Clock.h
     Include/ROS2/Clock/ITimeSource.h

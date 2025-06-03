@@ -12,7 +12,6 @@ set(FILES
     Source/Clients/ROS2SensorsSystemComponent.cpp
     Source/Clients/ROS2SensorsSystemComponent.h
     Source/Sensor/SensorConfiguration.cpp
-    Source/Sensor/SensorHelpers.cpp
     Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.cpp
     Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
     Source/Camera/CameraConstants.h
@@ -23,7 +22,6 @@ set(FILES
     Source/Camera/CameraSensorDescription.cpp
     Source/Camera/CameraSensorDescription.h
     Source/Camera/CameraSensorConfiguration.cpp
-    Source/Camera/CameraSensorConfiguration.h
     Source/Camera/CameraUtilities.cpp
     Source/Camera/CameraUtilities.h
     Source/Camera/ROS2CameraSensorComponent.cpp
@@ -35,7 +33,6 @@ set(FILES
     Source/GNSS/ROS2GNSSSensorComponent.cpp
     Source/GNSS/ROS2GNSSSensorComponent.h
     Source/Imu/ImuSensorConfiguration.cpp
-    Source/Imu/ImuSensorConfiguration.h
     Source/Imu/ROS2ImuSensorComponent.cpp
     Source/Imu/ROS2ImuSensorComponent.h
     Source/Lidar/ClassSegmentationConfigurationComponent.cpp
@@ -47,13 +44,10 @@ set(FILES
     Source/Lidar/LidarRegistrarSystemComponent.cpp
     Source/Lidar/LidarRegistrarSystemComponent.h
     Source/Lidar/LidarSensorConfiguration.cpp
-    Source/Lidar/LidarSensorConfiguration.h
     Source/Lidar/LidarSystem.cpp
     Source/Lidar/LidarSystem.h
     Source/Lidar/LidarTemplate.cpp
-    Source/Lidar/LidarTemplate.h
     Source/Lidar/LidarTemplateUtils.cpp
-    Source/Lidar/LidarTemplateUtils.h
     Source/Lidar/PointCloudMessageBuilder.cpp
     Source/Lidar/PointCloudMessageBuilder.h
     Source/Lidar/ROS2Lidar2DSensorComponent.cpp
@@ -62,8 +56,8 @@ set(FILES
     Source/Lidar/ROS2LidarSensorComponent.h
     Source/Odometry/ROS2OdometrySensorComponent.cpp
     Source/Odometry/ROS2OdometrySensorComponent.h
-    Source/Odometry/ROS2WheelOdometry.cpp
-    Source/Odometry/ROS2WheelOdometry.h
+    Source/Odometry/ROS2WheelOdometrySensorComponent.cpp
+    Source/Odometry/ROS2WheelOdometrySensorComponent.h
+    Source/Odometry/WheelOdometrySensorConfiguration.cpp
     Source/Odometry/ROS2OdometryCovariance.cpp
-    Source/Odometry/ROS2OdometryCovariance.h
 )

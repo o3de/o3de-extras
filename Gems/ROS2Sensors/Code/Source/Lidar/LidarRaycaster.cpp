@@ -13,7 +13,7 @@
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/Shape.h>
 #include <Lidar/LidarRaycaster.h>
-#include <Lidar/LidarTemplateUtils.h>
+#include <ROS2Sensors/Lidar/LidarTemplateUtils.h>
 #include <ROS2Sensors/Lidar/SegmentationUtils.h>
 
 namespace ROS2Sensors

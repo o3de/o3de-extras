@@ -4,13 +4,13 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
-    Source/Tools/ROS2EditorSystemComponent.cpp
-    Source/Tools/ROS2EditorSystemComponent.h
+    Source/Frame/ROS2FrameSystemComponent.cpp
+    Source/Frame/ROS2FrameSystemComponent.h
+    Source/Frame/ROS2FrameSystemBus.h
     Source/Spawner/ROS2SpawnerEditorComponent.cpp
     Source/Spawner/ROS2SpawnerEditorComponent.h
     Source/Spawner/ROS2SpawnPointEditorComponent.cpp
     Source/Spawner/ROS2SpawnPointEditorComponent.h
-    Source/Frame/ROS2FrameSystemComponent.cpp
-    Source/Frame/ROS2FrameSystemComponent.h
-    Source/Frame/ROS2FrameSystemBus.h
+    Source/Tools/ROS2EditorSystemComponent.cpp
+    Source/Tools/ROS2EditorSystemComponent.h
 )

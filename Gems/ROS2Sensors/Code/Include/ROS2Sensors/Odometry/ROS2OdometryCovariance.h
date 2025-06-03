@@ -11,13 +11,14 @@
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/RTTI/TypeInfoSimple.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <array>
 
 namespace ROS2Sensors
 {
     struct ROS2OdometryCovariance
     {
-        AZ_TYPE_INFO(ROS2OdometryCovariance, "{db015832-f621-11ed-b67e-0242ac120002}");
+        AZ_TYPE_INFO(ROS2OdometryCovariance, ROS2OdometryCovarianceTypeId);
 
         static void Reflect(AZ::ReflectContext* context);
 

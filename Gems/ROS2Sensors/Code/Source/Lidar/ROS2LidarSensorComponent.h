@@ -7,19 +7,17 @@
  */
 #pragma once
 
+#include "LidarCore.h"
+#include "LidarRaycaster.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
-#include <ROS2Sensors/Lidar/LidarRegistrarBus.h>
-#include <ROS2Sensors/Lidar/LidarSystemBus.h>
+#include <ROS2Sensors/Lidar/LidarConfigurationRequestBus.h>
+#include <ROS2Sensors/Lidar/LidarSensorConfiguration.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <vision_msgs/msg/label_info.hpp>
-
-#include "LidarCore.h"
-#include "LidarRaycaster.h"
-#include "LidarSensorConfiguration.h"
 
 namespace ROS2Sensors
 {
@@ -27,7 +25,9 @@ namespace ROS2Sensors
     //! Lidars (Light Detection and Ranging) emit laser light and measure it after reflection.
     //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation
     //! and data publishing. It requires ROS2FrameComponent.
-    class ROS2LidarSensorComponent : public ROS2SensorComponentBase<ROS2::TickBasedSource>
+    class ROS2LidarSensorComponent
+        : public ROS2SensorComponentBase<ROS2::TickBasedSource>
+        , protected LidarConfigurationRequestBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2LidarSensorComponent, ROS2Sensors::ROS2LidarSensorComponentTypeId, SensorBaseType);
@@ -44,6 +44,36 @@ namespace ROS2Sensors
 
     private:
         //////////////////////////////////////////////////////////////////////////
+        // LidarConfigurationRequestBus::Handler overrides
+        const LidarSensorConfiguration GetConfiguration() override;
+        void SetConfiguration(const LidarSensorConfiguration& configuration) override;
+        AZStd::string GetModelName() override;
+        void SetModelName(const AZStd::string& name) override;
+        bool IsSegmentationEnabled() override;
+        void SetSegmentationEnabled(bool enabled) override;
+        bool IsAddPointsAtMaxEnabled() override;
+        void SetAddPointsAtMaxEnabled(bool addPoints) override;
+        bool Is2D() override;
+        float GetMinHAngle() override;
+        void SetMinHAngle(float angle) override;
+        float GetMaxHAngle() override;
+        void SetMaxHAngle(float angle) override;
+        float GetMinVAngle() override;
+        void SetMinVAngle(float angle) override;
+        float GetMaxVAngle() override;
+        void SetMaxVAngle(float angle) override;
+        unsigned int GetLayers() override;
+        void SetLayers(unsigned int layers) override;
+        unsigned int GetNumberOfIncrements() override;
+        void SetNumberOfIncrements(unsigned int increments) override;
+        float GetMinRange() override;
+        void SetMinRange(float range) override;
+        float GetMaxRange() override;
+        void SetMaxRange(float range) override;
+        const LidarTemplate::NoiseParameters& GetNoiseParameters() override;
+        void SetNoiseParameters(const LidarTemplate::NoiseParameters& params) override;
+        //////////////////////////////////////////////////////////////////////////
+
         void FrequencyTick();
         void PublishRaycastResults(const RaycastResults& results);
 
