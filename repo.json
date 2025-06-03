@@ -4,7 +4,7 @@
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "summary": "A repository to hold various gems, projects, and templates for the O3DE engine.",
     "additional_info": "Extras gems, projects, and templates for O3DE. See the README.md at the root of this repository for more information",
-    "last_updated": "2025-02-20",
+    "last_updated": "2025-05-26",
     "$schemaVersion": "1.0.0",
     "gems_data": [
         {
@@ -122,8 +122,8 @@
                         "ROS2>=3.1.0"
                     ],
                     "compatible_engines": [
-                        "o3de-sdk>=4.1.0",
-                        "o3de>=4.1.0"
+                        "o3de-sdk>=2.3.0",
+                        "o3de>=2.3.0"
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.1.0-gem.zip",
                     "sha256": "dec32d93221e2514b59e1ac056b74c771dc4109b4599b5cf290f27a3f2486615"
@@ -7333,7 +7333,7 @@
                         }
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.0.1-template.zip",
-                    "sha256": "dd56a62e5fa1cd7d412962382845885170edcc1373c1af4b388331f073404c9d"
+                    "sha256": "c7367b98bd6ee5305eb63e0a256899aa57ee299cb553f4ab2555b8e9fef2100b"
                 },
                 {
                     "version": "2.0.2",
@@ -11579,6 +11579,5 @@
             ]
         }
     ],
-    "projects_data": [
-    ]
+    "projects_data": []
 }
