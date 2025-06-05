@@ -147,8 +147,8 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 AZ::AzToolsFramework
                 Gem::CommonFeaturesAtom.Editor.Static
                 Gem::PhysX5.Editor.Static
-                Gem::ROS2.Editor.Static
                 Gem::ROS2.Static
+                Gem::ROS2.Editor.Static
                 Gem::ROS2Sensors.Editor.API
                 ${gem_name}.Private.Object
             PRIVATE
