@@ -15,8 +15,8 @@
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBodyEvents.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
-#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <gazebo_msgs/msg/contact_state.hpp>
 #include <gazebo_msgs/msg/contacts_state.hpp>
 #include <rclcpp/publisher.hpp>
@@ -27,10 +27,12 @@ namespace ROS2Sensors
     //! It reports the location of the contact associated forces.
     //! This component publishes a contact_sensor topic.
     //! It doesn't measure torque.
-    class ROS2ContactSensorComponent : public ROS2SensorComponentBase<ROS2::TickBasedSource>
+    class ROS2ContactSensorComponent : public ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2ContactSensorComponent, ROS2Sensors::ROS2ContactSensorComponentTypeId, SensorBaseType);
+        using SensorBaseType = ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>;
+
+        AZ_COMPONENT(ROS2ContactSensorComponent, ROS2ContactSensorComponentTypeId, SensorBaseType);
         ROS2ContactSensorComponent();
         ~ROS2ContactSensorComponent() = default;
 

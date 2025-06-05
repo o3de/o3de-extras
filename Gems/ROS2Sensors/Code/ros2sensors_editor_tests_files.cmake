@@ -8,5 +8,4 @@
 
 set(FILES
     Tests/Tools/ROS2SensorsEditorTest.cpp
-    Tests/Odometry/WheelOdometrySensorConfigurationSerializationTest.cpp
 )

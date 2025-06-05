@@ -14,9 +14,9 @@
 
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Frame/ROS2Transform.h>
+#include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2Sensors/Camera/CameraConfigurationRequestBus.h>
 #include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
-#include <ROS2Sensors/Sensor/SensorConfiguration.h>
 
 namespace ROS2Sensors
 {
@@ -31,7 +31,7 @@ namespace ROS2Sensors
     public:
         ROS2CameraSensorEditorComponent();
         ROS2CameraSensorEditorComponent(
-            const SensorConfiguration& sensorConfiguration, const CameraSensorConfiguration& cameraConfiguration);
+            const ROS2::SensorConfiguration& sensorConfiguration, const CameraSensorConfiguration& cameraConfiguration);
         ~ROS2CameraSensorEditorComponent() override = default;
         AZ_EDITOR_COMPONENT(ROS2CameraSensorEditorComponent, "{3C2A86B2-AD58-4BF1-A5EF-71E0F94A2B42}");
         static void Reflect(AZ::ReflectContext* context);
@@ -71,7 +71,7 @@ namespace ROS2Sensors
         AZStd::pair<AZStd::string, ROS2::TopicConfiguration> MakeTopicConfigurationPair(
             const AZStd::string& topic, const AZStd::string& messageType, const AZStd::string& configName) const;
 
-        SensorConfiguration m_sensorConfiguration;
+        ROS2::SensorConfiguration m_sensorConfiguration;
         CameraSensorConfiguration m_cameraConfiguration;
     };
 } // namespace ROS2Sensors

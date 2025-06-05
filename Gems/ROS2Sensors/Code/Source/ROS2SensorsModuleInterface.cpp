@@ -10,11 +10,7 @@
 #include <AzCore/Memory/Memory.h>
 
 #include <Clients/ROS2SensorsSystemComponent.h>
-#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
-#include <ROS2/Sensor/Events/TickBasedSource.h>
-
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
-#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 
 #include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
 #include <Camera/ROS2CameraSensorComponent.h>
@@ -27,7 +23,6 @@
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
-#include <Odometry/ROS2WheelOdometrySensorComponent.h>
 
 namespace ROS2Sensors
 {
@@ -41,8 +36,6 @@ namespace ROS2Sensors
             m_descriptors.end(),
             {
                 ROS2SensorsSystemComponent::CreateDescriptor(),
-                ROS2SensorComponentBase<ROS2::TickBasedSource>::CreateDescriptor(),
-                ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::CreateDescriptor(),
                 ROS2CameraSensorComponent::CreateDescriptor(),
                 ROS2SystemCameraComponent::CreateDescriptor(),
                 ROS2ImageEncodingConversionComponent::CreateDescriptor(),
@@ -54,7 +47,6 @@ namespace ROS2Sensors
                 ClassSegmentationConfigurationComponent::CreateDescriptor(),
                 LidarRegistrarSystemComponent::CreateDescriptor(),
                 ROS2OdometrySensorComponent::CreateDescriptor(),
-                ROS2WheelOdometryComponent::CreateDescriptor(),
             });
     }
 

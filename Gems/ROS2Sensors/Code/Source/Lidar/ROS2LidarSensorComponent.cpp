@@ -65,7 +65,7 @@ namespace ROS2Sensors
     }
 
     ROS2LidarSensorComponent::ROS2LidarSensorComponent(
-        const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration)
+        const ROS2::SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration)
         : m_lidarCore(lidarConfiguration)
     {
         m_sensorConfiguration = sensorConfiguration;

@@ -11,10 +11,10 @@
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/RTTI/TypeInfoSimple.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2Sensors/ROS2SensorsTypeIds.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
 #include <array>
 
-namespace ROS2Sensors
+namespace ROS2Controllers
 {
     struct ROS2OdometryCovariance
     {
@@ -27,4 +27,4 @@ namespace ROS2Sensors
         AZ::Vector3 m_linearCovariance = AZ::Vector3::CreateZero();
         AZ::Vector3 m_angularCovariance = AZ::Vector3::CreateZero();
     };
-} // namespace ROS2Sensors
+} // namespace ROS2Controllers

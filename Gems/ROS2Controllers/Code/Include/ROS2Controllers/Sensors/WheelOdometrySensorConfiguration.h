@@ -10,10 +10,10 @@
 
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
-#include <ROS2Sensors/ROS2SensorsTypeIds.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
+#include <ROS2Controllers/Sensors/ROS2OdometryCovariance.h>
 
-namespace ROS2Sensors
+namespace ROS2Controllers
 {
 
     //! A structure capturing configuration of a wheel odometry sensor.
@@ -29,4 +29,4 @@ namespace ROS2Sensors
         ROS2OdometryCovariance m_poseCovariance;
         ROS2OdometryCovariance m_twistCovariance;
     };
-} // namespace ROS2Sensors
+} // namespace ROS2Controllers

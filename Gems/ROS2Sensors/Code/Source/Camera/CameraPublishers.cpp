@@ -11,8 +11,8 @@
 #include "CameraSensor.h"
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/ROS2Bus.h>
+#include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2/Utilities/ROS2Names.h>
-#include <ROS2Sensors/Sensor/SensorConfiguration.h>
 
 namespace ROS2Sensors
 {
@@ -20,7 +20,7 @@ namespace ROS2Sensors
     {
         using TopicConfigurations = AZStd::unordered_map<CameraSensorDescription::CameraChannelType, ROS2::TopicConfiguration>;
 
-        ROS2::TopicConfiguration GetTopicConfiguration(const SensorConfiguration& sensorConfiguration, const AZStd::string& key)
+        ROS2::TopicConfiguration GetTopicConfiguration(const ROS2::SensorConfiguration& sensorConfiguration, const AZStd::string& key)
         {
             auto ipos = sensorConfiguration.m_publishersConfigurations.find(key);
             AZ_Assert(ipos != sensorConfiguration.m_publishersConfigurations.end(), "Missing key in topic configuration!");
@@ -28,42 +28,42 @@ namespace ROS2Sensors
         }
 
         template<typename CameraType>
-        TopicConfigurations GetCameraTopicConfiguration([[maybe_unused]] const SensorConfiguration& sensorConfiguration)
+        TopicConfigurations GetCameraTopicConfiguration([[maybe_unused]] const ROS2::SensorConfiguration& sensorConfiguration)
         {
             AZ_Error("GetCameraTopicConfiguration", false, "Invalid camera template type!");
             return TopicConfigurations();
         }
 
         template<typename CameraType>
-        TopicConfigurations GetCameraInfoTopicConfiguration([[maybe_unused]] const SensorConfiguration& sensorConfiguration)
+        TopicConfigurations GetCameraInfoTopicConfiguration([[maybe_unused]] const ROS2::SensorConfiguration& sensorConfiguration)
         {
             AZ_Error("GetCameraInfoTopicConfiguration", false, "Invalid camera template type!");
             return TopicConfigurations();
         }
 
         template<>
-        TopicConfigurations GetCameraTopicConfiguration<CameraColorSensor>(const SensorConfiguration& sensorConfiguration)
+        TopicConfigurations GetCameraTopicConfiguration<CameraColorSensor>(const ROS2::SensorConfiguration& sensorConfiguration)
         {
             return { { CameraSensorDescription::CameraChannelType::RGB,
                        GetTopicConfiguration(sensorConfiguration, CameraConstants::ColorImageConfig) } };
         }
 
         template<>
-        TopicConfigurations GetCameraInfoTopicConfiguration<CameraColorSensor>(const SensorConfiguration& sensorConfiguration)
+        TopicConfigurations GetCameraInfoTopicConfiguration<CameraColorSensor>(const ROS2::SensorConfiguration& sensorConfiguration)
         {
             return { { CameraSensorDescription::CameraChannelType::RGB,
                        GetTopicConfiguration(sensorConfiguration, CameraConstants::ColorInfoConfig) } };
         }
 
         template<>
-        TopicConfigurations GetCameraTopicConfiguration<CameraDepthSensor>(const SensorConfiguration& sensorConfiguration)
+        TopicConfigurations GetCameraTopicConfiguration<CameraDepthSensor>(const ROS2::SensorConfiguration& sensorConfiguration)
         {
             return { { CameraSensorDescription::CameraChannelType::DEPTH,
                        GetTopicConfiguration(sensorConfiguration, CameraConstants::DepthImageConfig) } };
         }
 
         template<>
-        TopicConfigurations GetCameraInfoTopicConfiguration<CameraDepthSensor>(const SensorConfiguration& sensorConfiguration)
+        TopicConfigurations GetCameraInfoTopicConfiguration<CameraDepthSensor>(const ROS2::SensorConfiguration& sensorConfiguration)
         {
             return { { CameraSensorDescription::CameraChannelType::DEPTH,
                        GetTopicConfiguration(sensorConfiguration, CameraConstants::DepthInfoConfig) } };

@@ -13,7 +13,7 @@
 namespace ROS2Sensors
 {
     ROS2CameraSensorComponent::ROS2CameraSensorComponent(
-        const SensorConfiguration& sensorConfiguration, const CameraSensorConfiguration& cameraConfiguration)
+        const ROS2::SensorConfiguration& sensorConfiguration, const CameraSensorConfiguration& cameraConfiguration)
         : m_cameraConfiguration(cameraConfiguration)
     {
         m_sensorConfiguration = sensorConfiguration;

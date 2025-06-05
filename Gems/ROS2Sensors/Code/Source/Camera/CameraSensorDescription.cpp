@@ -16,7 +16,7 @@ namespace ROS2Sensors
         const AZStd::string& cameraName,
         const AZStd::string& effectiveNamespace,
         const CameraSensorConfiguration& configuration,
-        const SensorConfiguration& sensorConfiguration)
+        const ROS2::SensorConfiguration& sensorConfiguration)
         : m_cameraConfiguration(configuration)
         , m_sensorConfiguration(sensorConfiguration)
         , m_cameraName(cameraName)

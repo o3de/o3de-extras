@@ -10,9 +10,9 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/base.h>
-#include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
+#include <ROS2Controllers/Sensors/ROS2OdometryCovariance.h>
 
-namespace ROS2Sensors
+namespace ROS2Controllers
 {
     void ROS2OdometryCovariance::Reflect(AZ::ReflectContext* context)
     {
@@ -57,4 +57,4 @@ namespace ROS2Sensors
         // clang-format on
     }
 
-} // namespace ROS2Sensors
+} // namespace ROS2Controllers

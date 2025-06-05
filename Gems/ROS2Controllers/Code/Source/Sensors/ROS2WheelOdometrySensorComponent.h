@@ -9,13 +9,14 @@
 
 #include <AzCore/Math/Transform.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
-#include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
-#include <ROS2Sensors/Odometry/WheelOdometryConfigurationRequestBus.h>
-#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
+#include <ROS2Controllers/ROS2ControllersTypeIds.h>
+#include <ROS2Controllers/Sensors/ROS2OdometryCovariance.h>
+#include <ROS2Controllers/Sensors/WheelOdometryConfigurationRequestBus.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
 
-namespace ROS2Sensors
+namespace ROS2Controllers
 {
     class JsonROS2WheelOdometryComponentConfigSerializer : public AZ::BaseJsonSerializer
     {
@@ -35,13 +36,15 @@ namespace ROS2Sensors
     //! This is a physical sensor that takes a vehicle's configuration and computes updates from the wheels' rotations.
     //! @see <a href="https://index.ros.org/p/nav_msgs/">nav_msgs package</a>.
     class ROS2WheelOdometryComponent
-        : public ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
+        : public ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
         , protected WheelOdometryConfigurationRequestBus::Handler
     {
         friend class JsonROS2WheelOdometryComponentConfigSerializer;
 
     public:
-        AZ_COMPONENT(ROS2WheelOdometryComponent, ROS2Sensors::ROS2WheelOdometryComponentTypeId, SensorBaseType);
+        using SensorBaseType = ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>;
+
+        AZ_COMPONENT(ROS2WheelOdometryComponent, ROS2WheelOdometryComponentTypeId, SensorBaseType);
         ROS2WheelOdometryComponent();
         ~ROS2WheelOdometryComponent() = default;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
@@ -73,4 +76,4 @@ namespace ROS2Sensors
         void OnOdometryEvent();
         void OnPhysicsEvent(float physicsDeltaTime);
     };
-} // namespace ROS2Sensors
+} // namespace ROS2Controllers

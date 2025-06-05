@@ -7,10 +7,10 @@
  */
 
 #include <AzCore/Serialization/EditContext.h>
-#include <ROS2Sensors/Odometry/ROS2OdometryCovariance.h>
-#include <ROS2Sensors/Odometry/WheelOdometrySensorConfiguration.h>
+#include <ROS2Controllers/Sensors/ROS2OdometryCovariance.h>
+#include <ROS2Controllers/Sensors/WheelOdometrySensorConfiguration.h>
 
-namespace ROS2Sensors
+namespace ROS2Controllers
 {
     void WheelOdometrySensorConfiguration::Reflect(AZ::ReflectContext* context)
     {
@@ -40,4 +40,4 @@ namespace ROS2Sensors
             }
         }
     }
-} // namespace ROS2Sensors
+} // namespace ROS2Controllers

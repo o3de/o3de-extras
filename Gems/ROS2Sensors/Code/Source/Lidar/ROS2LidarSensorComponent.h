@@ -12,9 +12,9 @@
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <ROS2Sensors/Lidar/LidarConfigurationRequestBus.h>
 #include <ROS2Sensors/Lidar/LidarSensorConfiguration.h>
-#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <vision_msgs/msg/label_info.hpp>
@@ -26,13 +26,15 @@ namespace ROS2Sensors
     //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation
     //! and data publishing. It requires ROS2FrameComponent.
     class ROS2LidarSensorComponent
-        : public ROS2SensorComponentBase<ROS2::TickBasedSource>
+        : public ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>
         , protected LidarConfigurationRequestBus::Handler
     {
     public:
-        AZ_COMPONENT(ROS2LidarSensorComponent, ROS2Sensors::ROS2LidarSensorComponentTypeId, SensorBaseType);
+        using SensorBaseType = ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>;
+
+        AZ_COMPONENT(ROS2LidarSensorComponent, ROS2LidarSensorComponentTypeId, SensorBaseType);
         ROS2LidarSensorComponent();
-        ROS2LidarSensorComponent(const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration);
+        ROS2LidarSensorComponent(const ROS2::SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration);
         ~ROS2LidarSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);

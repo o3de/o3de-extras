@@ -17,10 +17,10 @@
 #include "CameraSensor.h"
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <ROS2Sensors/Camera/CameraConfigurationRequestBus.h>
 #include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
-#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 
 namespace ROS2Sensors
 {
@@ -32,18 +32,21 @@ namespace ROS2Sensors
     //!   - camera vertical field of view in degrees
     //! Camera frustum is facing negative Z axis; image plane is parallel to X,Y plane: X - right, Y - up
     class ROS2CameraSensorComponent
-        : public ROS2SensorComponentBase<ROS2::TickBasedSource>
+        : public ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>
         , protected CameraConfigurationRequestBus::Handler
     {
     public:
+        using SensorBaseType = ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>;
+
         ROS2CameraSensorComponent() = default;
-        ROS2CameraSensorComponent(const SensorConfiguration& sensorConfiguration, const CameraSensorConfiguration& cameraConfiguration);
+        ROS2CameraSensorComponent(
+            const ROS2::SensorConfiguration& sensorConfiguration, const CameraSensorConfiguration& cameraConfiguration);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         ~ROS2CameraSensorComponent() override = default;
 
-        AZ_COMPONENT(ROS2CameraSensorComponent, ROS2Sensors::ROS2CameraSensorComponentTypeId, SensorBaseType);
+        AZ_COMPONENT(ROS2CameraSensorComponent, ROS2CameraSensorComponentTypeId, SensorBaseType);
         static void Reflect(AZ::ReflectContext* context);
 
         // AzToolsFramework::Components::EditorComponentBase overrides ..

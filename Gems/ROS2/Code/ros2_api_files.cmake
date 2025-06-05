@@ -18,6 +18,9 @@ set(FILES
     Include/ROS2/Frame/ROS2FrameComponent.h
     Include/ROS2/Frame/ROS2FrameConfiguration.h
     Include/ROS2/Frame/ROS2Transform.h
+    Include/ROS2/Sensor/SensorConfiguration.h
+    Include/ROS2/Sensor/SensorConfigurationRequestBus.h
+    Include/ROS2/Sensor/ROS2SensorComponentBase.h
     Include/ROS2/Sensor/Events/EventSourceAdapter.h
     Include/ROS2/Sensor/Events/SensorEventSource.h
     Include/ROS2/Sensor/Events/PhysicsBasedSource.h

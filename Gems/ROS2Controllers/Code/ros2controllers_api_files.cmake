@@ -21,5 +21,8 @@ set(FILES
     Include/ROS2Controllers/Manipulation/MotorizedJoints/PidMotorControllerComponent.h
     Include/ROS2Controllers/RobotControl/ControlConfiguration.h
     Include/ROS2Controllers/RobotControl/ControlSubscriptionHandler.h
+    Include/ROS2Controllers/Sensors/ROS2OdometryCovariance.h
+    Include/ROS2Controllers/Sensors/WheelOdometrySensorConfiguration.h
+    Include/ROS2Controllers/Sensors/WheelOdometryConfigurationRequestBus.h
     Include/ROS2Controllers/VehicleDynamics/VehicleInputControlBus.h
 )

@@ -29,6 +29,7 @@
 #include <RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.h>
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
+#include <Sensors/ROS2WheelOdometrySensorComponent.h>
 #include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
@@ -59,6 +60,7 @@ namespace ROS2Controllers
                 RigidBodyTwistControlComponent::CreateDescriptor(),
                 SkidSteeringControlComponent::CreateDescriptor(),
                 ROS2RobotControlComponent::CreateDescriptor(),
+                ROS2WheelOdometryComponent::CreateDescriptor(),
                 VehicleDynamics::AckermannVehicleModelComponent::CreateDescriptor(),
                 VehicleDynamics::SkidSteeringModelComponent::CreateDescriptor(),
                 VehicleDynamics::WheelControllerComponent::CreateDescriptor(),

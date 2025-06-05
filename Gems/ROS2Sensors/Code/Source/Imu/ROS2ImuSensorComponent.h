@@ -14,9 +14,9 @@
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <ROS2Sensors/Imu/ImuConfigurationRequestBus.h>
 #include <ROS2Sensors/Imu/ImuSensorConfiguration.h>
-#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 
@@ -26,13 +26,15 @@ namespace ROS2Sensors
     //! IMUs typically include gyroscopes, accelerometers and magnetometers. This component encapsulates data
     //! acquisition and its publishing to ROS2 ecosystem. IMU Component requires ROS2FrameComponent.
     class ROS2ImuSensorComponent
-        : public ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
+        : public ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>
         , protected ImuConfigurationRequestBus::Handler
     {
     public:
-        AZ_COMPONENT(ROS2ImuSensorComponent, ROS2Sensors::ROS2ImuSensorComponentTypeId, SensorBaseType);
+        using SensorBaseType = ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>;
+
+        AZ_COMPONENT(ROS2ImuSensorComponent, ROS2ImuSensorComponentTypeId, SensorBaseType);
         ROS2ImuSensorComponent();
-        ROS2ImuSensorComponent(const SensorConfiguration& sensorConfiguration, const ImuSensorConfiguration& imuConfiguration);
+        ROS2ImuSensorComponent(const ROS2::SensorConfiguration& sensorConfiguration, const ImuSensorConfiguration& imuConfiguration);
         ~ROS2ImuSensorComponent() = default;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void Reflect(AZ::ReflectContext* context);

@@ -57,7 +57,7 @@ namespace ROS2Sensors
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(type, ls));
     }
     ROS2Lidar2DSensorComponent::ROS2Lidar2DSensorComponent(
-        const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration)
+        const ROS2::SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration)
         : m_lidarCore(lidarConfiguration)
     {
         m_sensorConfiguration = sensorConfiguration;

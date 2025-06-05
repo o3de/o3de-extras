@@ -15,6 +15,7 @@
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/ROS2TypeIds.h>
+#include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 
 #include <AzCore/Serialization/EditContext.h>
@@ -41,6 +42,7 @@ namespace ROS2
         QoS::Reflect(context);
         TopicConfiguration::Reflect(context);
         PublisherConfiguration::Reflect(context);
+        SensorConfiguration::Reflect(context);
 
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {

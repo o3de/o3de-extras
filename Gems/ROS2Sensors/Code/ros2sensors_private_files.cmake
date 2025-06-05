@@ -11,7 +11,6 @@ set(FILES
     Source/ROS2SensorsModuleInterface.h
     Source/Clients/ROS2SensorsSystemComponent.cpp
     Source/Clients/ROS2SensorsSystemComponent.h
-    Source/Sensor/SensorConfiguration.cpp
     Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.cpp
     Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
     Source/Camera/CameraConstants.h
@@ -56,8 +55,4 @@ set(FILES
     Source/Lidar/ROS2LidarSensorComponent.h
     Source/Odometry/ROS2OdometrySensorComponent.cpp
     Source/Odometry/ROS2OdometrySensorComponent.h
-    Source/Odometry/ROS2WheelOdometrySensorComponent.cpp
-    Source/Odometry/ROS2WheelOdometrySensorComponent.h
-    Source/Odometry/WheelOdometrySensorConfiguration.cpp
-    Source/Odometry/ROS2OdometryCovariance.cpp
 )

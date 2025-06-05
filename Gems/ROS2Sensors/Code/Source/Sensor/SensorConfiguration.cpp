@@ -8,7 +8,7 @@
 
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
-#include <ROS2Sensors/Sensor/SensorConfiguration.h>
+#include <ROS2/Sensor/SensorConfiguration.h>
 
 namespace ROS2Sensors
 {
