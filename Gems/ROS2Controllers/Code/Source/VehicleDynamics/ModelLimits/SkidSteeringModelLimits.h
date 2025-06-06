@@ -21,6 +21,8 @@ namespace ROS2Controllers::VehicleDynamics
     public:
         AZ_RTTI(SkidSteeringModelLimits, "{23420EFB-BB62-48C7-AD37-E50580A53C39}", VehicleModelLimits);
         SkidSteeringModelLimits() = default;
+        SkidSteeringModelLimits(
+            const float linearLimit, const float angularLimit, const float linearAcceleration, const float angularAcceleration);
 
         static void Reflect(AZ::ReflectContext* context);
 
@@ -32,8 +34,6 @@ namespace ROS2Controllers::VehicleDynamics
         float GetAngularAcceleration() const;
         float GetLinearSpeedLimit() const;
         float GetAngularSpeedLimit() const;
-
-        void SetAngularAccelerationLimit(const float limit);
 
     private:
         float m_linearLimit = 2.0f; //!< [m/s] Maximum travel velocity.

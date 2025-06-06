@@ -50,6 +50,14 @@ namespace ROS2Controllers
             const float acceleration,
             const PidConfiguration& steeringPid) override;
         AZ::Component* CreateAckermannControlComponent(AZ::Entity& entity) override;
+        AZ::Component* CreateSkidSteeringModelComponent(
+            AZ::Entity& entity,
+            const VehicleDynamics::VehicleConfiguration& configuration,
+            const float linearLimit,
+            const float angularLimit,
+            const float linearAcceleration,
+            const float angularAcceleration) override;
+        AZ::Component* CreateSkidSteeringControlComponent(AZ::Entity& entity) override;
         ////////////////////////////////////////////////////////////////////////
 
     private:

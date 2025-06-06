@@ -62,6 +62,27 @@ namespace ROS2Controllers
         //! @param entity The entity to which the control component will be added.
         //! @return A pointer to the newly created AZ::Component representing the Ackermann Control (or nullptr if failed).
         virtual AZ::Component* CreateAckermannControlComponent(AZ::Entity& entity) = 0;
+
+        //! Create a new Skid Steering Model component.
+        //! @param entity The entity to which the skid steering model component will be added.
+        //! @param configuration The configuration for the skid steering vehicle model.
+        //! @param linearLimit The maximum linear speed limit for the skid steering model [m/s].
+        //! @param angularLimit The maximum angular speed limit for the skid steering model [Rad/s].
+        //! @param linearAcceleration The maximum linear acceleration for the skid steering model [m*s^(-2)].
+        //! @param angularAcceleration The maximum angular acceleration for the skid steering model [rad*s^(-2)].
+        //! @return A pointer to the newly created AZ::Component representing the Skid Steering Model (or nullptr if failed).
+        virtual AZ::Component* CreateSkidSteeringModelComponent(
+            AZ::Entity& entity,
+            const VehicleDynamics::VehicleConfiguration& configuration,
+            const float linearLimit,
+            const float angularLimit,
+            const float linearAcceleration,
+            const float angularAcceleration) = 0;
+
+        //! Create a new Skid Steering Control component.
+        //! @param entity The entity to which the control component will be added.
+        //! @return A pointer to the newly created AZ::Component representing the Skid Steering Control (or nullptr if failed).
+        virtual AZ::Component* CreateSkidSteeringControlComponent(AZ::Entity& entity) = 0;
     };
 
     class ROS2ControllersEditorBusTraits : public AZ::EBusTraits

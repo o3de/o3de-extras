@@ -12,8 +12,10 @@
 
 #include <ROS2Controllers/ROS2ControllersTypeIds.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
+#include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
+#include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/ModelLimits/AckermannModelLimits.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
 
@@ -113,6 +115,25 @@ namespace ROS2Controllers
     AZ::Component* ROS2ControllersEditorSystemComponent::CreateAckermannControlComponent(AZ::Entity& entity)
     {
         return CreateComponent<AckermannControlComponent>(entity);
+    }
+
+    AZ::Component* ROS2ControllersEditorSystemComponent::CreateSkidSteeringModelComponent(
+        AZ::Entity& entity,
+        const VehicleDynamics::VehicleConfiguration& configuration,
+        const float linearLimit,
+        const float angularLimit,
+        const float linearAcceleration,
+        const float angularAcceleration)
+    {
+        VehicleDynamics::SkidSteeringModelLimits modelLimits(linearLimit, angularLimit, linearAcceleration, angularAcceleration);
+
+        return CreateComponent<VehicleDynamics::SkidSteeringModelComponent>(
+            entity, configuration, VehicleDynamics::SkidSteeringDriveModel(modelLimits));
+    }
+
+    AZ::Component* ROS2ControllersEditorSystemComponent::CreateSkidSteeringControlComponent(AZ::Entity& entity)
+    {
+        return CreateComponent<ROS2Controllers::SkidSteeringControlComponent>(entity);
     }
 
 } // namespace ROS2Controllers
