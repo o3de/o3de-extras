@@ -17,8 +17,8 @@ namespace ROS2RobotImporter::SDFormat::ROS2ModelPluginHooks
     // //! Get a mapping of SDFormat skid_steer_drive and diff_drive plugins into O3DE components.
     // ModelPluginImporterHook ROS2SkidSteeringModel();
 
-    // //! Get a mapping of SDFormat ackermann_drive plugin into O3DE components.
-    // ModelPluginImporterHook ROS2AckermannModel();
+    //! Get a mapping of SDFormat ackermann_drive plugin into O3DE components.
+    ModelPluginImporterHook ROS2AckermannModel();
 
     // //! Get a mapping of SDFormat joint_state_publisher plugin into O3DE components.
     // ModelPluginImporterHook ROS2JointStatePublisherModel();
