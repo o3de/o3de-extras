@@ -22,8 +22,8 @@ namespace ROS2Controllers
     // so they use the Same TypeId
     inline constexpr const char* ROS2ControllersEditorModuleTypeId = ROS2ControllersModuleTypeId;
 
-    // Interface TypeIds
-    inline constexpr const char* ROS2ControllersRequestsTypeId = "{2E0AB230-743E-4BCA-8194-D1BC7C9341EA}";
+    // Editor Interface TypeIds
+    inline constexpr const char* ROS2ControllersEditorRequestsTypeId = "{2E0AB230-743E-4BCA-8194-D1BC7C9341EA}";
 
     // Sensors TypeIds
     inline constexpr const char* ROS2WheelOdometryComponentTypeId = "{9BDB8C23-AC76-4C25-8D35-37AAA9F43FAC}";

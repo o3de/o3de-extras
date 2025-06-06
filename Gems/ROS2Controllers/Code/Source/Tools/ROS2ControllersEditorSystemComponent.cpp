@@ -67,4 +67,32 @@ namespace ROS2Controllers
         ROS2ControllersSystemComponent::Deactivate();
     }
 
+    AZ::Component* ROS2ControllersEditorSystemComponent::CreateWheelControllerComponent(
+        AZ::Entity& entity, const AZ::EntityId& steeringEntity, const float steeringScale)
+    {
+        return nullptr; // Implementation of this function is not provided in the original code snippet.
+    }
+
+    AZ::Component* ROS2ControllersEditorSystemComponent::CreateROS2RobotControlComponent(
+        AZ::Entity& entity, const ControlConfiguration& configuration)
+    {
+        return nullptr; // Implementation of this function is not provided in the original code snippet.
+    }
+
+    AZ::Component* ROS2ControllersEditorSystemComponent::CreateAckermannVehicleModelComponent(
+        AZ::Entity& entity,
+        const VehicleDynamics::VehicleConfiguration& configuration,
+        const float speedLimit,
+        const float steeringLimit,
+        const float acceleration,
+        const PidConfiguration& steeringPid)
+    {
+        return nullptr; // Implementation of this function is not provided in the original code snippet.
+    }
+
+    AZ::Component* ROS2ControllersEditorSystemComponent::CreateAckermannControlComponent(AZ::Entity& entity)
+    {
+        return nullptr; // Implementation of this function is not provided in the original code snippet.
+    }
+
 } // namespace ROS2Controllers
