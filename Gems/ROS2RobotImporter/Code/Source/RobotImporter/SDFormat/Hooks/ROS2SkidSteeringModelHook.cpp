@@ -8,12 +8,13 @@
 
 #include <AzCore/Math/MathUtils.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
-#include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
-#include <RobotControl/ROS2RobotControlComponent.h>
+#include <ROS2Controllers/Controllers/PidConfiguration.h>
+#include <ROS2Controllers/ROS2ControllersEditorBus.h>
+#include <ROS2Controllers/RobotControl/ControlConfiguration.h>
+#include <ROS2Controllers/VehicleDynamics/AxleConfiguration.h>
+#include <ROS2Controllers/VehicleDynamics/VehicleConfiguration.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
-#include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
-#include <VehicleDynamics/Utilities.h>
 
 #include <sdf/Joint.hh>
 #include <sdf/Link.hh>
@@ -24,10 +25,10 @@ namespace ROS2RobotImporter::SDFormat
 {
     namespace SkidSteeringParser
     {
-        VehicleDynamics::VehicleConfiguration CreateVehicleConfiguration(
+        ROS2Controllers::VehicleDynamics::VehicleConfiguration CreateVehicleConfiguration(
             const sdf::ElementPtr element, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
         {
-            VehicleDynamics::VehicleConfiguration configuration;
+            ROS2Controllers::VehicleDynamics::VehicleConfiguration configuration;
             auto addAxle = [&sdfModel, &createdEntities, &configuration](
                                const std::string& jointNameLeft,
                                const std::string& jointNameRight,
@@ -38,13 +39,30 @@ namespace ROS2RobotImporter::SDFormat
                 const auto entityIdRight = HooksUtils::GetJointEntityId(jointNameRight, sdfModel, createdEntities);
                 if (entityIdLeft.IsValid() && entityIdRight.IsValid())
                 {
+                    AZ::Entity* entityLeft = nullptr;
+                    AZ::Entity* entityRight = nullptr;
+                    AZ::ComponentApplicationBus::BroadcastResult(entityLeft, &AZ::ComponentApplicationRequests::FindEntity, entityIdLeft);
+                    AZ::ComponentApplicationBus::BroadcastResult(entityRight, &AZ::ComponentApplicationRequests::FindEntity, entityIdRight);
+                    auto interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+                    if (entityLeft && entityRight && interface)
+                    {
+                        interface->CreateWheelControllerComponent(*entityLeft, AZ::EntityId(), 0.0f);
+                        interface->CreateWheelControllerComponent(*entityRight, AZ::EntityId(), 0.0f);
+                    }
+                    else
+                    {
+                        AZ_Warning(
+                            "ROS2RobotImporter",
+                            false,
+                            "ROS2ControllersInterface is not available. Cannot create wheel controller components.");
+                    }
+
                     HooksUtils::EnableMotor(entityIdLeft);
-                    HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(entityIdLeft);
                     HooksUtils::EnableMotor(entityIdRight);
-                    HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(entityIdRight);
+
                     constexpr bool steering = false; // Skid steering model does not have any steering wheels.
                     constexpr bool drive = true;
-                    configuration.m_axles.emplace_back(VehicleDynamics::Utilities::Create2WheelAxle(
+                    configuration.m_axles.emplace_back(ROS2Controllers::VehicleDynamics::AxleConfiguration(
                         entityIdLeft, entityIdRight, AZStd::move(tag), wheelDiameter / 2.0f, steering, drive));
                 }
                 else
@@ -146,28 +164,9 @@ namespace ROS2RobotImporter::SDFormat
             }
 
             AZ_Warning(
-                "CreateVehicleConfiguration", !configuration.m_axles.empty(), "VehicleConfiguration parsing error: cannot find any axles.");
+                "ROS2SkidSteeringModelHook", !configuration.m_axles.empty(), "VehicleConfiguration parsing error: cannot find any axles.");
 
             return configuration;
-        }
-
-        VehicleDynamics::SkidSteeringModelLimits CreateModelLimits(const sdf::ElementPtr element)
-        {
-            VehicleDynamics::SkidSteeringModelLimits modelLimits;
-            if (element->HasElement("wheelAcceleration"))
-            {
-                modelLimits.SetAngularAccelerationLimit(element->Get<float>("wheelAcceleration"));
-            }
-            else if (element->HasElement("max_wheel_acceleration"))
-            {
-                modelLimits.SetAngularAccelerationLimit(element->Get<float>("max_wheel_acceleration"));
-            }
-            else
-            {
-                AZ_Warning("CreateModelLimits", false, "VehicleConfiguration parsing error: cannot determine model limits.");
-            }
-
-            return modelLimits;
         }
     } // namespace SkidSteeringParser
 
@@ -176,11 +175,11 @@ namespace ROS2RobotImporter::SDFormat
         ModelPluginImporterHook importerHook;
         importerHook.m_pluginNames =
             AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_skid_steer_drive.so", "libgazebo_ros_diff_drive.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{
-            ">wheelSeparation",        ">wheelDiameter",   ">wheelAcceleration", ">leftJoint",      ">rightJoint",       ">wheelDiameter",
-            ">leftFrontJoint",         ">rightFrontJoint", ">leftRearJoint",     ">rightRearJoint", ">wheel_separation", ">wheel_diameter",
-            ">max_wheel_acceleration", ">num_wheel_pairs", ">left_joint",        ">right_joint"
-        };
+        importerHook.m_supportedPluginParams =
+            AZStd::unordered_set<AZStd::string>{ ">wheelSeparation", ">wheelDiameter",    ">leftJoint",       ">rightJoint",
+                                                 ">wheelDiameter",   ">leftFrontJoint",   ">rightFrontJoint", ">leftRearJoint",
+                                                 ">rightRearJoint",  ">wheel_separation", ">wheel_diameter",  ">num_wheel_pairs",
+                                                 ">left_joint",      ">right_joint" };
 
         importerHook.m_sdfPluginToComponentCallback =
             [](AZ::Entity& entity, const sdf::Plugin& sdfPlugin, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
@@ -188,18 +187,30 @@ namespace ROS2RobotImporter::SDFormat
         {
             // Parse parameters
             const sdf::ElementPtr element = sdfPlugin.Element();
-            VehicleDynamics::VehicleConfiguration vehicleConfiguration =
-                SkidSteeringParser::CreateVehicleConfiguration(element, sdfModel, createdEntities);
-            VehicleDynamics::SkidSteeringModelLimits modelLimits = SkidSteeringParser::CreateModelLimits(element);
+            const auto vehicleConfiguration = SkidSteeringParser::CreateVehicleConfiguration(element, sdfModel, createdEntities);
+            ROS2Controllers::ControlConfiguration controlConfiguration;
+            controlConfiguration.m_steering = ROS2Controllers::ControlConfiguration::Steering::Twist;
+
+            // libgazebo_ros_diff_drive plugin does not implement all parameters, use O3DE defaults:
+            constexpr float linearLimit = 2.0f;
+            constexpr float angularLimit = 3.5f;
+            constexpr float linearAcceleration = 3.5f;
+            constexpr float angularAcceleration = 2.0f;
 
             // Create required components
+            auto interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+            if (!interface)
+            {
+                return AZ::Failure(AZStd::string("ROS2ControllersInterface is not available. Cannot create components."));
+            }
+
             HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity);
-            HooksUtils::CreateComponent<ROS2Controllers::ROS2RobotControlComponent>(entity);
-            HooksUtils::CreateComponent<ROS2Controllers::VehicleDynamics::SkidSteeringModelComponent>(
-                entity, vehicleConfiguration, VehicleDynamics::SkidSteeringDriveModel(modelLimits));
+            interface->CreateROS2RobotControlComponent(entity, controlConfiguration);
+            interface->CreateSkidSteeringModelComponent(
+                entity, vehicleConfiguration, linearLimit, angularLimit, linearAcceleration, angularAcceleration);
 
             // Create Skid Steering Control Component
-            if (HooksUtils::CreateComponent<ROS2Controllers::SkidSteeringControlComponent>(entity))
+            if (interface->CreateSkidSteeringControlComponent(entity))
             {
                 return AZ::Success();
             }
