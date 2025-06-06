@@ -64,7 +64,6 @@ set(FILES
     Source/Utilities/JointUtilities.h
     Source/Utilities/Controllers/PidConfiguration.cpp
     Source/VehicleDynamics/AxleConfiguration.cpp
-    Source/VehicleDynamics/AxleConfiguration.h
     Source/VehicleDynamics/DriveModel.cpp
     Source/VehicleDynamics/DriveModel.h
     Source/VehicleDynamics/DriveModels/AckermannDriveModel.cpp
@@ -75,7 +74,6 @@ set(FILES
     Source/VehicleDynamics/Utilities.cpp
     Source/VehicleDynamics/Utilities.h
     Source/VehicleDynamics/VehicleConfiguration.cpp
-    Source/VehicleDynamics/VehicleConfiguration.h
     Source/VehicleDynamics/VehicleInputs.cpp
     Source/VehicleDynamics/VehicleInputs.h
     Source/VehicleDynamics/VehicleModelComponent.cpp

@@ -24,5 +24,7 @@ set(FILES
     Include/ROS2Controllers/Sensors/ROS2OdometryCovariance.h
     Include/ROS2Controllers/Sensors/WheelOdometrySensorConfiguration.h
     Include/ROS2Controllers/Sensors/WheelOdometryConfigurationRequestBus.h
+    Include/ROS2Controllers/VehicleDynamics/AxleConfiguration.h
+    Include/ROS2Controllers/VehicleDynamics/VehicleConfiguration.h
     Include/ROS2Controllers/VehicleDynamics/VehicleInputControlBus.h
 )

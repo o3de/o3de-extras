@@ -9,7 +9,6 @@
 #include "VehicleModelComponent.h"
 #include "DriveModels/AckermannDriveModel.h"
 #include "Utilities.h"
-#include "VehicleConfiguration.h"
 #include "VehicleModelLimits.h"
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -17,6 +16,8 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
+#include <ROS2Controllers/VehicleDynamics/VehicleConfiguration.h>
+
 namespace ROS2Controllers::VehicleDynamics
 {
     void VehicleModelComponent::Activate()

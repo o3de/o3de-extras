@@ -6,9 +6,9 @@
  *
  */
 
-#include "AxleConfiguration.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
+#include <ROS2Controllers/VehicleDynamics/AxleConfiguration.h>
 
 namespace ROS2Controllers::VehicleDynamics
 {

@@ -7,13 +7,13 @@
  */
 #pragma once
 
-#include "AxleConfiguration.h"
-#include "VehicleConfiguration.h"
 #include "WheelDynamicsData.h"
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
+#include <ROS2Controllers/VehicleDynamics/AxleConfiguration.h>
+#include <ROS2Controllers/VehicleDynamics/VehicleConfiguration.h>
 
 namespace ROS2Controllers::VehicleDynamics::Utilities
 {
