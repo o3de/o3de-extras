@@ -11,6 +11,11 @@
 #include <AzCore/Serialization/SerializeContext.h>
 
 #include <ROS2Controllers/ROS2ControllersTypeIds.h>
+#include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
+#include <RobotControl/ROS2RobotControlComponent.h>
+#include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
+#include <VehicleDynamics/ModelLimits/AckermannModelLimits.h>
+#include <VehicleDynamics/WheelControllerComponent.h>
 
 namespace ROS2Controllers
 {
@@ -28,9 +33,21 @@ namespace ROS2Controllers
         }
     }
 
-    ROS2ControllersEditorSystemComponent::ROS2ControllersEditorSystemComponent() = default;
+    ROS2ControllersEditorSystemComponent::ROS2ControllersEditorSystemComponent()
+    {
+        if (ROS2ControllersEditorInterface::Get() == nullptr)
+        {
+            ROS2ControllersEditorInterface::Register(this);
+        }
+    }
 
-    ROS2ControllersEditorSystemComponent::~ROS2ControllersEditorSystemComponent() = default;
+    ROS2ControllersEditorSystemComponent::~ROS2ControllersEditorSystemComponent()
+    {
+        if (ROS2ControllersEditorInterface::Get() == this)
+        {
+            ROS2ControllersEditorInterface::Unregister(this);
+        }
+    }
 
     void ROS2ControllersEditorSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
@@ -70,13 +87,13 @@ namespace ROS2Controllers
     AZ::Component* ROS2ControllersEditorSystemComponent::CreateWheelControllerComponent(
         AZ::Entity& entity, const AZ::EntityId& steeringEntity, const float steeringScale)
     {
-        return nullptr; // Implementation of this function is not provided in the original code snippet.
+        return CreateComponent<VehicleDynamics::WheelControllerComponent>(entity, steeringEntity, steeringScale);
     }
 
     AZ::Component* ROS2ControllersEditorSystemComponent::CreateROS2RobotControlComponent(
         AZ::Entity& entity, const ControlConfiguration& configuration)
     {
-        return nullptr; // Implementation of this function is not provided in the original code snippet.
+        return CreateComponent<ROS2Controllers::ROS2RobotControlComponent>(entity, configuration);
     }
 
     AZ::Component* ROS2ControllersEditorSystemComponent::CreateAckermannVehicleModelComponent(
@@ -87,12 +104,15 @@ namespace ROS2Controllers
         const float acceleration,
         const PidConfiguration& steeringPid)
     {
-        return nullptr; // Implementation of this function is not provided in the original code snippet.
+        VehicleDynamics::AckermannModelLimits modelLimits(speedLimit, steeringLimit, acceleration);
+
+        return CreateComponent<VehicleDynamics::AckermannVehicleModelComponent>(
+            entity, configuration, VehicleDynamics::AckermannDriveModel(modelLimits, steeringPid));
     }
 
     AZ::Component* ROS2ControllersEditorSystemComponent::CreateAckermannControlComponent(AZ::Entity& entity)
     {
-        return nullptr; // Implementation of this function is not provided in the original code snippet.
+        return CreateComponent<AckermannControlComponent>(entity);
     }
 
 } // namespace ROS2Controllers
