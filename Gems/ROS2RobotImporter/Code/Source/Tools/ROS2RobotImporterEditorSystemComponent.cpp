@@ -74,8 +74,8 @@ namespace ROS2RobotImporter
         // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
         m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2AckermannModel());
         m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2SkidSteeringModel());
+        m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2JointPoseTrajectoryModel());
         // m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2JointStatePublisherModel());
-        // m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2JointPoseTrajectoryModel());
 
         // Query user-defined sensor and plugin hooks
         auto serializeContext = AZ::Interface<AZ::ComponentApplicationRequests>::Get()->GetSerializeContext();
