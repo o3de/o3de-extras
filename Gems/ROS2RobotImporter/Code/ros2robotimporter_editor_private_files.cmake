@@ -34,8 +34,7 @@ set(FILES
     Source/RobotImporter/SDFormat/Hooks/ROS2GNSSSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2ImuSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2JointPoseTrajectoryModelHook.cpp
-    # temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
-    # Source/RobotImporter/SDFormat/Hooks/ROS2JointStatePublisherModelHook.cpp
+    Source/RobotImporter/SDFormat/Hooks/ROS2JointStatePublisherModelHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2LidarSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2SkidSteeringModelHook.cpp
     Source/RobotImporter/SDFormat/ROS2ModelPluginHooks.h
