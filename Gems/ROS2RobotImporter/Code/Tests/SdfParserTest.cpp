@@ -610,65 +610,68 @@ namespace UnitTest
         EXPECT_EQ(unsupportedLaserParams[0U], "plugin \"librayplugin.so\"");
     }
 
-    // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
-    // TEST_F(SdfParserTest, SensorPluginImporterHookCheck)
-    // {
-    //     {
-    //         const auto xmlStr = GetSdfWithTwoSensors();
-    //         const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, {});
-    //         ASSERT_TRUE(sdfRootOutcome);
-    //         const auto& sdfRoot = sdfRootOutcome.GetRoot();
-    //         const auto* sdfModel = sdfRoot.Model();
-    //         ASSERT_NE(nullptr, sdfModel);
-    //         const sdf::ElementPtr cameraElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
-    //         const auto& cameraImporterHook = SDFormat::ROS2SensorHooks::ROS2CameraSensor();
+    TEST_F(SdfParserTest, SensorPluginImporterHookCheck)
+    {
+        {
+            const auto xmlStr = GetSdfWithTwoSensors();
+            const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, {});
+            ASSERT_TRUE(sdfRootOutcome);
+            const auto& sdfRoot = sdfRootOutcome.GetRoot();
+            const auto* sdfModel = sdfRoot.Model();
+            ASSERT_NE(nullptr, sdfModel);
+            const sdf::ElementPtr cameraElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
+            const auto& cameraImporterHook = SDFormat::ROS2SensorHooks::ROS2CameraSensor();
 
-    //         const auto& unsupportedCameraParams = Utils::SDFormat::GetUnsupportedParams(
-    //             cameraElement, cameraImporterHook.m_supportedSensorParams, cameraImporterHook.m_pluginNames,
-    //             cameraImporterHook.m_supportedPluginParams);
-    //         EXPECT_EQ(unsupportedCameraParams.size(), 1U);
-    //         EXPECT_EQ(unsupportedCameraParams[0U], "plugin \"libgazebo_ros_camera.so\": >camera_name");
+            const auto& unsupportedCameraParams = Utils::SDFormat::GetUnsupportedParams(
+                cameraElement,
+                cameraImporterHook.m_supportedSensorParams,
+                cameraImporterHook.m_pluginNames,
+                cameraImporterHook.m_supportedPluginParams);
+            EXPECT_EQ(unsupportedCameraParams.size(), 1U);
+            EXPECT_EQ(unsupportedCameraParams[0U], "plugin \"libgazebo_ros_camera.so\": >camera_name");
 
-    //         sdf::Plugin plug;
-    //         plug.SetName("test_camera");
-    //         plug.SetFilename("libgazebo_ros_camera.so");
-    //         EXPECT_TRUE(Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
-    //         plug.SetFilename("/usr/lib/libgazebo_ros_openni_kinect.so");
-    //         EXPECT_TRUE(Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
-    //         plug.SetFilename("~/dev/libgazebo_ros_imu.so");
-    //         EXPECT_FALSE(Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
-    //         plug.SetFilename("libgazebo_ros_camera");
-    //         EXPECT_FALSE(Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
+            sdf::Plugin plug;
+            plug.SetName("test_camera");
+            plug.SetFilename("libgazebo_ros_camera.so");
+            EXPECT_TRUE(Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
+            plug.SetFilename("/usr/lib/libgazebo_ros_openni_kinect.so");
+            EXPECT_TRUE(Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
+            plug.SetFilename("~/dev/libgazebo_ros_imu.so");
+            EXPECT_FALSE(Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
+            plug.SetFilename("libgazebo_ros_camera");
+            EXPECT_FALSE(Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
 
-    //         EXPECT_TRUE(cameraImporterHook.m_sensorTypes.contains(sdf::SensorType::CAMERA));
-    //         EXPECT_TRUE(cameraImporterHook.m_sensorTypes.contains(sdf::SensorType::DEPTH_CAMERA));
-    //         EXPECT_FALSE(cameraImporterHook.m_sensorTypes.contains(sdf::SensorType::GPS));
+            EXPECT_TRUE(cameraImporterHook.m_sensorTypes.contains(sdf::SensorType::CAMERA));
+            EXPECT_TRUE(cameraImporterHook.m_sensorTypes.contains(sdf::SensorType::DEPTH_CAMERA));
+            EXPECT_FALSE(cameraImporterHook.m_sensorTypes.contains(sdf::SensorType::GPS));
 
-    //         const sdf::ElementPtr lidarElement = sdfModel->LinkByName("link2")->SensorByIndex(0U)->Element();
-    //         const auto& lidarImporterHook = SDFormat::ROS2SensorHooks::ROS2LidarSensor();
-    //         const auto& unsupportedLidarParams = Utils::SDFormat::GetUnsupportedParams(
-    //             lidarElement, lidarImporterHook.m_supportedSensorParams, lidarImporterHook.m_pluginNames,
-    //             lidarImporterHook.m_supportedPluginParams);
-    //         EXPECT_EQ(unsupportedLidarParams.size(), 3U);
-    //         EXPECT_EQ(unsupportedLidarParams[0U], ">always_on");
-    //         EXPECT_EQ(unsupportedLidarParams[1U], ">ray>range>resolution");
-    //         EXPECT_EQ(unsupportedLidarParams[2U], "plugin \"librayplugin.so\"");
-    //     }
-    //     {
-    //         const auto xmlStr = GetSdfWithImuSensor();
-    //         const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, {});
-    //         ASSERT_TRUE(sdfRootOutcome);
-    //         const auto& sdfRoot = sdfRootOutcome.GetRoot();
-    //         const auto* sdfModel = sdfRoot.Model();
-    //         ASSERT_NE(nullptr, sdfModel);
-    //         const sdf::ElementPtr imuElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
-    //         const auto& importerHook = SDFormat::ROS2SensorHooks::ROS2ImuSensor();
+            const sdf::ElementPtr lidarElement = sdfModel->LinkByName("link2")->SensorByIndex(0U)->Element();
+            const auto& lidarImporterHook = SDFormat::ROS2SensorHooks::ROS2LidarSensor();
+            const auto& unsupportedLidarParams = Utils::SDFormat::GetUnsupportedParams(
+                lidarElement,
+                lidarImporterHook.m_supportedSensorParams,
+                lidarImporterHook.m_pluginNames,
+                lidarImporterHook.m_supportedPluginParams);
+            EXPECT_EQ(unsupportedLidarParams.size(), 3U);
+            EXPECT_EQ(unsupportedLidarParams[0U], ">always_on");
+            EXPECT_EQ(unsupportedLidarParams[1U], ">ray>range>resolution");
+            EXPECT_EQ(unsupportedLidarParams[2U], "plugin \"librayplugin.so\"");
+        }
+        {
+            const auto xmlStr = GetSdfWithImuSensor();
+            const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, {});
+            ASSERT_TRUE(sdfRootOutcome);
+            const auto& sdfRoot = sdfRootOutcome.GetRoot();
+            const auto* sdfModel = sdfRoot.Model();
+            ASSERT_NE(nullptr, sdfModel);
+            const sdf::ElementPtr imuElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
+            const auto& importerHook = SDFormat::ROS2SensorHooks::ROS2ImuSensor();
 
-    //         const auto& unsupportedImuParams = Utils::SDFormat::GetUnsupportedParams(
-    //               imuElement, importerHook.m_supportedSensorParams, importerHook.m_pluginNames, importerHook.m_supportedPluginParams);
-    //         EXPECT_EQ(unsupportedImuParams.size(), 1U);
-    //         EXPECT_EQ(unsupportedImuParams[0U], ">always_on");
-    //     }
-    // }
+            const auto& unsupportedImuParams = Utils::SDFormat::GetUnsupportedParams(
+                imuElement, importerHook.m_supportedSensorParams, importerHook.m_pluginNames, importerHook.m_supportedPluginParams);
+            EXPECT_EQ(unsupportedImuParams.size(), 1U);
+            EXPECT_EQ(unsupportedImuParams[0U], ">always_on");
+        }
+    }
 
 } // namespace UnitTest
