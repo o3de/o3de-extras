@@ -58,6 +58,11 @@ namespace ROS2Controllers
             const float linearAcceleration,
             const float angularAcceleration) override;
         AZ::Component* CreateSkidSteeringControlComponent(AZ::Entity& entity) override;
+        AZ::Component* CreateJointsArticulationControllerComponent(AZ::Entity& entity) override;
+        AZ::Component* CreateJointsPIDControllerComponent(AZ::Entity& entity) override;
+        AZ::Component* CreateJointsManipulationEditorComponent(
+            AZ::Entity& entity, const ROS2::PublisherConfiguration& publisherConfig) override;
+        AZ::Component* CreateJointsTrajectoryComponent(AZ::Entity& entity, const AZStd::string& actionName) override;
         ////////////////////////////////////////////////////////////////////////
 
     private:

@@ -10,6 +10,10 @@
 #include "ROS2ControllersEditorSystemComponent.h"
 #include <AzCore/Serialization/SerializeContext.h>
 
+#include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
+#include <Manipulation/Controllers/JointsPIDControllerComponent.h>
+#include <Manipulation/JointsManipulationEditorComponent.h>
+#include <Manipulation/JointsTrajectoryComponent.h>
 #include <ROS2Controllers/ROS2ControllersTypeIds.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
@@ -136,4 +140,25 @@ namespace ROS2Controllers
         return CreateComponent<ROS2Controllers::SkidSteeringControlComponent>(entity);
     }
 
+    AZ::Component* ROS2ControllersEditorSystemComponent::CreateJointsArticulationControllerComponent(AZ::Entity& entity)
+    {
+        return CreateComponent<ROS2Controllers::JointsArticulationControllerComponent>(entity);
+    }
+
+    AZ::Component* ROS2ControllersEditorSystemComponent::CreateJointsPIDControllerComponent(AZ::Entity& entity)
+    {
+        return CreateComponent<ROS2Controllers::JointsPIDControllerComponent>(entity);
+    }
+
+    AZ::Component* ROS2ControllersEditorSystemComponent::CreateJointsManipulationEditorComponent(
+        AZ::Entity& entity, const ROS2::PublisherConfiguration& publisherConfig)
+    {
+        return CreateComponent<ROS2Controllers::JointsManipulationEditorComponent>(entity, publisherConfig);
+    }
+
+    AZ::Component* ROS2ControllersEditorSystemComponent::CreateJointsTrajectoryComponent(
+        AZ::Entity& entity, const AZStd::string& actionName)
+    {
+        return CreateComponent<ROS2Controllers::JointsTrajectoryComponent>(entity, actionName);
+    }
 } // namespace ROS2Controllers

@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2Controllers/Controllers/PidConfiguration.h>
 #include <ROS2Controllers/ROS2ControllersTypeIds.h>
 #include <ROS2Controllers/RobotControl/ControlConfiguration.h>
@@ -16,6 +17,7 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
+#include <AzCore/std/string/string.h>
 
 namespace ROS2Controllers
 {
@@ -83,6 +85,29 @@ namespace ROS2Controllers
         //! @param entity The entity to which the control component will be added.
         //! @return A pointer to the newly created AZ::Component representing the Skid Steering Control (or nullptr if failed).
         virtual AZ::Component* CreateSkidSteeringControlComponent(AZ::Entity& entity) = 0;
+
+        //! Create a new Joints Articulation Controller component.
+        //! @param entity The entity to which the Joints Articulation Controller component will be added.
+        //! @return A pointer to the newly created AZ::Component representing the Joints Articulation Controller (or nullptr if failed).
+        virtual AZ::Component* CreateJointsArticulationControllerComponent(AZ::Entity& entity) = 0;
+
+        //! Create a new Joints PID Controller component.
+        //! @param entity The entity to which the Joints PID Controller component will be added.
+        //! @return A pointer to the newly created AZ::Component representing the Joints PID Controller (or nullptr if failed).
+        virtual AZ::Component* CreateJointsPIDControllerComponent(AZ::Entity& entity) = 0;
+
+        //! Create a new Joints Manipulation Editor component.
+        //! @param entity The entity to which the Joints Manipulation Editor component will be added.
+        //! @param publisherConfig The publisher configuration for the Joints Manipulation Editor component.
+        //! @return A pointer to the newly created AZ::Component representing the Joints Manipulation Editor (or nullptr if failed).
+        virtual AZ::Component* CreateJointsManipulationEditorComponent(
+            AZ::Entity& entity, const ROS2::PublisherConfiguration& publisherConfig) = 0;
+
+        //! Create a new Joints Trajectory component.
+        //! @param entity The entity to which the Joints Trajectory component will be added.
+        //! @param actionName The name of the trajectory action to be used by the Joints Trajectory component.
+        //! @return A pointer to the newly created AZ::Component representing the Joints Trajectory (or nullptr if failed).
+        virtual AZ::Component* CreateJointsTrajectoryComponent(AZ::Entity& entity, const AZStd::string& actionName) = 0;
     };
 
     class ROS2ControllersEditorBusTraits : public AZ::EBusTraits
