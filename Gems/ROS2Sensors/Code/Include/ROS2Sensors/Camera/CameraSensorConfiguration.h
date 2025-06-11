@@ -14,6 +14,17 @@
 
 namespace ROS2Sensors
 {
+    //! Constants used in camera sensor configuration and ROS2 messages.
+    namespace CameraConstants
+    {
+        inline constexpr char ImageMessageType[] = "sensor_msgs::msg::Image";
+        inline constexpr char DepthImageConfig[] = "Depth Image";
+        inline constexpr char ColorImageConfig[] = "Color Image";
+        inline constexpr char DepthInfoConfig[] = "Depth Camera Info";
+        inline constexpr char ColorInfoConfig[] = "Color Camera Info";
+        inline constexpr char CameraInfoMessageType[] = "sensor_msgs::msg::CameraInfo";
+    } // namespace CameraConstants
+
     //! A structure capturing configuration of a single camera sensor with up to two image sources (color and depth).
     struct CameraSensorConfiguration
     {

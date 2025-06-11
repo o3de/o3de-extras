@@ -7,7 +7,6 @@
  */
 
 #include "ROS2CameraSensorEditorComponent.h"
-#include "CameraConstants.h"
 #include "CameraUtilities.h"
 #include "ROS2CameraSensorComponent.h"
 #include <AzCore/Component/TransformBus.h>

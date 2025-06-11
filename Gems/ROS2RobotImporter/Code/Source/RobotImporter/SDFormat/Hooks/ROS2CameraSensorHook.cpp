@@ -6,9 +6,9 @@
  *
  */
 
-#include <Camera/CameraConstants.h>
-#include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
+#include <ROS2Sensors/ROS2SensorsEditorBus.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 
@@ -47,7 +47,8 @@ namespace ROS2RobotImporter::SDFormat
                 return AZ::Failure(AZStd::string("Failed to read parsed SDFormat data of %s camera sensor", sdfSensor.Name().c_str()));
             }
 
-            CameraSensorConfiguration cameraConfiguration;
+            // Get camera sensor configuration
+            ROS2Sensors::CameraSensorConfiguration cameraConfiguration;
             cameraConfiguration.m_depthCamera = cameraSensor->HasDepthCamera();
             cameraConfiguration.m_colorCamera = (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA) ? true : false;
             cameraConfiguration.m_width = cameraSensor->ImageWidth();
@@ -72,8 +73,10 @@ namespace ROS2RobotImporter::SDFormat
             const auto cameraPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
             const auto element = sdfSensor.Element();
 
-            SensorConfiguration sensorConfiguration;
-            sensorConfiguration.m_frequency = HooksUtils::GetFrequency(cameraPluginParams);
+            // Get base sensor configuration
+            ROS2::SensorConfiguration sensorConfiguration;
+            element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
+            element->Get<float>("update_rate", sensorConfiguration.m_frequency, 10.0f);
 
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
             { // COLOR_CAMERA and RGBD_CAMERA
@@ -84,9 +87,15 @@ namespace ROS2RobotImporter::SDFormat
                 const AZStd::string colorInfo = HooksUtils::ValueOfAny(cameraPluginParams, rawInfoParamNames, "camera_color_info");
 
                 HooksUtils::AddTopicConfiguration(
-                    sensorConfiguration, imageColor, CameraConstants::ImageMessageType, CameraConstants::ColorImageConfig);
+                    sensorConfiguration,
+                    imageColor,
+                    ROS2Sensors::CameraConstants::ImageMessageType,
+                    ROS2Sensors::CameraConstants::ColorImageConfig);
                 HooksUtils::AddTopicConfiguration(
-                    sensorConfiguration, colorInfo, CameraConstants::CameraInfoMessageType, CameraConstants::ColorInfoConfig);
+                    sensorConfiguration,
+                    colorInfo,
+                    ROS2Sensors::CameraConstants::CameraInfoMessageType,
+                    ROS2Sensors::CameraConstants::ColorInfoConfig);
             }
             if (sdfSensor.Type() != sdf::SensorType::CAMERA)
             { // DEPTH_CAMERA and RGBD_CAMERA
@@ -97,11 +106,16 @@ namespace ROS2RobotImporter::SDFormat
                 const AZStd::string depthInfo = HooksUtils::ValueOfAny(cameraPluginParams, depthInfoParamNames, "depth_camera_info");
 
                 HooksUtils::AddTopicConfiguration(
-                    sensorConfiguration, imageDepth, CameraConstants::ImageMessageType, CameraConstants::DepthImageConfig);
+                    sensorConfiguration,
+                    imageDepth,
+                    ROS2Sensors::CameraConstants::ImageMessageType,
+                    ROS2Sensors::CameraConstants::DepthImageConfig);
                 HooksUtils::AddTopicConfiguration(
-                    sensorConfiguration, depthInfo, CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig);
+                    sensorConfiguration,
+                    depthInfo,
+                    ROS2Sensors::CameraConstants::CameraInfoMessageType,
+                    ROS2Sensors::CameraConstants::DepthInfoConfig);
             }
-            element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
 
             // Get frame configuration
             const auto frameConfiguration = HooksUtils::GetFrameConfiguration(cameraPluginParams);
@@ -110,14 +124,17 @@ namespace ROS2RobotImporter::SDFormat
             HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity, frameConfiguration);
 
             // Create Camera component
-            if (HooksUtils::CreateComponent<ROS2Sensors::ROS2CameraSensorEditorComponent>(entity, sensorConfiguration, cameraConfiguration))
+            auto interface = ROS2Sensors::ROS2SensorsEditorInterface::Get();
+            AZ_Warning("ROS2RobotImporter", interface, "ROS2SensorsInterface is not available. Cannot create Camera sensor component.");
+            if (interface)
             {
-                return AZ::Success();
+                if (auto* sensor = interface->CreateROS2CameraSensorComponent(entity, sensorConfiguration, cameraConfiguration))
+                {
+                    return AZ::Success();
+                }
             }
-            else
-            {
-                return AZ::Failure(AZStd::string("Failed to create ROS 2 Camera Sensor component"));
-            }
+
+            return AZ::Failure(AZStd::string("Failed to create ROS 2 Camera Sensor component"));
         };
 
         return importerHook;

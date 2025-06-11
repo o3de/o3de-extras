@@ -13,7 +13,6 @@ set(FILES
     Source/Clients/ROS2SensorsSystemComponent.h
     Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.cpp
     Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
-    Source/Camera/CameraConstants.h
     Source/Camera/CameraPublishers.cpp
     Source/Camera/CameraPublishers.h
     Source/Camera/CameraSensor.cpp
@@ -42,11 +41,9 @@ set(FILES
     Source/Lidar/LidarRaycaster.h
     Source/Lidar/LidarRegistrarSystemComponent.cpp
     Source/Lidar/LidarRegistrarSystemComponent.h
-    Source/Lidar/LidarSensorConfiguration.cpp
     Source/Lidar/LidarSystem.cpp
     Source/Lidar/LidarSystem.h
     Source/Lidar/LidarTemplate.cpp
-    Source/Lidar/LidarTemplateUtils.cpp
     Source/Lidar/PointCloudMessageBuilder.cpp
     Source/Lidar/PointCloudMessageBuilder.h
     Source/Lidar/ROS2Lidar2DSensorComponent.cpp

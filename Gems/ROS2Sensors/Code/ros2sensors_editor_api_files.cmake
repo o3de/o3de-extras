@@ -7,4 +7,5 @@
 #
 
 set(FILES
+    Include/ROS2Sensors/ROS2SensorsEditorBus.h
 )

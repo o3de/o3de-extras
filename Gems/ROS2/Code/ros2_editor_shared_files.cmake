@@ -4,7 +4,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
-    Source/Frame/ROS2FrameEditorComponent.cpp
     Source/Tools/ROS2EditorModule.cpp
-    Source/ROS2GemUtilities.cpp
 )

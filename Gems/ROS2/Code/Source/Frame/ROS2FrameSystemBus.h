@@ -7,6 +7,8 @@
  */
 #pragma once
 
+#include <AzCore/Component/EntityId.h>
+#include <AzCore/EBus/EBus.h>
 #include <AzCore/EBus/Policies.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/RTTI/RTTIMacros.h>

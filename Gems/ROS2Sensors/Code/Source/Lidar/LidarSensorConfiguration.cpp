@@ -6,7 +6,6 @@
  *
  */
 
-#include "Lidar/LidarRegistrarSystemComponent.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <ROS2Sensors/Lidar/LidarSensorConfiguration.h>
@@ -94,7 +93,7 @@ namespace ROS2Sensors
     {
         if (m_lidarSystem.empty())
         {
-            m_lidarSystem = Details::GetDefaultLidarSystem();
+            m_lidarSystem = GetDefaultLidarSystem();
         }
         const auto* lidarMetaData = LidarRegistrarInterface::Get()->GetLidarSystemMetaData(m_lidarSystem);
         AZ_Warning("LidarSensorConfiguration", lidarMetaData, "No metadata for \"%s\"", m_lidarSystem.c_str());
@@ -185,5 +184,22 @@ namespace ROS2Sensors
     void LidarSensorConfiguration::UpdateShowNoise()
     {
         m_lidarParameters.m_showNoiseConfig = m_lidarSystemFeatures & LidarSystemFeatures::Noise;
+    }
+
+    AZStd::string LidarSensorConfiguration::GetDefaultLidarSystem()
+    {
+        const auto* lidarInterface = LidarRegistrarInterface::Get();
+        AZ_Assert(lidarInterface, "LidarRegistrarInterface is not registered.");
+        if (lidarInterface)
+        {
+            const auto& lidarSystemList = lidarInterface->GetRegisteredLidarSystems();
+            if (!lidarSystemList.empty())
+            {
+                return lidarSystemList.front();
+            }
+        }
+
+        AZ_Warning("ROS2LidarSensorComponent", false, "No LIDAR system for the sensor to use.");
+        return {};
     }
 } // namespace ROS2Sensors

@@ -21,6 +21,9 @@ namespace ROS2Sensors
     // so they use the Same TypeId
     inline constexpr const char* ROS2SensorsEditorModuleTypeId = ROS2SensorsModuleTypeId;
 
+    // Editor Interface TypeIds
+    inline constexpr const char* ROS2SensorsEditorRequestsTypeId = "{ACFDC553-B7E3-475C-91A3-26AB01C012AF}";
+
     // System Sensor Components TypeIds
     inline constexpr const char* ROS2SystemCameraComponentTypeId = "{B4665D39-78FD-40DE-8518-2F6BD345A831}";
     inline constexpr const char* ROS2EditorCameraSystemComponentTypeId = "{407F51C0-92C9-11EE-B9D1-0242AC120002}";
@@ -43,6 +46,7 @@ namespace ROS2Sensors
 
     // Sensor Components TypeIds
     inline constexpr const char* ROS2CameraSensorComponentTypeId = "{3C6B8AE6-9721-4639-B8F9-D8D28FD7A071}";
+    inline constexpr const char* ROS2CameraSensorEditorComponentTypeId = "{3C2A86B2-AD58-4BF1-A5EF-71E0F94A2B42}";
     inline constexpr const char* ROS2ContactSensorComponentTypeId = "{91272E66-C9F1-4AA2-A9D5-98EAA4EF4E9A}";
     inline constexpr const char* ROS2GNSSSensorComponentTypeId = "{55B4A299-7FA3-496A-88F0-764C75B0E9A7}";
     inline constexpr const char* ROS2ImuSensorComponentTypeId = "{502A955E-7742-4E23-AD77-5E4063739DCA}";
