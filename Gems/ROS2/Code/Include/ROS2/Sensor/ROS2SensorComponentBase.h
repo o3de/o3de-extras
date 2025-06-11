@@ -64,21 +64,6 @@ namespace ROS2
             required.push_back(AZ_CRC_CE("ROS2Frame"));
         }
 
-        //! Set the sensor configuration. This method is not available via SensorConfigurationRequestBus, as it is not
-        //! expected to be called from outside of the component. It is used internally to set the initial configuration.
-        //! @param sensorConfiguration The configuration to set.
-        //! @note This method should be called before starting the sensor.
-        void SetSensorConfiguration(const SensorConfiguration& sensorConfiguration)
-        {
-            auto* entity = GetEntity();
-            if (entity && entity->GetState() == AZ::Entity::State::Active)
-            {
-                AZ_Warning("ROS2SensorComponentBase", false, "SetSensorConfiguration should be called before the component is activated.");
-                return;
-            }
-            m_sensorConfiguration = sensorConfiguration;
-        }
-
         SensorConfiguration GetSensorConfiguration() const override
         {
             return m_sensorConfiguration;

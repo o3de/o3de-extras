@@ -39,20 +39,12 @@ namespace ROS2
     {
         ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
         AZ::EntityBus::Handler::BusConnect(GetEntityId());
-        auto* frameSystemInterface = ROS2FrameSystemInterface::Get();
-        if (frameSystemInterface)
-        {
-            frameSystemInterface->RegisterFrame(GetEntityId());
-        }
+        ROS2FrameSystemInterface::Get()->RegisterFrame(GetEntityId());
     }
 
     void ROS2FrameEditorComponent::Deactivate()
     {
-        auto* frameSystemInterface = ROS2FrameSystemInterface::Get();
-        if (frameSystemInterface)
-        {
-            frameSystemInterface->UnregisterFrame(GetEntityId());
-        }
+        ROS2FrameSystemInterface::Get()->UnregisterFrame(GetEntityId());
         AZ::EntityBus::Handler::BusDisconnect();
         ROS2FrameComponentBus::Handler::BusDisconnect();
     }

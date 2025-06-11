@@ -115,37 +115,6 @@ namespace ROS2RobotImporter::SDFormat
             return nullptr;
         }
 
-        //! Set the base configuration for a sensor component.
-        //! This function attempts to cast the provided sensor component to a ROS2SensorComponentBase of the specified EventSourceT type.
-        //! If the component is an editor component, it is first unwrapped from a GenericComponentWrapper.
-        //!@tparam BaseComponentT The ROS2SensorComponentBase type for the sensor component.
-        //!@param sensorComponent Pointer to the sensor component (may be wrapped).
-        //!@param sensorConfig The configuration to apply to the sensor component.
-        //!@return true if the configuration was successfully applied; false otherwise.
-        template<class BaseComponentT>
-        bool SetSensorComponentBaseConfiguration(AZ::Component* sensorComponent, const ROS2::SensorConfiguration& sensorConfig)
-        {
-            // If the component is not an "editor component" then it is wrapped into a GenericComponentWrapper.
-            BaseComponentT* sensorComponentBase = nullptr;
-            if (sensorComponent->RTTI_IsTypeOf(AzToolsFramework::Components::EditorComponentBase::RTTI_Type()))
-            {
-                auto* wrapper = azrtti_cast<AzToolsFramework::Components::GenericComponentWrapper*>(sensorComponent);
-                sensorComponentBase = azrtti_cast<BaseComponentT*>(wrapper->GetTemplate());
-            }
-            else
-            {
-                sensorComponentBase = azrtti_cast<BaseComponentT*>(sensorComponent);
-            }
-
-            if (sensorComponentBase)
-            {
-                sensorComponentBase->SetSensorConfiguration(sensorConfig);
-                return true;
-            }
-
-            return false;
-        }
-
         using PluginParams = AZStd::unordered_map<AZStd::string, AZStd::string>;
 
         //! Get frame configuration from given plugin params
