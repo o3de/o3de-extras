@@ -23,7 +23,7 @@
     "dependencies": [
         "LevelGeoreferencing",
         "PhysX5",
-        "ROS2>=3.3.0"
+        "ROS2>=4.0.0"
     ],
     "repo_uri": "https://github.com/o3de/o3de-extras/",
     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Sensors",

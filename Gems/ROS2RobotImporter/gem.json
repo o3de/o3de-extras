@@ -21,7 +21,8 @@
     "requirements": "Requires ROS 2 Gem, ROS2Sensors Gem and ROS2Controllers Gem.",
     "documentation_url": "Link to any documentation of your Gem",
     "dependencies": [
-        "ROS2>=3.3.0",
+        "ROS2>=4.0.0",
+        "ROS2Controllers",
         "ROS2Sensors"
     ],
     "repo_uri": "https://github.com/o3de/o3de-extras/",
