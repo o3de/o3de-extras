@@ -104,8 +104,8 @@ namespace ROS2RobotImporter::SDFormat
             HooksUtils::CreateComponent<PhysX::EditorArticulationLinkComponent>(entity);
 
             // Create Imu component
-            auto interface = ROS2Sensors::ROS2SensorsEditorInterface::Get();
-            AZ_Warning("ROS2RobotImporter", interface, "ROS2SensorsInterface is not available. Cannot create Imu sensor component.");
+            auto* interface = ROS2Sensors::ROS2SensorsEditorInterface::Get();
+            AZ_Assert(interface, "ROS2SensorsEditorInterface not available in ROS2ImuSensorHook");
             if (interface)
             {
                 if (auto* sensor = interface->CreateROS2ImuSensorComponent(entity, sensorConfiguration, imuConfiguration))

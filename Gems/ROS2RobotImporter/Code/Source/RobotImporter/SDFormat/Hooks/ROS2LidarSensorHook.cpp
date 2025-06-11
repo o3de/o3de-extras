@@ -84,6 +84,7 @@ namespace ROS2RobotImporter::SDFormat
             lidarConfiguration.m_lidarParameters.m_maxRange = lidarSensor->RangeMax();
 
             auto* lidarRegistrar = ROS2Sensors::LidarRegistrarInterface::Get();
+            AZ_Assert(lidarRegistrar, "lidarRegistrar not available in ROS2LidarSensorHook");
             if (lidarRegistrar)
             {
                 const auto lidarSystems = lidarRegistrar->GetRegisteredLidarSystems();
@@ -110,8 +111,8 @@ namespace ROS2RobotImporter::SDFormat
             HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity, frameConfiguration);
 
             // Create Lidar component
-            auto interface = ROS2Sensors::ROS2SensorsEditorInterface::Get();
-            AZ_Warning("ROS2RobotImporter", interface, "ROS2SensorsInterface is not available. Cannot create Lidar sensor component.");
+            auto* interface = ROS2Sensors::ROS2SensorsEditorInterface::Get();
+            AZ_Assert(interface, "ROS2SensorsEditorInterface not available in ROS2LidarSensorHook");
             if (interface)
             {
                 if (auto* sensor = is2DLidar ? interface->CreateROS2Lidar2DSensorComponent(entity, sensorConfiguration, lidarConfiguration)
@@ -121,7 +122,7 @@ namespace ROS2RobotImporter::SDFormat
                 }
             }
 
-            return AZ::Failure(AZStd::string("Failed to create ROS 2 Imu Sensor component"));
+            return AZ::Failure(AZStd::string("Failed to create ROS 2 Lidar Sensor component"));
         };
 
         return importerHook;

@@ -43,7 +43,8 @@ namespace ROS2RobotImporter::SDFormat
             HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity);
 
             // create controllerComponent based on model joints/articulations
-            auto interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+            auto* interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+            AZ_Assert(interface, "ROS2ControllersEditorInterface not available in ROS2JointPoseTrajectoryModelPluginHook");
             if (!interface)
             {
                 return AZ::Failure(AZStd::string("ROS2ControllersInterface is not available. Cannot create components."));

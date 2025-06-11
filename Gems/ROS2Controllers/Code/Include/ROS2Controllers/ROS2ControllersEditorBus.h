@@ -21,9 +21,10 @@
 
 namespace ROS2Controllers
 {
-    //! Interface for creating ROS2 sensor components.
-    //! This interface provides methods to create various types of ROS2 sensor components, such as GNSS, Camera, IMU, Lidar, and Odometry
-    //! sensors. It is intended to be used by external tools that create entities, e.g., when importing robots from SDF, URDF, or OpenUSD.
+    //! Interface for creating ROS2 controller components.
+    //! This interface provides methods to create various types of ROS2 controller components, such as wheel controllers, robot control,
+    //! vehicle models, and joint controllers.
+    //! It is intended to be used by external tools that create entities, e.g., when importing robots from SDF, URDF, or OpenUSD.
     class ROS2ControllersEditorRequests
     {
     public:

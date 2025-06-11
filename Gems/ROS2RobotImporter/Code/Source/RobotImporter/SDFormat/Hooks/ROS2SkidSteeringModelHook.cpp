@@ -198,7 +198,8 @@ namespace ROS2RobotImporter::SDFormat
             constexpr float angularAcceleration = 2.0f;
 
             // Create required components
-            auto interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+            auto* interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+            AZ_Assert(interface, "ROS2ControllersEditorInterface not available in ROS2SkidSteeringModelPluginHook");
             if (!interface)
             {
                 return AZ::Failure(AZStd::string("ROS2ControllersInterface is not available. Cannot create components."));
