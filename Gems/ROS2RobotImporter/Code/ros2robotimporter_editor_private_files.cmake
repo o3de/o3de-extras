@@ -29,15 +29,14 @@ set(FILES
     Source/RobotImporter/Pages/XacroParamsPage.h
     Source/RobotImporter/RobotImporterWidget.cpp
     Source/RobotImporter/RobotImporterWidget.h
-    # temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
-    # Source/RobotImporter/SDFormat/Hooks/ROS2AckermannModelHook.cpp
+    Source/RobotImporter/SDFormat/Hooks/ROS2AckermannModelHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2CameraSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2GNSSSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2ImuSensorHook.cpp
+    Source/RobotImporter/SDFormat/Hooks/ROS2JointPoseTrajectoryModelHook.cpp
+    Source/RobotImporter/SDFormat/Hooks/ROS2JointStatePublisherModelHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2LidarSensorHook.cpp
-    # Source/RobotImporter/SDFormat/Hooks/ROS2SkidSteeringModelHook.cpp
-    # Source/RobotImporter/SDFormat/Hooks/ROS2JointPoseTrajectoryModelHook.cpp
-    # Source/RobotImporter/SDFormat/Hooks/ROS2JointStatePublisherModelHook.cpp
+    Source/RobotImporter/SDFormat/Hooks/ROS2SkidSteeringModelHook.cpp
     Source/RobotImporter/SDFormat/ROS2ModelPluginHooks.h
     Source/RobotImporter/SDFormat/ROS2SDFormatHooksUtils.cpp
     Source/RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h

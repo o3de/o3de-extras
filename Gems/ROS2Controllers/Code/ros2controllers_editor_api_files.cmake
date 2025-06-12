@@ -7,4 +7,5 @@
 #
 
 set(FILES
+    Include/ROS2Controllers/ROS2ControllersEditorBus.h
 )

@@ -9,9 +9,9 @@
 
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2Controllers/Controllers/PidConfiguration.h>
-#include <VehicleDynamics/DriveModel.h>
+#include <ROS2Controllers/VehicleDynamics/VehicleConfiguration.h>
 #include <VehicleDynamics/ModelLimits/AckermannModelLimits.h>
-#include <VehicleDynamics/VehicleConfiguration.h>
+#include <VehicleDynamics/DriveModel.h>
 #include <VehicleDynamics/VehicleInputs.h>
 #include <VehicleDynamics/WheelDynamicsData.h>
 

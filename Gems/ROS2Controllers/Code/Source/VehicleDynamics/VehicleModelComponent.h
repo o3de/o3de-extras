@@ -9,12 +9,12 @@
 
 #include "DriveModels/AckermannDriveModel.h"
 #include "ManualControlEventHandler.h"
-#include "VehicleConfiguration.h"
 #include "VehicleInputs.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzCore/std/utils.h>
+#include <ROS2Controllers/VehicleDynamics/VehicleConfiguration.h>
 #include <ROS2Controllers/VehicleDynamics/VehicleInputControlBus.h>
 #include <VehicleDynamics/VehicleModelLimits.h>
 

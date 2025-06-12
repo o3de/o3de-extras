@@ -36,7 +36,16 @@ namespace ROS2Controllers
             const double iMax,
             const double iMin,
             const bool antiWindup,
-            const double outputLimit);
+            const double outputLimit)
+            : m_p(p)
+            , m_i(i)
+            , m_d(d)
+            , m_iMax(iMax)
+            , m_iMin(iMin)
+            , m_antiWindup(antiWindup)
+            , m_outputLimit(outputLimit)
+        {
+        }
 
         //! Initialize the controller
         void InitializePid();

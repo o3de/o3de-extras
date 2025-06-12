@@ -20,6 +20,17 @@ namespace ROS2Controllers::VehicleDynamics
     public:
         AZ_TYPE_INFO(AxleConfiguration, "{75BD5FEA-EADE-4371-8B2C-96F05A886BEB}");
         AxleConfiguration() = default;
+
+        //! Create the most common two wheel axle out of existing wheel entities.
+        AxleConfiguration(AZ::EntityId leftWheel, AZ::EntityId rightWheel, AZStd::string tag, float wheelRadius, bool steering, bool drive)
+            : m_axleWheels({ leftWheel, rightWheel })
+            , m_axleTag(AZStd::move(tag))
+            , m_wheelRadius(wheelRadius)
+            , m_isSteering(steering)
+            , m_isDrive(drive)
+        {
+        }
+
         static void Reflect(AZ::ReflectContext* context);
 
         // Helper functions for wheel entities. If there is only one wheel, same value is returned from both.

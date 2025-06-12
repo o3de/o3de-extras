@@ -150,6 +150,8 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::ROS2.Static
                 Gem::ROS2.Editor.Static
                 Gem::ROS2Sensors.Editor.API
+                Gem::ROS2Controllers.API
+                Gem::ROS2Controllers.Editor.API
                 ${gem_name}.Private.Object
             PRIVATE
                 AZ::AssetBuilderSDK

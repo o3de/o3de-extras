@@ -11,8 +11,8 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <VehicleDynamics/DriveModel.h>
 
+#include <ROS2Controllers/VehicleDynamics/VehicleConfiguration.h>
 #include <VehicleDynamics/ModelLimits/SkidSteeringModelLimits.h>
-#include <VehicleDynamics/VehicleConfiguration.h>
 #include <VehicleDynamics/VehicleInputs.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
 #include <VehicleDynamics/WheelDynamicsData.h>

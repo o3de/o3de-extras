@@ -7,10 +7,10 @@
  */
 #pragma once
 
-#include "VehicleConfiguration.h"
 #include "VehicleInputs.h"
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/utils.h>
+#include <ROS2Controllers/VehicleDynamics/VehicleConfiguration.h>
 #include <VehicleDynamics/VehicleModelLimits.h>
 
 namespace ROS2Controllers::VehicleDynamics

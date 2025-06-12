@@ -124,8 +124,8 @@ namespace ROS2RobotImporter::SDFormat
             HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity, frameConfiguration);
 
             // Create Camera component
-            auto interface = ROS2Sensors::ROS2SensorsEditorInterface::Get();
-            AZ_Warning("ROS2RobotImporter", interface, "ROS2SensorsInterface is not available. Cannot create Camera sensor component.");
+            auto* interface = ROS2Sensors::ROS2SensorsEditorInterface::Get();
+            AZ_Assert(interface, "ROS2SensorsEditorInterface not available in ROS2CameraSensorHook");
             if (interface)
             {
                 if (auto* sensor = interface->CreateROS2CameraSensorComponent(entity, sensorConfiguration, cameraConfiguration))

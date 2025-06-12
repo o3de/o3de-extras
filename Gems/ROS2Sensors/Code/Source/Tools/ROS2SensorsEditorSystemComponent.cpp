@@ -25,7 +25,8 @@ namespace ROS2Sensors
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ROS2SensorsEditorSystemComponent, ROS2SensorsSystemComponent>()->Version(0);
+            serializeContext->Class<ROS2SensorsEditorSystemComponent, ROS2SensorsSystemComponent>()->Version(1)->Attribute(
+                AZ::Edit::Attributes::SystemComponentTags, AZStd::vector<AZ::Crc32>({ AZ_CRC_CE("AssetBuilder") }));
         }
     }
 

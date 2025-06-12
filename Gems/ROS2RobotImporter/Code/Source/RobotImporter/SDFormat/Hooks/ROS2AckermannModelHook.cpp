@@ -11,16 +11,15 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <PhysX/EditorColliderComponentRequestBus.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
-#include <ROS2/RobotControl/ControlConfiguration.h>
-#include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
-#include <RobotControl/ROS2RobotControlComponent.h>
+#include <ROS2Controllers/Controllers/PidConfiguration.h>
+#include <ROS2Controllers/ROS2ControllersEditorBus.h>
+#include <ROS2Controllers/RobotControl/ControlConfiguration.h>
+#include <ROS2Controllers/VehicleDynamics/AxleConfiguration.h>
+#include <ROS2Controllers/VehicleDynamics/VehicleConfiguration.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <Source/EditorColliderComponent.h>
 #include <Source/EditorHingeJointComponent.h>
-#include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
-#include <VehicleDynamics/Utilities.h>
-#include <VehicleDynamics/WheelControllerComponent.h>
 
 #include <gz/math/Vector2.hh>
 #include <gz/math/Vector3.hh>
@@ -146,16 +145,16 @@ namespace ROS2RobotImporter::SDFormat
             return AZ::Vector3();
         }
 
-        PidConfiguration GetModelPidConfiguration(const sdf::ElementPtr element)
+        ROS2Controllers::PidConfiguration GetModelPidConfiguration(const sdf::ElementPtr element)
         {
             auto pid = element->Get<gz::math::Vector3d>("linear_velocity_pid_gain", gz::math::Vector3d::Zero).first;
             auto iRange = element->Get<gz::math::Vector2d>("linear_velocity_i_range", gz::math::Vector2d::Zero).first;
 
-            PidConfiguration config(pid.X(), pid.Y(), pid.Z(), iRange.Y(), iRange.X(), false, 0.0);
+            ROS2Controllers::PidConfiguration config(pid.X(), pid.Y(), pid.Z(), iRange.Y(), iRange.X(), false, 0.0);
             return config;
         }
 
-        VehicleDynamics::VehicleConfiguration GetConfiguration(
+        ROS2Controllers::VehicleDynamics::VehicleConfiguration GetConfiguration(
             const sdf::ElementPtr element, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
         {
             const static AZStd::array<std::string, Wheels::Total> jointNamesSDFormat{ { "front_left_joint",
@@ -189,8 +188,16 @@ namespace ROS2RobotImporter::SDFormat
                 }
             }
 
+            ROS2Controllers::VehicleDynamics::VehicleConfiguration configuration;
+            auto interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+            if (!interface)
+            {
+                AZ_Warning(
+                    "ROS2RobotImporter", false, "ROS2ControllersInterface is not available. Cannot create wheel controller components.");
+                return configuration;
+            }
+
             bool foundSteeringWheels = false;
-            VehicleDynamics::VehicleConfiguration configuration;
             auto addAxle = [&](const unsigned int wheelIdLeft, const unsigned int wheelIdRight, AZStd::string tag) -> void
             {
                 const auto& jointLeft = jointMapper[wheelIdLeft];
@@ -203,7 +210,7 @@ namespace ROS2RobotImporter::SDFormat
                         IsSteeringWheel(jointNameSteeringRight, jointRight.m_jointName, sdfModel);
                     const bool isDrive = !isSteering;
                     const float wheelRadius = GetWheelRadius(jointLeft.m_entity, jointRight.m_entity);
-                    configuration.m_axles.emplace_back(ROS2Controllers::VehicleDynamics::Utilities::Create2WheelAxle(
+                    configuration.m_axles.emplace_back(ROS2Controllers::VehicleDynamics::AxleConfiguration(
                         jointLeft.m_entityId, jointRight.m_entityId, AZStd::move(tag), wheelRadius, isSteering, isDrive));
 
                     const float track = GetTrack(jointLeft.m_entity, jointRight.m_entity);
@@ -219,20 +226,18 @@ namespace ROS2RobotImporter::SDFormat
                     if (isSteering)
                     {
                         const auto entityIdSteeringLeft = HooksUtils::GetJointEntityId(jointNameSteeringLeft, sdfModel, createdEntities);
-                        HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(
-                            jointLeft.m_entityId, entityIdSteeringLeft, 1.0f);
+                        interface->CreateWheelControllerComponent(*jointLeft.m_entity, entityIdSteeringLeft, 1.0f);
                         HooksUtils::EnableMotor(entityIdSteeringLeft);
 
                         const auto entityIdSteeringRight = HooksUtils::GetJointEntityId(jointNameSteeringRight, sdfModel, createdEntities);
-                        HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(
-                            jointRight.m_entityId, entityIdSteeringRight, 1.0f);
+                        interface->CreateWheelControllerComponent(*jointRight.m_entity, entityIdSteeringRight, 1.0f);
                         HooksUtils::EnableMotor(entityIdSteeringRight);
                         foundSteeringWheels = true;
                     }
                     else
                     {
-                        HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(jointLeft.m_entityId);
-                        HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(jointRight.m_entityId);
+                        interface->CreateWheelControllerComponent(*jointLeft.m_entity, AZ::EntityId(), 0.0f);
+                        interface->CreateWheelControllerComponent(*jointRight.m_entity, AZ::EntityId(), 0.0f);
                     }
                     HooksUtils::EnableMotor(jointLeft.m_entityId);
                     HooksUtils::EnableMotor(jointRight.m_entityId);
@@ -268,15 +273,6 @@ namespace ROS2RobotImporter::SDFormat
 
             return configuration;
         }
-
-        VehicleDynamics::AckermannModelLimits GetModelLimits(const sdf::ElementPtr element)
-        {
-            // Set default limits as in libgazebo_ros_ackermann_drive plugin, see:
-            // https://github.com/ros-simulation/gazebo_ros_pkgs/blob/79fd94c6da76781a91499bc0f54b70560b90a9d2/gazebo_plugins/src/gazebo_ros_ackermann_drive.cpp#L306C1-L307C65
-            const float speedLimit = element->Get<double>("max_speed", 20.0).first;
-            const float steeringLimit = element->Get<double>("max_steer", 0.6).first;
-            return VehicleDynamics::AckermannModelLimits(speedLimit, steeringLimit, speedLimit);
-        }
     } // namespace AckermannParser
 
     ModelPluginImporterHook ROS2ModelPluginHooks::ROS2AckermannModel()
@@ -294,21 +290,32 @@ namespace ROS2RobotImporter::SDFormat
         {
             // Parse parameters
             const sdf::ElementPtr element = sdfPlugin.Element();
-            VehicleDynamics::VehicleConfiguration vehicleConfiguration =
-                AckermannParser::GetConfiguration(element, sdfModel, createdEntities);
-            VehicleDynamics::AckermannModelLimits modelLimits = AckermannParser::GetModelLimits(element);
-            PidConfiguration steeringPid = AckermannParser::GetModelPidConfiguration(element);
-            ControlConfiguration controlConfiguration;
-            controlConfiguration.m_steering = ControlConfiguration::Steering::Ackermann;
+            const auto vehicleConfiguration = AckermannParser::GetConfiguration(element, sdfModel, createdEntities);
+            const auto steeringPid = AckermannParser::GetModelPidConfiguration(element);
+            ROS2Controllers::ControlConfiguration controlConfiguration;
+            controlConfiguration.m_steering = ROS2Controllers::ControlConfiguration::Steering::Ackermann;
+
+            // Set default limits as in libgazebo_ros_ackermann_drive plugin, see:
+            // https://github.com/ros-simulation/gazebo_ros_pkgs/blob/79fd94c6da76781a91499bc0f54b70560b90a9d2/gazebo_plugins/src/gazebo_ros_ackermann_drive.cpp#L306C1-L307C65
+            const float speedLimit = element->Get<double>("max_speed", 20.0).first;
+            const float steeringLimit = element->Get<double>("max_steer", 0.6).first;
+            const float accelLimit = 100.0f; // Acceleration limit is not specified in the plugin, so we use a default value.
 
             // Create required components
+            auto* interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+            AZ_Assert(interface, "ROS2ControllersEditorInterface not available in ROS2AckermannModelPluginHook");
+            if (!interface)
+            {
+                return AZ::Failure(AZStd::string("ROS2ControllersInterface is not available. Cannot create components."));
+            }
+
             HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity);
-            HooksUtils::CreateComponent<ROS2Controllers::ROS2RobotControlComponent>(entity, controlConfiguration);
-            HooksUtils::CreateComponent<VehicleDynamics::AckermannVehicleModelComponent>(
-                entity, vehicleConfiguration, VehicleDynamics::AckermannDriveModel(modelLimits, steeringPid));
+            interface->CreateROS2RobotControlComponent(entity, controlConfiguration);
+            interface->CreateAckermannVehicleModelComponent(
+                entity, vehicleConfiguration, speedLimit, steeringLimit, accelLimit, steeringPid);
 
             // Create Ackermann Control Component
-            if (HooksUtils::CreateComponent<AckermannControlComponent>(entity))
+            if (interface->CreateAckermannControlComponent(entity))
             {
                 return AZ::Success();
             }
