@@ -24,6 +24,18 @@ if(NOT PAL_TRAIT_ROS2SENSORS_SUPPORTED)
     return()
 endif()
 
+# Gazebo messages are optional, so we will only add the dependents if the package is found.
+# The gazebo_msgs package is EOL and will not be available in ROS 2 Kilted Kaiju.
+# If you need to use ContactSensor and/or ROS2 Spawner, please consider building gazebo_msgs from the source.
+find_package(gazebo_msgs QUIET)
+if (gazebo_msgs_FOUND)
+    message(STATUS "Found gazebo_msgs package, enabling legacy features like ContactSensor Component and ROS2 Spawner Component")
+    SET (WITH_GAZEBO_MSGS TRUE)
+else()
+    message(STATUS "Could not find gazebo_msgs package, disabling legacy features like ContactSensor Component and ROS2 Spawner Component")
+    SET(WITH_GAZEBO_MSGS FALSE)
+endif()
+
 # Add the ROS2Sensors.Lidar.Static target
 # Note: this target will include all helper methods that are used by any Lidar implementation
 ly_add_target(

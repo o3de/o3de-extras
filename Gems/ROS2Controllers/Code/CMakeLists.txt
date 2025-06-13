@@ -147,6 +147,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
             PUBLIC
                 AZ::AzToolsFramework
                 ${gem_name}.Private.Object
+                Gem::ROS2.Editor.Static
     )
 
     ly_add_target(
