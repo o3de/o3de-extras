@@ -7,10 +7,11 @@
  */
 #pragma once
 
-#include "QoS.h"
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
+#include <ROS2/Communication/QoS.h>
+#include <ROS2/ROS2TypeIds.h>
 
 namespace ROS2
 {
@@ -18,12 +19,12 @@ namespace ROS2
     struct TopicConfiguration
     {
     public:
-        AZ_TYPE_INFO(TopicConfiguration, "{7535D58F-5284-4657-A799-1F69D3F5AA42}");
+        AZ_TYPE_INFO(TopicConfiguration, TopicConfigurationTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
         TopicConfiguration() = default;
-        TopicConfiguration(const QoS& qos) :
-            m_qos(qos)
+        TopicConfiguration(const QoS& qos)
+            : m_qos(qos)
         {
         }
 

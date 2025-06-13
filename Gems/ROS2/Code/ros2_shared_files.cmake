@@ -4,5 +4,5 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
-    Source/ROS2Module.cpp
+    Source/Clients/ROS2Module.cpp
 )

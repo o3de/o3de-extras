@@ -24,9 +24,9 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <AzToolsFramework/UnitTest/AzToolsFrameworkTestHelpers.h>
 #include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
+#include <Clients/ROS2SystemComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
-#include <SystemComponents/ROS2SystemComponent.h>
 
 #include <QApplication>
 #include <gtest/gtest.h>

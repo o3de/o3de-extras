@@ -12,13 +12,14 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
+#include <ROS2/ROS2TypeIds.h>
 
 namespace ROS2
 {
     class ROS2FrameConfiguration final : public AZ::ComponentConfig
     {
     public:
-        AZ_TYPE_INFO(ROS2FrameConfiguration, "{04882f01-5451-4efa-b4f8-cd57e4b6cadf}");
+        AZ_TYPE_INFO(ROS2FrameConfiguration, ROS2FrameConfigurationTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
         NamespaceConfiguration m_namespaceConfiguration;

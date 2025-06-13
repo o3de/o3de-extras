@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder ROS2Sensors/Assets": {
+                    "watch": "@GEMROOT:ROS2Sensors@/Assets",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder ROS2Sensors/Registry": {
+                    "watch": "@GEMROOT:ROS2Sensors@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}

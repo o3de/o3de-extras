@@ -1,8 +1,5 @@
 {
     "Amazon": {
-      "Physics": {
-            "EnableReducedCoordinateArticulations": true
-        },
         "AssetProcessor": {
             "Settings": {
                 "ScanFolder ROS2/Assets": {

@@ -7,6 +7,8 @@
  */
 #pragma once
 
+#include <ROS2/ROS2TypeIds.h>
+
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/EBus/Event.h>
 #include <AzCore/Interface/Interface.h>
@@ -27,7 +29,7 @@ namespace ROS2
     public:
         using NodeChangedEvent = AZ::Event<std::shared_ptr<rclcpp::Node>>;
 
-        AZ_RTTI(ROS2Requests, "{a9bdbff6-e644-430d-8096-cdb53c88e8fc}");
+        AZ_RTTI(ROS2Requests, ROS2RequestsTypeId);
         virtual ~ROS2Requests() = default;
 
         //! Get a central ROS2 node of the Gem.

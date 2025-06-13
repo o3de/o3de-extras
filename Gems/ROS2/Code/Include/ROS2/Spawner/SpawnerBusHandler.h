@@ -7,10 +7,11 @@
  */
 #pragma once
 
-#include "AzCore/RTTI/BehaviorContext.h"
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
+#include <AzCore/RTTI/BehaviorContext.h>
+#include <ROS2/ROS2TypeIds.h>
 #include <ROS2/Spawner/SpawnerBus.h>
 
 namespace ROS2
@@ -20,8 +21,7 @@ namespace ROS2
         , public AZ::BehaviorEBusHandler
     {
     public:
-        AZ_EBUS_BEHAVIOR_BINDER(
-            SpawnerNotificationsBusHandler, "{9EB89664-0BE5-4E89-8E17-01B21073EBB8}", AZ::SystemAllocator, OnSpawned, OnDespawned);
+        AZ_EBUS_BEHAVIOR_BINDER(SpawnerNotificationsBusHandler, SpawnerBusHandlerTypeId, AZ::SystemAllocator, OnSpawned, OnDespawned);
 
         void OnSpawned(const AZStd::string& spawnableName, const AZ::EntityId& rootEntity, const AZStd::string& ticketName) override
         {
