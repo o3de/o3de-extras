@@ -1,0 +1,16 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.textureMap": "Textures/Proteus_Basecolor.png",
+        "emissive.enable": true,
+        "emissive.intensity": 7.420000076293945,
+        "emissive.textureMap": "Textures/Proteus_Emissive.png",
+        "metallic.textureMap": "Textures/Proteus_Metallic.png",
+        "normal.textureMap": "Textures/Proteus_Normal.png",
+        "opacity.factor": 1.0,
+        "roughness.factor": 0.5,
+        "roughness.textureMap": "Textures/Proteus_Roughness.png",
+        "specularF0.factor": 0.5099999904632568
+    }
+}

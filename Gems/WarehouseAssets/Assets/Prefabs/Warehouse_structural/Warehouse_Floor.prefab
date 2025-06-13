@@ -199,7 +199,7 @@
                                             "assetId": {
                                                 "guid": "{67470786-4A32-5D05-9EE2-73060764DC1D}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousefloor.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousefloor.azmaterial"
                                         }
                                     }
                                 }

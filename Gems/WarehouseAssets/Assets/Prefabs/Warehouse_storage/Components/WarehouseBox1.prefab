@@ -107,7 +107,20 @@
                                             "assetId": {
                                                 "guid": "{5468360F-1789-50A3-96FF-118192B81B48}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehouseboxes.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 4100903441
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5468360F-1789-50A3-96FF-118192B81B48}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
                                         }
                                     }
                                 }
@@ -126,7 +139,9 @@
                                     "subId": 282632013
                                 },
                                 "assetHint": "assets/warehouse/models/box1.fbx.azmodel"
-                            }
+                            },
+                            "LodType": 1,
+                            "QualityDecayRate": 0.20000000298023224
                         }
                     }
                 },
@@ -141,6 +156,44 @@
                 "Component_[9483887954899180333]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 9483887954899180333
+                },
+                "EditorMeshColliderComponent": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 2151018690426040466,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "MWarehouseBoxes"
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
+                                "assetId": {
+                                    "guid": "{8A03C41F-AC4F-5852-8AA7-0A4EFA5E2D61}",
+                                    "subId": 3771023971
+                                },
+                                "assetHint": "assets/warehouse/models/box1.fbx.pxmesh"
+                            },
+                            "Configuration": {
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{8A03C41F-AC4F-5852-8AA7-0A4EFA5E2D61}",
+                                        "subId": 3771023971
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "assets/warehouse/models/box1.fbx.pxmesh"
+                                }
+                            }
+                        }
+                    }
+                },
+                "EditorStaticRigidBodyComponent": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 11444425248016076172
                 }
             }
         }

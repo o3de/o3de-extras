@@ -2,22 +2,21 @@
     "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
     "materialTypeVersion": 5,
     "propertyValues": {
-        "baseColor.textureMap": "../Textures/WarehouseStorageOnWheels/WarehouseStorageOnWheelsBaseMap.png",
+        "baseColor.textureMap": "../Textures/WarehouseStorageOnWheels/WarehouseStorageOnWheels_basecolor.png",
         "emissive.color": [
             0.0,
             0.0,
             0.0,
             1.0
         ],
-        "metallic.textureMap": "../Textures/WarehouseStorageOnWheels/WarehouseStorageOnWheelsMaskMap_R.png",
+        "metallic.textureMap": "../Textures/WarehouseStorageOnWheels/WarehouseStorageOnWheels_metallic.png",
         "normal.factor": 0.5400000214576721,
         "normal.flipX": true,
-        "normal.textureMap": "../Textures/WarehouseStorageOnWheels/WarehouseStorageOnWheelsNormal.png",
+        "normal.textureMap": "../Textures/WarehouseStorageOnWheels/WarehouseStorageOnWheels_normal.png",
         "opacity.factor": 1.0,
         "roughness.factor": 0.5,
-        "roughness.lowerBound": 0.4300000071525574,
-        "roughness.textureMap": "../Textures/WarehouseStorageOnWheels/WarehouseStorageOnWheelsMaskMap_A.png",
-        "roughness.upperBound": 0.0,
+        "roughness.textureMap": "../Textures/WarehouseStorageOnWheels/WarehouseStorageOnWheels_roughness.png",
+        "roughness.upperBound": 0.7699999809265137,
         "specularF0.factor": 0.6200000047683716
     }
 }

@@ -2,21 +2,21 @@
     "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
     "materialTypeVersion": 5,
     "propertyValues": {
-        "baseColor.textureMap": "../Textures/WarehouseFloor/WarehouseFloorBaseMap.png",
+        "baseColor.textureMap": "../Textures/WarehouseFloor/WarehouseFloor_basecolor.png",
         "emissive.color": [
             0.0,
             0.0,
             0.0,
             1.0
         ],
-        "metallic.textureMap": "../Textures/WarehouseFloor/WarehouseFloorMaskMap_R.png",
+        "metallic.textureMap": "../Textures/WarehouseFloor/WarehouseFloor_metallic.png",
         "normal.factor": 0.11999999731779099,
         "normal.flipY": true,
-        "normal.textureMap": "../Textures/WarehouseFloor/WarehouseFloorNormal.png",
+        "normal.textureMap": "../Textures/WarehouseFloor/WarehouseFloor_normal.png",
         "opacity.factor": 1.0,
         "roughness.factor": 0.5,
-        "roughness.lowerBound": 0.20999999344348907,
-        "roughness.textureMap": "../Textures/WarehouseFloor/WarehouseFloorMaskMap_A.png",
+        "roughness.textureMap": "../Textures/WarehouseFloor/WarehouseFloor_roughness.png",
+        "roughness.upperBound": 0.7900000214576721,
         "specularF0.factor": 0.46000000834465027
     }
 }

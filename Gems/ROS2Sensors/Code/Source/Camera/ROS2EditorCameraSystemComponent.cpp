@@ -35,6 +35,10 @@ namespace ROS2Sensors
     {
         BaseSystemComponent::GetRequiredServices(required);
     }
+    void ROS2EditorCameraSystemComponent::GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent)
+    {
+        BaseSystemComponent::GetDependentServices(dependent);
+    }
 
     void ROS2EditorCameraSystemComponent::GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {

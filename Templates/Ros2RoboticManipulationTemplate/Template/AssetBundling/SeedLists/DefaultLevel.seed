@@ -1,0 +1,15 @@
+{
+    "Type": "JsonSerialization",
+    "Version": 1,
+    "ClassName": "AZStd::vector<SeedInfo, allocator>",
+    "ClassData": [
+        {
+            "assetId": {
+                "guid": "{643927EB-C53F-504A-AE26-FDEE21A76A27}",
+                "subId": 4285532669
+            },
+            "platformFlags": 2,
+            "pathHint": "levels/roboticmanipulation/roboticmanipulation.spawnable"
+        }
+    ]
+}
