@@ -40,7 +40,7 @@ namespace ROS2Sensors
         incompatible.push_back(AZ_CRC_CE("ROS2CameraSystemService"));
     }
 
-    void ROS2SystemCameraComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
+    void ROS2SystemCameraComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("ROS2Service"));
     }
