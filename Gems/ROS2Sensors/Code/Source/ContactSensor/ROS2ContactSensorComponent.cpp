@@ -5,9 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#ifndef WITH_GAZEBO_MSGS
-static_assert(false, "This file should not be included in the build, without WITH_GAZEBO_MSGS defined.");
-#endif
+
 #include "ROS2ContactSensorComponent.h"
 #include <AzFramework/Physics/Collision/CollisionEvents.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
