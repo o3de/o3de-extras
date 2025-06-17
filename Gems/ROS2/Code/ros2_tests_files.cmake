@@ -5,6 +5,5 @@
 
 set(FILES
     Tests/ROS2Test.cpp
-    Tests/GNSSTest.cpp
     Tests/PIDTest.cpp
 )

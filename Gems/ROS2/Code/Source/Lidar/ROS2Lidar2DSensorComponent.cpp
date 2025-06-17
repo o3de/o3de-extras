@@ -106,12 +106,19 @@ namespace ROS2
 
     void ROS2Lidar2DSensorComponent::FrequencyTick()
     {
-        RaycastResult lastScanResults = m_lidarCore.PerformRaycast();
+        AZStd::optional<RaycastResults> results = m_lidarCore.PerformRaycast();
 
-        if (!m_sensorConfiguration.m_publishingEnabled)
-        { // Skip publishing when it is disabled.
+        if (!results.has_value() || !m_sensorConfiguration.m_publishingEnabled)
+        {
             return;
         }
+
+        PublishRaycastResults(results.value());
+    }
+
+    void ROS2Lidar2DSensorComponent::PublishRaycastResults(const RaycastResults& results)
+    {
+        const bool isIntensityEnabled = m_lidarCore.m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity;
 
         auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         auto message = sensor_msgs::msg::LaserScan();
@@ -127,7 +134,14 @@ namespace ROS2
         message.scan_time = 1.f / m_sensorConfiguration.m_frequency;
         message.time_increment = 0.0f;
 
-        message.ranges.assign(lastScanResults.m_ranges.begin(), lastScanResults.m_ranges.end());
+        const auto rangeField = results.GetConstFieldSpan<RaycastResultFlags::Range>().value();
+        message.ranges.assign(rangeField.begin(), rangeField.end());
+        if (isIntensityEnabled)
+        {
+            const auto intensityField = results.GetConstFieldSpan<RaycastResultFlags::Intensity>().value();
+            message.intensities.assign(intensityField.begin(), intensityField.end());
+        }
+
         m_laserScanPublisher->publish(message);
     }
 } // namespace ROS2

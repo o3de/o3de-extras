@@ -30,12 +30,18 @@ namespace ROS2
         virtual void Activate() override;
         virtual void Deactivate() override;
 
+        //! Sets the time source to the given time.
+        //! @param time The time to set the time source to.
+        //! @return An outcome indicating success or failure.
+        virtual AZ::Outcome<void, AZStd::string> AdjustTime(const builtin_interfaces::msg::Time& time) override;
+
         //! Get ROS 2 time as ROS2 message.
         //! @see ROS2Requests::GetROSTimestamp() for more details.
         virtual builtin_interfaces::msg::Time GetROSTimestamp() const override;
 
     private:
         double m_elapsed = 0;
+        bool m_resetTimeOnRestart = true;
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_onSceneSimulationEvent;
         AzPhysics::SystemEvents::OnSceneAddedEvent::Handler m_onSceneAdded;
         AzPhysics::SystemEvents::OnSceneRemovedEvent::Handler m_onSceneRemoved;

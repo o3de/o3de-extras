@@ -11,6 +11,7 @@
 #include <AzCore/EBus/OrderedEvent.h>
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/Common/PhysicsTypes.h>
+#include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/Events/SensorEventSource.h>
 
 namespace ROS2
@@ -32,5 +33,6 @@ namespace ROS2
 
     private:
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_onSceneSimulationEventHandler; ///< Handler for physics callback.
+        builtin_interfaces::msg::Time m_lastSimulationTime; ///< Last simulation time.
     };
 } // namespace ROS2

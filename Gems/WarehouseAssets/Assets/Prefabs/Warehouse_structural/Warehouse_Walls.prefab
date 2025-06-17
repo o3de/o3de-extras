@@ -62,7 +62,6 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 11277376333132157077,
                     "Child Entity Order": [
-                        "Entity_[463080257953440]",
                         "Entity_[375975649381444]",
                         "Entity_[375971354414148]"
                     ]
@@ -180,7 +179,7 @@
                                             "assetId": {
                                                 "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
                                         }
                                     }
                                 },
@@ -193,7 +192,33 @@
                                             "assetId": {
                                                 "guid": "{06298918-E750-5053-B55B-10D158B1ED8C}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousegate.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousegate.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3367833104
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3906332078
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{06298918-E750-5053-B55B-10D158B1ED8C}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehousegate.azmaterial"
                                         }
                                     }
                                 }
@@ -219,7 +244,7 @@
                                     "Name": "MWarehouseGate"
                                 },
                                 {
-                                    "Name": "MWarehouseModules"
+                                    "Name": "MWarehouseModules_001"
                                 }
                             ]
                         }
@@ -253,7 +278,14 @@
                 "Component_[17714278481541526192]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 17714278481541526192,
-                    "Parent Entity": "Entity_[368861560381088]"
+                    "Parent Entity": "Entity_[368861560381088]",
+                    "Transform Data": {
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
                 },
                 "Component_[17751943132203388929]": {
                     "$type": "EditorVisibilityComponent",
@@ -324,7 +356,7 @@
                                             "assetId": {
                                                 "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
                                         }
                                     }
                                 }
@@ -439,7 +471,7 @@
                                             "assetId": {
                                                 "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
                                         }
                                     }
                                 }
@@ -567,7 +599,7 @@
                                             "assetId": {
                                                 "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
                                         }
                                     }
                                 }
@@ -691,142 +723,6 @@
                 }
             }
         },
-        "Entity_[463080257953440]": {
-            "Id": "Entity_[463080257953440]",
-            "Name": "Front_no_gates",
-            "Components": {
-                "Component_[10813453887359688918]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 10813453887359688918,
-                    "Parent Entity": "Entity_[368861560381088]",
-                    "Transform Data": {
-                        "Translate": [
-                            39.84550094604492,
-                            1.1772464513778687,
-                            0.0
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
-                        ]
-                    }
-                },
-                "Component_[18360744952719232820]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 18360744952719232820
-                },
-                "Component_[2298197826914367238]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2298197826914367238
-                },
-                "Component_[3149718320647090514]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 3149718320647090514,
-                    "VisibilityFlag": false
-                },
-                "Component_[4417542793349551988]": {
-                    "$type": "EditorStaticRigidBodyComponent",
-                    "Id": 4417542793349551988
-                },
-                "Component_[4932017064714589766]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 4932017064714589766
-                },
-                "Component_[7017245480046407512]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 7017245480046407512,
-                    "DisabledComponents": {
-                        "Component_[10232715223514738948]": {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 10232715223514738948,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
-                                            "subId": 269507228
-                                        },
-                                        "assetHint": "assets/warehouse/models/warehouse_walls_front.fbx.azmodel"
-                                    }
-                                }
-                            }
-                        },
-                        "Component_[3790789121538053334]": {
-                            "$type": "EditorColliderComponent",
-                            "Id": 3790789121538053334,
-                            "ColliderConfiguration": {
-                                "MaterialSlots": {
-                                    "Slots": [
-                                        {
-                                            "Name": "MWarehouseModules"
-                                        }
-                                    ]
-                                }
-                            },
-                            "ShapeConfiguration": {
-                                "PhysicsAsset": {
-                                    "Asset": {
-                                        "assetId": {
-                                            "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
-                                            "subId": 2510506373
-                                        },
-                                        "assetHint": "assets/warehouse/models/warehouse_walls_front.pxmesh"
-                                    },
-                                    "Configuration": {
-                                        "PhysicsAsset": {
-                                            "assetId": {
-                                                "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
-                                                "subId": 2510506373
-                                            },
-                                            "loadBehavior": "QueueLoad",
-                                            "assetHint": "assets/warehouse/models/warehouse_walls_front.pxmesh"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "Component_[8212625672736002681]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 8212625672736002681,
-                    "PendingComponents": {
-                        "Component_[11718397946111790072]": {
-                            "$type": "EditorMaterialComponent",
-                            "Id": 11718397946111790072,
-                            "Controller": {
-                                "Configuration": {
-                                    "materials": [
-                                        {
-                                            "Key": {
-                                                "materialSlotStableId": 103484566
-                                            },
-                                            "Value": {
-                                                "MaterialAsset": {
-                                                    "assetId": {
-                                                        "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
-                                                    },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                },
-                "Component_[9253383058600544919]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 9253383058600544919
-                },
-                "Component_[9529209697264184359]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 9529209697264184359
-                }
-            }
-        },
         "Entity_[463290711350944]": {
             "Id": "Entity_[463290711350944]",
             "Name": "Front_gate",
@@ -943,7 +839,7 @@
                                                     "assetId": {
                                                         "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                                     },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
+                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
                                                 }
                                             }
                                         }
@@ -1086,7 +982,7 @@
                                                     "assetId": {
                                                         "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                                     },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
+                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
                                                 }
                                             }
                                         },
@@ -1099,7 +995,7 @@
                                                     "assetId": {
                                                         "guid": "{06298918-E750-5053-B55B-10D158B1ED8C}"
                                                     },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousegate.material.azmaterial"
+                                                    "assetHint": "assets/warehouse/materials/mwarehousegate.azmaterial"
                                                 }
                                             }
                                         }

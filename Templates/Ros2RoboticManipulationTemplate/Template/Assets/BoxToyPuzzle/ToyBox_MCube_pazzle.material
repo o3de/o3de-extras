@@ -1,0 +1,26 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.8000000715255737,
+            0.29154831171035767,
+            0.03697733208537102,
+            1.0
+        ],
+        "baseColor.textureMap": "texture/BoxToyPuzzle_MCube_pazzle_BaseMap.png",
+        "baseColor.textureMapUv": "Unwrapped",
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "metallic.textureMap": "texture/BoxToyPuzzle_MCube_pazzle_Metallic.png",
+        "normal.textureMap": "texture/BoxToyPuzzle_MCube_pazzle_Normal.png",
+        "opacity.factor": 1.0,
+        "roughness.factor": 0.5,
+        "roughness.textureMap": "texture/BoxToyPuzzle_MCube_pazzle_Roughness.png",
+        "specularF0.textureMap": "texture/BoxToyPuzzle_MCube_pazzle_Specular.png"
+    }
+}

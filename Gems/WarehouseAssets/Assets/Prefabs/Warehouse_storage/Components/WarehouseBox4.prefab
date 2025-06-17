@@ -112,6 +112,19 @@
                             "materials": [
                                 {
                                     "Key": {
+                                        "materialSlotStableId": 1773863654
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5468360F-1789-50A3-96FF-118192B81B48}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
                                         "materialSlotStableId": 2919702015
                                     },
                                     "Value": {
@@ -119,7 +132,7 @@
                                             "assetId": {
                                                 "guid": "{5468360F-1789-50A3-96FF-118192B81B48}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehouseboxes.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
                                         }
                                     }
                                 }
@@ -147,7 +160,9 @@
                                     "subId": 282185463
                                 },
                                 "assetHint": "assets/warehouse/models/box2.fbx.azmodel"
-                            }
+                            },
+                            "LodType": 1,
+                            "QualityDecayRate": 0.20000000298023224
                         }
                     }
                 },
@@ -162,6 +177,51 @@
                 "Component_[9483887954899180333]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 9483887954899180333
+                },
+                "EditorMeshColliderComponent": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 13457564342271675332,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "MWarehouseBoxes_001"
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
+                                "assetId": {
+                                    "guid": "{198A15B4-31E6-5693-BCF6-6C3D49884F59}",
+                                    "subId": 3227237471
+                                },
+                                "assetHint": "assets/warehouse/models/box2.fbx.pxmesh"
+                            },
+                            "Configuration": {
+                                "Scale": [
+                                    1.2999999523162842,
+                                    1.2999999523162842,
+                                    1.5600000619888306
+                                ],
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{198A15B4-31E6-5693-BCF6-6C3D49884F59}",
+                                        "subId": 3227237471
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "assets/warehouse/models/box2.fbx.pxmesh"
+                                }
+                            }
+                        },
+                        "HasNonUniformScale": true
+                    },
+                    "HasNonUniformScale": true
+                },
+                "EditorStaticRigidBodyComponent": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 2298260891530613232
                 }
             }
         }

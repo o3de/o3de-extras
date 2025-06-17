@@ -422,7 +422,7 @@ namespace XR
         uint32_t bufferSize = width * height * formatSize;
 
         // Get a list of supported shading rates so we always write a valid one
-        const AZ::RHI::Device& device = image->GetDevice();
+        const AZ::RHI::Device& device = image->GetDeviceImage(AZ::RHI::MultiDevice::DefaultDeviceIndex)->GetDevice();
         const auto& features = device.GetFeatures();
         AZ::RHI::ShadingRate supportedRates[static_cast<int>(AZ::RHI::ShadingRate::Count)];
         AZ::RHI::ShadingRate lastSupported = AZ::RHI::ShadingRate::Rate1x1;
@@ -546,8 +546,9 @@ namespace XR
         AZ::RHI::ImageUpdateRequest request;
         request.m_image = image;
         request.m_sourceData = shadingRatePatternData.data();
-        request.m_sourceSubresourceLayout =
-            AZ::RHI::ImageSubresourceLayout(AZ::RHI::Size(width, height, 1), height, width * formatSize, bufferSize, 1, 1);
+        request.m_sourceSubresourceLayout.Init(
+            AZ::RHI::MultiDevice::AllDevices,
+            AZ::RHI::DeviceImageSubresourceLayout(AZ::RHI::Size(width, height, 1), height, width * formatSize, bufferSize, 1, 1));
 
         AZ::RHI::ImagePool* imagePool = azrtti_cast<AZ::RHI::ImagePool*>(image->GetPool());
         return imagePool->UpdateImageContents(request);

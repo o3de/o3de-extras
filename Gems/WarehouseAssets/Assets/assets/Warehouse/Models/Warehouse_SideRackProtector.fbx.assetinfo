@@ -7,10 +7,15 @@
             "NodeSelectionList": {
                 "selectedNodes": [
                     "RootNode",
-                    "RootNode.SideRackProtector"
+                    "RootNode.SideRackProtector",
+                    "RootNode.SideRackProtector.MWarehouseProps",
+                    "RootNode.SideRackProtector.UVMap",
+                    "RootNode.SideRackProtector.custom_properties",
+                    "RootNode.SideRackProtector.transform"
                 ]
             },
             "export method": 1,
+            "DecomposeMeshes": true,
             "PhysicsMaterialSlots": {
                 "Slots": [
                     {
@@ -24,9 +29,12 @@
             "name": "Warehouse_SideRackProtector",
             "nodeSelectionList": {
                 "selectedNodes": [
-                    {},
                     "RootNode",
-                    "RootNode.SideRackProtector"
+                    "RootNode.SideRackProtector",
+                    "RootNode.SideRackProtector.MWarehouseProps",
+                    "RootNode.SideRackProtector.UVMap",
+                    "RootNode.SideRackProtector.custom_properties",
+                    "RootNode.SideRackProtector.transform"
                 ]
             },
             "rules": {
@@ -37,6 +45,9 @@
                 ]
             },
             "id": "{FA33C4EC-7A39-5D81-8041-B44E90A6F50B}"
+        },
+        {
+            "$type": "{41DCBEAB-203C-4A05-96FA-98E1D8A96FA1} ImportGroup"
         },
         {
             "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
@@ -67,8 +78,8 @@
         },
         {
             "$type": "PrefabGroup",
-            "name": "Models/Warehouse_SideRackProtector_fbx.procprefab",
-            "id": "{A9A6E769-163B-50E9-9D50-12C5B26B79EF}"
+            "name": "assets/Warehouse/Models/Warehouse_SideRackProtector_fbx.procprefab",
+            "id": "{7B188D07-8895-58F3-B0B3-F1A736F394AC}"
         }
     ]
 }

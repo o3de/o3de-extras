@@ -11,7 +11,9 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Math/Vector3.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <ROS2/Communication/QoS.h>
+#include <ROS2/Lidar/RaycastResults.h>
 
 namespace ROS2
 {
@@ -84,19 +86,12 @@ namespace ROS2
     //! Unique id used by lidar raycasters.
     using LidarId = StronglyTypedUuid<struct LidarIdTag>;
 
-    enum class RaycastResultFlags : AZ::u8
+    //! Structure used to describe both minimal and maximal
+    //! ray travel distance in meters.
+    struct RayRange
     {
-        Points = (1 << 0), //!< return 3D point coordinates
-        Ranges = (1 << 1), //!< return array of distances
-    };
-
-    //! Bitwise operators for RaycastResultFlags
-    AZ_DEFINE_ENUM_BITWISE_OPERATORS(RaycastResultFlags)
-
-    struct RaycastResult
-    {
-        AZStd::vector<AZ::Vector3> m_points;
-        AZStd::vector<float> m_ranges;
+        float m_min{ 0.0f };
+        float m_max{ 0.0f };
     };
 
     //! Interface class that allows for communication with a single Lidar instance.
@@ -110,16 +105,9 @@ namespace ROS2
         //! vector in the positive z direction first by the y, next by the z axis. The x axis is currently not included in calculations.
         virtual void ConfigureRayOrientations(const AZStd::vector<AZ::Vector3>& orientations) = 0;
 
-        //! Configures ray maximum travel distance.
-        //! @param range Ray range in meters.
-        virtual void ConfigureRayRange(float range) = 0;
-
-        //! Configures ray minimum travel distance.
-        //! @param range Ray range in meters.
-        virtual void ConfigureMinimumRayRange(float range)
-        {
-            AZ_Assert(false, "This Lidar Implementation does not support minimum ray range configurations!");
-        }
+        //! Configures ray range.
+        //! @param range Ray range.
+        virtual void ConfigureRayRange(RayRange range) = 0;
 
         //! Configures result flags.
         //! @param flags Raycast result flags define set of data types returned by lidar.
@@ -131,8 +119,10 @@ namespace ROS2
         //! Schedules a raycast that originates from the point described by the lidarTransform.
         //! @param lidarTransform Current transform from global to lidar reference frame.
         //! @param flags Used to request different kinds of data returned by raycast query
-        //! @return Results of the raycast in the requested form including 3D space coordinates and/or ranges.
-        virtual RaycastResult PerformRaycast(const AZ::Transform& lidarTransform) = 0;
+        //! @return Results of the raycast in the requested form if the raycast was successfull or an error message if it was not.
+        //! The returned error messages are c-style string literals which are statically allocated and therefore do not need to be
+        //! dealocated.
+        virtual AZ::Outcome<RaycastResults, const char*> PerformRaycast(const AZ::Transform& lidarTransform) = 0;
 
         //! Configures ray Gaussian Noise parameters.
         //! Each call overrides the previous configuration.
@@ -209,11 +199,6 @@ namespace ROS2
 
     protected:
         ~LidarRaycasterRequests() = default;
-
-        static void ValidateRayRange([[maybe_unused]] float range)
-        {
-            AZ_Assert(range > 0.0f, "Provided ray range was of incorrect value: Ray range value must be greater than zero.")
-        }
 
         static void ValidateRayOrientations([[maybe_unused]] const AZStd::vector<AZ::Vector3>& orientations)
         {

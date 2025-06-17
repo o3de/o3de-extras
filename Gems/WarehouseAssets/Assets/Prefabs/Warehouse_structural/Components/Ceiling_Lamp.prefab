@@ -52,7 +52,7 @@
     "Entities": {
         "Entity_[160675420873135]": {
             "Id": "Entity_[160675420873135]",
-            "Name": "env_light",
+            "Name": "CeilingAmbient",
             "Components": {
                 "Component_[1095037194436951656]": {
                     "$type": "EditorEntityIconComponent",
@@ -104,7 +104,7 @@
                         "Translate": [
                             0.0,
                             0.0,
-                            -0.2489767074584961
+                            -0.28542327880859375
                         ]
                     }
                 },
@@ -127,6 +127,76 @@
                 "Component_[8728350275649358967]": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 8728350275649358967
+                }
+            }
+        },
+        "Entity_[406383391784513]": {
+            "Id": "Entity_[406383391784513]",
+            "Name": "LightBulb",
+            "Components": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 3697467797984621479,
+                    "Controller": {
+                        "Configuration": {
+                            "LightType": 1,
+                            "Intensity": 500.0,
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 0.6000000238418579
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 4858575228805500784
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 12183617194830789849
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 1039371649101738797
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3679159995405265846
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 13146134938949470271
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 1589289903331216526
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3363953609205516254
+                },
+                "EditorSphereShapeComponent": {
+                    "$type": "EditorSphereShapeComponent",
+                    "Id": 2433037172727483138,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "SphereShape": {
+                        "Configuration": {
+                            "Radius": 0.05000000074505806
+                        }
+                    }
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 6218801036364820178
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 7304454679242705596,
+                    "Parent Entity": "Entity_[42005323915901]"
                 }
             }
         },
@@ -181,7 +251,8 @@
                     "Child Entity Order": [
                         "Entity_[5307646330990]",
                         "Entity_[160675420873135]",
-                        "Entity_[6054970640494]"
+                        "Entity_[6054970640494]",
+                        "Entity_[406383391784513]"
                     ]
                 },
                 "Component_[9212702534469447939]": {
@@ -200,7 +271,7 @@
         },
         "Entity_[5307646330990]": {
             "Id": "Entity_[5307646330990]",
-            "Name": "ceiling_light",
+            "Name": "MainLight",
             "Components": {
                 "Component_[10859140407872365140]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -209,21 +280,6 @@
                 "Component_[13731661953046902460]": {
                     "$type": "EditorEntitySortComponent",
                     "Id": 13731661953046902460
-                },
-                "Component_[14095203236477292142]": {
-                    "$type": "EditorSphereShapeComponent",
-                    "Id": 14095203236477292142,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "SphereShape": {
-                        "Configuration": {
-                            "Radius": 0.029999999329447746
-                        }
-                    }
                 },
                 "Component_[15575290374250860903]": {
                     "$type": "EditorLockComponent",
@@ -242,6 +298,11 @@
                             0.0,
                             0.0,
                             -0.02852153778076172
+                        ],
+                        "Rotate": [
+                            0.0,
+                            180.0,
+                            0.0
                         ]
                     }
                 },
@@ -262,16 +323,19 @@
                     "Id": 8006897901341233975,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 1,
-                            "Intensity": 2200.0,
+                            "LightType": 2,
+                            "Intensity": 1200.0,
                             "AttenuationRadiusMode": 0,
-                            "AttenuationRadius": 40.0,
+                            "AttenuationRadius": 20.0,
+                            "EnableShutters": true,
+                            "InnerShutterAngleDegrees": 69.41500091552734,
+                            "OuterShutterAngleDegrees": 88.20999908447266,
                             "Enable Shadow": true,
-                            "Shadow Bias": 0.30000001192092896,
-                            "Normal Shadow Bias": 6.400000095367432,
-                            "Shadowmap Max Size": "Size1024",
+                            "Shadow Bias": 1.2000000476837158,
+                            "Normal Shadow Bias": 4.0,
+                            "Shadowmap Max Size": "Size2048",
                             "Shadow Filter Method": 1,
-                            "Filtering Sample Count": 64,
+                            "Filtering Sample Count": 20,
                             "Esm Exponent": 5000.0,
                             "Shadow Caching Mode": 1,
                             "Shadow Caching Enabled": true,
@@ -282,6 +346,21 @@
                 "Component_[9787204896455568909]": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 9787204896455568909
+                },
+                "EditorDiskShapeComponent": {
+                    "$type": "EditorDiskShapeComponent",
+                    "Id": 1996049784603953192,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "DiskShape": {
+                        "Configuration": {
+                            "Radius": 0.05000000074505806
+                        }
+                    }
                 }
             }
         },
@@ -304,7 +383,7 @@
                                             "assetId": {
                                                 "guid": "{EF5EE945-8A4F-578E-8AF5-2D545FA4CDEE}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules_lamps.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules_lamps.azmaterial"
                                         }
                                     }
                                 }

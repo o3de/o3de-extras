@@ -1,10 +1,11 @@
 {
     "project_name": "${Name}",
+    "version": "1.0.0",
     "project_id": "${ProjectId}",
     "origin": "Open 3D Engine Extras: ${Name}",
-    "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate/Template/LICENSE.txt",
+    "license": "What license ${Name} uses goes here: i.e. https://opensource.org/licenses/Apache-2.0 Or https://opensource.org/licenses/MIT etc.",
     "display_name": "${Name}",
-    "summary": "Template for ROS2 projects.",
+    "summary": "A short description of ${Name}.",
     "canonical_tags": [
         "Project"
     ],
@@ -34,14 +35,14 @@
         "PrimitiveAssets",
         "PrefabBuilder",
         "ROS2>=3.1.0",
-        "RosRobotSample>=2.0.0",
+        "ROS2SampleRobots",
         "SaveData",
         "ScriptCanvasPhysics",
         "ScriptEvents",
         "StartingPointInput",
         "TextureAtlas",
         "WhiteBox",
-        "WarehouseSample",
+        "WarehouseAssets",
         "${Name}"
     ]    
 }

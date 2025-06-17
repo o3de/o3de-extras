@@ -12,9 +12,9 @@
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
-#include "Georeference/GNSSFormatConversions.h"
+
 #include <ROS2/GNSS/GNSSPostProcessingRequestBus.h>
-#include <ROS2/Georeference/GeoreferenceBus.h>
+#include <Georeferencing/GeoreferenceBus.h>
 
 namespace ROS2
 {
@@ -94,11 +94,12 @@ namespace ROS2
 
     void ROS2GNSSSensorComponent::FrequencyTick()
     {
+        using namespace Georeferencing;
         AZ::Vector3 currentPosition{ 0.0f };
         AZ::TransformBus::EventResult(currentPosition, GetEntityId(), &AZ::TransformBus::Events::GetWorldTranslation);
 
         WGS::WGS84Coordinate currentPositionWGS84;
-        ROS2::GeoreferenceRequestsBus::BroadcastResult(
+        GeoreferenceRequestsBus::BroadcastResult(
             currentPositionWGS84, &GeoreferenceRequests::ConvertFromLevelToWGS84, currentPosition);
 
         m_gnssMsg.latitude = currentPositionWGS84.m_latitude;

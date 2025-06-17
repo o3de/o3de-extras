@@ -1,0 +1,56 @@
+# Copyright (c) Contributors to the Open 3D Engine Project.
+# For complete copyright and license terms please see the LICENSE at the root of this distribution.
+#
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+#
+
+set(FILES
+    Source/SimulationInterfacesModuleInterface.cpp
+    Source/SimulationInterfacesModuleInterface.h
+    Source/Clients/SimulationManager.cpp
+    Source/Clients/SimulationManager.h
+    Source/Clients/SimulationEntitiesManager.cpp
+    Source/Clients/SimulationEntitiesManager.h
+    Source/Clients/CommonUtilities.cpp
+    Source/Clients/CommonUtilities.h
+    Source/Clients/SimulationFeaturesAggregator.cpp
+    Source/Clients/SimulationFeaturesAggregator.h
+    Source/Clients/ROS2SimulationInterfacesSystemComponent.cpp
+    Source/Clients/ROS2SimulationInterfacesSystemComponent.h
+    Source/Interfaces/IROS2HandlerBase.h
+    Source/Actions/SimulateStepsActionServerHandler.cpp
+    Source/Actions/SimulateStepsActionServerHandler.h
+    Source/Actions/ROS2ActionBase.h
+    Source/Services/ROS2ServiceBase.h
+    Source/Services/GetEntitiesServiceHandler.cpp
+    Source/Services/GetEntitiesServiceHandler.h
+    Source/Services/DeleteEntityServiceHandler.cpp
+    Source/Services/DeleteEntityServiceHandler.h
+    Source/Services/GetEntitiesServiceHandler.cpp
+    Source/Services/GetEntitiesServiceHandler.h
+    Source/Services/GetEntitiesStatesServiceHandler.cpp
+    Source/Services/GetEntitiesStatesServiceHandler.h
+    Source/Services/GetEntityStateServiceHandler.cpp
+    Source/Services/GetEntityStateServiceHandler.h
+    Source/Services/DeleteEntityServiceHandler.cpp
+    Source/Services/DeleteEntityServiceHandler.h
+    Source/Services/SetEntityStateServiceHandler.cpp
+    Source/Services/SetEntityStateServiceHandler.h
+    Source/Services/GetSpawnablesServiceHandler.cpp
+    Source/Services/GetSpawnablesServiceHandler.h
+    Source/Services/SpawnEntityServiceHandler.cpp
+    Source/Services/SpawnEntityServiceHandler.h
+    Source/Services/ResetSimulationServiceHandler.cpp
+    Source/Services/ResetSimulationServiceHandler.h
+    Source/Services/GetSimulationFeaturesServiceHandler.cpp
+    Source/Services/GetSimulationFeaturesServiceHandler.h
+    Source/Services/SetSimulationStateServiceHandler.cpp
+    Source/Services/SetSimulationStateServiceHandler.h
+    Source/Services/GetSimulationStateServiceHandler.cpp
+    Source/Services/GetSimulationStateServiceHandler.h
+    Source/Services/StepSimulationServiceHandler.cpp
+    Source/Services/StepSimulationServiceHandler.h
+    Source/Utils/RegistryUtils.cpp
+    Source/Utils/RegistryUtils.h
+    Source/Utils/Utils.h
+)

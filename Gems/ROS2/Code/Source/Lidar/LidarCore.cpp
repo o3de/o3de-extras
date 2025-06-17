@@ -6,12 +6,13 @@
  *
  */
 
-#include "LidarCore.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
+#include <Lidar/LidarCore.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Lidar/ClassSegmentationBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
@@ -36,6 +37,34 @@ namespace ROS2
         }
     }
 
+    RaycastResultFlags LidarCore::GetRaycastResultFlagsForConfig(const LidarSensorConfiguration& configuration)
+    {
+        RaycastResultFlags flags = RaycastResultFlags::Range | RaycastResultFlags::Point;
+        if (configuration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity)
+        {
+            flags |= RaycastResultFlags::Intensity;
+        }
+
+        if (configuration.m_lidarSystemFeatures & LidarSystemFeatures::Segmentation && configuration.m_isSegmentationEnabled)
+        {
+            if (ClassSegmentationInterface::Get())
+            {
+                flags |= RaycastResultFlags::SegmentationData;
+            }
+            else
+            {
+                AZ_Error(
+                    "ROS2",
+                    false,
+                    "Segmentation feature was enabled for this lidar sensor but the segmentation interface is not accessible. Make sure to "
+                    "either add the Class segmentation component to the level entity or disable the feature in the lidar component "
+                    "configuration.");
+            }
+        }
+
+        return flags;
+    }
+
     void LidarCore::ConnectToLidarRaycaster()
     {
         if (auto raycasterId = m_implementationToRaycasterMap.find(m_lidarConfiguration.m_lidarSystem);
@@ -58,10 +87,8 @@ namespace ROS2
         LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayOrientations, m_lastRotations);
         LidarRaycasterRequestBus::Event(
             m_lidarRaycasterId,
-            &LidarRaycasterRequestBus::Events::ConfigureMinimumRayRange,
-            m_lidarConfiguration.m_lidarParameters.m_minRange);
-        LidarRaycasterRequestBus::Event(
-            m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayRange, m_lidarConfiguration.m_lidarParameters.m_maxRange);
+            &LidarRaycasterRequestBus::Events::ConfigureRayRange,
+            RayRange{ m_lidarConfiguration.m_lidarParameters.m_minRange, m_lidarConfiguration.m_lidarParameters.m_maxRange });
 
         if ((m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Noise) &&
             m_lidarConfiguration.m_lidarParameters.m_isNoiseEnabled)
@@ -74,9 +101,8 @@ namespace ROS2
                 m_lidarConfiguration.m_lidarParameters.m_noiseParameters.m_distanceNoiseStdDevRisePerMeter);
         }
 
-        RaycastResultFlags requestedFlags = RaycastResultFlags::Ranges | RaycastResultFlags::Points;
-
-        LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags, requestedFlags);
+        m_resultFlags = GetRaycastResultFlagsForConfig(m_lidarConfiguration);
+        LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags, m_resultFlags);
 
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::CollisionLayers)
         {
@@ -101,6 +127,12 @@ namespace ROS2
         }
     }
 
+    void LidarCore::UpdatePoints(const RaycastResults& results)
+    {
+        const auto pointsField = results.GetConstFieldSpan<RaycastResultFlags::Point>().value();
+        m_lastPoints.assign(pointsField.begin(), pointsField.end());
+    }
+
     LidarCore::LidarCore(const AZStd::vector<LidarTemplate::LidarModel>& availableModels)
         : m_lidarConfiguration(availableModels)
     {
@@ -113,7 +145,7 @@ namespace ROS2
 
     void LidarCore::VisualizeResults() const
     {
-        if (m_lastScanResults.m_points.empty())
+        if (m_lastPoints.empty())
         {
             return;
         }
@@ -122,8 +154,8 @@ namespace ROS2
         {
             const uint8_t pixelSize = 2;
             AZ::RPI::AuxGeomDraw::AuxGeomDynamicDrawArguments drawArgs;
-            drawArgs.m_verts = m_lastScanResults.m_points.data();
-            drawArgs.m_vertCount = m_lastScanResults.m_points.size();
+            drawArgs.m_verts = m_lastPoints.data();
+            drawArgs.m_vertCount = m_lastPoints.size();
             drawArgs.m_colors = &AZ::Colors::Red;
             drawArgs.m_colorCount = 1;
             drawArgs.m_opacityType = AZ::RPI::AuxGeomDraw::OpacityType::Opaque;
@@ -161,19 +193,30 @@ namespace ROS2
         return m_lidarRaycasterId;
     }
 
-    RaycastResult LidarCore::PerformRaycast()
+    RaycastResultFlags LidarCore::GetResultFlags() const
+    {
+        return m_resultFlags;
+    }
+
+    AZStd::optional<RaycastResults> LidarCore::PerformRaycast()
     {
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, m_entityId);
         const auto entityTransform = entity->FindComponent<AzFramework::TransformComponent>();
 
+        AZ::Outcome<RaycastResults, const char*> results = AZ::Failure("EBus failure occurred.");
         LidarRaycasterRequestBus::EventResult(
-            m_lastScanResults, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::PerformRaycast, entityTransform->GetWorldTM());
-        if (m_lastScanResults.m_points.empty())
+            results, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::PerformRaycast, entityTransform->GetWorldTM());
+        if (!results.IsSuccess())
         {
-            AZ_TracePrintf("Lidar Sensor Component", "No results from raycast\n");
-            return RaycastResult();
+            AZ_Error(__func__, false, "Unable to obtain raycast results. %s", results.GetError());
+            return {};
         }
-        return m_lastScanResults;
+
+        AZ_Warning("Lidar Sensor Component", !results.GetValue().IsEmpty(), "No results from raycast\n");
+
+        UpdatePoints(results.GetValue());
+
+        return results.GetValue();
     }
 } // namespace ROS2

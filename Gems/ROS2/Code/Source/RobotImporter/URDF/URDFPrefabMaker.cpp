@@ -10,7 +10,6 @@
 #include "CollidersMaker.h"
 #include "PrefabMakerUtils.h"
 #include <API/EditorAssetSystemAPI.h>
-#include <Atom/Feature/Mesh/MeshFeatureProcessor.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/Math/Transform.h>
