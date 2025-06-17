@@ -1,0 +1,31 @@
+{
+    "gem_name": "Metastream",
+    "version": "1.0.0",
+    "display_name": "Metastream",
+    "license": "Apache-2.0 Or MIT",
+    "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
+    "origin": "O3DE Extras",
+    "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/Metastream",
+    "type": "Code",
+    "summary": "Provides functionality for an HTTP server that allows broadcasters to customize game streams with overlays of statistics and event data from a game session.",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "Gameplay",
+        "Network",
+        "Framework",
+        "Metastream"
+    ],
+    "icon_path": "preview.png",
+    "requirements": "",
+    "documentation_url": "https://o3de.org/docs/user-guide/gems/reference/network/twitch/metastream/",
+    "dependencies": [],
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "compatible_engines": [
+        "o3de-sdk>=3.0.0",
+        "o3de>=4.0.0"
+    ],
+    "engine_api_dependencies": [],
+    "restricted": "Metastream"
+}
