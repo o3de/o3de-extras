@@ -432,7 +432,7 @@
                         "o3de>=2.3.0"
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.0-gem.zip",
-                    "sha256": "2f983dbf19be64c9de9217cfa88c91b3dc1a59e08d57eb07b348cfbc2fb00f5e"
+                    "sha256": "b91c685ea476523322b2864d17aafc5c6236092f950a4159fe59051d9c9449ce"
                 }
             ]
         },
