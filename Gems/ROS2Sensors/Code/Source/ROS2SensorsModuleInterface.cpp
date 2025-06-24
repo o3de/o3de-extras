@@ -15,7 +15,6 @@
 #include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <Camera/ROS2CameraSystemComponent.h>
-#include <ContactSensor/ROS2ContactSensorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
 #include <Lidar/ClassSegmentationConfigurationComponent.h>
@@ -23,6 +22,9 @@
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
+#ifdef WITH_GAZEBO_MSGS
+#include <ContactSensor/ROS2ContactSensorComponent.h>
+#endif
 
 namespace ROS2Sensors
 {
@@ -39,7 +41,9 @@ namespace ROS2Sensors
                 ROS2CameraSensorComponent::CreateDescriptor(),
                 ROS2SystemCameraComponent::CreateDescriptor(),
                 ROS2ImageEncodingConversionComponent::CreateDescriptor(),
+#ifdef WITH_GAZEBO_MSGS
                 ROS2ContactSensorComponent::CreateDescriptor(),
+#endif
                 ROS2GNSSSensorComponent::CreateDescriptor(),
                 ROS2ImuSensorComponent::CreateDescriptor(),
                 ROS2LidarSensorComponent::CreateDescriptor(),
