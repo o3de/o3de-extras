@@ -12,7 +12,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
-#include <ROS2/ROS2SensorTypesIds.h>
+#include <ROS2/ROS2TypeIds.h>
 #include <ROS2/Sensor/Events/EventSourceAdapter.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2/Sensor/SensorConfigurationRequestBus.h>
@@ -21,8 +21,8 @@ namespace ROS2
 {
     //! Base sensor component class for all specific sensor implementations. Developer working on the new sensor should derive from this
     //! class, defining necessary event source type (EventSourceT template parameter). Available sources are e.g. TickBasedSource or
-    //! PhysicsBasedSource. Chosen event source is wrapped into EventSourceAdapter, making it possible to work with specific frequency.
-    //! Derived implementation should call ROS2::ROS2SensorComponentBase::StartSensor at the end of Activate (or whenever sensor
+    //! PhysicsBasedSource. Chosen event source is wrapped into ROS2::EventSourceAdapter, making it possible to work with specific
+    //! frequency. Derived implementation should call ROS2::ROS2SensorComponentBase::StartSensor at the end of Activate (or whenever sensor
     //! configuration is already set up) and StopSensor in Deactivate. Starting sensor base requires passing two parameters:
     //!  - sensor working frequency - how often sensor logic should be processed,
     //!  - adapted event callback - what should be done in sensor logic processing.
@@ -142,7 +142,7 @@ namespace ROS2
             m_eventSourceAdapter.Start();
         }
 
-        //! Stops sensor and disconnects event callbacks passed through RSO2::ROS2SensorComponentBase::StartSensor.
+        //! Stops sensor and disconnects event callbacks passed through ROS2::ROS2SensorComponentBase::StartSensor.
         void StopSensor()
         {
             m_eventSourceAdapter.Stop();
@@ -175,6 +175,5 @@ namespace ROS2
         typename EventSourceT::AdaptedEventHandlerType m_adaptedEventHandler;
     };
 
-    AZ_COMPONENT_IMPL_INLINE(
-        (ROS2SensorComponentBase, AZ_CLASS), "ROS2SensorComponentBase", "{2DF9A652-DF5D-43B1-932F-B6A838E36E97}", AZ::Component)
+    AZ_COMPONENT_IMPL_INLINE((ROS2SensorComponentBase, AZ_CLASS), "ROS2SensorComponentBase", ROS2SensorComponentBaseTypeId, AZ::Component)
 } // namespace ROS2

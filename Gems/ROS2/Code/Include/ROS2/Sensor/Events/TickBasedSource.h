@@ -10,8 +10,10 @@
 
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/EBus/Event.h>
-#include <ROS2/Sensor/Events/SensorEventSource.h>
 #include <ROS2/ROS2Bus.h>
+#include <ROS2/ROS2TypeIds.h>
+#include <ROS2/Sensor/Events/SensorEventSource.h>
+
 namespace ROS2
 {
     //! Class implementing system TickBus (draw calls) as sensor event source. Source event (ROS2::SensorEventSource) is signalled based on
@@ -22,7 +24,7 @@ namespace ROS2
         , protected AZ::TickBus::Handler
     {
     public:
-        AZ_TYPE_INFO(TickBasedSource, "{AD3CC041-5F7C-45E8-AA2D-5D8A1D4CC466}");
+        AZ_TYPE_INFO(TickBasedSource, TickBasedSourceTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
         // Overrides of ROS2::SensorEventSource.
