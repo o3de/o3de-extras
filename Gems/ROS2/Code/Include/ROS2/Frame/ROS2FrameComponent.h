@@ -16,6 +16,7 @@
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2GemUtilities.h>
+#include <ROS2/ROS2TypeIds.h>
 
 namespace ROS2
 {
@@ -23,7 +24,7 @@ namespace ROS2
     class JsonFrameComponentConfigSerializer : public AZ::BaseJsonSerializer
     {
     public:
-        AZ_RTTI(ROS2::JsonFrameComponentConfigSerializer, "{ac74cbc1-a5dc-4014-85d7-0e7934f352bd}", AZ::BaseJsonSerializer);
+        AZ_RTTI(ROS2::JsonFrameComponentConfigSerializer, ROS2FrameComponentTypeId, AZ::BaseJsonSerializer);
         AZ_CLASS_ALLOCATOR_DECL;
 
         AZ::JsonSerializationResult::Result Load(

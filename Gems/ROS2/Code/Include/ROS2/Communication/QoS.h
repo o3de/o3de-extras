@@ -10,6 +10,7 @@
 
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <ROS2/ROS2TypeIds.h>
 #include <rclcpp/qos.hpp>
 
 namespace ROS2
@@ -19,7 +20,7 @@ namespace ROS2
     struct QoS
     {
     public:
-        AZ_TYPE_INFO(QoS, "{46692EA4-EA4C-495E-AD3C-426EAB8954D3}");
+        AZ_TYPE_INFO(QoS, QoSTypeId);
         QoS(const rclcpp::QoS& qos = rclcpp::QoS(rmw_qos_profile_default.depth));
         static void Reflect(AZ::ReflectContext* context);
 

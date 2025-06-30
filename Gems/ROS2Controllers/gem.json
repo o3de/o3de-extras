@@ -1,0 +1,33 @@
+{
+    "gem_name": "ROS2Controllers",
+    "version": "1.0.0",
+    "display_name": "ROS2Controllers",
+    "license": "Apache-2.0",
+    "license_url": "https://opensource.org/licenses/Apache-2.0",
+    "origin": "RobotecAI",
+    "origin_url": "https://robotec.ai",
+    "type": "Code",
+    "summary": "Tools and components enabling robot control with ROS 2 communication interfaces",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "ROS2Controllers"
+    ],
+    "platforms": [
+        "Linux"
+    ],
+    "icon_path": "preview.png",
+    "requirements": "Requires ROS 2 Gem and PhysX5 Gem",
+    "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+    "dependencies": [
+        "PhysX5",
+        "ROS2>=4.0.0"
+    ],
+    "repo_uri": "https://github.com/o3de/o3de-extras/",
+    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Controllers",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2controllers-1.0.0-gem.zip",
+    "compatible_engines": [],
+    "engine_api_dependencies": [],
+    "restricted": "ROS2Controllers"
+}
