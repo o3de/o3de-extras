@@ -37,7 +37,7 @@
 
 namespace UnitTest
 {
-    class ROS2FrameComponentTestEnviroment : public AZ::Test::GemTestEnvironment
+    class ROS2FrameComponentTestEnvironment : public AZ::Test::GemTestEnvironment
     {
         // AZ::Test::GemTestEnvironment overrides ...
         void AddGemsAndComponents() override;
@@ -45,11 +45,11 @@ namespace UnitTest
         void PostSystemEntityActivate() override;
 
     public:
-        ROS2FrameComponentTestEnviroment() = default;
-        ~ROS2FrameComponentTestEnviroment() override = default;
+        ROS2FrameComponentTestEnvironment() = default;
+        ~ROS2FrameComponentTestEnvironment() override = default;
     };
 
-    void ROS2FrameComponentTestEnviroment::AddGemsAndComponents()
+    void ROS2FrameComponentTestEnvironment::AddGemsAndComponents()
     {
         AddActiveGems(AZStd::to_array<AZStd::string_view>({ "ROS2" }));
         AddDynamicModulePaths({});
@@ -58,13 +58,13 @@ namespace UnitTest
         AddRequiredComponents(AZStd::to_array<AZ::TypeId const>({ ROS2::ROS2SystemComponent::TYPEINFO_Uuid() }));
     }
 
-    AZ::ComponentApplication* ROS2FrameComponentTestEnviroment::CreateApplicationInstance()
+    AZ::ComponentApplication* ROS2FrameComponentTestEnvironment::CreateApplicationInstance()
     {
         // Using ToolsTestApplication to have AzFramework and AzToolsFramework components.
         return aznew UnitTest::ToolsTestApplication("ROS2FrameComponent");
     }
 
-    void ROS2FrameComponentTestEnviroment::PostSystemEntityActivate()
+    void ROS2FrameComponentTestEnvironment::PostSystemEntityActivate()
     {
         AZ::UserSettingsComponentRequestBus::Broadcast(&AZ::UserSettingsComponentRequests::DisableSaveOnFinalize);
     }
@@ -187,7 +187,7 @@ AZTEST_EXPORT int AZ_UNIT_TEST_HOOK_NAME(int argc, char** argv)
     AzQtComponents::PrepareQtPaths();
     QApplication app(argc, argv);
     AZ::Test::printUnusedParametersWarning(argc, argv);
-    AZ::Test::addTestEnvironments({ new UnitTest::ROS2FrameComponentTestEnviroment() });
+    AZ::Test::addTestEnvironments({ new UnitTest::ROS2FrameComponentTestEnvironment() });
     int result = RUN_ALL_TESTS();
     return result;
 }
