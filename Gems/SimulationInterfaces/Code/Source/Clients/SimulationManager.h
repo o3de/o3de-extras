@@ -15,6 +15,8 @@
 #include <AzCore/std/utility/pair.h>
 #include <AzFramework/API/ApplicationAPI.h>
 #include <AzFramework/Entity/EntityContextBus.h>
+#include <AzFramework/Input/Devices/Keyboard/InputDeviceKeyboard.h>
+#include <AzFramework/Input/Events/InputChannelEventListener.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
@@ -23,11 +25,18 @@
 
 namespace SimulationInterfaces
 {
+    struct KeyboardTransition
+    {
+        AzFramework::InputChannelId m_inputChannelId; //! Input channel ID for the keyboard key that triggers the transition
+        SimulationState m_desiredState; //! Desired state to transition to when the key is pressed
+        AZStd::string m_prettyName; //! Pretty name for the keyboard transition, used in UI
+    };
     class SimulationManager
         : public AZ::Component
         , protected SimulationManagerRequestBus::Handler
         , protected AzFramework::LevelSystemLifecycleNotificationBus::Handler
         , protected AZ::TickBus::Handler
+        , protected AzFramework::InputChannelEventListener
     {
     public:
         AZ_COMPONENT_DECL(SimulationManager);
@@ -63,6 +72,9 @@ namespace SimulationInterfaces
         // AZ::TickBus::Handler
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
+        // InputChannelEventListener
+        bool OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel) override;
+
         bool m_isSimulationPaused = false;
 
         uint64_t m_numberOfPhysicsSteps = 0;
@@ -83,5 +95,8 @@ namespace SimulationInterfaces
             { simulation_interfaces::msg::SimulationState::STATE_QUITTING, simulation_interfaces::msg::SimulationState::STATE_PLAYING },
             { simulation_interfaces::msg::SimulationState::STATE_QUITTING, simulation_interfaces::msg::SimulationState::STATE_PAUSED },
         } };
+
+        //! Map of keyboard transitions - defined in registry key
+        AZStd::unordered_map<SimulationState, KeyboardTransition> m_keyboardTransitions;
     };
 } // namespace SimulationInterfaces
