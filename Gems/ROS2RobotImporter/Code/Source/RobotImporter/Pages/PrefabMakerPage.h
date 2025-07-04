@@ -51,6 +51,5 @@ namespace ROS2RobotImporter
         QTextEdit* m_log;
         QComboBox* m_spawnPointsComboBox;
         ROS2::SpawnPointInfoMap m_spawnPointsInfos;
-        RobotImporterWidget* m_parentImporterWidget;
     };
 } // namespace ROS2RobotImporter

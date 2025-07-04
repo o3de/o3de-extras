@@ -23,10 +23,9 @@
 
 namespace ROS2RobotImporter
 {
-    PrefabMakerPage::PrefabMakerPage(RobotImporterWidget* parent)
+    PrefabMakerPage::PrefabMakerPage([[maybe_unused]] RobotImporterWidget* parent)
         : QWizardPage(parent)
         , m_success(false)
-        , m_parentImporterWidget(parent)
     {
         AZ::EBusAggregateResults<AZStd::unordered_map<AZStd::string, ROS2::SpawnPointInfo>> allActiveSpawnPoints;
         ROS2::SpawnerRequestsBus::BroadcastResult(allActiveSpawnPoints, &ROS2::SpawnerRequestsBus::Events::GetAllSpawnPointInfos);

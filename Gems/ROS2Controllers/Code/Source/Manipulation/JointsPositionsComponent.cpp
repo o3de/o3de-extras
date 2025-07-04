@@ -13,7 +13,6 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 
-#include <ROS2/ROS2GemUtilities.h>
 #include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
 #include <Utilities/ArticulationsUtilities.h>
 

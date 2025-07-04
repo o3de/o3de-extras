@@ -14,7 +14,6 @@
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <HingeJointComponent.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
-#include <ROS2/ROS2GemUtilities.h>
 #include <VehicleDynamics/Utilities.h>
 
 namespace ROS2Controllers::VehicleDynamics
@@ -97,8 +96,8 @@ namespace ROS2Controllers::VehicleDynamics
         AZ::Entity* wheelEntityPtr = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(wheelEntityPtr, &AZ::ComponentApplicationRequests::FindEntity, wheelEntityId);
         AZ_Assert(wheelEntityPtr, "The wheelEntity should not be null here");
-        out.wheelControllerComponentPtr = ROS2::Utils::GetGameOrEditorComponent<WheelControllerComponent>(wheelEntityPtr);
         out.wheelData = VehicleDynamics::Utilities::GetWheelData(wheelEntityId, axle.m_wheelRadius);
+        out.wheelControllerComponentPtr = wheelEntityPtr->FindComponent<WheelControllerComponent>();
         if (out.wheelControllerComponentPtr)
         {
             const auto wheelsCount = axle.m_axleWheels.size();

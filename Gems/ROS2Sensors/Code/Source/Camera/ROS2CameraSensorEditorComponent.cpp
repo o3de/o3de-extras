@@ -10,7 +10,6 @@
 #include "CameraUtilities.h"
 #include "ROS2CameraSensorComponent.h"
 #include <AzCore/Component/TransformBus.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
 
 namespace ROS2Sensors
 {

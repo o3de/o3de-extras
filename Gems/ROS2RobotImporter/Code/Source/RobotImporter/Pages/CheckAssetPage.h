@@ -48,7 +48,6 @@ namespace ROS2RobotImporter
         bool m_success;
         QTableWidget* m_table{};
         QTableWidgetItem* createCell(bool isOk, const QString& text);
-        QLabel* m_numberOfAssetLabel{};
         unsigned int m_missingCount{ 0 };
         unsigned int m_failedCount{ 0 };
         void SetTitle();

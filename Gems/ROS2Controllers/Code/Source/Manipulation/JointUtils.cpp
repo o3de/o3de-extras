@@ -8,10 +8,8 @@
 
 #include "JointUtils.h"
 
-#include <ROS2/ROS2GemUtilities.h>
 #include <Source/EditorArticulationLinkComponent.h>
 #include <Source/EditorBallJointComponent.h>
-#include <Source/EditorFixedJointComponent.h>
 #include <Source/EditorHingeJointComponent.h>
 #include <Source/EditorPrismaticJointComponent.h>
 
@@ -20,11 +18,11 @@ namespace ROS2Controllers::JointUtils
 
     bool HasNonFixedJoints(const AZ::Entity* entity)
     {
-        const bool hasPrismaticJoints = ROS2::Utils::HasComponentOfType(entity, PhysX::EditorPrismaticJointComponent::TYPEINFO_Uuid());
-        const bool hasBallJoints = ROS2::Utils::HasComponentOfType(entity, PhysX::EditorBallJointComponent::TYPEINFO_Uuid());
-        const bool hasHingeJoints = ROS2::Utils::HasComponentOfType(entity, PhysX::EditorHingeJointComponent::TYPEINFO_Uuid());
-        const bool hasArticulations = ROS2::Utils::HasComponentOfType(entity, PhysX::EditorArticulationLinkComponent::TYPEINFO_Uuid());
-        const bool hasJoints = hasPrismaticJoints || hasBallJoints || hasHingeJoints || hasArticulations;
+        const auto* prismaticJoint = entity->FindComponent<PhysX::EditorPrismaticJointComponent>();
+        const auto* ballJoint = entity->FindComponent<PhysX::EditorBallJointComponent>();
+        const auto* hingeJoint = entity->FindComponent<PhysX::EditorHingeJointComponent>();
+        const auto* articulation = entity->FindComponent<PhysX::EditorArticulationLinkComponent>();
+        const bool hasJoints = prismaticJoint || ballJoint || hingeJoint || articulation;
 
         return hasJoints;
     }

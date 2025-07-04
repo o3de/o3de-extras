@@ -51,7 +51,6 @@ namespace ROS2RobotImporter
         QFileDialog* m_fileDialog;
         QPushButton* m_button;
         QLineEdit* m_textEdit;
-        QCheckBox* m_copyFiles;
 
         AZStd::unique_ptr<SdfAssetBuilderSettings> m_sdfAssetBuilderSettings;
         AzToolsFramework::ReflectedPropertyEditor* m_sdfAssetBuilderSettingsEditor{};

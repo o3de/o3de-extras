@@ -9,7 +9,6 @@
 #include "ROS2SDFormatHooksUtils.h"
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Communication/TopicConfiguration.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>

@@ -12,8 +12,8 @@
 #include <AzCore/EBus/Policies.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/RTTI/RTTIMacros.h>
+#include <AzCore/std/containers/set.h>
 #include <AzCore/std/string/string.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
 
 namespace ROS2
 {

@@ -8,12 +8,11 @@
 
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
+#include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <Lidar/LidarCore.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2Sensors/Lidar/ClassSegmentationBus.h>
 
 namespace ROS2Sensors

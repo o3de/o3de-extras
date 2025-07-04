@@ -18,7 +18,6 @@
 #include <Georeferencing/GeoreferenceBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Spawner/SpawnerBus.h>
 #include <ROS2/Spawner/SpawnerBusHandler.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
