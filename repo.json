@@ -4,7 +4,7 @@
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "summary": "A repository to hold various gems, projects, and templates for the O3DE engine.",
     "additional_info": "Extras gems, projects, and templates for O3DE. See the README.md at the root of this repository for more information",
-    "last_updated": "2025-02-20",
+    "last_updated": "2025-06-30",
     "$schemaVersion": "1.0.0",
     "gems_data": [
         {
@@ -432,7 +432,7 @@
                         "o3de>=2.3.0"
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.0-gem.zip",
-                    "sha256": "2f983dbf19be64c9de9217cfa88c91b3dc1a59e08d57eb07b348cfbc2fb00f5e"
+                    "sha256": "b91c685ea476523322b2864d17aafc5c6236092f950a4159fe59051d9c9449ce"
                 }
             ]
         },
@@ -7333,7 +7333,7 @@
                         }
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.0.1-template.zip",
-                    "sha256": "dd56a62e5fa1cd7d412962382845885170edcc1373c1af4b388331f073404c9d"
+                    "sha256": "c7367b98bd6ee5305eb63e0a256899aa57ee299cb553f4ab2555b8e9fef2100b"
                 },
                 {
                     "version": "2.0.2",
