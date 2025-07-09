@@ -48,14 +48,13 @@ namespace SimulationInterfaces
             }
 
             // Create a pretty name based on the key region and key name
-            AZStd::string prettyName;
             if (keyRegion == "alphanumeric" || keyRegion == "function")
             {
                 // For alphanumeric keys, we can return the key name directly
                 return AZStd::string::format("Key '%s'", keyName.c_str());
             }
 
-            return AZStd::string::format("Key '%s_%s' ", keyRegion.c_str(), keyName.c_str()); ;
+            return AZStd::string::format("Key '%s_%s'", keyRegion.c_str(), keyName.c_str());
         }
 
         const AZStd::unordered_map<SimulationState, AZStd::string> SimulationStateToString = {
