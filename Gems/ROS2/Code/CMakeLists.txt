@@ -335,16 +335,8 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 BUILD_DEPENDENCIES
                     PRIVATE
                         AZ::AzTest
-                        AZ::AzTestShared
-                        Legacy::CryCommon
-                        Legacy::EditorCommon
-                        Legacy::Editor.Headers
                         AZ::AzManipulatorTestFramework.Static
                         Gem::${gem_name}.Editor.Private.Object
-                        Gem::${gem_name}.Editor.Static
-                        Gem::${gem_name}.Static
-                RUNTIME_DEPENDENCIES
-                    Legacy::Editor
             )
 
             # Add ${gem_name}.Editor.Tests to googletest
