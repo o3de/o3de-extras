@@ -105,9 +105,9 @@ namespace ROS2Controllers
 
         AZStd::function<void(const AZ::Entity* entity)> getAllJointsHierarchy = [&](const AZ::Entity* entity)
         {
-            // AZStd::string ros2Namespace;
-            // ROS2FrameEditorComponentBus::EventResult(ros2Namespace, frameParentEntity,
-            // &ROS2FrameEditorComponentBus::Events::GetNamespace);
+            // AZStd::string jointName;
+            // ROS2::ROS2FrameEditorComponentBus::EventResult(
+            //     jointName, entity->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::GetNamespacedJointName);
 
             auto* frameEditorComponent = entity->FindComponent<ROS2::ROS2FrameEditorComponent>();
             AZ_Assert(frameEditorComponent, "ROS2FrameEditorComponent does not exist!");
