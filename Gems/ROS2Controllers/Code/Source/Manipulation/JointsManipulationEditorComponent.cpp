@@ -14,7 +14,6 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/std/functional.h>
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <ROS2Controllers/Manipulation/JointInfo.h>
