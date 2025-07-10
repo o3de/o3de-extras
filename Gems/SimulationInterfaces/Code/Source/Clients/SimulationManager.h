@@ -29,7 +29,7 @@ namespace SimulationInterfaces
     {
         AzFramework::InputChannelId m_inputChannelId; //! Input channel ID for the keyboard key that triggers the transition
         SimulationState m_desiredState; //! Desired state to transition to when the key is pressed
-        AZStd::string m_prettyName; //! Pretty name for the keyboard transition, used in UI
+        AZStd::string m_uiDescription; //! Description of the transition, used in UI
     };
     class SimulationManager
         : public AZ::Component
@@ -56,6 +56,7 @@ namespace SimulationInterfaces
         void Deactivate() override;
 
     private:
+
         // SimulationManagerRequestBus interface implementation
         void SetSimulationPaused(bool paused) override;
         void StepSimulation(AZ::u64 steps) override;
@@ -74,6 +75,12 @@ namespace SimulationInterfaces
 
         // InputChannelEventListener
         bool OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel) override;
+
+        //! Register a keyboard transition key in m_keyboardTransitions. Generate UI hints
+        //! \param key The input channel ID of the keyboard key
+        //! \param sourceState The current simulation state that the key is associated with
+        //! \param desiredState The desired simulation state to transition to when the key is pressed
+        void RegisterTransitionsKey(const AzFramework::InputChannelId& key, SimulationState sourceState, SimulationState desiredState);
 
         bool m_isSimulationPaused = false;
 
