@@ -21,7 +21,7 @@ namespace ROS2Controllers::Utils
             ROS2::ROS2FrameComponent* component = entity->FindComponent<ROS2::ROS2FrameComponent>();
             if (component)
             {
-                return component->GetJointName().GetStringView();
+                return component->GetNamespacedJointName().GetStringView();
             }
         }
         return AZStd::string();

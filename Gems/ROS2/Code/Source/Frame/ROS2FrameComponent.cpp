@@ -273,7 +273,7 @@ namespace ROS2
         return m_namespaceConfiguration.GetNamespace(parentNamespace);
     }
 
-    AZ::Name ROS2FrameComponent::GetJointName() const
+    AZ::Name ROS2FrameComponent::GetNamespacedJointName() const
     {
         return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_jointName).c_str());
     }

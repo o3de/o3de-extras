@@ -71,7 +71,7 @@ namespace ROS2
         //! Get the joint name including the namespace
         //! @note Supplementary metadata for Joint components, necessary in some cases for joints addressed by name in ROS 2
         //! @return The namespaced joint name, ready to send in a ROS2 message
-        AZ::Name GetJointName() const;
+        AZ::Name GetNamespacedJointName() const;
 
         //! Set the joint name
         //! @note May be populated during URDF import or set by the user in the Editor view

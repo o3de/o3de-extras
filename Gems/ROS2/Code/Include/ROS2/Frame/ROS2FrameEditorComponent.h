@@ -66,14 +66,13 @@ namespace ROS2
 
         // ROS2FrameEditorComponentBus::Handler overrides
         AZStd::string GetFrameID() const override;
-        AZ::Name GetJointName() const override;
+        AZ::Name GetNamespacedJointName() const override;
         AZStd::string GetNamespace() const override;
         void UpdateNamespace(const AZStd::string& parentNamespace) override;
         AZStd::string GetGlobalFrameName() const override;
         bool IsTopLevel() const override; //!< True if this entity does not have a parent entity with ROS2.
         AZ::EntityId GetFrameParent() const override;
         AZStd::set<AZ::EntityId> GetFrameChildren() const override;
-
 
         //! Get the configuration of this component.
         ROS2FrameConfiguration GetConfiguration() const;
