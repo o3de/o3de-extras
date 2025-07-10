@@ -86,7 +86,7 @@ namespace ROS2Controllers
 
             const bool hasNonFixedJoints = JointUtils::HasNonFixedJoints(entity);
 
-            const AZStd::string jointName(frameEditorComponent->GetJointName().GetCStr());
+            const AZStd::string jointName(frameEditorComponent->GetNamespacedJointName().GetCStr());
             if (!jointName.empty() && hasNonFixedJoints)
             {
                 m_jointNames.emplace_back(jointName);
