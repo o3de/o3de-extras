@@ -17,7 +17,7 @@
 
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
 
 namespace ROS2Controllers
@@ -81,18 +81,20 @@ namespace ROS2Controllers
         m_jointNames.clear();
         AZStd::function<void(const AZ::Entity* entity)> getAllJointsHierarchy = [&](const AZ::Entity* entity)
         {
-            auto* frameEditorComponent = entity->FindComponent<ROS2::ROS2FrameEditorComponent>();
-            AZ_Assert(frameEditorComponent, "ROS2FrameEditorComponent does not exist!");
+            AZ::Name jointName;
+            ROS2::ROS2FrameEditorComponentBus::EventResult(
+                jointName, entity->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::GetNamespacedJointName);
 
+            const AZStd::string jointNameStr = jointName.GetCStr();
             const bool hasNonFixedJoints = JointUtils::HasNonFixedJoints(entity);
-
-            const AZStd::string jointName(frameEditorComponent->GetNamespacedJointName().GetCStr());
-            if (!jointName.empty() && hasNonFixedJoints)
+            if (!jointNameStr.empty() && hasNonFixedJoints)
             {
-                m_jointNames.emplace_back(jointName);
+                m_jointNames.emplace_back(jointNameStr);
             }
 
-            const auto& childrenEntityIds = frameEditorComponent->GetFrameChildren();
+            AZStd::set<AZ::EntityId> childrenEntityIds;
+            ROS2::ROS2FrameEditorComponentBus::EventResult(
+                childrenEntityIds, entity->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::GetFrameChildren);
             if (!childrenEntityIds.empty())
             {
                 for (const auto& entityId : childrenEntityIds)
