@@ -16,7 +16,6 @@
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
-#include <Utilities/JointUtilities.h>
 #include <imgui/imgui.h>
 
 namespace ROS2Controllers
@@ -106,15 +105,23 @@ namespace ROS2Controllers
         {
             JointsManipulationRequestBus::EventResult(allJoints, m_rootOfArticulation, &JointsManipulationRequests::GetJoints);
         }
+
         AZStd::vector<AZ::EntityId> descendantIds;
         AZ::TransformBus::EventResult(descendantIds, GetEntityId(), &AZ::TransformBus::Events::GetAllDescendants);
-
-        for (AZ::EntityId descendant : descendantIds)
+        for (const auto& descendantId : descendantIds)
         {
-            AZStd::string jointName = Utils::GetJointName(descendant);
+            AZ::Entity* entity{ nullptr };
+            AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, descendantId);
+            AZ_Assert(entity, "Entity %s not found.", descendantId.ToString().c_str());
+            ROS2::ROS2FrameComponent* component = entity->FindComponent<ROS2::ROS2FrameComponent>();
+            if (!component)
+            {
+                break;
+            }
+
+            const auto jointName = component->GetNamespacedJointName().GetStringView();
             if (!jointName.empty())
             {
-                AZ_Printf("FingerGripperComponent", "Adding finger joint %s", jointName.c_str());
                 m_fingerJoints[jointName] = allJoints[jointName];
             }
         }

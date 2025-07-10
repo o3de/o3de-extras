@@ -76,8 +76,6 @@ namespace ROS2Controllers
 
         void MoveToSetPositions(float deltaTime);
 
-        AZStd::string GetManipulatorNamespace() const;
-
         AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const JointInfo& jointInfo);
         AZ::Outcome<JointVelocity, AZStd::string> GetJointVelocity(const JointInfo& jointInfo);
         AZ::Outcome<JointEffort, AZStd::string> GetJointEffort(const JointInfo& jointInfo);

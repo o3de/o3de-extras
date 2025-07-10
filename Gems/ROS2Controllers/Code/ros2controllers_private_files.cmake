@@ -60,8 +60,6 @@ set(FILES
     Source/Sensors/WheelOdometrySensorConfiguration.cpp
     Source/Utilities/ArticulationsUtilities.cpp
     Source/Utilities/ArticulationsUtilities.h
-    Source/Utilities/JointUtilities.cpp
-    Source/Utilities/JointUtilities.h
     Source/Utilities/Controllers/PidConfiguration.cpp
     Source/VehicleDynamics/AxleConfiguration.cpp
     Source/VehicleDynamics/DriveModel.cpp
