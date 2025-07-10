@@ -7,6 +7,8 @@
 set(FILES
     Include/SimulationInterfaces/Result.h
     Include/SimulationInterfaces/TagFilter.h
+    Include/SimulationInterfaces/Bounds.h
+    Include/SimulationInterfaces/NamedPoseManagerRequestBus.h
     Include/SimulationInterfaces/SimulationEntityManagerRequestBus.h
     Include/SimulationInterfaces/SimulationInterfacesTypeIds.h
     Include/SimulationInterfaces/SimulationMangerRequestBus.h
