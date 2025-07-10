@@ -602,16 +602,20 @@
                     "Id": 2016576711781101659,
                     "Controller": {
                         "Configuration": {
-                            "materials": {
-                                "{}": {
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{5B369E33-6E01-5794-9DB2-7CEFC2B205D5}"
-                                        },
-                                        "assetHint": "rosbotxl/models/materials/rosbotxl_antenna_plasticmatteblack.azmaterial"
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3551515046
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{BC08A50C-9CCD-587F-B2B5-9DB0EF6907DF}"
+                                            }
+                                        }
                                     }
                                 }
-                            }
+                            ]
                         }
                     }
                 }
@@ -1452,16 +1456,21 @@
                     "Id": 17880601295840825835,
                     "Controller": {
                         "Configuration": {
-                            "materials": {
-                                "{}": {
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{5B369E33-6E01-5794-9DB2-7CEFC2B205D5}"
-                                        },
-                                        "assetHint": "rosbotxl/models/materials/rosbotxl_antenna_plasticmatteblack.azmaterial"
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2725144250
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B369E33-6E01-5794-9DB2-7CEFC2B205D5}"
+                                            },
+                                            "assetHint": "rosbotxl/models/materials/rosbotxl_antenna_plasticmatteblack.azmaterial"
+                                        }
                                     }
                                 }
-                            }
+                            ]
                         }
                     }
                 }

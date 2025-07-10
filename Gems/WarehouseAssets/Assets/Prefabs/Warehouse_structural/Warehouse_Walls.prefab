@@ -172,32 +172,6 @@
                             "materials": [
                                 {
                                     "Key": {
-                                        "materialSlotStableId": 103484566
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
-                                            },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 745211904
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{06298918-E750-5053-B55B-10D158B1ED8C}"
-                                            },
-                                            "assetHint": "assets/warehouse/materials/mwarehousegate.azmaterial"
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
                                         "materialSlotStableId": 3367833104
                                     },
                                     "Value": {
