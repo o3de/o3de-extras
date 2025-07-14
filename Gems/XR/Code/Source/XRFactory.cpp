@@ -11,7 +11,7 @@
 
 namespace XR
 {
-    AZ::u32 Factory::GetPlatformService()
+    AZ::Crc32 Factory::GetPlatformService()
     {
         return AZ_CRC_CE("XRPlatformService");
     }
