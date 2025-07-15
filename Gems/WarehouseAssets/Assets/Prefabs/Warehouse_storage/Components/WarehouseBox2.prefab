@@ -110,19 +110,6 @@
                                             "assetHint": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
                                         }
                                     }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 2919702015
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{5468360F-1789-50A3-96FF-118192B81B48}"
-                                            },
-                                            "assetHint": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
-                                        }
-                                    }
                                 }
                             ]
                         }
