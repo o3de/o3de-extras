@@ -9,6 +9,7 @@
 
 #include <AzCore/RTTI/TypeInfo.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/Serialization/EditContext.h>
 #include <ROS2Controllers/Controllers/PidConfiguration.h>
 
 namespace ROS2Controllers {
@@ -17,6 +18,7 @@ namespace ROS2Controllers {
     public:
         enum class PhysicalApi {
             Velocity,
+            Kinematic,
             Force
         };
 
@@ -24,6 +26,13 @@ namespace ROS2Controllers {
 
         static void Reflect(AZ::ReflectContext *context);
 
+        // Visibility functions for edit context
+        [[nodiscard]] AZ::u32 GetPidControllersVisibility() const {
+            return m_physicalApi == PhysicalApi::Force ? AZ::Edit::PropertyVisibility::Show
+                                                       : AZ::Edit::PropertyVisibility::Hide;
+        }
+
+        AZStd::string GetNote() const;
 
         float m_maxLinearVelocity = 10.0f; //!< Maximum linear velocity in m/s
         float m_maxAngularVelocity = 5.0f; //!< Maximum angular velocity in rad/s

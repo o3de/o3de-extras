@@ -32,7 +32,8 @@ namespace ROS2Controllers {
                         ->Attribute(AZ::Edit::Attributes::ViewportIcon,
                                     "Editor/Icons/Components/Viewport/RigidBodyTwistControl.svg")
                         ->DataElement(AZ::Edit::UIHandlers::Default, &RigidBodyTwistControlComponent::m_config,
-                                      "Configuration", "Configuration for the Rigid Body Twist Control Component");
+                                      "Configuration", "Configuration for the Rigid Body Twist Control Component")
+                        ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
     }
@@ -40,10 +41,10 @@ namespace ROS2Controllers {
     void RigidBodyTwistControlComponent::Activate() {
         AZ::TickBus::Handler::BusConnect();
         TwistNotificationBus::Handler::BusConnect(GetEntityId());
-        for (auto& controller : m_config.m_linerControllers) {
+        for (auto &controller: m_config.m_linerControllers) {
             controller.InitializePid();
         }
-        for (auto& controller : m_config.m_angularControllers) {
+        for (auto &controller: m_config.m_angularControllers) {
             controller.InitializePid();
         }
     }
@@ -67,11 +68,11 @@ namespace ROS2Controllers {
         }
         AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
         AZ_Assert(defaultSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid default physics scene handle");
-        AzPhysics::RigidBody* rigidBody = nullptr;
+        AzPhysics::RigidBody *rigidBody = nullptr;
         Physics::RigidBodyRequestBus::EventResult(rigidBody, GetEntityId(), &Physics::RigidBodyRequests::GetRigidBody);
-        AZ_Warning("RigidBodyTwistControlComponent", rigidBody, "No rigid body found for entity %s", GetEntity()->GetName().c_str());
-        if (!rigidBody)
-        {
+        AZ_Warning("RigidBodyTwistControlComponent", rigidBody, "No rigid body found for entity %s",
+                   GetEntity()->GetName().c_str());
+        if (!rigidBody) {
             return;
         }
         m_bodyHandle = rigidBody->m_bodyHandle;
@@ -84,7 +85,8 @@ namespace ROS2Controllers {
         AZ::TickBus::Handler::BusDisconnect();
     }
 
-    AZ::Vector3 ComputeImpulse(const AZ::Vector3& errorVec, AZStd::array<PidConfiguration, 3>& controllers, float fixedDeltaTime) {
+    AZ::Vector3
+    ComputeImpulse(const AZ::Vector3 &errorVec, AZStd::array<PidConfiguration, 3> &controllers, float fixedDeltaTime) {
         AZ::Vector3 impulse = AZ::Vector3::CreateZero();
         for (size_t i = 0; i < 3; ++i) {
             const auto error = errorVec.GetElement(i);
@@ -110,6 +112,25 @@ namespace ROS2Controllers {
 
         const AZ::Transform robotTransform = rigidBody->GetTransform();
 
+        if (m_config.m_physicalApi == RigidBodyTwistControlComponentConfig::PhysicalApi::Kinematic) {
+            // Convert local steering to world frame
+            const auto linearVelocityGlobal = robotTransform.TransformVector(m_linearVelocityLocal);
+            const auto angularVelocityGlobal = robotTransform.TransformVector(m_angularVelocityLocal);
+
+            // Set the kinematic target for the rigid body
+            // This will move the rigid body to the target position and orientation
+            Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetKinematic, true);
+
+            AZ::Transform kinematicTarget = robotTransform;
+            kinematicTarget.SetTranslation(kinematicTarget.GetTranslation() + linearVelocityGlobal * fixedDeltaTime);
+            kinematicTarget.SetRotation(
+                    AZ::Quaternion::CreateFromScaledAxisAngle(angularVelocityGlobal * fixedDeltaTime) *
+                    kinematicTarget.GetRotation());
+
+            Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetKinematicTarget,
+                                                kinematicTarget);
+            return;
+        }
         if (m_config.m_physicalApi == RigidBodyTwistControlComponentConfig::PhysicalApi::Velocity) {
             // Convert local steering to world frame
             const auto linearVelocityGlobal = robotTransform.TransformVector(m_linearVelocityLocal);
@@ -134,7 +155,7 @@ namespace ROS2Controllers {
             const AZ::Vector3 currentLinearVelocityLocal = robotTransformInv.TransformVector(currentLinearVelocityGlob);
             const AZ::Vector3 angularVelocityLocal = robotTransformInv.TransformVector(currentAngularVelocityGlob);
 
-            const AZ::Vector3 errorLinear = m_linearVelocityLocal - currentLinearVelocityLocal ;
+            const AZ::Vector3 errorLinear = m_linearVelocityLocal - currentLinearVelocityLocal;
             const AZ::Vector3 errorAngular = m_angularVelocityLocal - angularVelocityLocal;
 
 
@@ -144,7 +165,6 @@ namespace ROS2Controllers {
 
             const AZ::Vector3 linearForceGlobal = robotTransform.TransformVector(linearForceLocal);
             const AZ::Vector3 angularForceGlobal = robotTransform.TransformVector(angularForceLocal);
-
 
 
             Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::ApplyLinearImpulse,
