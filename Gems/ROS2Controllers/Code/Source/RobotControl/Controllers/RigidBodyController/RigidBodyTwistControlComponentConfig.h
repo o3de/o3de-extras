@@ -34,10 +34,6 @@ namespace ROS2Controllers {
 
         AZStd::string GetNote() const;
 
-        float m_maxLinearVelocity = 10.0f; //!< Maximum linear velocity in m/s
-        float m_maxAngularVelocity = 5.0f; //!< Maximum angular velocity in rad/s
-        bool m_enableVelocityLimiting = true; //!< Enable velocity limiting
-
         //! Pid controllers for linear velocities - default config for each axis
         AZStd::array<PidConfiguration, 3> m_linerControllers =
                 {PidConfiguration(500, 50, 0, 0, 0, false, false), PidConfiguration(500, 50, 0, 0, 0, false, false),

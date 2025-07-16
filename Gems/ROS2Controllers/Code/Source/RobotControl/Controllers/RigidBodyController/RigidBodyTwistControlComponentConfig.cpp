@@ -15,11 +15,7 @@ namespace ROS2Controllers {
         if (AZ::SerializeContext *serialize = azrtti_cast<AZ::SerializeContext *>(context)) {
             serialize->Class<RigidBodyTwistControlComponentConfig>()
                     ->Version(1)
-                    ->Field("MaxLinearVelocity", &RigidBodyTwistControlComponentConfig::m_maxLinearVelocity)
-                    ->Field("MaxAngularVelocity", &RigidBodyTwistControlComponentConfig::m_maxAngularVelocity)
-                    ->Field("EnableVelocityLimiting", &RigidBodyTwistControlComponentConfig::m_enableVelocityLimiting)
                     ->Field("PhysicalApi", &RigidBodyTwistControlComponentConfig::m_physicalApi)
-
                     ->Field("LinerControllers", &RigidBodyTwistControlComponentConfig::m_linerControllers)
                     ->Field("AngularControllers", &RigidBodyTwistControlComponentConfig::m_angularControllers);
 
@@ -29,21 +25,6 @@ namespace ROS2Controllers {
                                                                 "Configuration for Rigid Body Twist Control Component")
                         ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                         ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                        ->DataElement(AZ::Edit::UIHandlers::Default,
-                                      &RigidBodyTwistControlComponentConfig::m_maxLinearVelocity, "Max Linear Velocity",
-                                      "Maximum linear velocity in m/s")
-                        ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
-                        ->Attribute(AZ::Edit::Attributes::Max, 50.0f)
-                        ->Attribute(AZ::Edit::Attributes::Step, 0.1f)
-                        ->DataElement(AZ::Edit::UIHandlers::Default,
-                                      &RigidBodyTwistControlComponentConfig::m_maxAngularVelocity,
-                                      "Max Angular Velocity", "Maximum angular velocity in rad/s")
-                        ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
-                        ->Attribute(AZ::Edit::Attributes::Max, 10.0f)
-                        ->Attribute(AZ::Edit::Attributes::Step, 0.1f)
-                        ->DataElement(AZ::Edit::UIHandlers::CheckBox,
-                                      &RigidBodyTwistControlComponentConfig::m_enableVelocityLimiting,
-                                      "Enable Velocity Limiting", "Enable velocity limiting")
                         ->DataElement(AZ::Edit::UIHandlers::ComboBox,
                                       &RigidBodyTwistControlComponentConfig::m_physicalApi, "Physical API",
                                       "API to use for applying velocities. Velocity mode directly sets velocities (limited control). Force mode uses PID controllers for better control.")
