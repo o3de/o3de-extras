@@ -7,10 +7,12 @@
  */
 #pragma once
 
+#include "RigidBodyTwistControlComponentConfig.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2Controllers/RobotControl/Twist/TwistBus.h>
+
 namespace ROS2Controllers
 {
     //! A component with a simple handler for Twist type of control (linear and angular velocities).
@@ -44,9 +46,14 @@ namespace ROS2Controllers
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
         //////////////////////////////////////////////////////////////////////////
 
+        void OnSceneSimulationFinish(
+            AzPhysics::SceneHandle sceneHandle,
+            float fixedDeltaTime); //!< Handler for scene simulation finish event
+
         AZ::Vector3 m_linearVelocityLocal{ AZ::Vector3::CreateZero() }; //!< Linear velocity in local frame
         AZ::Vector3 m_angularVelocityLocal{ AZ::Vector3::CreateZero() }; //!< Angular velocity in local frame
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_sceneFinishSimHandler; //!< Handler called after every physics sub-step
         AzPhysics::SimulatedBodyHandle m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle; //!< Handle to the body to apply velocities to
+        RigidBodyTwistControlComponentConfig m_config; //!< Configuration for the component
     };
 } // namespace ROS2Controllers

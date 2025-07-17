@@ -91,4 +91,6 @@ set(FILES
     Source/VehicleDynamics/WheelControllerComponent.cpp
     Source/VehicleDynamics/WheelControllerComponent.h
     Source/VehicleDynamics/WheelDynamicsData.h
+    Source/RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponentConfig.cpp
+    Source/RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponentConfig.h
 )
