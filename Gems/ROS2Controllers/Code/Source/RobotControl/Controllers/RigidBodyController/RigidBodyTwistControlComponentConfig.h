@@ -34,9 +34,9 @@ namespace ROS2Controllers
         [[nodiscard]] AZStd::string GetNote() const;
 
         //! Pid controllers for linear velocities - default config for each axis
-        AZStd::array<PidConfiguration, 3> m_linerControllers = { PidConfiguration(500, 50, 0, 0, 0, false, false),
-                                                                 PidConfiguration(500, 50, 0, 0, 0, false, false),
-                                                                 PidConfiguration(0, 0, 0, 0, 0, false, false) };
+        AZStd::array<PidConfiguration, 3> m_linearControllers = { PidConfiguration(500, 50, 0, 0, 0, false, false),
+                                                                  PidConfiguration(500, 50, 0, 0, 0, false, false),
+                                                                  PidConfiguration(0, 0, 0, 0, 0, false, false) };
 
         //! Pid controllers for angular velocities - default config for each axis
         AZStd::array<PidConfiguration, 3> m_angularControllers = { PidConfiguration(0, 0, 0, 0, 0, false, false),

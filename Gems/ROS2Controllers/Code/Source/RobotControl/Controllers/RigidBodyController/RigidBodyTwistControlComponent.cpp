@@ -16,6 +16,22 @@
 
 namespace ROS2Controllers
 {
+
+    namespace
+    {
+        AZ::Vector3 ComputeImpulse(const AZ::Vector3& errorVec, AZStd::array<PidConfiguration, 3>& controllers, float fixedDeltaTime)
+        {
+            AZ::Vector3 impulse = AZ::Vector3::CreateZero();
+            for (size_t i = 0; i < 3; ++i)
+            {
+                const auto error = errorVec.GetElement(i);
+                static constexpr float secondsToNanoSeconds = 1'000'000'000.0f;
+                impulse.SetElement(i, controllers[i].ComputeCommand(error, fixedDeltaTime * secondsToNanoSeconds));
+            }
+            return impulse;
+        }
+    } // namespace
+
     void RigidBodyTwistControlComponent::Reflect(AZ::ReflectContext* context)
     {
         RigidBodyTwistControlComponentConfig::Reflect(context);
@@ -46,7 +62,7 @@ namespace ROS2Controllers
     {
         AZ::TickBus::Handler::BusConnect();
         TwistNotificationBus::Handler::BusConnect(GetEntityId());
-        for (auto& controller : m_config.m_linerControllers)
+        for (auto& controller : m_config.m_linearControllers)
         {
             controller.InitializePid();
         }
@@ -95,17 +111,6 @@ namespace ROS2Controllers
             aznumeric_cast<int32_t>(AzPhysics::SceneEvents::PhysicsStartFinishSimulationPriority::Components));
         sceneInterface->RegisterSceneSimulationFinishHandler(defaultSceneHandle, m_sceneFinishSimHandler);
         AZ::TickBus::Handler::BusDisconnect();
-    }
-
-    AZ::Vector3 ComputeImpulse(const AZ::Vector3& errorVec, AZStd::array<PidConfiguration, 3>& controllers, float fixedDeltaTime)
-    {
-        AZ::Vector3 impulse = AZ::Vector3::CreateZero();
-        for (size_t i = 0; i < 3; ++i)
-        {
-            const auto error = errorVec.GetElement(i);
-            impulse.SetElement(i, controllers[i].ComputeCommand(error, fixedDeltaTime * 1'000'000'000));
-        }
-        return impulse;
     }
 
     void RigidBodyTwistControlComponent::OnSceneSimulationFinish(AzPhysics::SceneHandle sceneHandle, float fixedDeltaTime)
@@ -169,7 +174,7 @@ namespace ROS2Controllers
             const AZ::Vector3 errorAngular = m_angularVelocityLocal - angularVelocityLocal;
 
             // Compute the forces to apply based on the error
-            AZ::Vector3 linearForceLocal = ComputeImpulse(errorLinear, m_config.m_linerControllers, fixedDeltaTime);
+            AZ::Vector3 linearForceLocal = ComputeImpulse(errorLinear, m_config.m_linearControllers, fixedDeltaTime);
             AZ::Vector3 angularForceLocal = ComputeImpulse(errorAngular, m_config.m_angularControllers, fixedDeltaTime);
 
             const AZ::Vector3 linearForceGlobal = robotTransform.TransformVector(linearForceLocal);

@@ -19,7 +19,7 @@ namespace ROS2Controllers
             serialize->Class<RigidBodyTwistControlComponentConfig>()
                 ->Version(1)
                 ->Field("PhysicalApi", &RigidBodyTwistControlComponentConfig::m_physicalApi)
-                ->Field("LinerControllers", &RigidBodyTwistControlComponentConfig::m_linerControllers)
+                ->Field("LinerControllers", &RigidBodyTwistControlComponentConfig::m_linearControllers)
                 ->Field("AngularControllers", &RigidBodyTwistControlComponentConfig::m_angularControllers);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -43,7 +43,7 @@ namespace ROS2Controllers
                     ->Attribute(AZ::Edit::Attributes::ValueText, &RigidBodyTwistControlComponentConfig::GetNote)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &RigidBodyTwistControlComponentConfig::m_linerControllers,
+                        &RigidBodyTwistControlComponentConfig::m_linearControllers,
                         "Linear Controllers",
                         "PID controllers for linear velocities (only used in Force mode)")
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, false)
