@@ -24,6 +24,39 @@ namespace SimulationInterfaces
     namespace
     {
 
+        //! Convert string like : keyboard_key_alphanumeric_O to a pretty name like "Key 'O'"
+        AZStd::string MakePrettyKeyboardName(const AzFramework::InputChannelId& inputChannelId)
+        {
+            // Convert the input channel name to a pretty format for display
+
+            // split the name by underscores
+            AZStd::vector<AZStd::string> parts;
+            AZ::StringFunc::Tokenize(inputChannelId.GetName(), parts, "_");
+            if (parts.size() < 4)
+            {
+                return inputChannelId.GetName(); // return original if no parts found
+            }
+
+            const AZStd::string& deviceType = parts[0];
+            const AZStd::string& keyType = parts[1];
+            const AZStd::string& keyRegion = parts[2];
+            const AZStd::string& keyName = parts[3];
+
+            if (deviceType != "keyboard" || keyType != "key")
+            {
+                return inputChannelId.GetName(); // return original if not a keyboard alphanumeric key
+            }
+
+            // Create a pretty name based on the key region and key name
+            if (keyRegion == "alphanumeric" || keyRegion == "function")
+            {
+                // For alphanumeric keys, we can return the key name directly
+                return AZStd::string::format("Key '%s'", keyName.c_str());
+            }
+
+            return AZStd::string::format("Key '%s_%s'", keyRegion.c_str(), keyName.c_str());
+        }
+
         const AZStd::unordered_map<SimulationState, AZStd::string> SimulationStateToString = {
             { simulation_interfaces::msg::SimulationState::STATE_PAUSED, "STATE_PAUSED" },
             { simulation_interfaces::msg::SimulationState::STATE_PLAYING, "STATE_PLAYING" },
@@ -33,6 +66,9 @@ namespace SimulationInterfaces
 
         constexpr AZStd::string_view PrintStateName = "/SimulationInterfaces/PrintStateNameInGui";
         constexpr AZStd::string_view StartInStoppedStateKey = "/SimulationInterfaces/StartInStoppedState";
+        constexpr AZStd::string_view KeyboardTransitionStoppedToPlaying = "/SimulationInterfaces/KeyboardTransitions/StoppedToPlaying";
+        constexpr AZStd::string_view KeyboardTransitionPausedToPlaying = "/SimulationInterfaces/KeyboardTransitions/PausedToPlaying";
+        constexpr AZStd::string_view KeyboardTransitionPlayingToPaused = "/SimulationInterfaces/KeyboardTransitions/PlayingToPaused";
 
         AZStd::string GetStateName(SimulationState state)
         {
@@ -61,6 +97,32 @@ namespace SimulationInterfaces
             settingsRegistry->Get(output, PrintStateName);
             return output;
         }
+
+        AZStd::optional<AzFramework::InputChannelId> GetKeyboardTransitionKey(const AZStd::string& registryKeyName)
+        {
+            AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get();
+            AZ_Assert(settingsRegistry, "Settings Registry is not available");
+            AZStd::string channelIdName;
+            settingsRegistry->Get(channelIdName, registryKeyName);
+
+            if (channelIdName.empty())
+            {
+                AZ_Error("SimulationManager", false, "Failed to get keyboard transition key from registry: %s", registryKeyName.c_str());
+                return AZStd::nullopt;
+            }
+            AZ::Crc32 channelIdCrc32 = AZ::Crc32(channelIdName.c_str());
+
+            for (const auto& inputChannel : AzFramework::InputDeviceKeyboard::Key::All)
+            {
+                if (inputChannel.GetNameCrc32() == channelIdCrc32)
+                {
+                    return inputChannel;
+                }
+            }
+            AZ_Error("SimulationManager", false, "Failed to find input channel with name: %s", channelIdName.c_str());
+            return AZStd::nullopt;
+        }
+
     } // namespace
 
     AZ_COMPONENT_IMPL(SimulationManager, "SimulationManager", SimulationManagerTypeId);
@@ -101,10 +163,12 @@ namespace SimulationInterfaces
         {
             SimulationManagerRequestBusInterface::Register(this);
         }
+        InputChannelEventListener::BusConnect();
     }
 
     SimulationManager::~SimulationManager()
     {
+        InputChannelEventListener::BusDisconnect();
         if (SimulationManagerRequestBusInterface::Get() == this)
         {
             SimulationManagerRequestBusInterface::Unregister(this);
@@ -142,15 +206,42 @@ namespace SimulationInterfaces
                                                          simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_ACTION,
                                                          simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_SETTING,
                                                          simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_GETTING });
+
         if (PrintStateNameInGui())
         {
             AZ::TickBus::Handler::BusConnect();
         }
+
         AZ::SystemTickBus::QueueFunction(
             [this]()
             {
                 InitializeSimulationState();
             });
+
+        // Query registry for keyboard transition keys
+        if (const auto stoppedToPlayingKey = GetKeyboardTransitionKey(KeyboardTransitionStoppedToPlaying))
+        {
+            RegisterTransitionsKey(
+                *stoppedToPlayingKey,
+                simulation_interfaces::msg::SimulationState::STATE_STOPPED,
+                simulation_interfaces::msg::SimulationState::STATE_PLAYING);
+        }
+
+        if (const auto pausedToPlayingKey = GetKeyboardTransitionKey(KeyboardTransitionPausedToPlaying))
+        {
+            RegisterTransitionsKey(
+                *pausedToPlayingKey,
+                simulation_interfaces::msg::SimulationState::STATE_PAUSED,
+                simulation_interfaces::msg::SimulationState::STATE_PLAYING);
+        }
+
+        if (const auto playingToPausedKey = GetKeyboardTransitionKey(KeyboardTransitionPlayingToPaused))
+        {
+            RegisterTransitionsKey(
+                *playingToPausedKey,
+                simulation_interfaces::msg::SimulationState::STATE_PLAYING,
+                simulation_interfaces::msg::SimulationState::STATE_PAUSED);
+        }
     }
 
     void SimulationManager::Deactivate()
@@ -373,11 +464,59 @@ namespace SimulationInterfaces
 
     void SimulationManager::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
+        // get if we have available keyboard transition
+
+        AZStd::string keyboardHint;
+        const auto maybeKeyboardTransition = m_keyboardTransitions.find(m_simulationState);
+
+        if (maybeKeyboardTransition != m_keyboardTransitions.end())
+        {
+            keyboardHint = maybeKeyboardTransition->second.m_uiDescription;
+        }
+
         DebugDraw::DebugDrawRequestBus::Broadcast(
             &DebugDraw::DebugDrawRequests::DrawTextOnScreen,
-            AZStd::string::format("Simulation state: %s", GetStateName(m_simulationState).c_str()),
+            AZStd::string::format("Simulation state: %s %s", GetStateName(m_simulationState).c_str(), keyboardHint.c_str()),
             AZ::Color(1.0f, 1.0f, 1.0f, 1.0f),
             0.f);
+    }
+
+    void SimulationManager::RegisterTransitionsKey(
+        const AzFramework::InputChannelId& key, SimulationState sourceState, SimulationState desiredState)
+    {
+        const auto uiKeyName = MakePrettyKeyboardName(key);
+        const auto uiHint =
+            AZStd::string::format("Press %s to change simulation state to %s", uiKeyName.c_str(), GetStateName(desiredState).c_str());
+        m_keyboardTransitions[sourceState] = { key, desiredState, uiHint };
+    }
+
+    bool SimulationManager::OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel)
+    {
+        const AzFramework::InputDeviceId& deviceId = inputChannel.GetInputDevice().GetInputDeviceId();
+
+        if (AzFramework::InputDeviceKeyboard::IsKeyboardDevice(deviceId) && inputChannel.IsStateBegan())
+        {
+            const auto maybeKeyboardTransition = m_keyboardTransitions.find(m_simulationState);
+            if (maybeKeyboardTransition == m_keyboardTransitions.end())
+            {
+                return false;
+            }
+            if (maybeKeyboardTransition->second.m_inputChannelId == inputChannel.GetInputChannelId())
+            {
+                // if we have transition, set the state
+                auto result = SetSimulationState(maybeKeyboardTransition->second.m_desiredState);
+
+                AZ_Error(
+                    "SimulationManager",
+                    result.IsSuccess(),
+                    "Failed to change simulation state: %d %s",
+                    result.GetError().m_errorCode,
+                    result.GetError().m_errorString.c_str());
+
+                return true;
+            }
+        }
+        return false;
     }
 
 } // namespace SimulationInterfaces
