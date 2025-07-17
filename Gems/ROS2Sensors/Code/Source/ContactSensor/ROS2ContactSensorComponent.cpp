@@ -142,7 +142,7 @@ namespace ROS2Sensors
         gazebo_msgs::msg::ContactsState msg;
         const auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(ros2Frame, "Invalid component pointer value");
-        msg.header.frame_id = ros2Frame->GetFrameID().data();
+        msg.header.frame_id = ros2Frame->GetNamespacedFrameID().data();
         msg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
 
         {

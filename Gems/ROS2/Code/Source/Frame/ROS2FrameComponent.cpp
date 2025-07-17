@@ -143,7 +143,7 @@ namespace ROS2
 
         if (m_publishTransform)
         {
-            AZ_TracePrintf("ROS2FrameComponent", "Setting up %s", GetFrameID().data());
+            AZ_TracePrintf("ROS2FrameComponent", "Setting up %s", GetNamespacedFrameID().data());
 
             // The frame will always be dynamic if it's a top entity.
             if (IsTopLevel())
@@ -168,10 +168,10 @@ namespace ROS2
                 "Setting up %s transform between parent %s and child %s to be published %s\n",
                 IsDynamic() ? "dynamic" : "static",
                 GetParentFrameID().data(),
-                GetFrameID().data(),
+                GetNamespacedFrameID().data(),
                 IsDynamic() ? "continuously to /tf" : "once to /tf_static");
 
-            m_ros2Transform = AZStd::make_unique<ROS2Transform>(GetParentFrameID(), GetFrameID(), IsDynamic());
+            m_ros2Transform = AZStd::make_unique<ROS2Transform>(GetParentFrameID(), GetNamespacedFrameID(), IsDynamic());
             if (IsDynamic())
             {
                 AZ::TickBus::Handler::BusConnect();
@@ -246,13 +246,13 @@ namespace ROS2
     {
         if (auto parentFrame = GetParentROS2FrameComponent(); parentFrame != nullptr)
         {
-            return parentFrame->GetFrameID();
+            return parentFrame->GetNamespacedFrameID();
         }
         // If parent entity does not exist or does not have a ROS2FrameComponent, return ROS2 default global frame.
         return GetGlobalFrameName();
     }
 
-    AZStd::string ROS2FrameComponent::GetFrameID() const
+    AZStd::string ROS2FrameComponent::GetNamespacedFrameID() const
     {
         return ROS2Names::GetNamespacedName(GetNamespace(), m_frameName);
     }

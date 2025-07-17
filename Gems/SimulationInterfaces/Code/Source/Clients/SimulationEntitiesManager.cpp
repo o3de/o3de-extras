@@ -643,9 +643,8 @@ namespace SimulationInterfaces
         if (!initialPose.IsOrthogonal())
         {
             AZ_Warning("SimulationInterfaces", false, "Initial pose is not orthogonal");
-            completedCb(
-                AZ::Failure(FailedResult(
-                    simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
+            completedCb(AZ::Failure(FailedResult(
+                simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
             return;
         }
 
@@ -689,7 +688,7 @@ namespace SimulationInterfaces
                 ROS2::ROS2FrameComponent* frameComponent = entity->template FindComponent<ROS2::ROS2FrameComponent>();
                 if (frameComponent)
                 {
-                    const AZStd::string f = frameComponent->GetFrameID();
+                    const AZStd::string f = frameComponent->GetNamespacedFrameID();
                     if (f.empty())
                     {
                         frameComponent->SetFrameID(name);

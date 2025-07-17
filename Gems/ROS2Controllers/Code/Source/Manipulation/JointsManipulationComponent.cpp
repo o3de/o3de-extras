@@ -178,7 +178,7 @@ namespace ROS2Controllers
         auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         JointStatePublisherContext publisherContext;
         publisherContext.m_publisherNamespace = ros2Frame->GetNamespace();
-        publisherContext.m_frameId = ros2Frame->GetFrameID();
+        publisherContext.m_frameId = ros2Frame->GetNamespacedFrameID();
         publisherContext.m_entityId = GetEntityId();
 
         m_jointStatePublisher = AZStd::make_unique<JointStatePublisher>(m_jointStatePublisherConfiguration, publisherContext);

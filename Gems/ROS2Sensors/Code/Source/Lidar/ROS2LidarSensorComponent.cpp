@@ -93,7 +93,7 @@ namespace ROS2Sensors
                 m_lidarRaycasterId,
                 &LidarRaycasterRequestBus::Events::ConfigurePointCloudPublisher,
                 ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic),
-                ros2Frame->GetFrameID().data(),
+                ros2Frame->GetNamespacedFrameID().data(),
                 publisherConfig.GetQoS());
         }
         else
@@ -167,7 +167,7 @@ namespace ROS2Sensors
     void ROS2LidarSensorComponent::PublishRaycastResults(const RaycastResults& results)
     {
         auto builder = PointCloud2MessageBuilder(
-            GetEntity()->FindComponent<ROS2::ROS2FrameComponent>()->GetFrameID(),
+            GetEntity()->FindComponent<ROS2::ROS2FrameComponent>()->GetNamespacedFrameID(),
             ROS2::ROS2Interface::Get()->GetROSTimestamp(),
             results.GetCount());
 

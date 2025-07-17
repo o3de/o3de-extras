@@ -65,7 +65,7 @@ namespace ROS2
         void UpdateNamespaceConfiguration(const AZStd::string& ros2Namespace, const NamespaceConfiguration::NamespaceStrategy& strategy);
 
         // ROS2FrameEditorComponentBus::Handler overrides
-        AZStd::string GetFrameID() const override;
+        AZStd::string GetNamespacedFrameID() const override;
         AZ::Name GetNamespacedJointName() const override;
         AZStd::string GetNamespace() const override;
         void UpdateNamespace(const AZStd::string& parentNamespace) override;

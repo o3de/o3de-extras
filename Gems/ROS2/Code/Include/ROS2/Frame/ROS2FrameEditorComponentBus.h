@@ -31,7 +31,7 @@ namespace ROS2
 
         //! Get a frame id, which is needed for any ROS2 message with a Header
         //! @return Frame id which includes the namespace, ready to send in a ROS2 message
-        virtual AZStd::string GetFrameID() const = 0;
+        virtual AZStd::string GetNamespacedFrameID() const = 0;
 
         //! Get the joint name including the namespace
         //! @note Supplementary metadata for Joint components, necessary in some cases for joints addressed by name in ROS 2

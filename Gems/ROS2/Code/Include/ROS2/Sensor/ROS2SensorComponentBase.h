@@ -158,10 +158,10 @@ namespace ROS2
         }
 
         //! Returns this sensor frame ID. The ID contains namespace.
-        [[nodiscard]] AZStd::string GetFrameID() const
+        [[nodiscard]] AZStd::string GetNamespacedFrameID() const
         {
             auto* ros2Frame = GetEntity()->template FindComponent<ROS2FrameComponent>();
-            return ros2Frame->GetFrameID();
+            return ros2Frame->GetNamespacedFrameID();
         }
 
         SensorConfiguration m_sensorConfiguration; ///< Basic sensor configuration.

@@ -183,7 +183,7 @@ namespace ROS2Controllers
 
         // "odom" is globally fixed frame for all robots, no matter the namespace
         m_odometryMsg.header.frame_id = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), "odom").c_str();
-        m_odometryMsg.child_frame_id = GetFrameID().c_str();
+        m_odometryMsg.child_frame_id = GetNamespacedFrameID().c_str();
 
         auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor");

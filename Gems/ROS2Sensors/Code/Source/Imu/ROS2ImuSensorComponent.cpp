@@ -84,7 +84,7 @@ namespace ROS2Sensors
 
         auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
-        m_imuMsg.header.frame_id = GetFrameID().c_str();
+        m_imuMsg.header.frame_id = GetNamespacedFrameID().c_str();
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType];
         const auto fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());

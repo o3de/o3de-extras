@@ -64,7 +64,7 @@ namespace ROS2
         return ROS2FrameSystemInterface::Get()->IsTopLevel(GetEntityId());
     }
 
-    AZStd::string ROS2FrameEditorComponent::GetFrameID() const
+    AZStd::string ROS2FrameEditorComponent::GetNamespacedFrameID() const
     {
         return ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_frameName);
     }

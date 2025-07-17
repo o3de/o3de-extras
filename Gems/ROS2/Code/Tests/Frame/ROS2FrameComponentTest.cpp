@@ -86,7 +86,7 @@ namespace UnitTest
         entity.Activate();
 
         const std::string jointName(frame->GetNamespacedJointName().GetCStr());
-        const std::string frameId(frame->GetFrameID().c_str());
+        const std::string frameId(frame->GetNamespacedFrameID().c_str());
 
         EXPECT_EQ(entity.GetState(), AZ::Entity::State::Active);
         EXPECT_STRCASEEQ(jointName.c_str(), ("o3de_" + entityName + "/").c_str());
@@ -128,7 +128,7 @@ namespace UnitTest
         for (int i = 0; i < numOfEntities; i++)
         {
             const std::string jointName(frames[i]->GetNamespacedJointName().GetCStr());
-            const std::string frameId(frames[i]->GetFrameID().c_str());
+            const std::string frameId(frames[i]->GetNamespacedFrameID().c_str());
 
             EXPECT_EQ(entities[i]->GetState(), AZ::Entity::State::Active);
             EXPECT_STRCASEEQ(jointName.c_str(), (entities[0]->GetName() + "/").c_str());

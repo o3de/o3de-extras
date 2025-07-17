@@ -39,7 +39,7 @@ namespace ROS2Sensors
 
         const auto* component = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(component, "Entity has no ROS2FrameComponent");
-        m_frameName = component->GetFrameID();
+        m_frameName = component->GetNamespacedFrameID();
         CameraConfigurationRequestBus::Handler::BusConnect(GetEntityId());
 
         StartSensor(
@@ -99,7 +99,7 @@ namespace ROS2Sensors
         AZ_Assert(component, "Entity %s has no ROS2CameraSensorComponent", entity->GetName().c_str());
         if (component)
         {
-            AZStd::string cameraName = component->GetFrameID();
+            AZStd::string cameraName = component->GetNamespacedFrameID();
             AZStd::replace(cameraName.begin(), cameraName.end(), '/', '_');
             return cameraName;
         }
