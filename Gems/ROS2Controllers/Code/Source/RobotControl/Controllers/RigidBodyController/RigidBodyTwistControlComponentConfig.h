@@ -30,12 +30,8 @@ namespace ROS2Controllers
         static void Reflect(AZ::ReflectContext* context);
 
         // Visibility functions for edit context
-        [[nodiscard]] AZ::u32 GetPidControllersVisibility() const
-        {
-            return m_physicalApi == PhysicalApi::Force ? AZ::Edit::PropertyVisibility::Show : AZ::Edit::PropertyVisibility::Hide;
-        }
-
-        AZStd::string GetNote() const;
+        [[nodiscard]] AZ::u32 GetPidControllersVisibility() const;
+        [[nodiscard]] AZStd::string GetNote() const;
 
         //! Pid controllers for linear velocities - default config for each axis
         AZStd::array<PidConfiguration, 3> m_linerControllers = { PidConfiguration(500, 50, 0, 0, 0, false, false),

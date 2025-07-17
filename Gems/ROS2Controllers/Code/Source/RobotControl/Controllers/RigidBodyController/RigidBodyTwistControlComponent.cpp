@@ -122,7 +122,7 @@ namespace ROS2Controllers
             return;
         }
         auto* rigidBody = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
-        AZ_Assert(sceneInterface, "No body found for previously given handle");
+        AZ_Assert(rigidBody, "No body found for previously given handle");
 
         const AZ::Transform robotTransform = rigidBody->GetTransform();
 
@@ -142,19 +142,16 @@ namespace ROS2Controllers
                 AZ::Quaternion::CreateFromScaledAxisAngle(angularVelocityGlobal * fixedDeltaTime) * kinematicTarget.GetRotation());
 
             Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetKinematicTarget, kinematicTarget);
-            return;
         }
-        if (m_config.m_physicalApi == RigidBodyTwistControlComponentConfig::PhysicalApi::Velocity)
+        else if (m_config.m_physicalApi == RigidBodyTwistControlComponentConfig::PhysicalApi::Velocity)
         {
             // Convert local steering to world frame
             const auto linearVelocityGlobal = robotTransform.TransformVector(m_linearVelocityLocal);
             const auto angularVelocityGlobal = robotTransform.TransformVector(m_angularVelocityLocal);
             Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetLinearVelocity, linearVelocityGlobal);
             Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetAngularVelocity, angularVelocityGlobal);
-            return;
         }
-
-        if (m_config.m_physicalApi == RigidBodyTwistControlComponentConfig::PhysicalApi::Force)
+        else if (m_config.m_physicalApi == RigidBodyTwistControlComponentConfig::PhysicalApi::Force)
         {
             const AZ::Transform robotTransformInv = rigidBody->GetTransform().GetInverse();
             AZ::Vector3 currentLinearVelocityGlob = AZ::Vector3::CreateZero();
@@ -182,6 +179,10 @@ namespace ROS2Controllers
                 GetEntityId(), &Physics::RigidBodyRequests::ApplyLinearImpulse, linearForceGlobal * fixedDeltaTime);
             Physics::RigidBodyRequestBus::Event(
                 GetEntityId(), &Physics::RigidBodyRequests::ApplyAngularImpulse, angularForceGlobal * fixedDeltaTime);
+        }
+        else
+        {
+            AZ_Error("RigidBodyTwistControlComponent", false, "Unknown physical API type %d", static_cast<int>(m_config.m_physicalApi));
         }
     }
 

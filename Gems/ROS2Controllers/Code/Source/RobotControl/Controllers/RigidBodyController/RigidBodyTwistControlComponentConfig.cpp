@@ -59,6 +59,11 @@ namespace ROS2Controllers
         }
     }
 
+    AZ::u32 RigidBodyTwistControlComponentConfig::GetPidControllersVisibility() const
+    {
+        return m_physicalApi == PhysicalApi::Force ? AZ::Edit::PropertyVisibility::Show : AZ::Edit::PropertyVisibility::Hide;
+    }
+
     AZStd::string RigidBodyTwistControlComponentConfig::GetNote() const
     {
         if (m_physicalApi == PhysicalApi::Force)
