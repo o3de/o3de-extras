@@ -1183,142 +1183,6 @@
                 }
             }
         },
-        "Entity_[917866002800546]": {
-            "Id": "Entity_[917866002800546]",
-            "Name": "Front_gate",
-            "Components": {
-                "Component_[10813453887359688918]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 10813453887359688918,
-                    "Parent Entity": "Entity_[918432938483618]",
-                    "Transform Data": {
-                        "Translate": [
-                            39.78621292114258,
-                            1.0,
-                            0.0
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            -179.99989318847656
-                        ]
-                    }
-                },
-                "Component_[11235052944295479876]": {
-                    "$type": "EditorStaticRigidBodyComponent",
-                    "Id": 11235052944295479876
-                },
-                "Component_[18360744952719232820]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 18360744952719232820
-                },
-                "Component_[2298197826914367238]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2298197826914367238
-                },
-                "Component_[3149718320647090514]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 3149718320647090514,
-                    "VisibilityFlag": false
-                },
-                "Component_[4932017064714589766]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 4932017064714589766
-                },
-                "Component_[7017245480046407512]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 7017245480046407512,
-                    "DisabledComponents": {
-                        "Component_[10232715223514738948]": {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 10232715223514738948,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
-                                            "subId": 279103289
-                                        },
-                                        "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.fbx.azmodel"
-                                    }
-                                }
-                            }
-                        },
-                        "Component_[1554132197757752789]": {
-                            "$type": "EditorColliderComponent",
-                            "Id": 1554132197757752789,
-                            "ColliderConfiguration": {
-                                "MaterialSlots": {
-                                    "Slots": [
-                                        {
-                                            "Name": "MWarehouseModules"
-                                        }
-                                    ]
-                                }
-                            },
-                            "ShapeConfiguration": {
-                                "PhysicsAsset": {
-                                    "Asset": {
-                                        "assetId": {
-                                            "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
-                                            "subId": 3814177680
-                                        },
-                                        "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.pxmesh"
-                                    },
-                                    "Configuration": {
-                                        "PhysicsAsset": {
-                                            "assetId": {
-                                                "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
-                                                "subId": 3814177680
-                                            },
-                                            "loadBehavior": "QueueLoad",
-                                            "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.pxmesh"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "Component_[8212625672736002681]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 8212625672736002681,
-                    "PendingComponents": {
-                        "Component_[11718397946111790072]": {
-                            "$type": "EditorMaterialComponent",
-                            "Id": 11718397946111790072,
-                            "Controller": {
-                                "Configuration": {
-                                    "materials": [
-                                        {
-                                            "Key": {
-                                                "materialSlotStableId": 103484566
-                                            },
-                                            "Value": {
-                                                "MaterialAsset": {
-                                                    "assetId": {
-                                                        "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
-                                                    },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                },
-                "Component_[9253383058600544919]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 9253383058600544919
-                },
-                "Component_[9529209697264184359]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 9529209697264184359
-                }
-            }
-        },
         "Entity_[917870297767842]": {
             "Id": "Entity_[917870297767842]",
             "Name": "circle",
@@ -1571,158 +1435,6 @@
                             0.0
                         ]
                     }
-                }
-            }
-        },
-        "Entity_[917887477637026]": {
-            "Id": "Entity_[917887477637026]",
-            "Name": "Gate",
-            "Components": {
-                "Component_[13600490855520413730]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 13600490855520413730
-                },
-                "Component_[15167189095873685279]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 15167189095873685279
-                },
-                "Component_[17614188821325671055]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 17614188821325671055,
-                    "DisabledComponents": {
-                        "Component_[10387122939797774050]": {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 10387122939797774050,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{9F3790A0-9383-5BBA-BB91-2AD9F04086B3}",
-                                            "subId": 279508339
-                                        },
-                                        "assetHint": "assets/warehouse/models/warehouse_gate_closed.fbx.azmodel"
-                                    }
-                                }
-                            }
-                        },
-                        "Component_[16809483465388003559]": {
-                            "$type": "EditorColliderComponent",
-                            "Id": 16809483465388003559,
-                            "ColliderConfiguration": {
-                                "MaterialSlots": {
-                                    "Slots": [
-                                        {
-                                            "Name": "MWarehouseGate"
-                                        },
-                                        {
-                                            "Name": "MWarehouseModules"
-                                        }
-                                    ]
-                                }
-                            },
-                            "ShapeConfiguration": {
-                                "PhysicsAsset": {
-                                    "Asset": {
-                                        "assetId": {
-                                            "guid": "{9F3790A0-9383-5BBA-BB91-2AD9F04086B3}",
-                                            "subId": 675098786
-                                        },
-                                        "assetHint": "assets/warehouse/models/warehouse_gate_closed.pxmesh"
-                                    },
-                                    "Configuration": {
-                                        "PhysicsAsset": {
-                                            "assetId": {
-                                                "guid": "{9F3790A0-9383-5BBA-BB91-2AD9F04086B3}",
-                                                "subId": 675098786
-                                            },
-                                            "loadBehavior": "QueueLoad",
-                                            "assetHint": "assets/warehouse/models/warehouse_gate_closed.pxmesh"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "Component_[17714278481541526192]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 17714278481541526192,
-                    "Parent Entity": "Entity_[918432938483618]",
-                    "Transform Data": {
-                        "Translate": [
-                            39.78621292114258,
-                            1.0,
-                            0.0
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            -179.99989318847656
-                        ]
-                    }
-                },
-                "Component_[17751943132203388929]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 17751943132203388929,
-                    "VisibilityFlag": false
-                },
-                "Component_[18437099534701703658]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 18437099534701703658
-                },
-                "Component_[5781546573867269447]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 5781546573867269447
-                },
-                "Component_[7578485257791727565]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 7578485257791727565
-                },
-                "Component_[8806906810237163444]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 8806906810237163444,
-                    "PendingComponents": {
-                        "Component_[12188643545659218893]": {
-                            "$type": "EditorMaterialComponent",
-                            "Id": 12188643545659218893,
-                            "Controller": {
-                                "Configuration": {
-                                    "materials": [
-                                        {
-                                            "Key": {
-                                                "materialSlotStableId": 103484566
-                                            },
-                                            "Value": {
-                                                "MaterialAsset": {
-                                                    "assetId": {
-                                                        "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
-                                                    },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "Key": {
-                                                "materialSlotStableId": 745211904
-                                            },
-                                            "Value": {
-                                                "MaterialAsset": {
-                                                    "assetId": {
-                                                        "guid": "{06298918-E750-5053-B55B-10D158B1ED8C}"
-                                                    },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousegate.azmaterial"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                },
-                "Component_[9994022325695796853]": {
-                    "$type": "EditorStaticRigidBodyComponent",
-                    "Id": 9994022325695796853
                 }
             }
         },
@@ -3273,19 +2985,23 @@
                 },
                 "EditorMaterialComponent": {
                     "$type": "EditorMaterialComponent",
-                    "Id": 17349375791338578383,
+                    "Id": 8609877608279723647,
                     "Controller": {
                         "Configuration": {
-                            "materials": {
-                                "{}": {
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{4D881031-88E9-5300-B525-6F6E35182D97}"
-                                        },
-                                        "assetHint": "assets/warehouse/materials/mwarehousemodules_roof.azmaterial"
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3367833104
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
+                                            }
+                                        }
                                     }
                                 }
-                            }
+                            ]
                         }
                     }
                 }
@@ -4902,9 +4618,9 @@
             "Id": "Entity_[918080751165346]",
             "Name": "Gate",
             "Components": {
-                "Component_[10387122939797774050]": {
+                "AZ::Render::EditorMeshComponent": {
                     "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 10387122939797774050,
+                    "Id": 2741706271260557178,
                     "Controller": {
                         "Configuration": {
                             "ModelAsset": {
@@ -4914,68 +4630,6 @@
                                 },
                                 "assetHint": "assets/warehouse/models/warehouse_gate_closed.fbx.azmodel"
                             }
-                        }
-                    }
-                },
-                "Component_[12188643545659218893]": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 12188643545659218893,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 103484566
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
-                                            },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 745211904
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{06298918-E750-5053-B55B-10D158B1ED8C}"
-                                            },
-                                            "assetHint": "assets/warehouse/materials/mwarehousegate.azmaterial"
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 3367833104
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
-                                            },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 3906332078
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{06298918-E750-5053-B55B-10D158B1ED8C}"
-                                            },
-                                            "assetHint": "assets/warehouse/materials/mwarehousegate.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
                         }
                     }
                 },
@@ -5063,6 +4717,41 @@
                 "Component_[9994022325695796853]": {
                     "$type": "EditorStaticRigidBodyComponent",
                     "Id": 9994022325695796853
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 8111949087953792883,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3367833104
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3906332078
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{06298918-E750-5053-B55B-10D158B1ED8C}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehousegate.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -10876,8 +10565,6 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 4977736227609570658,
                     "Child Entity Order": [
-                        "Entity_[917887477637026]",
-                        "Entity_[917866002800546]",
                         "Entity_[918226780053410]"
                     ]
                 },
