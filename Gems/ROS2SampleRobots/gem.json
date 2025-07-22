@@ -1,6 +1,6 @@
 {
     "gem_name": "ROS2SampleRobots",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "display_name": "ROS2 Sample Robots",
     "license": "Apache-2.0 or MIT",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
@@ -32,5 +32,5 @@
     ],
     "engine_api_dependencies": [],
     "restricted": "ROS2SampleRobots",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2samplerobots-1.0.0-gem.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2samplerobots-1.0.1-gem.zip"
 }
