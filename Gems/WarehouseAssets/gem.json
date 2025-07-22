@@ -1,6 +1,6 @@
 {
     "gem_name": "WarehouseAssets",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "display_name": "WarehouseAssets",
     "license": "Apache-2.0 or MIT",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
@@ -25,7 +25,8 @@
         "o3de-sdk>=2.3.0",
         "o3de>=2.3.0"
     ],
+    "engine_api_dependencies": [],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "restricted": "",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.0-gem.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.1-gem.zip"
 }
