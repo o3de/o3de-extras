@@ -73,7 +73,16 @@ namespace UnitTest
 
         const char* expectedOutput =
             R"~({"Id":0,"SensorConfiguration":{"Visualize":true,"Publishing Enabled":true,"Frequency (HZ)":10.0,"Publishers":{"nav_msgs::msg::Odometry":{"Type":"nav_msgs::msg::Odometry","Topic":"odom","QoS":{"Reliability":2,"Durability":2,"Depth":5}}}},"Odometry configuration":{"Pose covariance":{"Linear covariance":[321.0,654.0,987.0],"Angular covariance":[789.0,456.0,123.0]},"Twist covariance":{"Linear covariance":[123.0,456.0,789.0],"Angular covariance":[987.0,654.0,321.0]}}})~";
-        EXPECT_STREQ(buffer.GetString(), expectedOutput);
+
+        // Parse both JSONs into RapidJSON documents
+        rapidjson::Document actualJson;
+        actualJson.Parse(buffer.GetString());
+
+        rapidjson::Document expectedJson;
+        expectedJson.Parse(expectedOutput);
+
+        // Compare the documents
+        EXPECT_TRUE(actualJson == expectedJson);
     }
 
     // Store test for the new schema, where there is a configuration class.
@@ -133,6 +142,15 @@ namespace UnitTest
 
         const char* expectedOutput =
             R"~({"Id":0,"SensorConfiguration":{"Visualize":true,"Publishing Enabled":true,"Frequency (HZ)":10.0,"Publishers":{"nav_msgs::msg::Odometry":{"Type":"nav_msgs::msg::Odometry","Topic":"odom","QoS":{"Reliability":2,"Durability":2,"Depth":5}}}},"Odometry configuration":{"Pose covariance":{"Linear covariance":[321.0,654.0,987.0],"Angular covariance":[789.0,456.0,123.0]},"Twist covariance":{"Linear covariance":[123.0,456.0,789.0],"Angular covariance":[987.0,654.0,321.0]}}})~";
-        EXPECT_STREQ(buffer.GetString(), expectedOutput);
+
+        // Parse both JSONs into RapidJSON documents
+        rapidjson::Document actualJson;
+        actualJson.Parse(buffer.GetString());
+
+        rapidjson::Document expectedJson;
+        expectedJson.Parse(expectedOutput);
+
+        // Compare the documents
+        EXPECT_TRUE(actualJson == expectedJson);
     }
 } // namespace UnitTest
