@@ -72,7 +72,8 @@ namespace ROS2
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2FrameSystemComponent, AZ::Component>();
+            serialize->Class<ROS2FrameSystemComponent, AZ::Component>()->Version(1)->Attribute(
+                AZ::Edit::Attributes::SystemComponentTags, AZStd::vector<AZ::Crc32>({ AZ_CRC_CE("AssetBuilder") }));
         }
     }
 
