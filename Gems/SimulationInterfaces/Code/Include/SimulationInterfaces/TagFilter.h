@@ -10,12 +10,13 @@
 
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/string/string.h>
+#include <simulation_interfaces/msg/tags_filter.hpp>
 
 namespace SimulationInterfaces
 {
     //! Structure to design a filter for tags
     //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/TagsFilter.msg">TagsFilter.msg</a>
-    using TagFilterMode = uint8_t;
+    using TagFilterMode = simulation_interfaces::msg::TagsFilter::_filter_mode_type;
 
     struct TagFilter
     {
