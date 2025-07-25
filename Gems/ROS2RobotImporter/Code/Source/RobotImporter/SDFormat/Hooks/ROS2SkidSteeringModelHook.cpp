@@ -7,7 +7,7 @@
  */
 
 #include <AzCore/Math/MathUtils.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/ROS2EditorBus.h>
 #include <ROS2Controllers/Controllers/PidConfiguration.h>
 #include <ROS2Controllers/ROS2ControllersEditorBus.h>
 #include <ROS2Controllers/RobotControl/ControlConfiguration.h>
@@ -43,11 +43,11 @@ namespace ROS2RobotImporter::SDFormat
                     AZ::Entity* entityRight = nullptr;
                     AZ::ComponentApplicationBus::BroadcastResult(entityLeft, &AZ::ComponentApplicationRequests::FindEntity, entityIdLeft);
                     AZ::ComponentApplicationBus::BroadcastResult(entityRight, &AZ::ComponentApplicationRequests::FindEntity, entityIdRight);
-                    auto interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
-                    if (entityLeft && entityRight && interface)
+                    auto controllersInterface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+                    if (entityLeft && entityRight && controllersInterface)
                     {
-                        interface->CreateWheelControllerComponent(*entityLeft, AZ::EntityId(), 0.0f);
-                        interface->CreateWheelControllerComponent(*entityRight, AZ::EntityId(), 0.0f);
+                        controllersInterface->CreateWheelControllerComponent(*entityLeft, AZ::EntityId(), 0.0f);
+                        controllersInterface->CreateWheelControllerComponent(*entityRight, AZ::EntityId(), 0.0f);
                     }
                     else
                     {
@@ -198,27 +198,26 @@ namespace ROS2RobotImporter::SDFormat
             constexpr float angularAcceleration = 2.0f;
 
             // Create required components
-            auto* interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
-            AZ_Assert(interface, "ROS2ControllersEditorInterface not available in ROS2SkidSteeringModelPluginHook");
-            if (!interface)
+            auto* ros2interface = ROS2::ROS2EditorInterface::Get();
+            AZ_Assert(ros2interface, "ROS2EditorInterface not available in ROS2ImuSensorHook");
+            auto* controllersInterface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+            AZ_Assert(controllersInterface, "ROS2ControllersEditorInterface not available in ROS2SkidSteeringModelPluginHook");
+            if (ros2interface && controllersInterface)
             {
-                return AZ::Failure(AZStd::string("ROS2ControllersInterface is not available. Cannot create components."));
+                auto* ros2FrameComponent = ros2interface->CreateROS2FrameEditorComponent(entity, ROS2::ROS2FrameConfiguration());
+                controllersInterface->CreateROS2RobotControlComponent(entity, controlConfiguration);
+                controllersInterface->CreateSkidSteeringModelComponent(
+                    entity, vehicleConfiguration, linearLimit, angularLimit, linearAcceleration, angularAcceleration);
+
+                // Create Skid Steering Control Component
+                auto* steeringComponent = controllersInterface->CreateSkidSteeringControlComponent(entity);
+                if (ros2FrameComponent && steeringComponent)
+                {
+                    return AZ::Success();
+                }
             }
 
-            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity);
-            interface->CreateROS2RobotControlComponent(entity, controlConfiguration);
-            interface->CreateSkidSteeringModelComponent(
-                entity, vehicleConfiguration, linearLimit, angularLimit, linearAcceleration, angularAcceleration);
-
-            // Create Skid Steering Control Component
-            if (interface->CreateSkidSteeringControlComponent(entity))
-            {
-                return AZ::Success();
-            }
-            else
-            {
-                return AZ::Failure(AZStd::string("Failed to create ROS 2 Skid Steering Control Component"));
-            }
+            return AZ::Failure(AZStd::string("Failed to create ROS 2 Skid Steering Control Component"));
         };
 
         return importerHook;

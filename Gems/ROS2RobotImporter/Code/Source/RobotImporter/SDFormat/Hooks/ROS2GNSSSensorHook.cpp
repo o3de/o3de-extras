@@ -7,7 +7,7 @@
  */
 
 #include <AzCore/Math/Uuid.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/ROS2EditorBus.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <ROS2Sensors/ROS2SensorsEditorBus.h>
@@ -49,15 +49,16 @@ namespace ROS2RobotImporter::SDFormat
             // Get frame configuration
             const auto frameConfiguration = HooksUtils::GetFrameConfiguration(gnssPluginParams);
 
-            // Create required components
-            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity, frameConfiguration);
-
             // Create GNSS component
-            auto* interface = ROS2Sensors::ROS2SensorsEditorInterface::Get();
-            AZ_Assert(interface, "ROS2SensorsEditorInterface not available in ROS2GNSSSensorHook");
-            if (interface)
+            auto* ros2interface = ROS2::ROS2EditorInterface::Get();
+            AZ_Assert(ros2interface, "ROS2EditorInterface not available in ROS2ImuSensorHook");
+            auto* sensorsInterface = ROS2Sensors::ROS2SensorsEditorInterface::Get();
+            AZ_Assert(sensorsInterface, "ROS2SensorsEditorInterface not available in ROS2GNSSSensorHook");
+            if (ros2interface && sensorsInterface)
             {
-                if (auto* sensor = interface->CreateROS2GnssSensorComponent(entity, sensorConfiguration))
+                auto* ros2FrameComponent = ros2interface->CreateROS2FrameEditorComponent(entity, frameConfiguration);
+                auto* sensor = sensorsInterface->CreateROS2GnssSensorComponent(entity, sensorConfiguration);
+                if (ros2FrameComponent && sensor)
                 {
                     return AZ::Success();
                 }

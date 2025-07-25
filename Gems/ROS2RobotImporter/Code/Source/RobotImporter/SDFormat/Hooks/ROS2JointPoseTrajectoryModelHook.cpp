@@ -7,7 +7,7 @@
  */
 
 #include <ROS2/Communication/PublisherConfiguration.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/ROS2EditorBus.h>
 #include <ROS2Controllers/ROS2ControllersEditorBus.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
@@ -39,29 +39,27 @@ namespace ROS2RobotImporter::SDFormat
             const AZStd::string trajectoryActionName =
                 HooksUtils::ValueOfAny(poseTrajectoryParams, trajectoryTopicParamNames, "arm_controller/follow_joint_trajectory");
 
-            // add required components
-            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity);
-
             // create controllerComponent based on model joints/articulations
-            auto* interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
-            AZ_Assert(interface, "ROS2ControllersEditorInterface not available in ROS2JointPoseTrajectoryModelPluginHook");
-            if (!interface)
+            auto* ros2interface = ROS2::ROS2EditorInterface::Get();
+            AZ_Assert(ros2interface, "ROS2EditorInterface not available in ROS2ImuSensorHook");
+            auto* controllersInterface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+            AZ_Assert(controllersInterface, "ROS2ControllersEditorInterface not available in ROS2JointPoseTrajectoryModelPluginHook");
+            if (ros2interface && controllersInterface)
             {
-                return AZ::Failure(AZStd::string("ROS2ControllersInterface is not available. Cannot create components."));
+                auto* ros2FrameComponent = ros2interface->CreateROS2FrameEditorComponent(entity, ROS2::ROS2FrameConfiguration());
+                entity.FindComponent<PhysX::EditorArticulationLinkComponent>()
+                    ? controllersInterface->CreateJointsArticulationControllerComponent(entity)
+                    : controllersInterface->CreateJointsPIDControllerComponent(entity);
+
+                controllersInterface->CreateJointsManipulationEditorComponent(entity, publisherConfiguration);
+                auto* trajectoryComponent = controllersInterface->CreateJointsTrajectoryComponent(entity, trajectoryActionName);
+                if (ros2FrameComponent && trajectoryComponent)
+                {
+                    return AZ::Success();
+                }
             }
 
-            entity.FindComponent<PhysX::EditorArticulationLinkComponent>() ? interface->CreateJointsArticulationControllerComponent(entity)
-                                                                           : interface->CreateJointsPIDControllerComponent(entity);
-
-            interface->CreateJointsManipulationEditorComponent(entity, publisherConfiguration);
-            if (interface->CreateJointsTrajectoryComponent(entity, trajectoryActionName))
-            {
-                return AZ::Success();
-            }
-            else
-            {
-                return AZ::Failure(AZStd::string("Failed to create ROS 2 Joints Trajectory Component"));
-            }
+            return AZ::Failure(AZStd::string("Failed to create ROS 2 Joints Trajectory Component"));
         };
 
         return importerHook;

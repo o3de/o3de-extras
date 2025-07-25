@@ -15,7 +15,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/Frame/ROS2FrameConfiguration.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2/Sensor/SensorConfiguration.h>

@@ -28,6 +28,11 @@ namespace ROS2
 
         //! Create a new ROS2 Frame editor component.
         //! @param entity The entity to which the frame component will be added.
+        //! @return A pointer to the newly created AZ::Component representing the ROS2 Frame (or nullptr if failed).
+        virtual AZ::Component* CreateROS2FrameEditorComponent(AZ::Entity& entity) = 0;
+
+        //! Create a new ROS2 Frame editor component.
+        //! @param entity The entity to which the frame component will be added.
         //! @param frameConfiguration The configuration for the ROS2 Frame.
         //! @return A pointer to the newly created AZ::Component representing the ROS2 Frame (or nullptr if failed).
         virtual AZ::Component* CreateROS2FrameEditorComponent(
