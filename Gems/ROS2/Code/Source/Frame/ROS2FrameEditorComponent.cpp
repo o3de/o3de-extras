@@ -64,7 +64,7 @@ namespace ROS2
         return ROS2FrameSystemInterface::Get()->IsTopLevel(GetEntityId());
     }
 
-    AZStd::string ROS2FrameEditorComponent::GetFrameID() const
+    AZStd::string ROS2FrameEditorComponent::GetNamespacedFrameID() const
     {
         return ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_frameName);
     }
@@ -99,7 +99,7 @@ namespace ROS2
         m_configuration.m_namespaceConfiguration.SetNamespace(ros2Namespace, strategy);
     }
 
-    AZ::Name ROS2FrameEditorComponent::GetJointName() const
+    AZ::Name ROS2FrameEditorComponent::GetNamespacedJointName() const
     {
         return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_jointName).c_str());
     }

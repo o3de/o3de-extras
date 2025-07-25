@@ -104,7 +104,7 @@ namespace ROS2Controllers
                 { // Frame Component is required for joints.
                     continue;
                 }
-                const AZStd::string jointName(frameComponent->GetJointName().GetCStr());
+                const AZStd::string jointName(frameComponent->GetNamespacedJointName().GetCStr());
 
                 auto* hingeComponent = entity->FindComponent<PhysX::HingeJointComponent>();
                 auto* prismaticComponent = entity->FindComponent<PhysX::PrismaticJointComponent>();
@@ -143,18 +143,19 @@ namespace ROS2Controllers
             return manipulationJoints;
         }
 
-        void SetInitialPositions(ManipulationJoints& manipulationJoints, const AZStd::unordered_map<AZStd::string, float>& initialPositions)
+        void SetInitialPositions(
+            ManipulationJoints& manipulationJoints, const AZStd::vector<AZStd::pair<AZStd::string, float>>& initialPositions)
         {
             // Set the initial / resting position to move to and keep.
-            for (const auto& [jointName, jointInfo] : manipulationJoints)
+            for (const auto& [jointName, position] : initialPositions)
             {
-                if (initialPositions.contains(jointName))
+                if (manipulationJoints.contains(jointName))
                 {
-                    manipulationJoints[jointName].m_restPosition = initialPositions.at(jointName);
+                    manipulationJoints[jointName].m_restPosition = position;
                 }
                 else
                 {
-                    AZ_Warning("JointsManipulationComponent", false, "No set initial position for joint %s", jointName.c_str());
+                    AZ_Warning("JointsManipulationComponent", false, "No joint %s to set initial position", jointName.c_str());
                 }
             }
         }
@@ -177,7 +178,7 @@ namespace ROS2Controllers
         auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         JointStatePublisherContext publisherContext;
         publisherContext.m_publisherNamespace = ros2Frame->GetNamespace();
-        publisherContext.m_frameId = ros2Frame->GetFrameID();
+        publisherContext.m_frameId = ros2Frame->GetNamespacedFrameID();
         publisherContext.m_entityId = GetEntityId();
 
         m_jointStatePublisher = AZStd::make_unique<JointStatePublisher>(m_jointStatePublisherConfiguration, publisherContext);
@@ -414,31 +415,12 @@ namespace ROS2Controllers
         }
     }
 
-    AZStd::string JointsManipulationComponent::GetManipulatorNamespace() const
-    {
-        auto* frameComponent = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
-        AZ_Assert(frameComponent, "ROS2FrameComponent is required for joints.");
-        return frameComponent->GetNamespace();
-    }
-
     void JointsManipulationComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
         if (m_manipulationJoints.empty())
         {
-            const AZStd::string manipulatorNamespace = GetManipulatorNamespace();
-            AZStd::unordered_map<AZStd::string, JointPosition> initialPositionNamespaced;
-            AZStd::transform(
-                m_initialPositions.begin(),
-                m_initialPositions.end(),
-                AZStd::inserter(initialPositionNamespaced, initialPositionNamespaced.end()),
-                [&manipulatorNamespace](const auto& pair)
-                {
-                    return AZStd::make_pair(ROS2::ROS2Names::GetNamespacedName(manipulatorNamespace, pair.first), pair.second);
-                });
-
             m_manipulationJoints = Internal::GetAllEntityHierarchyJoints(GetEntityId());
-
-            Internal::SetInitialPositions(m_manipulationJoints, initialPositionNamespaced);
+            Internal::SetInitialPositions(m_manipulationJoints, m_initialPositions);
             if (m_manipulationJoints.empty())
             {
                 AZ_Warning("JointsManipulationComponent", false, "No manipulation joints to handle!");

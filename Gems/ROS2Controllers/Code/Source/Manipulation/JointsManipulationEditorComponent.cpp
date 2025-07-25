@@ -14,7 +14,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/std/functional.h>
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <ROS2Controllers/Manipulation/JointInfo.h>
 #include <Source/ArticulationLinkComponent.h>
@@ -104,18 +104,20 @@ namespace ROS2Controllers
 
         AZStd::function<void(const AZ::Entity* entity)> getAllJointsHierarchy = [&](const AZ::Entity* entity)
         {
-            auto* frameEditorComponent = entity->FindComponent<ROS2::ROS2FrameEditorComponent>();
-            AZ_Assert(frameEditorComponent, "ROS2FrameEditorComponent does not exist!");
+            AZ::Name jointName;
+            ROS2::ROS2FrameEditorComponentBus::EventResult(
+                jointName, entity->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::GetNamespacedJointName);
 
+            const AZStd::string jointNameStr = jointName.GetCStr();
             const bool hasNonFixedJoints = JointUtils::HasNonFixedJoints(entity);
-
-            const AZStd::string jointName(frameEditorComponent->GetConfiguration().m_jointName);
-            if (!jointName.empty() && hasNonFixedJoints)
+            if (!jointNameStr.empty() && hasNonFixedJoints)
             {
-                m_initialPositions.emplace_back(AZStd::make_pair(jointName, configBackup[jointName]));
+                m_initialPositions.emplace_back(AZStd::make_pair(jointNameStr, configBackup[jointNameStr]));
             }
 
-            const auto& childrenEntityIds = frameEditorComponent->GetFrameChildren();
+            AZStd::set<AZ::EntityId> childrenEntityIds;
+            ROS2::ROS2FrameEditorComponentBus::EventResult(
+                childrenEntityIds, entity->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::GetFrameChildren);
             if (!childrenEntityIds.empty())
             {
                 for (const auto& entityId : childrenEntityIds)

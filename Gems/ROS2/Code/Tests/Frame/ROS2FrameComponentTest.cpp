@@ -53,9 +53,8 @@ namespace UnitTest
     {
         AddActiveGems(AZStd::to_array<AZStd::string_view>({ "ROS2" }));
         AddDynamicModulePaths({});
-        AddComponentDescriptors(
-            AZStd::initializer_list<AZ::ComponentDescriptor*>{ ROS2::ROS2FrameComponent::CreateDescriptor(),
-                                                               ROS2::ROS2SystemComponent::CreateDescriptor() });
+        AddComponentDescriptors(AZStd::initializer_list<AZ::ComponentDescriptor*>{ ROS2::ROS2FrameComponent::CreateDescriptor(),
+                                                                                   ROS2::ROS2SystemComponent::CreateDescriptor() });
         AddRequiredComponents(AZStd::to_array<AZ::TypeId const>({ ROS2::ROS2SystemComponent::TYPEINFO_Uuid() }));
     }
 
@@ -86,8 +85,8 @@ namespace UnitTest
         entity.Init();
         entity.Activate();
 
-        const std::string jointName(frame->GetJointName().GetCStr());
-        const std::string frameId(frame->GetFrameID().c_str());
+        const std::string jointName(frame->GetNamespacedJointName().GetCStr());
+        const std::string frameId(frame->GetNamespacedFrameID().c_str());
 
         EXPECT_EQ(entity.GetState(), AZ::Entity::State::Active);
         EXPECT_STRCASEEQ(jointName.c_str(), ("o3de_" + entityName + "/").c_str());
@@ -128,8 +127,8 @@ namespace UnitTest
 
         for (int i = 0; i < numOfEntities; i++)
         {
-            const std::string jointName(frames[i]->GetJointName().GetCStr());
-            const std::string frameId(frames[i]->GetFrameID().c_str());
+            const std::string jointName(frames[i]->GetNamespacedJointName().GetCStr());
+            const std::string frameId(frames[i]->GetNamespacedFrameID().c_str());
 
             EXPECT_EQ(entities[i]->GetState(), AZ::Entity::State::Active);
             EXPECT_STRCASEEQ(jointName.c_str(), (entities[0]->GetName() + "/").c_str());
