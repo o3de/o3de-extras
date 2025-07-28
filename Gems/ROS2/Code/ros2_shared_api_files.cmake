@@ -6,9 +6,6 @@
 set(FILES
     Source/Clients/ROS2SystemComponent.cpp
     Source/Clients/ROS2SystemComponent.h
-    Source/Communication/QoS.cpp
-    Source/Communication/PublisherConfiguration.cpp
-    Source/Communication/TopicConfiguration.cpp
     Source/Frame/NamespaceConfiguration.cpp
     Source/Frame/ROS2FrameComponent.cpp
     Source/Frame/ROS2FrameConfiguration.cpp
