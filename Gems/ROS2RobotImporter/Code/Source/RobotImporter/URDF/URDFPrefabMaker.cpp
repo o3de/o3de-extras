@@ -458,8 +458,21 @@ namespace ROS2RobotImporter
             AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
             if (childEntityPtr)
             {
-                ROS2::ROS2FrameEditorComponentBus::Event(
-                    childEntityPtr->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::SetJointName, azJointName);
+                childEntityPtr->Activate();
+                if (childEntityPtr->GetState() == AZ::Entity::State::Active)
+                {
+                    ROS2::ROS2FrameEditorComponentBus::Event(
+                        childEntityPtr->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::SetJointName, azJointName);
+                    childEntityPtr->Deactivate();
+                }
+                else
+                {
+                    AZ_Warning(
+                        "CreatePrefabFromUrdfOrSdf",
+                        false,
+                        "Entity %s is not active, cannot set joint name",
+                        childEntityPtr->GetName().c_str());
+                }
             }
             // check if both has RigidBody and we are not creating articulation
             if (!m_useArticulations)
