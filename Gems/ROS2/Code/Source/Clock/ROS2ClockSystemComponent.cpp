@@ -133,7 +133,6 @@ namespace ROS2
         {
             m_timeSource->Deactivate();
         }
-        m_timeSource->Deactivate();
         m_clockPublisher.reset();
     }
 
