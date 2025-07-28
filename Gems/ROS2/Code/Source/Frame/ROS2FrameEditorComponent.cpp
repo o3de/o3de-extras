@@ -80,9 +80,7 @@ namespace ROS2
         m_configuration.m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
         m_configuration.SetEffectiveNamespace(GetNamespace());
         AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Event(
-            GetEntityId(),
-            &AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Events::OnEntityComponentPropertyChanged,
-            GetEntity()->FindComponent<ROS2FrameEditorComponent>()->GetId());
+            GetEntityId(), &AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Events::OnEntityComponentPropertyChanged, GetId());
 
         ROS2FrameEditorComponentNotificationBus::Event(
             GetEntityId(), &ROS2FrameEditorComponentNotificationBus::Events::OnConfigurationChange);

@@ -47,6 +47,10 @@ namespace ROS2
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 
+        //! Get the configuration of this component.
+        ROS2FrameConfiguration GetConfiguration() const;
+
+    private:
         // ROS2FrameEditorComponentBus::Handler overrides
         AZStd::string GetNamespacedFrameID() const override;
         AZ::Name GetNamespacedJointName() const override;
@@ -58,14 +62,10 @@ namespace ROS2
         AZStd::set<AZ::EntityId> GetFrameChildren() const override;
         void SetJointName(const AZStd::string& frameId) override;
 
-        //! Get the configuration of this component.
-        ROS2FrameConfiguration GetConfiguration() const;
-
-    private:
-        AZ::Crc32 OnFrameConfigurationChange();
-
         // AZ::EntityBus::Handler override.
         void OnEntityNameChanged(const AZStd::string& name) override;
+
+        AZ::Crc32 OnFrameConfigurationChange();
 
         ROS2FrameConfiguration m_configuration;
     };
