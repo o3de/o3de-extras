@@ -88,12 +88,6 @@ namespace ROS2
             GetEntityId(), &ROS2FrameEditorComponentNotificationBus::Events::OnConfigurationChange);
     }
 
-    void ROS2FrameEditorComponent::UpdateNamespaceConfiguration(
-        const AZStd::string& ros2Namespace, const NamespaceConfiguration::NamespaceStrategy& strategy)
-    {
-        m_configuration.m_namespaceConfiguration.SetNamespace(ros2Namespace, strategy);
-    }
-
     AZ::Name ROS2FrameEditorComponent::GetNamespacedJointName() const
     {
         return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_jointName).c_str());

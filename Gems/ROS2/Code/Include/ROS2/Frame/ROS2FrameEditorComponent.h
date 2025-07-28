@@ -47,11 +47,6 @@ namespace ROS2
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 
-        //! Updates the namespace and namespace strategy of the underlying namespace configuration
-        //! @param ros2Namespace Namespace to set.
-        //! @param strategy Namespace strategy to use.
-        void UpdateNamespaceConfiguration(const AZStd::string& ros2Namespace, const NamespaceConfiguration::NamespaceStrategy& strategy);
-
         // ROS2FrameEditorComponentBus::Handler overrides
         AZStd::string GetNamespacedFrameID() const override;
         AZ::Name GetNamespacedJointName() const override;
