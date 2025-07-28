@@ -7,6 +7,7 @@
  */
 #include "ROS2EditorSystemComponent.h"
 #include <AzCore/Serialization/SerializeContext.h>
+#include <Frame/ROS2FrameEditorComponent.h>
 
 #include <ROS2/ROS2TypeIds.h>
 
@@ -22,9 +23,21 @@ namespace ROS2
         }
     }
 
-    ROS2EditorSystemComponent::ROS2EditorSystemComponent() = default;
+    ROS2EditorSystemComponent::ROS2EditorSystemComponent()
+    {
+        if (ROS2EditorInterface::Get() == nullptr)
+        {
+            ROS2EditorInterface::Register(this);
+        }
+    }
 
-    ROS2EditorSystemComponent::~ROS2EditorSystemComponent() = default;
+    ROS2EditorSystemComponent::~ROS2EditorSystemComponent()
+    {
+        if (ROS2EditorInterface::Get() == this)
+        {
+            ROS2EditorInterface::Unregister(this);
+        }
+    }
 
     void ROS2EditorSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {

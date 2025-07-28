@@ -148,7 +148,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::CommonFeaturesAtom.Editor.Static
                 Gem::PhysX5.Editor.Static
                 Gem::ROS2.Static
-                Gem::ROS2.Editor.Static
+                Gem::ROS2.Editor.API
                 Gem::ROS2Sensors.Editor.API
                 Gem::ROS2Controllers.API
                 Gem::ROS2Controllers.Editor.API

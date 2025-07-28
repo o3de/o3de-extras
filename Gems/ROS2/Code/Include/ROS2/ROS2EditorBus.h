@@ -9,7 +9,6 @@
 #pragma once
 
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/ROS2TypeIds.h>
 
 #include <AzCore/Component/Component.h>
