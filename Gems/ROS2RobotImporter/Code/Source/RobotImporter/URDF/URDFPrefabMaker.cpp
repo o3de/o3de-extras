@@ -659,8 +659,6 @@ namespace ROS2RobotImporter
 
         createdEntities.emplace_back(entityId);
 
-        // link.Name().c_str() is used to create the frameId
-        // m_configuration.m_frameName = frameId;
         ROS2::ROS2FrameConfiguration frameConfiguration;
         frameConfiguration.m_frameName = AZStd::string(link.Name().c_str());
         auto* ros2interface = ROS2::ROS2EditorInterface::Get();

@@ -25,15 +25,15 @@ namespace ROS2
         AZ_RTTI(ROS2EditorRequests, ROS2EditorRequestsTypeId);
         virtual ~ROS2EditorRequests() = default;
 
-        //! Create a new ROS2 Frame editor component.
+        //! Create a new ROS2FrameEditorComponent.
         //! @param entity The entity to which the frame component will be added.
-        //! @return A pointer to the newly created AZ::Component representing the ROS2 Frame (or nullptr if failed).
+        //! @return A pointer to the newly created AZ::Component representing the ROS2FrameEditorComponent (or nullptr if failed).
         virtual AZ::Component* CreateROS2FrameEditorComponent(AZ::Entity& entity) = 0;
 
-        //! Create a new ROS2 Frame editor component.
+        //! Create a new ROSS2FrameEditorComponent.
         //! @param entity The entity to which the frame component will be added.
-        //! @param frameConfiguration The configuration for the ROS2 Frame.
-        //! @return A pointer to the newly created AZ::Component representing the ROS2 Frame (or nullptr if failed).
+        //! @param frameConfiguration The configuration for the ROS2FrameEditorComponent.
+        //! @return A pointer to the newly created AZ::Component representing the ROS2FrameEditorComponent (or nullptr if failed).
         virtual AZ::Component* CreateROS2FrameEditorComponent(
             AZ::Entity& entity, const ROS2::ROS2FrameConfiguration& frameConfiguration) = 0;
     };
