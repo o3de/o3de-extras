@@ -36,6 +36,7 @@ namespace ROS2
     protected:
         ////////////////////////////////////////////////////////////////////////
         // ROS2EditorRequestBus interface implementation
+        AZ::Component* CreateROS2FrameEditorComponent(AZ::Entity& entity) override;
         AZ::Component* CreateROS2FrameEditorComponent(AZ::Entity& entity, const ROS2::ROS2FrameConfiguration& frameConfiguration) override;
         ////////////////////////////////////////////////////////////////////////
 

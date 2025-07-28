@@ -34,9 +34,6 @@ namespace ROS2
 
         ROS2FrameEditorComponent() = default;
         ~ROS2FrameEditorComponent() = default;
-        //! Initialize to a specific frame id
-        ROS2FrameEditorComponent(const AZStd::string& frameId);
-
         ROS2FrameEditorComponent(const ROS2FrameConfiguration ros2FrameConfiguration);
 
         // AzToolsFramework::Components::EditorComponentBase overrides
@@ -49,15 +46,6 @@ namespace ROS2
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
-
-        //! Set the frame id.
-        //! @param frameId frameId to be set in the configuration.
-        void SetFrameID(const AZStd::string& frameId);
-
-        //! Set the joint name
-        //! @note May be populated during URDF import or set by the user in the Editor view
-        //! @param jointName joint name without the namespace (the namespace prefix is added automatically).
-        void SetJointName(const AZStd::string& jointName);
 
         //! Updates the namespace and namespace strategy of the underlying namespace configuration
         //! @param ros2Namespace Namespace to set.
@@ -73,6 +61,7 @@ namespace ROS2
         bool IsTopLevel() const override; //!< True if this entity does not have a parent entity with ROS2.
         AZ::EntityId GetFrameParent() const override;
         AZStd::set<AZ::EntityId> GetFrameChildren() const override;
+        void SetJointName(const AZStd::string& frameId) override;
 
         //! Get the configuration of this component.
         ROS2FrameConfiguration GetConfiguration() const;

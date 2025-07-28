@@ -69,6 +69,11 @@ namespace ROS2
         ROS2SystemComponent::Deactivate();
     }
 
+    AZ::Component* ROS2EditorSystemComponent::CreateROS2FrameEditorComponent(AZ::Entity& entity)
+    {
+        return CreateComponent<ROS2FrameEditorComponent>(entity);
+    }
+
     AZ::Component* ROS2EditorSystemComponent::CreateROS2FrameEditorComponent(
         AZ::Entity& entity, const ROS2::ROS2FrameConfiguration& frameConfiguration)
     {

@@ -69,11 +69,6 @@ namespace ROS2
         return ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_frameName);
     }
 
-    void ROS2FrameEditorComponent::SetFrameID(const AZStd::string& frameId)
-    {
-        m_configuration.m_frameName = frameId;
-    }
-
     AZStd::string ROS2FrameEditorComponent::GetNamespace() const
     {
         return m_configuration.m_namespaceConfiguration.GetNamespace();
@@ -171,11 +166,6 @@ namespace ROS2
     void ROS2FrameEditorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("TransformService"));
-    }
-
-    ROS2FrameEditorComponent::ROS2FrameEditorComponent(const AZStd::string& frameId)
-    {
-        SetFrameID(frameId);
     }
 
     void ROS2FrameEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)

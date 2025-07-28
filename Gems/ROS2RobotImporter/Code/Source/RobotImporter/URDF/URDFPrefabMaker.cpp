@@ -23,7 +23,8 @@
 #include <AzToolsFramework/Prefab/Procedural/ProceduralPrefabAsset.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
+#include <ROS2/ROS2EditorBus.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>
@@ -457,11 +458,8 @@ namespace ROS2RobotImporter
             AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
             if (childEntityPtr)
             {
-                auto* component = childEntityPtr->FindComponent<ROS2::ROS2FrameEditorComponent>();
-                if (component)
-                {
-                    component->SetJointName(azJointName);
-                }
+                ROS2::ROS2FrameEditorComponentBus::Event(
+                    childEntityPtr->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::SetJointName, azJointName);
             }
             // check if both has RigidBody and we are not creating articulation
             if (!m_useArticulations)
@@ -648,9 +646,14 @@ namespace ROS2RobotImporter
 
         createdEntities.emplace_back(entityId);
 
-        [[maybe_unused]] const auto frameComponentId =
-            entity->CreateComponent<ROS2::ROS2FrameEditorComponent>(AZStd::string(link.Name().c_str()));
-        AZ_Assert(frameComponentId, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
+        // link.Name().c_str() is used to create the frameId
+        // m_configuration.m_frameName = frameId;
+        ROS2::ROS2FrameConfiguration frameConfiguration;
+        frameConfiguration.m_frameName = AZStd::string(link.Name().c_str());
+        auto* ros2interface = ROS2::ROS2EditorInterface::Get();
+        AZ_Assert(ros2interface, "ROS2EditorInterface not available in URDFPrefabMaker::AddEntitiesForLink");
+        auto* ros2FrameComponent = ros2interface->CreateROS2FrameEditorComponent(*entity, frameConfiguration);
+        AZ_Assert(ros2FrameComponent, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
 
         auto createdVisualEntities = m_visualsMaker.AddVisuals(&link, entityId);
         createdEntities.insert(createdEntities.end(), createdVisualEntities.begin(), createdVisualEntities.end());
