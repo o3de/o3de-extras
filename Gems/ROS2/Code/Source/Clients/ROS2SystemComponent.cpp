@@ -168,7 +168,6 @@ namespace ROS2
             m_dynamicTFBroadcaster->sendTransform(m_frameTransforms);
             m_frameTransforms.clear();
 
-            // m_simulationClock->Tick();
             m_executor->spin_some();
         }
 
