@@ -7,8 +7,7 @@
  */
 
 #include <AzCore/Settings/SettingsRegistry.h>
-#include <AzCore/Time/ITime.h>
-#include <ROS2/Clock/SimulationTimeSource.h>
+#include "SimulationTimeSource.h"
 #include <ROS2/ROS2Bus.h>
 
 namespace ROS2

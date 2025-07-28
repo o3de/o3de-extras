@@ -10,6 +10,7 @@
 #include <AzCore/Memory/Memory.h>
 
 #include <Clients/ROS2SystemComponent.h>
+#include <Clock/ROS2ClockSystemComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2TypeIds.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
@@ -33,6 +34,7 @@ namespace ROS2
             m_descriptors.end(),
             {
                 ROS2SystemComponent::CreateDescriptor(),
+                ROS2ClockSystemComponent::CreateDescriptor(),
                 ROS2FrameComponent::CreateDescriptor(),
                 FollowingCameraComponent::CreateDescriptor(),
                 ROS2SensorComponentBase<TickBasedSource>::CreateDescriptor(),
@@ -47,7 +49,7 @@ namespace ROS2
     AZ::ComponentTypeList ROS2ModuleInterface::GetRequiredSystemComponents() const
     {
         return AZ::ComponentTypeList{
-            azrtti_typeid<ROS2SystemComponent>(),
+            azrtti_typeid<ROS2SystemComponent>(), azrtti_typeid<ROS2ClockSystemComponent>()
         };
     }
 } // namespace ROS2

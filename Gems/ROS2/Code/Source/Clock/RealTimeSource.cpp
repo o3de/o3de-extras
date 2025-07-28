@@ -7,7 +7,7 @@
  */
 
 #include <AzCore/Time/ITime.h>
-#include <ROS2/Clock/RealTimeSource.h>
+#include "RealTimeSource.h"
 
 namespace ROS2
 {
@@ -38,4 +38,6 @@ namespace ROS2
     {
         return AZ::Failure(AZStd::string("RealTimeSource does not support setting a specific time."));
     }
+
+
 } // namespace ROS2

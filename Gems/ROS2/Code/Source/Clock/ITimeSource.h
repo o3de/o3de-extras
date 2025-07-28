@@ -13,6 +13,7 @@
 
 namespace ROS2
 {
+    //! Interface for time source used by ROS2ClockSystemComponent.
     class ITimeSource
     {
     public:

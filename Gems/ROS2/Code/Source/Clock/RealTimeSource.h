@@ -33,9 +33,7 @@ namespace ROS2
         //! Get simulation time as ROS 2 message.
         //! @see ROS2Requests::GetROSTimestamp() for more details.
         virtual builtin_interfaces::msg::Time GetROSTimestamp() const override;
-
     private:
-        //! Get the time since start of sim, scaled with t_simulationTickScale
         int64_t GetElapsedTimeMicroseconds() const;
     };
 } // namespace ROS2
