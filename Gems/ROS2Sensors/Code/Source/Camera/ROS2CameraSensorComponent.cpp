@@ -8,6 +8,7 @@
 
 #include "ROS2CameraSensorComponent.h"
 #include "CameraUtilities.h"
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 
 namespace ROS2Sensors
@@ -85,10 +86,11 @@ namespace ROS2Sensors
         }
 
         const AZ::Transform& transform = GetEntity()->GetTransform()->GetWorldTM();
-        const auto timestamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
 
+        builtin_interfaces::msg::Time simTimestamp;
+        ROS2::ROS2ClockRequestBus::BroadcastResult(simTimestamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
         std_msgs::msg::Header messageHeader;
-        messageHeader.stamp = timestamp;
+        messageHeader.stamp = simTimestamp;
         messageHeader.frame_id = m_frameName.c_str();
         m_cameraSensor->RequestMessagePublication(transform, messageHeader);
     }

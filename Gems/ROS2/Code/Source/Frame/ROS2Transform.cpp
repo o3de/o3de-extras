@@ -7,6 +7,7 @@
  */
 
 #include <ROS2/Frame/ROS2Transform.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <tf2_ros/qos.hpp>
@@ -24,7 +25,7 @@ namespace ROS2
     geometry_msgs::msg::TransformStamped ROS2Transform::CreateTransformMessage(const AZ::Transform& o3deTransform)
     {
         geometry_msgs::msg::TransformStamped t;
-        t.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
+        ROS2ClockRequestBus::BroadcastResult(t.header.stamp, &ROS2ClockRequestBus::Events::GetROSTimestamp);
         t.header.frame_id = m_parentFrame.data();
         t.child_frame_id = m_childFrame.data();
         t.transform.translation = ROS2Conversions::ToROS2Vector3(o3deTransform.GetTranslation());

@@ -11,6 +11,7 @@
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
@@ -126,7 +127,8 @@ namespace ROS2Sensors
         auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         auto message = sensor_msgs::msg::LaserScan();
         message.header.frame_id = ros2Frame->GetNamespacedFrameID().data();
-        message.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+        ROS2::ROS2ClockRequestBus::BroadcastResult(message.header.stamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
+
         message.angle_min = AZ::DegToRad(m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_minHAngle);
         message.angle_max = AZ::DegToRad(m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_maxHAngle);
         message.angle_increment = (message.angle_max - message.angle_min) /

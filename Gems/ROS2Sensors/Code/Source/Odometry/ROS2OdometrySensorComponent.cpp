@@ -12,6 +12,7 @@
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 
 namespace ROS2Sensors
 {
@@ -91,7 +92,8 @@ namespace ROS2Sensors
         const auto localAngular = transform.TransformVector(rigidbodyPtr->GetAngularVelocity());
         const auto localLinear = transform.TransformVector(rigidbodyPtr->GetLinearVelocity());
 
-        m_odometryMsg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+        ROS2::ROS2ClockRequestBus::BroadcastResult(m_odometryMsg.header.stamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
+
         m_odometryMsg.twist.twist.linear = ROS2::ROS2Conversions::ToROS2Vector3(localLinear);
         m_odometryMsg.twist.twist.angular = ROS2::ROS2Conversions::ToROS2Vector3(localAngular);
 

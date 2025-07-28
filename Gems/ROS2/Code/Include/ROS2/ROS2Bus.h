@@ -43,16 +43,6 @@ namespace ROS2
         //! @note callback is active as long as handler is not destroyed.
         virtual void ConnectOnNodeChanged(NodeChangedEvent::Handler& handler) = 0;
 
-        //! Acquire current time as ROS2 timestamp.
-        //! Timestamps provide temporal context for messages such as sensor data.
-        //! @code
-        //! auto message = sensor_msgs::msg::PointCloud2();
-        //! message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
-        //! @endcode
-        //! @return Simulation time in ROS2 format. Time source is also valid with non-real time settings.
-        //! @note Make sure to set the use_sim_time parameter for ROS2 nodes which will use the simulation data.
-        virtual builtin_interfaces::msg::Time GetROSTimestamp() const = 0;
-
         //! Send transformation between ROS2 frames.
         //! @param t is a <a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/TransformStamped.html">ROS2 TransformStamped
         //! message</a>.

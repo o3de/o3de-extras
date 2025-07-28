@@ -60,7 +60,6 @@ namespace ROS2
         // ROS2RequestBus interface implementation
         std::shared_ptr<rclcpp::Node> GetNode() const override;
         void ConnectOnNodeChanged(NodeChangedEvent::Handler& handler) override;
-        builtin_interfaces::msg::Time GetROSTimestamp() const override;
         void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) override;
         ////////////////////////////////////////////////////////////////////////
 

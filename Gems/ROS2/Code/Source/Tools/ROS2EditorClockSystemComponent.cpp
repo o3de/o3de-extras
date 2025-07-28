@@ -18,7 +18,7 @@ namespace ROS2
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ROS2EditorSystemComponent, ROS2SystemComponent>()->Version(0);
+            serializeContext->Class<ROS2EditorClockSystemComponent, BaseSystemComponent>()->Version(0);
         }
     }
 

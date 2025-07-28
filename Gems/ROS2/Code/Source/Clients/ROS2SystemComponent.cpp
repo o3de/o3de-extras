@@ -139,13 +139,6 @@ namespace ROS2
         m_nodeChangedEvent.Signal(m_ros2Node);
     }
 
-    builtin_interfaces::msg::Time ROS2SystemComponent::GetROSTimestamp() const
-    {
-        // return m_simulationClock->GetROSTimestamp();
-        //TODO MAKE FOR COMPATIBILITY
-        return  builtin_interfaces::msg::Time();
-    }
-
     std::shared_ptr<rclcpp::Node> ROS2SystemComponent::GetNode() const
     {
         return m_ros2Node;

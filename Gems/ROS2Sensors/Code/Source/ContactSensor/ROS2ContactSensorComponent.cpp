@@ -11,6 +11,7 @@
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <geometry_msgs/msg/wrench.hpp>
 
@@ -143,7 +144,8 @@ namespace ROS2Sensors
         const auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(ros2Frame, "Invalid component pointer value");
         msg.header.frame_id = ros2Frame->GetNamespacedFrameID().data();
-        msg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+
+        ROS2::ROS2ClockRequestBus::BroadcastResult(msg.header.stamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
 
         {
             // If there are no active collisions, then there is nothing to send
