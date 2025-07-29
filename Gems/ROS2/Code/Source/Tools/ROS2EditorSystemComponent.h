@@ -20,7 +20,7 @@ namespace ROS2
     class ROS2EditorSystemComponent
         : public ROS2SystemComponent
         , protected AzToolsFramework::EditorEvents::Bus::Handler
-        , protected ROS2EditorRequestBus::Handler
+        , protected ROS2EditorRequests
         , private AzToolsFramework::EditorEntityContextNotificationBus::Handler
     {
         using BaseSystemComponent = ROS2SystemComponent;

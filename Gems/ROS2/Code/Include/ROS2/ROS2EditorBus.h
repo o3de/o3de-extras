@@ -48,7 +48,6 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
     };
 
-    using ROS2EditorRequestBus = AZ::EBus<ROS2EditorRequests, ROS2EditorBusTraits>;
     using ROS2EditorInterface = AZ::Interface<ROS2EditorRequests>;
 
 } // namespace ROS2

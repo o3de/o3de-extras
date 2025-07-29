@@ -72,12 +72,10 @@ namespace ROS2Sensors
     {
         ROS2SensorsSystemComponent::Activate();
         AzToolsFramework::EditorEvents::Bus::Handler::BusConnect();
-        ROS2SensorsEditorRequestBus::Handler::BusConnect();
     }
 
     void ROS2SensorsEditorSystemComponent::Deactivate()
     {
-        ROS2SensorsEditorRequestBus::Handler::BusDisconnect();
         AzToolsFramework::EditorEvents::Bus::Handler::BusDisconnect();
         ROS2SensorsSystemComponent::Deactivate();
     }
