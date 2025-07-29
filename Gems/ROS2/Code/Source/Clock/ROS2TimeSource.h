@@ -30,7 +30,6 @@ namespace ROS2
         //! @param time The time to set the time source to.
         //! @return An outcome indicating success or failure.
         AZ::Outcome<void, AZStd::string> AdjustTime(const builtin_interfaces::msg::Time& time) override;
-
     };
 
 } // namespace ROS2

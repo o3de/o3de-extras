@@ -6,8 +6,8 @@
  *
  */
 
-#include <AzCore/Time/ITime.h>
 #include "RealTimeSource.h"
+#include <AzCore/Time/ITime.h>
 
 namespace ROS2
 {

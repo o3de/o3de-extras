@@ -1,5 +1,5 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
+ * Copyright (c) Contributors to the Open 3D Engine Project.
  * For complete copyright and license terms please see the LICENSE at the root of this distribution.
  *
  * SPDX-License-Identifier: Apache-2.0 OR MIT
@@ -8,16 +8,15 @@
 #pragma once
 
 #include <AzCore/Component/ComponentBus.h>
-#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <ROS2/ROS2TypeIds.h>
-
+#include <builtin_interfaces/msg/time.hpp>
 
 namespace ROS2
 {
-    //! Interface that allows to get sensor configuration and switch publish state.
     class ROS2ClockRequests : public AZ::EBusTraits
     {
     public:
@@ -36,7 +35,7 @@ namespace ROS2
         //! Sets the time source to the given time as a double value.
         //! @param time The time to set the time source to, in seconds.
         //! @return true if the time was adjusted successfully, false otherwise.
-        virtual bool AdjustTimeDouble(double time) = 0;
+        virtual bool AdjustTimeSec(double time) = 0;
 
         //! Acquire current time as ROS2 timestamp.
         //! Timestamps provide temporal context for messages such as sensor data.

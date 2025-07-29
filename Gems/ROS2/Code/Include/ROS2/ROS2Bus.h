@@ -51,7 +51,6 @@ namespace ROS2
         //! @note Transforms are already published by each ROS2FrameComponent.
         //! Use this function directly only when default behavior of ROS2FrameComponent is not sufficient.
         virtual void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) = 0;
-
     };
 
     class ROS2BusTraits : public AZ::EBusTraits

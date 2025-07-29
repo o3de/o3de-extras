@@ -7,15 +7,15 @@
  */
 #pragma once
 
-#include <AzCore/Component/Component.h>
 #include "ITimeSource.h"
+#include <AzCore/Component/Component.h>
+#include <AzCore/Component/TickBus.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzCore/std/string/string.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <rclcpp/publisher.hpp>
 #include <rosgraph_msgs/msg/clock.hpp>
-#include <ROS2/Clock/ROS2ClockRequestBus.h>
-#include <AzCore/Component/TickBus.h>
 
 namespace ROS2
 {
@@ -23,10 +23,10 @@ namespace ROS2
     //! The clock can use different types of the time sources and publish the current
     //! time to the ROS 2 `/clock/` topic. The published time can be used with
     //! the /use_sim_time parameter set to true.
-    class ROS2ClockSystemComponent :
-        public AZ::Component,
-        public AZ::TickBus::Handler,
-        public ROS2ClockRequestBus::Handler
+    class ROS2ClockSystemComponent
+        : public AZ::Component
+        , public AZ::TickBus::Handler
+        , public ROS2ClockRequestBus::Handler
     {
     public:
         AZ_COMPONENT_DECL(ROS2ClockSystemComponent);

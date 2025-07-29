@@ -10,14 +10,14 @@
 #include "ROS2TimeSource.h"
 #include "RealTimeSource.h"
 #include "SimulationTimeSource.h"
+#include <AzCore/RTTI/BehaviorContext.h>
+#include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/Settings/SettingsRegistry.h>
+#include <AzCore/std/sort.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <rclcpp/qos.hpp>
-#include <AzCore/Serialization/SerializeContext.h>
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Settings/SettingsRegistry.h>
-#include <AzCore/RTTI/BehaviorContext.h>
-#include <AzCore/std/sort.h>
 
 namespace ROS2
 {
@@ -36,28 +36,26 @@ namespace ROS2
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2ClockSystemComponent, AZ::Component>()
-                     ->Version(0);
+            serialize->Class<ROS2ClockSystemComponent, AZ::Component>()->Version(0);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2ClockSystemComponent>(
-                      "ROS 2 Clock System Component",
-                      "This component provides ROS 2 clock functionality.")
-                  ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                  ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("System"))
-                  ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                  ->Attribute(AZ::Edit::Attributes::AutoExpand, true);
+                ec->Class<ROS2ClockSystemComponent>("ROS 2 Clock System Component", "This component provides ROS 2 clock functionality.")
+                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("System"))
+                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true);
             }
         }
         if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
         {
-            behaviorContext->EBus<ROS2ClockRequestBus>("ROS2ClockRequestBus")
+            behaviorContext
+                ->EBus<ROS2ClockRequestBus>("ROS2ClockRequestBus")
 
-                           ->Event("GetRosTimestampSec", &ROS2ClockRequestBus::Events::GetROSTimestampSec)
-                           ->Event("PublishTime", &ROS2ClockRequestBus::Events::PublishTime)
-                           ->Event("GetExpectedLoopTime", &ROS2ClockRequestBus::Events::GetExpectedLoopTime)
-                           ->Event("AdjustTime", &ROS2ClockRequestBus::Events::AdjustTimeDouble);
+                ->Event("GetRosTimestampSec", &ROS2ClockRequestBus::Events::GetROSTimestampSec)
+                ->Event("PublishTime", &ROS2ClockRequestBus::Events::PublishTime)
+                ->Event("GetExpectedLoopTime", &ROS2ClockRequestBus::Events::GetExpectedLoopTime)
+                ->Event("AdjustTimeSec", &ROS2ClockRequestBus::Events::AdjustTimeSec);
         }
     }
 
