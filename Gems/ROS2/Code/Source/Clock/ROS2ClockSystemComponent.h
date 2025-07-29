@@ -50,7 +50,7 @@ namespace ROS2
         builtin_interfaces::msg::Time GetROSTimestamp() const override;
         double GetROSTimestampSec() const override;
         AZ::Outcome<void, AZStd::string> AdjustTime(const builtin_interfaces::msg::Time& time) override;
-        bool AdjustTimeDouble(double time) override;
+        bool AdjustTimeSec(double time) override;
         void PublishTime() override;
         float GetExpectedLoopTime() const override;
 

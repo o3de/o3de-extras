@@ -168,7 +168,7 @@ namespace ROS2
         return m_timeSource->AdjustTime(time);
     }
 
-    bool ROS2ClockSystemComponent::AdjustTimeDouble(double time)
+    bool ROS2ClockSystemComponent::AdjustTimeSec(double time)
     {
         AZ_Assert(m_timeSource, "No time source set for ROS2ClockSystemComponent");
         builtin_interfaces::msg::Time timeStamp;
