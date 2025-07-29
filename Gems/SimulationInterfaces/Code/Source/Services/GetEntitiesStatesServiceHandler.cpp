@@ -7,9 +7,6 @@
  */
 
 #include "GetEntitiesStatesServiceHandler.h"
-
-#include "ROS2/Clock/ROS2ClockRequestBus.h"
-
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
