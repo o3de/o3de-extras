@@ -110,7 +110,6 @@ namespace ROS2
 
     void ROS2SystemComponent::Activate()
     {
-        // m_simulationClock->Activate();
         m_ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node");
         m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
         m_executor->add_node(m_ros2Node);
