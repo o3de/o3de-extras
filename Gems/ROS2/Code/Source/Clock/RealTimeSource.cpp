@@ -38,6 +38,4 @@ namespace ROS2
     {
         return AZ::Failure(AZStd::string("RealTimeSource does not support setting a specific time."));
     }
-
-
 } // namespace ROS2
