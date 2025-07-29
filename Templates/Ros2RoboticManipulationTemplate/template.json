@@ -1,6 +1,6 @@
 {
     "template_name": "Ros2RoboticManipulationTemplate",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "origin": "https://github.com/o3de/o3de-extras",
     "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2RoboticManipulationTemplate/Template/LICENSE.txt",
     "display_name": "ROS2 Robotic Manipulation",
@@ -99,6 +99,10 @@
             "isTemplated": false
         },
         {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Height.png",
+            "isTemplated": "false"
+        },
+        {
             "file": "Assets/Room/Textures/Desk/Room_M_Desk_Metallic.png",
             "isTemplated": false
         },
@@ -117,6 +121,10 @@
         {
             "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Base_color.png",
             "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Height.png",
+            "isTemplated": "false"
         },
         {
             "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Metallic.png",
@@ -534,5 +542,5 @@
         }
     ],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-2.1.0-template.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-2.1.1-template.zip"
 }
