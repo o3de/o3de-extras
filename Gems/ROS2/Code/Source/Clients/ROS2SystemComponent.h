@@ -41,7 +41,7 @@ namespace ROS2
     class ROS2SystemComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
-        , protected ROS2RequestBus::Handler
+        , protected ROS2Requests
     {
     public:
         AZ_COMPONENT_DECL(ROS2SystemComponent);
@@ -55,7 +55,6 @@ namespace ROS2
 
         ROS2SystemComponent();
         ~ROS2SystemComponent();
-
 
     protected:
         ////////////////////////////////////////////////////////////////////////

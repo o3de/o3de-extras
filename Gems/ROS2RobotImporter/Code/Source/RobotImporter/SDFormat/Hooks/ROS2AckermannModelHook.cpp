@@ -10,7 +10,7 @@
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <PhysX/EditorColliderComponentRequestBus.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/ROS2EditorBus.h>
 #include <ROS2Controllers/Controllers/PidConfiguration.h>
 #include <ROS2Controllers/ROS2ControllersEditorBus.h>
 #include <ROS2Controllers/RobotControl/ControlConfiguration.h>
@@ -189,8 +189,8 @@ namespace ROS2RobotImporter::SDFormat
             }
 
             ROS2Controllers::VehicleDynamics::VehicleConfiguration configuration;
-            auto interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
-            if (!interface)
+            auto controllersInterface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+            if (!controllersInterface)
             {
                 AZ_Warning(
                     "ROS2RobotImporter", false, "ROS2ControllersInterface is not available. Cannot create wheel controller components.");
@@ -226,18 +226,18 @@ namespace ROS2RobotImporter::SDFormat
                     if (isSteering)
                     {
                         const auto entityIdSteeringLeft = HooksUtils::GetJointEntityId(jointNameSteeringLeft, sdfModel, createdEntities);
-                        interface->CreateWheelControllerComponent(*jointLeft.m_entity, entityIdSteeringLeft, 1.0f);
+                        controllersInterface->CreateWheelControllerComponent(*jointLeft.m_entity, entityIdSteeringLeft, 1.0f);
                         HooksUtils::EnableMotor(entityIdSteeringLeft);
 
                         const auto entityIdSteeringRight = HooksUtils::GetJointEntityId(jointNameSteeringRight, sdfModel, createdEntities);
-                        interface->CreateWheelControllerComponent(*jointRight.m_entity, entityIdSteeringRight, 1.0f);
+                        controllersInterface->CreateWheelControllerComponent(*jointRight.m_entity, entityIdSteeringRight, 1.0f);
                         HooksUtils::EnableMotor(entityIdSteeringRight);
                         foundSteeringWheels = true;
                     }
                     else
                     {
-                        interface->CreateWheelControllerComponent(*jointLeft.m_entity, AZ::EntityId(), 0.0f);
-                        interface->CreateWheelControllerComponent(*jointRight.m_entity, AZ::EntityId(), 0.0f);
+                        controllersInterface->CreateWheelControllerComponent(*jointLeft.m_entity, AZ::EntityId(), 0.0f);
+                        controllersInterface->CreateWheelControllerComponent(*jointRight.m_entity, AZ::EntityId(), 0.0f);
                     }
                     HooksUtils::EnableMotor(jointLeft.m_entityId);
                     HooksUtils::EnableMotor(jointRight.m_entityId);
@@ -302,27 +302,26 @@ namespace ROS2RobotImporter::SDFormat
             const float accelLimit = 100.0f; // Acceleration limit is not specified in the plugin, so we use a default value.
 
             // Create required components
-            auto* interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
-            AZ_Assert(interface, "ROS2ControllersEditorInterface not available in ROS2AckermannModelPluginHook");
-            if (!interface)
+            auto* ros2interface = ROS2::ROS2EditorInterface::Get();
+            AZ_Assert(ros2interface, "ROS2EditorInterface not available in ROS2ImuSensorHook");
+            auto* controllersInterface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+            AZ_Assert(controllersInterface, "ROS2ControllersEditorInterface not available in ROS2AckermannModelPluginHook");
+            if (ros2interface && controllersInterface)
             {
-                return AZ::Failure(AZStd::string("ROS2ControllersInterface is not available. Cannot create components."));
+                auto* ros2FrameComponent = ros2interface->CreateROS2FrameEditorComponent(entity, ROS2::ROS2FrameConfiguration());
+                controllersInterface->CreateROS2RobotControlComponent(entity, controlConfiguration);
+                controllersInterface->CreateAckermannVehicleModelComponent(
+                    entity, vehicleConfiguration, speedLimit, steeringLimit, accelLimit, steeringPid);
+
+                // Create Ackermann Control Component
+                auto* ackermannComponent = controllersInterface->CreateAckermannControlComponent(entity);
+                if (ros2FrameComponent && ackermannComponent)
+                {
+                    return AZ::Success();
+                }
             }
 
-            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity);
-            interface->CreateROS2RobotControlComponent(entity, controlConfiguration);
-            interface->CreateAckermannVehicleModelComponent(
-                entity, vehicleConfiguration, speedLimit, steeringLimit, accelLimit, steeringPid);
-
-            // Create Ackermann Control Component
-            if (interface->CreateAckermannControlComponent(entity))
-            {
-                return AZ::Success();
-            }
-            else
-            {
-                return AZ::Failure(AZStd::string("Failed to create ROS 2 Ackermann Control Component"));
-            }
+            return AZ::Failure(AZStd::string("Failed to create ROS 2 Ackermann Control Component"));
         };
 
         return importerHook;

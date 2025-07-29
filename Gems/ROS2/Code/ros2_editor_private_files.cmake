@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
+    Source/Frame/ROS2FrameEditorComponent.cpp
+    Source/Frame/ROS2FrameEditorComponent.h
     Source/Frame/ROS2FrameSystemComponent.cpp
     Source/Frame/ROS2FrameSystemComponent.h
     Source/Frame/ROS2FrameSystemBus.h

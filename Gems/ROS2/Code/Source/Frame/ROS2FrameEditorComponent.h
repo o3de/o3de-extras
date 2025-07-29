@@ -34,9 +34,6 @@ namespace ROS2
 
         ROS2FrameEditorComponent() = default;
         ~ROS2FrameEditorComponent() = default;
-        //! Initialize to a specific frame id
-        ROS2FrameEditorComponent(const AZStd::string& frameId);
-
         ROS2FrameEditorComponent(const ROS2FrameConfiguration ros2FrameConfiguration);
 
         // AzToolsFramework::Components::EditorComponentBase overrides
@@ -50,20 +47,10 @@ namespace ROS2
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 
-        //! Set the frame id.
-        //! @param frameId frameId to be set in the configuration.
-        void SetFrameID(const AZStd::string& frameId);
+        //! Get the configuration of this component.
+        ROS2FrameConfiguration GetConfiguration() const;
 
-        //! Set the joint name
-        //! @note May be populated during URDF import or set by the user in the Editor view
-        //! @param jointName joint name without the namespace (the namespace prefix is added automatically).
-        void SetJointName(const AZStd::string& jointName);
-
-        //! Updates the namespace and namespace strategy of the underlying namespace configuration
-        //! @param ros2Namespace Namespace to set.
-        //! @param strategy Namespace strategy to use.
-        void UpdateNamespaceConfiguration(const AZStd::string& ros2Namespace, const NamespaceConfiguration::NamespaceStrategy& strategy);
-
+    private:
         // ROS2FrameEditorComponentBus::Handler overrides
         AZStd::string GetNamespacedFrameID() const override;
         AZ::Name GetNamespacedJointName() const override;
@@ -73,15 +60,12 @@ namespace ROS2
         bool IsTopLevel() const override; //!< True if this entity does not have a parent entity with ROS2.
         AZ::EntityId GetFrameParent() const override;
         AZStd::set<AZ::EntityId> GetFrameChildren() const override;
-
-        //! Get the configuration of this component.
-        ROS2FrameConfiguration GetConfiguration() const;
-
-    private:
-        AZ::Crc32 OnFrameConfigurationChange();
+        void SetJointName(const AZStd::string& frameId) override;
 
         // AZ::EntityBus::Handler override.
         void OnEntityNameChanged(const AZStd::string& name) override;
+
+        AZ::Crc32 OnFrameConfigurationChange();
 
         ROS2FrameConfiguration m_configuration;
     };

@@ -9,7 +9,7 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/ROS2EditorBus.h>
 #include <ROS2Controllers/ROS2ControllersEditorBus.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
@@ -40,28 +40,25 @@ namespace ROS2RobotImporter::SDFormat
             publisherConfiguration.m_topicConfiguration.m_topic =
                 HooksUtils::ValueOfAny(statePublisherParams, topicParamNames, "joint_states");
 
-            // add required components
-            HooksUtils::CreateComponent<ROS2::ROS2FrameEditorComponent>(entity);
-
             // create controllerComponent based on model joints/articulations
-            auto* interface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
-            AZ_Assert(interface, "ROS2ControllersEditorInterface not available in ROS2JointStatePublisherModelPluginHook");
-            if (!interface)
+            auto* ros2interface = ROS2::ROS2EditorInterface::Get();
+            AZ_Assert(ros2interface, "ROS2EditorInterface not available in ROS2ImuSensorHook");
+            auto* controllersInterface = ROS2Controllers::ROS2ControllersEditorInterface::Get();
+            AZ_Assert(controllersInterface, "ROS2ControllersEditorInterface not available in ROS2JointStatePublisherModelPluginHook");
+            if (ros2interface && controllersInterface)
             {
-                return AZ::Failure(AZStd::string("ROS2ControllersInterface is not available. Cannot create components."));
+                auto* ros2FrameComponent = ros2interface->CreateROS2FrameEditorComponent(entity, ROS2::ROS2FrameConfiguration());
+                entity.FindComponent<PhysX::EditorArticulationLinkComponent>()
+                    ? controllersInterface->CreateJointsArticulationControllerComponent(entity)
+                    : controllersInterface->CreateJointsPIDControllerComponent(entity);
+                auto* jointComponent = controllersInterface->CreateJointsManipulationEditorComponent(entity, publisherConfiguration);
+                if (ros2FrameComponent && jointComponent)
+                {
+                    return AZ::Success();
+                }
             }
 
-            entity.FindComponent<PhysX::EditorArticulationLinkComponent>() ? interface->CreateJointsArticulationControllerComponent(entity)
-                                                                           : interface->CreateJointsPIDControllerComponent(entity);
-
-            if (interface->CreateJointsManipulationEditorComponent(entity, publisherConfiguration))
-            {
-                return AZ::Success();
-            }
-            else
-            {
-                return AZ::Failure(AZStd::string("Failed to create ROS 2 Joint State Publisher Component"));
-            }
+            return AZ::Failure(AZStd::string("Failed to create ROS 2 Joint State Publisher Component"));
         };
 
         return importerHook;

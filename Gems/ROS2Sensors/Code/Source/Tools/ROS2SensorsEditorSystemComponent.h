@@ -22,7 +22,7 @@ namespace ROS2Sensors
     class ROS2SensorsEditorSystemComponent
         : public ROS2SensorsSystemComponent
         , protected AzToolsFramework::EditorEvents::Bus::Handler
-        , protected ROS2SensorsEditorRequestBus::Handler
+        , protected ROS2SensorsEditorRequests
     {
         using BaseSystemComponent = ROS2SensorsSystemComponent;
 

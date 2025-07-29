@@ -22,6 +22,7 @@ namespace ROS2
 
     // Interface TypeIds
     inline constexpr const char* ROS2RequestsTypeId = "{A9BDBFF6-E644-430D-8096-CDB53C88E8FC}";
+    inline constexpr const char* ROS2EditorRequestsTypeId = "{E8A645D7-B0A4-4D6A-827B-64A44211BDB4}";
 
     // Communication Interface TypeIds
     inline constexpr const char* PublisherConfigurationTypeId = "{E50D1926-0322-4832-BD72-C48F854131C8}";

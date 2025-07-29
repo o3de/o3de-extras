@@ -92,7 +92,6 @@ namespace ROS2Sensors
         //////////////////////////////////////////////////////////////////////////
     };
 
-    using ROS2SensorsEditorRequestBus = AZ::EBus<ROS2SensorsEditorRequests, ROS2SensorsEditorBusTraits>;
     using ROS2SensorsEditorInterface = AZ::Interface<ROS2SensorsEditorRequests>;
 
 } // namespace ROS2Sensors
