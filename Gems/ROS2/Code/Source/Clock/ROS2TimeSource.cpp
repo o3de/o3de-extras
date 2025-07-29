@@ -14,7 +14,7 @@ namespace ROS2
     builtin_interfaces::msg::Time ROS2TimeSource::GetROSTimestamp() const
     {
         auto ros2Node = ROS2Interface::Get()->GetNode();
-            AZ_Assert(ros2Node, "No ros 2 node");
+        AZ_Assert(ros2Node, "No ros 2 node");
         builtin_interfaces::msg::Time timeStamp = ros2Node->get_clock()->now();
         return timeStamp;
     }
