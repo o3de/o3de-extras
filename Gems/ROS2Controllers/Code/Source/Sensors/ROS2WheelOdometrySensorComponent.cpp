@@ -10,6 +10,7 @@
 #include <AzCore/Serialization/Json/JsonSerialization.h>
 #include <AzCore/Serialization/Json/JsonSerializationResult.h>
 #include <AzCore/Serialization/Json/RegistrationContext.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2Controllers/Sensors/ROS2OdometryCovariance.h>
@@ -161,7 +162,7 @@ namespace ROS2Controllers
         VehicleDynamics::VehicleInputControlRequestBus::EventResult(
             vt, GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::GetWheelsOdometry);
 
-        m_odometryMsg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+        m_odometryMsg.header.stamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
         m_odometryMsg.twist.twist.linear = ROS2::ROS2Conversions::ToROS2Vector3(vt.first);
         m_odometryMsg.twist.twist.angular = ROS2::ROS2Conversions::ToROS2Vector3(vt.second);
         m_odometryMsg.twist.covariance = m_odometryConfiguration.m_twistCovariance.GetRosCovariance();

@@ -12,6 +12,7 @@
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <PrismaticJointComponent.h>
 #include <ROS2/ROS2Bus.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2Controllers/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
 #include <imgui/imgui.h>
@@ -20,7 +21,7 @@ namespace ROS2Controllers
 {
     void JointMotorControllerComponent::Activate()
     {
-        m_lastTickTimestamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+        ROS2::ROS2ClockRequestBus::BroadcastResult(m_lastTickTimestamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
         AZ::TickBus::Handler::BusConnect();
         ImGui::ImGuiUpdateListenerBus::Handler::BusConnect();
         AZ::EntityBus::Handler::BusConnect(GetEntityId());
@@ -88,7 +89,8 @@ namespace ROS2Controllers
 
         PhysX::JointRequestBus::EventResult(m_currentPosition, m_jointComponentIdPair, &PhysX::JointRequests::GetPosition);
 
-        const auto timestamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+        builtin_interfaces::msg::Time timestamp;
+        ROS2::ROS2ClockRequestBus::BroadcastResult(timestamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
         const float deltaSimTime = ROS2::ROS2Conversions::GetTimeDifference(m_lastTickTimestamp, timestamp);
         const float setSpeed = CalculateMotorSpeed(deltaSimTime);
         PhysX::JointRequestBus::Event(m_jointComponentIdPair, &PhysX::JointRequests::SetVelocity, setSpeed);

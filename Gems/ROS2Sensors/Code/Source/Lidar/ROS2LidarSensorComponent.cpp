@@ -11,6 +11,7 @@
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/PointCloudMessageBuilder.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2Sensors/Lidar/ClassSegmentationBus.h>
@@ -144,7 +145,7 @@ namespace ROS2Sensors
     {
         if (m_canRaycasterPublish && m_sensorConfiguration.m_publishingEnabled)
         {
-            const builtin_interfaces::msg::Time timestamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+            const builtin_interfaces::msg::Time timestamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterId,
                 &LidarRaycasterRequestBus::Events::UpdatePublisherTimestamp,
@@ -166,9 +167,10 @@ namespace ROS2Sensors
 
     void ROS2LidarSensorComponent::PublishRaycastResults(const RaycastResults& results)
     {
+        const auto simTimestamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
         auto builder = PointCloud2MessageBuilder(
             GetEntity()->FindComponent<ROS2::ROS2FrameComponent>()->GetNamespacedFrameID(),
-            ROS2::ROS2Interface::Get()->GetROSTimestamp(),
+            simTimestamp,
             results.GetCount());
 
         builder.AddField("x", sensor_msgs::msg::PointField::FLOAT32)

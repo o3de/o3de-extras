@@ -10,7 +10,6 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
-#include <ROS2/Clock/ROS2Clock.h>
 #include <ROS2/ROS2Bus.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <memory>
@@ -61,10 +60,7 @@ namespace ROS2
         // ROS2RequestBus interface implementation
         std::shared_ptr<rclcpp::Node> GetNode() const override;
         void ConnectOnNodeChanged(NodeChangedEvent::Handler& handler) override;
-        builtin_interfaces::msg::Time GetROSTimestamp() const override;
         void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) override;
-        const ROS2Clock& GetSimulationClock() const override;
-        float GetExpectedSimulationLoopTime() const override;
         ////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////
@@ -79,19 +75,11 @@ namespace ROS2
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
         ////////////////////////////////////////////////////////////////////////
     private:
-        void InitClock();
-
         std::vector<geometry_msgs::msg::TransformStamped> m_frameTransforms;
-
         std::shared_ptr<rclcpp::Node> m_ros2Node;
         AZStd::shared_ptr<rclcpp::executors::SingleThreadedExecutor> m_executor;
         AZStd::unique_ptr<tf2_ros::TransformBroadcaster> m_dynamicTFBroadcaster;
         AZStd::unique_ptr<tf2_ros::StaticTransformBroadcaster> m_staticTFBroadcaster;
-        AZStd::unique_ptr<ROS2Clock> m_simulationClock;
         NodeChangedEvent m_nodeChangedEvent;
-
-        AZStd::deque<float> m_simulationLoopTimes;
-        builtin_interfaces::msg::Time m_lastSimulationTime;
-        float m_simulationLoopTimeMedian = 1.0f / 60.0f;
     };
 } // namespace ROS2

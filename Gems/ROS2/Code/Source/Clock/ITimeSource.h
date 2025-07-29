@@ -7,12 +7,13 @@
  */
 #pragma once
 
-#include <builtin_interfaces/msg/time.hpp>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/string/string.h>
+#include <builtin_interfaces/msg/time.hpp>
 
 namespace ROS2
 {
+    //! Interface for time source used by ROS2ClockSystemComponent.
     class ITimeSource
     {
     public:
@@ -24,7 +25,7 @@ namespace ROS2
         //! Sets the time source to the given time.
         //! @param time The time to set the time source to.
         //! @return An outcome indicating success or failure.
-        virtual AZ::Outcome<void, AZStd::string> AdjustTime(const builtin_interfaces::msg::Time & time) = 0;
+        virtual AZ::Outcome<void, AZStd::string> AdjustTime(const builtin_interfaces::msg::Time& time) = 0;
 
         //! Get time as ROS 2 message.
         //! @see ROS2Requests::GetROSTimestamp() for more details.

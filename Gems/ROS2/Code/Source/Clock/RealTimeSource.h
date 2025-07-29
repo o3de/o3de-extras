@@ -22,8 +22,8 @@ namespace ROS2
         virtual ~RealTimeSource() = default;
 
         // ITimeSource overrides ...
-        virtual void Activate() override{};
-        virtual void Deactivate() override{};
+        virtual void Activate() override {};
+        virtual void Deactivate() override {};
 
         //! Sets the time source to the given time.
         //! @param time The time to set the time source to.
@@ -35,7 +35,6 @@ namespace ROS2
         virtual builtin_interfaces::msg::Time GetROSTimestamp() const override;
 
     private:
-        //! Get the time since start of sim, scaled with t_simulationTickScale
         int64_t GetElapsedTimeMicroseconds() const;
     };
 } // namespace ROS2

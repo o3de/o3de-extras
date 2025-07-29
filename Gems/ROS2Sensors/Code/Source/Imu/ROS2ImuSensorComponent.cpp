@@ -8,6 +8,7 @@
 
 #include "ROS2ImuSensorComponent.h"
 #include <ROS2/ROS2Bus.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
@@ -195,7 +196,7 @@ namespace ROS2Sensors
             m_imuMsg.orientation = ROS2::ROS2Conversions::ToROS2Quaternion(rigidbody->GetTransform().GetRotation());
             m_imuMsg.orientation_covariance = ROS2::ROS2Conversions::ToROS2Covariance(m_orientationCovariance);
         }
-        m_imuMsg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+        m_imuMsg.header.stamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
         this->m_imuPublisher->publish(m_imuMsg);
     }
 

@@ -7,7 +7,7 @@
  */
 
 #include "GetEntityStateServiceHandler.h"
-#include <ROS2/ROS2Bus.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
@@ -40,7 +40,7 @@ namespace ROS2SimulationInterfaces
 
         const auto& entityState = outcome.GetValue();
         simulation_interfaces::msg::EntityState entityStateMsg;
-        entityStateMsg.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
+        entityStateMsg.header.stamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
         entityStateMsg.header.frame_id = "";
         entityStateMsg.pose = ROS2::ROS2Conversions::ToROS2Pose(entityState.m_pose);
         entityStateMsg.twist.linear = ROS2::ROS2Conversions::ToROS2Vector3(entityState.m_twistLinear);

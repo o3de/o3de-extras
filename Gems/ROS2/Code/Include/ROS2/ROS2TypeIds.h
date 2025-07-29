@@ -13,6 +13,11 @@ namespace ROS2
     inline constexpr const char* ROS2SystemComponentTypeId = "{CB28D486-AFA4-4A9F-A237-AC5EB42E1C87}";
     inline constexpr const char* ROS2EditorSystemComponentTypeId = "{349883C1-C66E-45F5-90D7-884565FCFA7E}";
 
+    // Clock
+    inline constexpr const char* ROS2ClockRequestsTypeId = "{6DB40AA6-C8B7-40D5-A3D2-BABF9CC3864F}";
+    inline constexpr const char* ROS2ClockSystemComponentTypeId = "{C5E8C74A-7A1F-43BF-BB05-D8FDA6B7D732}";
+    inline constexpr const char* ROS2EditorClockSystemComponentTypeId = "{BF6C01D0-1E0E-41CD-A024-10A8DD503AB2}";
+
     // Module derived classes TypeIds
     inline constexpr const char* ROS2ModuleInterfaceTypeId = "{8B5567CB-1DE9-49AF-9CD4-9750D4ABCD6B}";
     inline constexpr const char* ROS2ModuleTypeId = "{3DDFC98F-D1CC-4658-BAF8-2CC34A9D39F3}";

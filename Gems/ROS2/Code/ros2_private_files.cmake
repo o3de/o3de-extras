@@ -9,6 +9,15 @@ set(FILES
     ../Assets/Passes/PipelineROSColor.pass
     ../Assets/Passes/PipelineROSDepth.pass
     ../Assets/Passes/ROSPassTemplates.azasset
+    Source/Clock/ITimeSource.h
+    Source/Clock/ROS2ClockSystemComponent.h
+    Source/Clock/ROS2ClockSystemComponent.cpp
+    Source/Clock/ROS2TimeSource.cpp
+    Source/Clock/ROS2TimeSource.h
+    Source/Clock/SimulationTimeSource.cpp
+    Source/Clock/SimulationTimeSource.h
+    Source/Clock/RealTimeSource.cpp
+    Source/Clock/RealTimeSource.h
     Source/SimulationUtils/FollowingCameraConfiguration.cpp
     Source/SimulationUtils/FollowingCameraConfiguration.h
     Source/SimulationUtils/FollowingCameraComponent.cpp
