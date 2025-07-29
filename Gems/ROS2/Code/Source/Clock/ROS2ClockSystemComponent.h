@@ -36,8 +36,8 @@ namespace ROS2
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
 
-        ROS2ClockSystemComponent() = default;
-        ~ROS2ClockSystemComponent() override = default;
+        ROS2ClockSystemComponent();
+        ~ROS2ClockSystemComponent() override;
 
         // AZ::Component overrides
         void Activate();

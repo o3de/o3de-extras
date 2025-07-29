@@ -11,6 +11,7 @@
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
+#include <AzCore/Interface/Interface.h>
 #include <ROS2/ROS2TypeIds.h>
 
 
@@ -61,4 +62,5 @@ namespace ROS2
     };
 
     using ROS2ClockRequestBus = AZ::EBus<ROS2ClockRequests>;
+    using ROS2ClockInterface = AZ::Interface<ROS2ClockRequests>;
 } // namespace ROS2

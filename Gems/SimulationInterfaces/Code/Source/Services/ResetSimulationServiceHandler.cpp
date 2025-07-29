@@ -9,7 +9,7 @@
 #include "ResetSimulationServiceHandler.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/std/optional.h>
-#include <ROS2/Clock/ROS2Clock.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
@@ -64,14 +64,13 @@ namespace ROS2SimulationInterfaces
 
         if (request.scope == Request::SCOPE_TIME)
         {
-            auto* interface = ROS2::ROS2Interface::Get();
+            auto* interface = ROS2::ROS2ClockInterface::Get();
             AZ_Assert(interface, "ROS2Interface is not available");
-            auto& clock = interface->GetSimulationClock();
 
             builtin_interfaces::msg::Time time;
             time.sec = 0;
             time.nanosec = 0;
-            auto results = clock.AdjustTime(time);
+            auto results = interface->AdjustTime(time);
 
             if (results.IsSuccess())
             {

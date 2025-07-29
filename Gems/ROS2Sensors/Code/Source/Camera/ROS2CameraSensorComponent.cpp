@@ -87,10 +87,8 @@ namespace ROS2Sensors
 
         const AZ::Transform& transform = GetEntity()->GetTransform()->GetWorldTM();
 
-        builtin_interfaces::msg::Time simTimestamp;
-        ROS2::ROS2ClockRequestBus::BroadcastResult(simTimestamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
         std_msgs::msg::Header messageHeader;
-        messageHeader.stamp = simTimestamp;
+        messageHeader.stamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
         messageHeader.frame_id = m_frameName.c_str();
         m_cameraSensor->RequestMessagePublication(transform, messageHeader);
     }

@@ -145,8 +145,7 @@ namespace ROS2Sensors
     {
         if (m_canRaycasterPublish && m_sensorConfiguration.m_publishingEnabled)
         {
-            builtin_interfaces::msg::Time timestamp;
-            ROS2::ROS2ClockRequestBus::BroadcastResult(timestamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
+            const builtin_interfaces::msg::Time timestamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterId,
                 &LidarRaycasterRequestBus::Events::UpdatePublisherTimestamp,
@@ -168,9 +167,7 @@ namespace ROS2Sensors
 
     void ROS2LidarSensorComponent::PublishRaycastResults(const RaycastResults& results)
     {
-        builtin_interfaces::msg::Time simTimestamp;
-        ROS2::ROS2ClockRequestBus::BroadcastResult(simTimestamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
-
+        const auto simTimestamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
         auto builder = PointCloud2MessageBuilder(
             GetEntity()->FindComponent<ROS2::ROS2FrameComponent>()->GetNamespacedFrameID(),
             simTimestamp,

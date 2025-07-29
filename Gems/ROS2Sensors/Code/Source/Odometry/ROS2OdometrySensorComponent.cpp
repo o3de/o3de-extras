@@ -92,8 +92,7 @@ namespace ROS2Sensors
         const auto localAngular = transform.TransformVector(rigidbodyPtr->GetAngularVelocity());
         const auto localLinear = transform.TransformVector(rigidbodyPtr->GetLinearVelocity());
 
-        ROS2::ROS2ClockRequestBus::BroadcastResult(m_odometryMsg.header.stamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
-
+        m_odometryMsg.header.stamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
         m_odometryMsg.twist.twist.linear = ROS2::ROS2Conversions::ToROS2Vector3(localLinear);
         m_odometryMsg.twist.twist.angular = ROS2::ROS2Conversions::ToROS2Vector3(localAngular);
 

@@ -62,6 +62,22 @@ namespace ROS2
         }
     }
 
+    ROS2ClockSystemComponent::ROS2ClockSystemComponent()
+    {
+        if (ROS2ClockInterface::Get() == nullptr)
+        {
+            ROS2ClockInterface::Register(this);
+        }
+    }
+
+    ROS2ClockSystemComponent::~ROS2ClockSystemComponent()
+    {
+        if (ROS2ClockInterface::Get() == this)
+        {
+            ROS2ClockInterface::Unregister(this);
+        }
+    }
+
     void ROS2ClockSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(AZ_CRC_CE("ROS2ClockService"));

@@ -27,9 +27,7 @@ namespace ROS2
         m_onSceneSimulationEventHandler = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
             [this](AzPhysics::SceneHandle sceneHandle, float deltaTime)
             {
-                builtin_interfaces::msg::Time simulationTime;
-                ROS2ClockRequestBus::BroadcastResult(simulationTime, &ROS2ClockRequestBus::Events::GetROSTimestamp);
-
+                const auto simulationTime = ROS2ClockInterface::Get()->GetROSTimestamp();
                 const float deltaSimulationTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simulationTime);
                 m_sourceEvent.Signal(sceneHandle, deltaSimulationTime);
                 m_lastSimulationTime = simulationTime;

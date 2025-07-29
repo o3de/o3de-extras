@@ -196,8 +196,7 @@ namespace ROS2Sensors
             m_imuMsg.orientation = ROS2::ROS2Conversions::ToROS2Quaternion(rigidbody->GetTransform().GetRotation());
             m_imuMsg.orientation_covariance = ROS2::ROS2Conversions::ToROS2Covariance(m_orientationCovariance);
         }
-        ROS2::ROS2ClockRequestBus::BroadcastResult(m_imuMsg.header.stamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
-
+        m_imuMsg.header.stamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
         this->m_imuPublisher->publish(m_imuMsg);
     }
 
