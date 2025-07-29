@@ -65,7 +65,7 @@ namespace ROS2SimulationInterfaces
         if (request.scope == Request::SCOPE_TIME)
         {
             auto* interface = ROS2::ROS2ClockInterface::Get();
-            AZ_Assert(interface, "ROS2Interface is not available");
+            AZ_Assert(interface, "ROS2ClockInterface is not available");
 
             builtin_interfaces::msg::Time time;
             time.sec = 0;
