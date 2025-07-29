@@ -45,7 +45,7 @@ namespace ROS2
         // query time ROS2 system
         ROS2ClockRequestBus::BroadcastResult(
             expectedSimulationLoopTime, &ROS2ClockRequestBus::Events::GetExpectedLoopTime);
-        AZ_Assert(expectedSimulationLoopTime>= 0.f, "Did not receive expected simulation loop time from ROS2ClockRequestBus");
+        AZ_Assert(expectedSimulationLoopTime >= 0.f, "Did not receive expected simulation loop time from ROS2ClockRequestBus");
         m_sourceEvent.Signal(expectedSimulationLoopTime);
     }
 } // namespace ROS2
