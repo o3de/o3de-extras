@@ -28,7 +28,6 @@ namespace ROS2
     constexpr AZStd::string_view Ros2ClockName = "ros2";
     constexpr AZStd::string_view DefaultClock = SimulationClockName;
 
-
     constexpr size_t FramesNumberForStats = 60;
 
     AZ_COMPONENT_IMPL(ROS2ClockSystemComponent, "ROS2ClockSystemComponent", ROS2ClockSystemComponentTypeId);
