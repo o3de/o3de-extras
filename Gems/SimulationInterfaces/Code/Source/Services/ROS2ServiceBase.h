@@ -42,6 +42,11 @@ namespace ROS2SimulationInterfaces
             m_serviceHandle->send_response(*m_lastRequestHeader, response);
         }
 
+        bool IsValid() override
+        {
+            return m_serviceHandle != nullptr;
+        }
+
     protected:
         //! This function is called when a service request is received.
         virtual AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) = 0;
@@ -57,15 +62,30 @@ namespace ROS2SimulationInterfaces
         void CreateService(rclcpp::Node::SharedPtr& node)
         {
             // get the service name from the type name
-            AZStd::string serviceName = RegistryUtilities::GetName(GetTypeName());
+            // passing empty string to settings registry causes in not creating ROS 2 service
+            AZStd::optional<AZStd::string> serviceName = RegistryUtilities::GetName(GetTypeName());
 
-            if (serviceName.empty())
+            // check if settings registry and apply early exit if value is equal to empty string
+            if (serviceName.has_value())
+            {
+                if (serviceName.value().empty())
+                {
+                    AZ_Warning(
+                        "SimulationInterfaces",
+                        false,
+                        "Service name for type %s is set to empty string, service won't be created",
+                        GetTypeName().data());
+                    return;
+                }
+            }
+
+            if (!serviceName.has_value())
             {
                 // if the service name is empty, use the default name
                 serviceName = GetDefaultName();
             }
 
-            const std::string serviceNameStr{ serviceName.c_str(), serviceName.size() };
+            const std::string serviceNameStr{ serviceName.value().c_str(), serviceName.value().size() };
             m_serviceHandle = node->create_service<RosServiceType>(
                 serviceNameStr,
                 [this](

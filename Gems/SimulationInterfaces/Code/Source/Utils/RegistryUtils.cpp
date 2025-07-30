@@ -12,13 +12,20 @@
 
 namespace ROS2SimulationInterfaces::RegistryUtilities
 {
-    AZStd::string GetName(const AZStd::string& serviceType)
+    AZStd::optional<AZStd::string> GetName(const AZStd::string& serviceType)
     {
         AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get();
         AZ_Assert(settingsRegistry, "Settings Registry is not available");
         AZStd::string output = "";
         AZ::IO::Path setRegPath = AZ::IO::Path(RegistryPrefix) / AZ::IO::Path(serviceType);
-        settingsRegistry->Get(output, setRegPath.String());
-        return output;
+        const auto setRegStatus = settingsRegistry->Get(output, setRegPath.String());
+        if (setRegStatus) // value gathering from settings registry succeeded
+        {
+            return output;
+        }
+        else
+        {
+            return AZStd::nullopt;
+        }
     }
 } // namespace ROS2SimulationInterfaces::RegistryUtilities

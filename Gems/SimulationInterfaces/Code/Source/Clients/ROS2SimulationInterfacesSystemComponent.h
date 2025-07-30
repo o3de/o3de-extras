@@ -54,7 +54,10 @@ namespace ROS2SimulationInterfaces
         {
             AZStd::shared_ptr handler = AZStd::make_shared<T>();
             handler->Initialize(ros2Node);
-            m_availableRos2Interface[handler->GetTypeName()] = AZStd::move(handler);
+            if (handler->IsValid())
+            {
+                m_availableRos2Interface[handler->GetTypeName()] = AZStd::move(handler);
+            }
             handler.reset();
         };
     };

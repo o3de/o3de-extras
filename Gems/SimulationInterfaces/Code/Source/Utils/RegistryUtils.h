@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include <AzCore/std/optional.h>
 #include <AzCore/std/string/string.h>
 
 namespace ROS2SimulationInterfaces::RegistryUtilities
@@ -16,5 +17,5 @@ namespace ROS2SimulationInterfaces::RegistryUtilities
 
     //! Gets name of the service with defined type form settings registry
     //! @return string with service name, if setting registry doesn't exits returns empty string
-    [[nodiscard]] AZStd::string GetName(const AZStd::string& serviceType);
+    [[nodiscard]] AZStd::optional<AZStd::string> GetName(const AZStd::string& serviceType);
 } // namespace ROS2SimulationInterfaces::RegistryUtilities

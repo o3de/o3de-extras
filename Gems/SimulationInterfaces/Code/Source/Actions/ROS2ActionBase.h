@@ -37,6 +37,11 @@ namespace ROS2SimulationInterfaces
             CreateAction(node);
         }
 
+        bool IsValid() override
+        {
+            return m_actionHandle != nullptr;
+        }
+
     protected:
         //! This function is called when the action is cancelled
         virtual void CancelGoal(std::shared_ptr<Result> result)
@@ -104,15 +109,30 @@ namespace ROS2SimulationInterfaces
         void CreateAction(rclcpp::Node::SharedPtr& node)
         {
             // Get the action name from the type name
-            AZStd::string actionName = RegistryUtilities::GetName(GetTypeName());
+            // passing empty string to settings registry causes in not creating ROS 2 action
+            AZStd::optional<AZStd::string> actionName = RegistryUtilities::GetName(GetTypeName());
 
-            if (actionName.empty())
+            // check if settings registry and apply early exit if value is equal to empty string
+            if (actionName.has_value())
             {
-                // if the action name is empty, use the default name
+                if (actionName.value().empty())
+                {
+                    AZ_Warning(
+                        "SimulationInterfaces",
+                        false,
+                        "Action name for type %s is set to empty string, action server won't be created",
+                        GetTypeName().data());
+                    return;
+                }
+            }
+
+            if (!actionName.has_value())
+            {
+                // if the service name is empty, use the default name
                 actionName = GetDefaultName();
             }
 
-            const std::string actionNameStr{ actionName.c_str(), actionName.size() };
+            const std::string actionNameStr{ actionName.value().c_str(), actionName.value().size() };
             m_actionHandle = rclcpp_action::create_server<RosActionType>(
                 node,
                 actionNameStr,
