@@ -128,7 +128,7 @@ namespace ROS2SimulationInterfaces
 
             if (!actionName.has_value())
             {
-                // if the service name is empty, use the default name
+                // if the action name is empty, use the default name
                 actionName = GetDefaultName();
             }
 
