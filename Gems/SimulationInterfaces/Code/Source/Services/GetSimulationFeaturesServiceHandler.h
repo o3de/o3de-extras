@@ -21,7 +21,7 @@ namespace ROS2SimulationInterfaces
     public:
         AZStd::string_view GetTypeName() const override
         {
-            return "GetSimulationFeatures";
+            return "GetSimulatorFeatures";
         }
 
         AZStd::string_view GetDefaultName() const override
