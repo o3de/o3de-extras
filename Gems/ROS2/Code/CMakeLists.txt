@@ -81,7 +81,6 @@ ly_add_target(
     BUILD_DEPENDENCIES
         PUBLIC
             AZ::AzCore
-            AZ::AzToolsFramework
             Gem::${gem_name}.Private.Object
 )
 
