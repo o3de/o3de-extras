@@ -41,7 +41,7 @@ namespace ROS2SimulationInterfaces
             [](const SimulationInterfaces::Spawnable& spawnable)
             {
                 simulation_interfaces::msg::Spawnable simSpawnable;
-                simSpawnable.uri = spawnable.m_uri.c_str();
+                simSpawnable.entity_resource.uri = spawnable.m_uri.c_str();
                 simSpawnable.description = spawnable.m_description.c_str();
                 return simSpawnable;
             });

@@ -25,7 +25,7 @@ namespace ROS2SimulationInterfaces
         const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
         const AZStd::string_view name{ request.name.c_str(), request.name.size() };
-        const AZStd::string_view uri{ request.uri.c_str(), request.uri.size() };
+        const AZStd::string_view uri{ request.entity_resource.uri.c_str(), request.entity_resource.uri.size() };
         const AZStd::string_view entityNamespace{ request.entity_namespace.c_str(), request.entity_namespace.size() };
         const AZStd::string_view messageFrameId{ request.initial_pose.header.frame_id.c_str(),
                                                  request.initial_pose.header.frame_id.size() };
