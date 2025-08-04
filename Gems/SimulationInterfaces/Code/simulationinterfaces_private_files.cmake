@@ -18,6 +18,7 @@ set(FILES
     Source/Clients/ROS2SimulationInterfacesSystemComponent.cpp
     Source/Clients/ROS2SimulationInterfacesSystemComponent.h
     Source/Interfaces/IROS2HandlerBase.h
+    Source/Interfaces/TransformInterface.h
     Source/Actions/SimulateStepsActionServerHandler.cpp
     Source/Actions/SimulateStepsActionServerHandler.h
     Source/Actions/ROS2ActionBase.h

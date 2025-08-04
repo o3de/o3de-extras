@@ -45,12 +45,15 @@ ly_add_target(
     FILES_CMAKE
         simulationinterfaces_private_files.cmake
         ${pal_dir}/simulationinterfaces_private_files.cmake
+    PLATFORM_INCLUDE_FILES
+        ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/simulation_interfaces_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
     TARGET_PROPERTIES
         O3DE_PRIVATE_TARGET TRUE
     INCLUDE_DIRECTORIES
         PRIVATE
             Include
             Source
+            Source/Clients
     BUILD_DEPENDENCIES
         PUBLIC
             AZ::AzCore
@@ -59,7 +62,7 @@ ly_add_target(
             Gem::ROS2.Static
             Gem::DebugDraw.API
 )
-target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp std_msgs geometry_msgs simulation_interfaces rclcpp_action)
+target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp std_msgs geometry_msgs simulation_interfaces rclcpp_action tf2_ros)
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
 ly_add_target(

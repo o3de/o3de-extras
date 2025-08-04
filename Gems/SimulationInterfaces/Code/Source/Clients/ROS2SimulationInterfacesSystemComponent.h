@@ -14,16 +14,18 @@
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/API/ApplicationAPI.h>
-
 #include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_listener.h>
 
 #include <Interfaces/IROS2HandlerBase.h>
-
+#include <Interfaces/TransformInterface.h>
 namespace ROS2SimulationInterfaces
 {
     class ROS2SimulationInterfacesSystemComponent
         : public AZ::Component
         , public ROS2SimulationInterfacesRequestBus::Handler
+        , public ROS2SimulationInterfaces::TFInterface::Registrar
     {
     public:
         AZ_COMPONENT_DECL(ROS2SimulationInterfacesSystemComponent);
@@ -35,8 +37,12 @@ namespace ROS2SimulationInterfaces
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
-        ROS2SimulationInterfacesSystemComponent() = default;
-        ~ROS2SimulationInterfacesSystemComponent() = default;
+        ROS2SimulationInterfacesSystemComponent();
+        ~ROS2SimulationInterfacesSystemComponent();
+
+        // TFInterface implementation
+        AZ::Outcome<AZ::Transform, AZStd::string> GetTransform(
+            const AZStd::string& source, const AZStd::string& target, const builtin_interfaces::msg::Time& time) override;
 
     protected:
         // AZ::Component interface implementation
@@ -45,6 +51,8 @@ namespace ROS2SimulationInterfaces
 
         // ROS2SimulationInterfacesRequestBus override
         AZStd::unordered_set<SimulationFeatureType> GetSimulationFeatures() override;
+        AZStd::shared_ptr<tf2_ros::Buffer> m_tfBuffer;
+        AZStd::shared_ptr<tf2_ros::TransformListener> m_tfListener;
 
     private:
         AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<IROS2HandlerBase>> m_availableRos2Interface;

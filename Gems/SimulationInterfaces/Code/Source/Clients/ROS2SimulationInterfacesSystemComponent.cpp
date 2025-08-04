@@ -8,6 +8,8 @@
 
 #include "ROS2SimulationInterfacesSystemComponent.h"
 
+#include "ROS2/Utilities/ROS2Conversions.h"
+
 #include <Actions/SimulateStepsActionServerHandler.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
@@ -31,6 +33,8 @@
 #include <Services/SetSimulationStateServiceHandler.h>
 #include <Services/SpawnEntityServiceHandler.h>
 #include <Services/StepSimulationServiceHandler.h>
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_listener.h>
 
 namespace ROS2SimulationInterfaces
 {
@@ -42,6 +46,22 @@ namespace ROS2SimulationInterfaces
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<ROS2SimulationInterfacesSystemComponent, AZ::Component>()->Version(0);
+        }
+    }
+
+    ROS2SimulationInterfacesSystemComponent::ROS2SimulationInterfacesSystemComponent()
+    {
+        if (TFInterface::Get() == nullptr)
+        {
+            TFInterface::Register(this);
+        }
+    }
+
+    ROS2SimulationInterfacesSystemComponent::~ROS2SimulationInterfacesSystemComponent()
+    {
+        if (TFInterface::Get() == this)
+        {
+            TFInterface::Unregister(this);
         }
     }
 
@@ -86,6 +106,10 @@ namespace ROS2SimulationInterfaces
         RegisterInterface<SetSimulationStateServiceHandler>(ros2Node);
         RegisterInterface<GetSimulationStateServiceHandler>(ros2Node);
         RegisterInterface<StepSimulationServiceHandler>(ros2Node);
+
+        // setup tf2 buffer and listener
+        m_tfBuffer = AZStd::make_shared<tf2_ros::Buffer>(ros2Node->get_clock());
+        m_tfListener = AZStd::make_shared<tf2_ros::TransformListener>(*m_tfBuffer);
     }
 
     void ROS2SimulationInterfacesSystemComponent::Deactivate()
@@ -107,6 +131,24 @@ namespace ROS2SimulationInterfaces
             result.insert(features.begin(), features.end());
         }
         return result;
+    }
+
+    AZ::Outcome<AZ::Transform, AZStd::string> ROS2SimulationInterfacesSystemComponent::GetTransform(
+        const AZStd::string& source, const AZStd::string& target, const builtin_interfaces::msg::Time& time)
+    {
+        AZ_Assert(m_tfBuffer, "ROS2 TF buffer is not initialized.");
+        try
+        {
+            const auto transform = m_tfBuffer->lookupTransform(source.c_str(), target.c_str(), time);
+            const auto q = ROS2::ROS2Conversions::FromROS2Quaternion(transform.transform.rotation);
+            const auto t = ROS2::ROS2Conversions::FromROS2Vector3(transform.transform.translation);
+            return AZ::Transform::CreateFromQuaternionAndTranslation(q, t);
+
+        } catch (const tf2::TransformException& ex)
+        {
+            return AZ::Failure(
+                AZStd::string::format("Failed to get transform from %s to %s: %s", source.c_str(), target.c_str(), ex.what()));
+        }
     }
 
 } // namespace ROS2SimulationInterfaces
