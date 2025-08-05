@@ -22,7 +22,7 @@
 #include <Services/GetEntitiesServiceHandler.h>
 #include <Services/GetEntitiesStatesServiceHandler.h>
 #include <Services/GetEntityStateServiceHandler.h>
-#include <Services/GetSimulationFeaturesServiceHandler.h>
+#include <Services/GetSimulatorFeaturesServiceHandler.h>
 #include <Services/GetSimulationStateServiceHandler.h>
 #include <Services/GetSpawnablesServiceHandler.h>
 #include <Services/ROS2ServiceBase.h>
@@ -80,7 +80,7 @@ namespace ROS2SimulationInterfaces
         RegisterInterface<GetSpawnablesServiceHandler>(ros2Node);
         RegisterInterface<SetEntityStateServiceHandler>(ros2Node);
         RegisterInterface<SpawnEntityServiceHandler>(ros2Node);
-        RegisterInterface<GetSimulationFeaturesServiceHandler>(ros2Node);
+        RegisterInterface<GetSimulatorFeaturesServiceHandler>(ros2Node);
         RegisterInterface<ResetSimulationServiceHandler>(ros2Node);
         RegisterInterface<SimulateStepsActionServerHandler>(ros2Node);
         RegisterInterface<SetSimulationStateServiceHandler>(ros2Node);

@@ -29,7 +29,7 @@
 #include <Services/GetEntitiesServiceHandler.h>
 #include <Services/GetEntitiesStatesServiceHandler.h>
 #include <Services/GetEntityStateServiceHandler.h>
-#include <Services/GetSimulationFeaturesServiceHandler.h>
+#include <Services/GetSimulatorFeaturesServiceHandler.h>
 #include <Services/GetSimulationStateServiceHandler.h>
 #include <Services/GetSpawnablesServiceHandler.h>
 #include <Services/ROS2ServiceBase.h>
@@ -178,7 +178,7 @@ namespace UnitTest
         EXPECT_NE(services.find("/get_spawnables"), services.end());
         EXPECT_NE(services.find("/set_entity_state"), services.end());
         EXPECT_NE(services.find("/spawn_entity"), services.end());
-        EXPECT_NE(services.find("/get_simulation_features"), services.end());
+        EXPECT_NE(services.find("/get_simulator_features"), services.end());
         EXPECT_NE(services.find("/step_simulation"), services.end());
     }
 
@@ -391,7 +391,7 @@ namespace UnitTest
         using ::testing::_;
         auto node = GetRos2Node();
 
-        auto client = node->create_client<simulation_interfaces::srv::GetSimulatorFeatures>("/get_simulation_features");
+        auto client = node->create_client<simulation_interfaces::srv::GetSimulatorFeatures>("/get_simulator_features");
         auto request = std::make_shared<simulation_interfaces::srv::GetSimulatorFeatures::Request>();
         auto future = client->async_send_request(request);
         SpinAppUntilFuture(future);
@@ -419,7 +419,7 @@ namespace UnitTest
                     return features;
                 }));
 
-        auto client = node->create_client<simulation_interfaces::srv::GetSimulatorFeatures>("/get_simulation_features");
+        auto client = node->create_client<simulation_interfaces::srv::GetSimulatorFeatures>("/get_simulator_features");
         auto request = std::make_shared<simulation_interfaces::srv::GetSimulatorFeatures::Request>();
         auto future = client->async_send_request(request);
         SpinAppUntilFuture(future);
