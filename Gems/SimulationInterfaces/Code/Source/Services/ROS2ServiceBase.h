@@ -62,21 +62,17 @@ namespace ROS2SimulationInterfaces
         void CreateService(rclcpp::Node::SharedPtr& node)
         {
             // get the service name from the type name
-            // passing empty string to settings registry causes in not creating ROS 2 service
+            // passing an empty string to settings registry disables ROS 2 action
             AZStd::optional<AZStd::string> serviceName = RegistryUtilities::GetName(GetTypeName());
 
-            // check if settings registry and apply early exit if value is equal to empty string
-            if (serviceName.has_value())
+            // do not create a ROS 2 action if the value is empty
+            if (serviceName.has_value() && serviceName.value().empty())
             {
-                if (serviceName.value().empty())
-                {
-                    AZ_Warning(
-                        "SimulationInterfaces",
-                        false,
-                        "Service name for type %s is set to empty string, service won't be created",
-                        GetTypeName().data());
-                    return;
-                }
+                AZ_Trace(
+                    "SimulationInterfaces",
+                    "Service name for type %s is set to empty string, service won't be created",
+                    GetTypeName().data());
+                return;
             }
 
             if (!serviceName.has_value())

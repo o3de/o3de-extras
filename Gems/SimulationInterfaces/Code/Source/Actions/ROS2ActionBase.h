@@ -109,21 +109,17 @@ namespace ROS2SimulationInterfaces
         void CreateAction(rclcpp::Node::SharedPtr& node)
         {
             // Get the action name from the type name
-            // passing empty string to settings registry causes in not creating ROS 2 action
+            // passing an empty string to settings registry disables ROS 2 action
             AZStd::optional<AZStd::string> actionName = RegistryUtilities::GetName(GetTypeName());
-
-            // check if settings registry and apply early exit if value is equal to empty string
-            if (actionName.has_value())
+            
+            // do not create a ROS 2 action if the value is empty
+            if (actionName.has_value() && actionName.value().empty())
             {
-                if (actionName.value().empty())
-                {
-                    AZ_Warning(
-                        "SimulationInterfaces",
-                        false,
-                        "Action name for type %s is set to empty string, action server won't be created",
-                        GetTypeName().data());
-                    return;
-                }
+                AZ_Trace(
+                    "SimulationInterfaces",
+                    "Action name for type %s is set to empty string, action server won't be created",
+                    GetTypeName().data());
+                return;
             }
 
             if (!actionName.has_value())

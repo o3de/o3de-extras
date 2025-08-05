@@ -16,6 +16,7 @@ namespace ROS2SimulationInterfaces::RegistryUtilities
     inline constexpr const char* RegistryPrefix = "/ROS2SimulationInterfaces";
 
     //! Gets name of the service with defined type form settings registry
-    //! @return string with service name, if setting registry doesn't exits returns empty string
+    //! @return optional string with service name. If setting registry entry exists, its value is returned.
+    //!         Otherwise AZStd::nullopt is returned
     [[nodiscard]] AZStd::optional<AZStd::string> GetName(const AZStd::string& serviceType);
 } // namespace ROS2SimulationInterfaces::RegistryUtilities

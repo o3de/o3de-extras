@@ -16,7 +16,7 @@
 namespace ROS2SimulationInterfaces
 {
 
-    class GetSimulationFeaturesServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::GetSimulatorFeatures>
+    class GetSimulatorFeaturesServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::GetSimulatorFeatures>
     {
     public:
         AZStd::string_view GetTypeName() const override
@@ -26,7 +26,7 @@ namespace ROS2SimulationInterfaces
 
         AZStd::string_view GetDefaultName() const override
         {
-            return "get_simulation_features";
+            return "get_simulator_features";
         }
         AZStd::unordered_set<SimulationFeatureType> GetProvidedFeatures() override;
 

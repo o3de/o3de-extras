@@ -6,7 +6,7 @@
  *
  */
 
-#include "GetSimulationFeaturesServiceHandler.h"
+#include "GetSimulatorFeaturesServiceHandler.h"
 #include <AzCore/base.h>
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/sort.h>
@@ -15,13 +15,13 @@
 namespace ROS2SimulationInterfaces
 {
 
-    AZStd::unordered_set<SimulationFeatureType> GetSimulationFeaturesServiceHandler::GetProvidedFeatures()
+    AZStd::unordered_set<SimulationFeatureType> GetSimulatorFeaturesServiceHandler::GetProvidedFeatures()
     {
         // standard doesn't define specific feature id for this service
         return AZStd::unordered_set<SimulationFeatureType>{};
     }
 
-    AZStd::optional<GetSimulationFeaturesServiceHandler::Response> GetSimulationFeaturesServiceHandler::HandleServiceRequest(
+    AZStd::optional<GetSimulatorFeaturesServiceHandler::Response> GetSimulatorFeaturesServiceHandler::HandleServiceRequest(
         const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
         // call bus to get simulation features in ROS2SimulationInterfaces Gem side
