@@ -17,6 +17,8 @@ set(FILES
     Source/Clients/NamedPosesManager.h
     Source/Clients/SimulationFeaturesAggregator.cpp
     Source/Clients/SimulationFeaturesAggregator.h
+    Source/Clients/LevelManager.cpp
+    Source/Clients/LevelManager.h
     Source/Clients/ROS2SimulationInterfacesSystemComponent.cpp
     Source/Clients/ROS2SimulationInterfacesSystemComponent.h
     Source/Interfaces/IROS2HandlerBase.h
