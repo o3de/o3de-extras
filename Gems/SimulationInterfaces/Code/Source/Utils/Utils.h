@@ -11,7 +11,9 @@
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
+#include <SimulationInterfaces/WorldResource.h>
 #include <simulation_interfaces/msg/bounds.hpp>
+#include <simulation_interfaces/msg/world_resource.hpp>
 
 namespace ROS2SimulationInterfaces::Utils
 {
@@ -61,4 +63,23 @@ namespace ROS2SimulationInterfaces::Utils
         }
         return AZ::Success(AZStd::move(filter));
     }
+
+    inline simulation_interfaces::msg::WorldResource ConvertWorldResource(const SimulationInterfaces::WorldResource& resource)
+    {
+        simulation_interfaces::msg::WorldResource worldResource;
+        worldResource.name = resource.m_name.c_str();
+        worldResource.description = resource.m_description.c_str();
+        worldResource.world_resource.uri = resource.m_worldResource.m_uri.c_str();
+        worldResource.world_resource.resource_string = resource.m_worldResource.m_resourceString.c_str();
+        AZStd::transform(
+            resource.m_tags.begin(),
+            resource.m_tags.end(),
+            AZStd::back_inserter(worldResource.tags),
+            [](const AZStd::string& tag)
+            {
+                std::string stdTag(tag.c_str());
+                return stdTag;
+            });
+        return worldResource;
+    };
 } // namespace ROS2SimulationInterfaces::Utils

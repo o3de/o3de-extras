@@ -39,5 +39,7 @@ namespace SimulationInterfaces
         AZ::Outcome<WorldResource, FailedResult> GetCurrentWorld() override;
         AZ::Outcome<WorldResource, FailedResult> LoadWorld(const LoadWorldRequest& request) override;
         AZ::Outcome<void, FailedResult> UnloadWorld() override;
+
+        AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> GetAllAvailableLevels();
     };
 } // namespace SimulationInterfaces

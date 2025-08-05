@@ -16,6 +16,11 @@ namespace SimulationInterfaces
     struct Resource
     {
         Resource() = default;
+        Resource(AZStd::string uri, AZStd::string resourceString)
+            : m_uri(uri)
+            , m_resourceString(resourceString)
+        {
+        }
         AZStd::string m_uri;
         AZStd::string m_resourceString;
     };

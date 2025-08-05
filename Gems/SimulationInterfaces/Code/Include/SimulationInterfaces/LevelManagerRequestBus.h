@@ -32,7 +32,7 @@ namespace SimulationInterfaces
         AZStd::vector<AZStd::string> additionalSources;
         TagFilter filter; // A filter to match against world tags
         bool offlineOnly = false; // Whether to limit search to only offline resources
-        bool ignoreMissingOrUnsupportedAssets = false; // By default fail in case of missing asset
+        bool continueOnError = false; // By default fail in case of missing asset
     };
 
     //! @see <a
@@ -41,7 +41,7 @@ namespace SimulationInterfaces
     {
         Resource levelResource; // which level needs to be loaded
         bool failOnUnsupportedElement = false; // By default just skip failed elements
-        bool continueOnError = false; // Whether search should be continue on some noncritical fails
+        bool ignoreMissingOrUnsupportedAssets = false; // Whether search should be continue on some noncritical fails
     };
 
     using WorldResourcesList = AZStd::vector<WorldResource>;

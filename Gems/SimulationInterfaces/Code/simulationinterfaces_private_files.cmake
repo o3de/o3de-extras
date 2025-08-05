@@ -54,6 +54,15 @@ set(FILES
     Source/Services/GetSimulationStateServiceHandler.h
     Source/Services/StepSimulationServiceHandler.cpp
     Source/Services/StepSimulationServiceHandler.h
+    Source/Services/GetAvailableWorldsServiceHandler.cpp
+    Source/Services/GetAvailableWorldsServiceHandler.h
+    Source/Services/GetCurrentWorldServiceHandler.cpp
+    Source/Services/GetCurrentWorldServiceHandler.h
+    Source/Services/LoadWorldServiceHandler.cpp
+    Source/Services/LoadWorldServiceHandler.h
+    Source/Services/UnloadWorldServiceHandler.cpp
+    Source/Services/UnloadWorldServiceHandler.h
+
     Source/Utils/RegistryUtils.cpp
     Source/Utils/RegistryUtils.h
     Source/Utils/Utils.h

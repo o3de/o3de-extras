@@ -18,6 +18,13 @@ namespace SimulationInterfaces
     struct WorldResource
     {
         WorldResource() = default;
+        WorldResource(AZStd::string name, Resource resource, AZStd::string description, AZStd::vector<AZStd::string> tags)
+            : m_name(name)
+            , m_worldResource(resource)
+            , m_description(description)
+            , m_tags(tags)
+        {
+        }
         AZStd::string m_name;
         Resource m_worldResource;
         AZStd::string m_description;
