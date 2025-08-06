@@ -3,6 +3,7 @@
 #include "SimulationInterfaces/SimulationMangerRequestBus.h"
 #include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/Asset/AssetManagerBus.h>
+#include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/base.h>
@@ -94,12 +95,23 @@ namespace SimulationInterfaces
     void LevelManager::Activate()
     {
         LevelManagerRequestBus::Handler::BusConnect();
+        AZ::ApplicationTypeQuery appType;
+        AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
+        m_isAppEditor = (appType.IsValid() && appType.IsEditor());
+
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
-            AZStd::unordered_set<SimulationFeatureType>{ simulation_interfaces::msg::SimulatorFeatures::AVAILABLE_WORLDS,
-                                                         simulation_interfaces::msg::SimulatorFeatures::WORLD_INFO_GETTING,
-                                                         simulation_interfaces::msg::SimulatorFeatures::WORLD_LOADING,
-                                                         simulation_interfaces::msg::SimulatorFeatures::WORLD_UNLOADING });
+            AZStd::unordered_set<SimulationFeatureType>{ simulation_interfaces::msg::SimulatorFeatures::AVAILABLE_WORLDS });
+
+        // level loading and unloading is supported only in GameLauncher, remove features from Editor application
+        if (!m_isAppEditor)
+        {
+            SimulationFeaturesAggregatorRequestBus::Broadcast(
+                &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
+                AZStd::unordered_set<SimulationFeatureType>{ simulation_interfaces::msg::SimulatorFeatures::WORLD_INFO_GETTING,
+                                                             simulation_interfaces::msg::SimulatorFeatures::WORLD_LOADING,
+                                                             simulation_interfaces::msg::SimulatorFeatures::WORLD_UNLOADING });
+        }
     }
     void LevelManager::Deactivate()
     {
@@ -144,6 +156,13 @@ namespace SimulationInterfaces
 
     AZ::Outcome<WorldResource, FailedResult> LevelManager::GetCurrentWorld()
     {
+        if (m_isAppEditor)
+        {
+            constexpr const char* errorMsg = "GetCurrentWorld is not supported in Editor";
+            AZ_Warning("SimulationInterfaces", false, errorMsg);
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
+        }
+
         WorldResource currentWorld;
         auto* levelInterface = AzFramework::LevelSystemLifecycleInterface::Get();
         if (levelInterface == nullptr)
@@ -175,6 +194,13 @@ namespace SimulationInterfaces
 
     AZ::Outcome<WorldResource, FailedResult> LevelManager::LoadWorld(const LoadWorldRequest& request)
     {
+        if (m_isAppEditor)
+        {
+            constexpr const char* errorMsg = "LoadWorld is not supported in Editor";
+            AZ_Warning("SimulationInterfaces", false, errorMsg);
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
+        }
+
         WorldResource loadedWorld;
 
         if (request.levelResource.m_resourceString.empty() && request.levelResource.m_uri.empty())
@@ -239,6 +265,12 @@ namespace SimulationInterfaces
 
     AZ::Outcome<void, FailedResult> LevelManager::UnloadWorld()
     {
+        if (m_isAppEditor)
+        {
+            constexpr const char* errorMsg = "UnloadWorld is not supported in Editor";
+            AZ_Warning("SimulationInterfaces", false, errorMsg);
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
+        }
         const auto currentLevel = GetCurrentWorld();
         if (!currentLevel.IsSuccess())
         {
@@ -265,6 +297,12 @@ namespace SimulationInterfaces
 
     void LevelManager::ReloadLevel()
     {
+        if (m_isAppEditor)
+        {
+            constexpr const char* errorMsg = "ReloadWorld is not supported in Editor";
+            AZ_Warning("SimulationInterfaces", false, errorMsg);
+            return;
+        }
         auto levelGathering = GetCurrentWorld();
         if (!levelGathering.IsSuccess())
         {

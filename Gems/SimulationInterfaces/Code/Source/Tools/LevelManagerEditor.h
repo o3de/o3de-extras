@@ -16,6 +16,8 @@
 namespace SimulationInterfaces
 {
     /// System component for SimulationInterfaces editor
+    // This Part of the system is most not active in Editor but due to added required and dependant services it is required to exist in
+    // Editor
     class LevelManagerEditor
         : public LevelManager
         , protected AzToolsFramework::EditorEvents::Bus::Handler
@@ -44,6 +46,6 @@ namespace SimulationInterfaces
 
         // EditorEntityContextNotificationBus
         void OnStartPlayInEditorBegin() override;
-        void OnStopPlayInEditorBegin()override;
+        void OnStopPlayInEditorBegin() override;
     };
 } // namespace SimulationInterfaces

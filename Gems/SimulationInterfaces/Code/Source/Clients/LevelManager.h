@@ -42,5 +42,6 @@ namespace SimulationInterfaces
         void ReloadLevel() override;
 
         AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> GetAllAvailableLevels();
+        bool m_isAppEditor = false;
     };
 } // namespace SimulationInterfaces

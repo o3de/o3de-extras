@@ -7,6 +7,7 @@
  */
 
 #include "ROS2SimulationInterfacesSystemComponent.h"
+#include <AzCore/Component/ComponentApplicationBus.h>
 
 #include <Actions/SimulateStepsActionServerHandler.h>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -75,6 +76,9 @@ namespace ROS2SimulationInterfaces
     void ROS2SimulationInterfacesSystemComponent::Activate()
     {
         ROS2SimulationInterfacesRequestBus::Handler::BusConnect();
+        AZ::ApplicationTypeQuery appType;
+        AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
+        m_isAppEditor = (appType.IsValid() && appType.IsEditor());
 
         rclcpp::Node::SharedPtr ros2Node = rclcpp::Node::SharedPtr(ROS2::ROS2Interface::Get()->GetNode());
         AZ_Assert(ros2Node, "ROS2 node is not available.");
@@ -95,9 +99,14 @@ namespace ROS2SimulationInterfaces
         RegisterInterface<GetNamedPosesServiceHandler>(ros2Node);
         RegisterInterface<GetNamedPoseBoundsServiceHandler>(ros2Node);
         RegisterInterface<GetAvailableWorldsServiceHandler>(ros2Node);
-        RegisterInterface<GetCurrentWorldServiceHandler>(ros2Node);
-        RegisterInterface<LoadWorldServiceHandler>(ros2Node);
-        RegisterInterface<UnloadWorldServiceHandler>(ros2Node);
+        if (!m_isAppEditor)
+        {
+            // services related to world loading and unloading are available only in GameLauncher
+            // prevent creation of those service handlers
+            RegisterInterface<GetCurrentWorldServiceHandler>(ros2Node);
+            RegisterInterface<LoadWorldServiceHandler>(ros2Node);
+            RegisterInterface<UnloadWorldServiceHandler>(ros2Node);
+        }
     }
 
     void ROS2SimulationInterfacesSystemComponent::Deactivate()
