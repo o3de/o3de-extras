@@ -6,9 +6,7 @@
 set(FILES
     Source/Clients/ROS2SystemComponent.cpp
     Source/Clients/ROS2SystemComponent.h
-    Source/Frame/NamespaceConfiguration.cpp
     Source/Frame/ROS2FrameComponent.cpp
-    Source/Frame/ROS2FrameConfiguration.cpp
     Source/Frame/ROS2Transform.cpp
     Source/ROS2ModuleInterface.cpp
     Source/ROS2ModuleInterface.h
