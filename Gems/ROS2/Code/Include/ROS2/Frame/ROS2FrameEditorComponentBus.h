@@ -11,7 +11,6 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/std/containers/set.h>
 #include <AzFramework/Components/TransformComponent.h>
-#include <ROS2/Frame/ROS2Transform.h>
 
 namespace ROS2
 {
