@@ -476,7 +476,7 @@ namespace SimulationInterfaces
 
         DebugDraw::DebugDrawRequestBus::Broadcast(
             &DebugDraw::DebugDrawRequests::DrawTextOnScreen,
-            AZStd::string::format("Simulation state: %s %s", GetStateName(m_simulationState).c_str(), keyboardHint.c_str()),
+            AZStd::string::format("Simulation state: %s \n %s", GetStateName(m_simulationState).c_str(), keyboardHint.c_str()),
             AZ::Color(1.0f, 1.0f, 1.0f, 1.0f),
             0.f);
     }

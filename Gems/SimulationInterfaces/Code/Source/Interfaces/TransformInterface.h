@@ -16,7 +16,7 @@ namespace ROS2SimulationInterfaces
     class TFInterfaceRequests
     {
     public:
-        AZ_RTTI(TFInterfaceRequests, "{BC0C8C08-DC47-44AB-9A84-D853751D15F1}");
+        AZ_RTTI(TFInterfaceRequests, TFInterfaceTypeId);
         //! Gets transform from source frame to target frame, at most recent time
         //! @param source - source frame name
         //! @param target - target frame name

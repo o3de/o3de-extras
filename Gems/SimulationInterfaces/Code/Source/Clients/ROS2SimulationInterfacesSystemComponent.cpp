@@ -33,8 +33,6 @@
 #include <Services/SetSimulationStateServiceHandler.h>
 #include <Services/SpawnEntityServiceHandler.h>
 #include <Services/StepSimulationServiceHandler.h>
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/transform_listener.h>
 
 namespace ROS2SimulationInterfaces
 {
