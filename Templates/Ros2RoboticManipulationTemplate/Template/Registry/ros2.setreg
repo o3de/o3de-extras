@@ -8,6 +8,9 @@
                 "CaptureMouseCursor": false
             }
         },
+        "SimulationInterfaces": {
+        	"SimulatorFrame": "world_simulator_frame",
+    	},
         "ROS2":
         {
             "SteadyClock" : true,

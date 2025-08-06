@@ -518,30 +518,34 @@
                         "Publishers": {
                             "Color Camera Info": {
                                 "Type": "sensor_msgs::msg::CameraInfo",
-                                "Topic": "color_camera_info",
+                                "Topic": "camera_info",
                                 "QoS": {
-                                    "Reliability": 1
+                                    "Reliability": 1,
+                                    "Durability": 1
                                 }
                             },
                             "Color Image": {
                                 "Type": "sensor_msgs::msg::Image",
                                 "Topic": "camera_image_color",
                                 "QoS": {
-                                    "Reliability": 1
+                                    "Reliability": 1,
+                                    "Durability": 1
                                 }
                             },
                             "Depth Camera Info": {
                                 "Type": "sensor_msgs::msg::CameraInfo",
                                 "Topic": "depth_camera_info",
                                 "QoS": {
-                                    "Reliability": 1
+                                    "Reliability": 1,
+                                    "Durability": 1
                                 }
                             },
                             "Depth Image": {
                                 "Type": "sensor_msgs::msg::Image",
                                 "Topic": "camera_image_depth",
                                 "QoS": {
-                                    "Reliability": 1
+                                    "Reliability": 1,
+                                    "Durability": 1
                                 }
                             }
                         }
