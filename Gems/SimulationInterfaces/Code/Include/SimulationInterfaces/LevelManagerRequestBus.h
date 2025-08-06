@@ -52,10 +52,16 @@ namespace SimulationInterfaces
         AZ_RTTI(LevelManagerRequests, LevelManagerRequestsTypeId);
         virtual ~LevelManagerRequests() = default;
 
+        //! Returns vector with all worlds available in the simulator
         virtual AZ::Outcome<WorldResourcesList, FailedResult> GetAvailableWorlds(const GetWorldsRequest& request) = 0;
+        //! Returns currently loaded world. If no world is loaded, error is returned
         virtual AZ::Outcome<WorldResource, FailedResult> GetCurrentWorld() = 0;
+        //! Loads world based on provided resources
         virtual AZ::Outcome<WorldResource, FailedResult> LoadWorld(const LoadWorldRequest& request) = 0;
+        //! Unloads currently loaded level
         virtual AZ::Outcome<void, FailedResult> UnloadWorld() = 0;
+        //! Reloads current level
+        virtual void ReloadLevel() = 0;
     };
 
     class LevelManagerRequestBusTraits : public AZ::EBusTraits

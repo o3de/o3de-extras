@@ -18,7 +18,7 @@ namespace UnitTest
             SimulationInterfaces::SimulationManagerRequestBus::Handler::BusDisconnect();
         }
 
-        MOCK_METHOD1(ReloadLevel, void(ReloadLevelCallback));
+        MOCK_METHOD1(RestartSimulation, void(ReloadLevelCallback));
         MOCK_METHOD1(SetSimulationPaused, void(bool));
         MOCK_METHOD1(StepSimulation, void(AZ::u64));
         MOCK_METHOD(bool, IsSimulationPaused, (), (const));

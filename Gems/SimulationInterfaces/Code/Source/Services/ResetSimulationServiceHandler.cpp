@@ -7,6 +7,7 @@
  */
 
 #include "ResetSimulationServiceHandler.h"
+#include "Services/ROS2ServiceBase.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/std/optional.h>
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
@@ -15,11 +16,10 @@
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
 #include <builtin_interfaces/msg/time.hpp>
-#include <simulation_interfaces/msg/detail/result__struct.hpp>
+#include <simulation_interfaces/msg/result.hpp>
 
 namespace ROS2SimulationInterfaces
 {
-
     AZStd::unordered_set<SimulationFeatureType> ResetSimulationServiceHandler::GetProvidedFeatures()
     {
         return AZStd::unordered_set<SimulationFeatureType>{ SimulationFeatures::SIMULATION_RESET,
@@ -108,7 +108,7 @@ namespace ROS2SimulationInterfaces
                 SendResponse(response);
             };
             SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
-                &SimulationInterfaces::SimulationManagerRequests::ReloadLevel, levelReloadCompletion);
+                &SimulationInterfaces::SimulationManagerRequests::RestartSimulation, levelReloadCompletion);
 
             return AZStd::nullopt;
         }

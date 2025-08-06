@@ -13,7 +13,6 @@
 #include <AzCore/Script/ScriptTimePoint.h>
 #include <AzCore/std/containers/array.h>
 #include <AzCore/std/utility/pair.h>
-#include <AzFramework/API/ApplicationAPI.h>
 #include <AzFramework/Entity/EntityContextBus.h>
 #include <AzFramework/Input/Devices/Keyboard/InputDeviceKeyboard.h>
 #include <AzFramework/Input/Events/InputChannelEventListener.h>
@@ -21,6 +20,7 @@
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
+#include <simulation_interfaces/msg/simulation_state.hpp>
 #include <simulation_interfaces/srv/set_simulation_state.hpp>
 
 namespace SimulationInterfaces
@@ -34,7 +34,6 @@ namespace SimulationInterfaces
     class SimulationManager
         : public AZ::Component
         , protected SimulationManagerRequestBus::Handler
-        , protected AzFramework::LevelSystemLifecycleNotificationBus::Handler
         , protected AZ::TickBus::Handler
         , protected AzFramework::InputChannelEventListener
     {
@@ -56,19 +55,15 @@ namespace SimulationInterfaces
         void Deactivate() override;
 
     private:
-
         // SimulationManagerRequestBus interface implementation
+        void RestartSimulation(ReloadLevelCallback completionCallback) override;
         void SetSimulationPaused(bool paused) override;
         void StepSimulation(AZ::u64 steps) override;
         bool IsSimulationPaused() const override;
         void CancelStepSimulation() override;
         bool IsSimulationStepsActive() const override;
-        void ReloadLevel(SimulationManagerRequests::ReloadLevelCallback completionCallback) override;
         SimulationState GetSimulationState() const override;
         AZ::Outcome<void, FailedResult> SetSimulationState(SimulationState stateToSet) override;
-
-        // LevelSystemLifecycleNotificationBus interface implementation
-        void OnLoadingComplete(const char* levelName) override;
 
         // AZ::TickBus::Handler
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
@@ -99,14 +94,18 @@ namespace SimulationInterfaces
 
         bool IsTransitionForbidden(SimulationState requestedState);
         // forbidden transition between state, first is current state, second is desire state
-        const AZStd::array<AZStd::pair<SimulationState, SimulationState>, 4> m_forbiddenStatesTransitions{ {
-            { simulation_interfaces::msg::SimulationState::STATE_STOPPED, simulation_interfaces::msg::SimulationState::STATE_PAUSED },
-            { simulation_interfaces::msg::SimulationState::STATE_QUITTING, simulation_interfaces::msg::SimulationState::STATE_STOPPED },
-            { simulation_interfaces::msg::SimulationState::STATE_QUITTING, simulation_interfaces::msg::SimulationState::STATE_PLAYING },
-            { simulation_interfaces::msg::SimulationState::STATE_QUITTING, simulation_interfaces::msg::SimulationState::STATE_PAUSED },
-        } };
+        const AZStd::array<AZStd::pair<SimulationState, SimulationState>, 7> m_forbiddenStatesTransitions{
+            { { simulation_interfaces::msg::SimulationState::STATE_STOPPED, simulation_interfaces::msg::SimulationState::STATE_PAUSED },
+              { simulation_interfaces::msg::SimulationState::STATE_QUITTING, simulation_interfaces::msg::SimulationState::STATE_STOPPED },
+              { simulation_interfaces::msg::SimulationState::STATE_QUITTING, simulation_interfaces::msg::SimulationState::STATE_PLAYING },
+              { simulation_interfaces::msg::SimulationState::STATE_QUITTING, simulation_interfaces::msg::SimulationState::STATE_PAUSED },
+              { simulation_interfaces::msg::SimulationState::STATE_NO_WORLD, simulation_interfaces::msg::SimulationState::STATE_STOPPED },
+              { simulation_interfaces::msg::SimulationState::STATE_NO_WORLD, simulation_interfaces::msg::SimulationState::STATE_PLAYING },
+              { simulation_interfaces::msg::SimulationState::STATE_NO_WORLD, simulation_interfaces::msg::SimulationState::STATE_PAUSED } }
+        };
 
         //! Map of keyboard transitions - defined in registry key
         AZStd::unordered_map<SimulationState, KeyboardTransition> m_keyboardTransitions;
+        bool m_levelLoaded = false;
     };
 } // namespace SimulationInterfaces

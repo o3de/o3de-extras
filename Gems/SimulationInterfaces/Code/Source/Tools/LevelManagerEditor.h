@@ -7,40 +7,43 @@
  */
 
 #pragma once
-#include "SimulationInterfaces/LevelManagerRequestBus.h"
-#include <AzCore/Component/Component.h>
+
+#include <AzToolsFramework/API/ToolsApplicationAPI.h>
+#include <AzToolsFramework/Entity/EditorEntityContextBus.h>
+
+#include <Clients/LevelManager.h>
 
 namespace SimulationInterfaces
 {
-    class LevelManager
-        : public AZ::Component
-        , protected LevelManagerRequestBus::Handler
+    /// System component for SimulationInterfaces editor
+    class LevelManagerEditor
+        : public LevelManager
+        , protected AzToolsFramework::EditorEvents::Bus::Handler
+        , private AzToolsFramework::EditorEntityContextNotificationBus::Handler
     {
+        using BaseSystemComponent = LevelManager;
+
     public:
-        AZ_COMPONENT_DECL(LevelManager);
+        AZ_COMPONENT_DECL(LevelManagerEditor);
 
         static void Reflect(AZ::ReflectContext* context);
 
+        LevelManagerEditor();
+        ~LevelManagerEditor();
+
+    private:
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
-        LevelManager();
-        ~LevelManager();
-
         // AZ::Component
+        void Init() override;
         void Activate() override;
         void Deactivate() override;
 
-    private:
-        // LevelManagerRequestBus interface implementation
-        AZ::Outcome<WorldResourcesList, FailedResult> GetAvailableWorlds(const GetWorldsRequest& request) override;
-        AZ::Outcome<WorldResource, FailedResult> GetCurrentWorld() override;
-        AZ::Outcome<WorldResource, FailedResult> LoadWorld(const LoadWorldRequest& request) override;
-        AZ::Outcome<void, FailedResult> UnloadWorld() override;
-        void ReloadLevel() override;
-
-        AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> GetAllAvailableLevels();
+        // EditorEntityContextNotificationBus
+        void OnStartPlayInEditorBegin() override;
+        void OnStopPlayInEditorBegin()override;
     };
 } // namespace SimulationInterfaces

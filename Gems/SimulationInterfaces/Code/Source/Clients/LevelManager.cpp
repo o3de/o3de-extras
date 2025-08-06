@@ -1,5 +1,6 @@
 
 #include "LevelManager.h"
+#include "SimulationInterfaces/SimulationMangerRequestBus.h"
 #include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/Outcome/Outcome.h>
@@ -14,16 +15,16 @@
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 #include <SimulationInterfaces/WorldResource.h>
-#include <simulation_interfaces/srv/detail/get_current_world__struct.hpp>
-#include <simulation_interfaces/srv/detail/load_world__struct.hpp>
-#include <simulation_interfaces/srv/detail/unload_world__struct.hpp>
+#include <simulation_interfaces/msg/detail/simulation_state__struct.hpp>
 #include <simulation_interfaces/srv/get_available_worlds.hpp>
+#include <simulation_interfaces/srv/get_current_world.hpp>
+#include <simulation_interfaces/srv/load_world.hpp>
+#include <simulation_interfaces/srv/unload_world.hpp>
 
 // ordering important
 // begin
 #include <CryCommon/ILevelSystem.h>
 #include <CryCommon/ISystem.h>
-
 // end
 
 namespace SimulationInterfaces
@@ -140,6 +141,7 @@ namespace SimulationInterfaces
         }
         return AZ::Success(availableWorlds);
     }
+
     AZ::Outcome<WorldResource, FailedResult> LevelManager::GetCurrentWorld()
     {
         WorldResource currentWorld;
@@ -217,6 +219,9 @@ namespace SimulationInterfaces
         }
 
         levelSystem->UnloadLevel();
+        // notify state machine
+        SimulationManagerRequestBus::Broadcast(
+            &SimulationManagerRequests::SetSimulationState, simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD);
 
         if (!levelSystem->LoadLevel(request.levelResource.m_uri.c_str()))
         {
@@ -224,10 +229,14 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return AZ::Failure(FailedResult(simulation_interfaces::srv::LoadWorld::Response::RESOURCE_PARSE_ERROR, errorMsg));
         }
+        // notify state machine
+        SimulationManagerRequestBus::Broadcast(
+            &SimulationManagerRequests::SetSimulationState, simulation_interfaces::msg::SimulationState::STATE_STOPPED);
         // fill up response
         loadedWorld.m_worldResource = request.levelResource;
         return AZ::Success(loadedWorld);
     }
+
     AZ::Outcome<void, FailedResult> LevelManager::UnloadWorld()
     {
         const auto currentLevel = GetCurrentWorld();
@@ -249,7 +258,23 @@ namespace SimulationInterfaces
         }
 
         levelSystem->UnloadLevel();
+        SimulationManagerRequestBus::Broadcast(
+            &SimulationManagerRequests::SetSimulationState, simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
         return AZ::Success();
+    }
+
+    void LevelManager::ReloadLevel()
+    {
+        auto levelGathering = GetCurrentWorld();
+        if (!levelGathering.IsSuccess())
+        {
+            AZ_Error("LevelManager", false, "Error occurred during level gathering: %s", levelGathering.GetError().m_errorString.c_str());
+            return;
+        }
+        UnloadWorld();
+        LoadWorldRequest request;
+        request.levelResource = levelGathering.GetValue().m_worldResource;
+        LoadWorld(request);
     }
 
     AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> LevelManager::GetAllAvailableLevels()
@@ -285,5 +310,4 @@ namespace SimulationInterfaces
 
         return AZ::Success(levelNames);
     }
-
 } // namespace SimulationInterfaces
