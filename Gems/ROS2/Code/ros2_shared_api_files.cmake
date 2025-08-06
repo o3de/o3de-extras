@@ -12,5 +12,4 @@ set(FILES
     Source/ROS2ModuleInterface.h
     Source/Sensor/Events/PhysicsBasedSource.cpp
     Source/Sensor/Events/TickBasedSource.cpp
-    Source/Utilities/ROS2Names.cpp
 )

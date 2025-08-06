@@ -12,8 +12,8 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
 #include <ROS2/Communication/QoS.h>
+#include <ROS2/ROS2NamesBus.h>
 #include <ROS2/ROS2TypeIds.h>
-#include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2
 {
@@ -46,7 +46,7 @@ namespace ROS2
                         ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_type, "Type", "Type of topic messages")
                         ->Attribute(AZ::Edit::Attributes::ReadOnly, true)
                         ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_topic, "Topic", "Topic with no namespace")
-                        ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateTopicField)
+                        ->Attribute(AZ::Edit::Attributes::ChangeValidate, &TopicConfiguration::ValidateTopicField)
                         ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_qos, "QoS", "Quality of Service");
                 }
             }
@@ -64,5 +64,13 @@ namespace ROS2
 
     private:
         QoS m_qos = rclcpp::SensorDataQoS();
+
+        AZ::Outcome<void, AZStd::string> ValidateTopicField(void* newValue, const AZ::Uuid& valueType)
+        {
+            AZ::Outcome<void, AZStd::string> outcome;
+            ROS2NamesRequestBus::BroadcastResult(outcome, &ROS2NamesRequests::ValidateTopicField, newValue, valueType);
+
+            return outcome;
+        }
     };
 } // namespace ROS2

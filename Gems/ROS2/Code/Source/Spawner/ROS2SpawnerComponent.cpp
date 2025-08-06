@@ -18,10 +18,10 @@
 #include <Georeferencing/GeoreferenceBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
+#include <ROS2/ROS2NamesBus.h>
 #include <ROS2/Spawner/SpawnerBus.h>
 #include <ROS2/Spawner/SpawnerBusHandler.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
-#include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2
 {
@@ -151,7 +151,9 @@ namespace ROS2
         AZStd::string spawnableNamespace(request->robot_namespace.c_str());
         AZStd::string spawnPointName(request->xml.c_str(), request->xml.size());
 
-        if (auto namespaceValidation = ROS2Names::ValidateNamespace(spawnableNamespace); !namespaceValidation.IsSuccess())
+        AZ::Outcome<void, AZStd::string> namespaceValidation = AZ::Failure("Cannot validate namespace, ROS2NamesBus is not available");
+        ROS2NamesRequestBus::BroadcastResult(namespaceValidation, &ROS2NamesRequestBus::Events::ValidateNamespace, spawnableNamespace);
+        if (!namespaceValidation.IsSuccess())
         {
             response.success = false;
             response.status_message = namespaceValidation.GetError().data();

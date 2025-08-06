@@ -10,9 +10,9 @@
 #include <AzFramework/Physics/Collision/CollisionEvents.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
-#include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
-#include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2NamesBus.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 #include <geometry_msgs/msg/wrench.hpp>
 
 namespace ROS2Sensors
@@ -67,7 +67,9 @@ namespace ROS2Sensors
         auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Contact sensor");
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations["gazebo_msgs::msg::ContactsState"];
-        const auto fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+        AZStd::string fullTopic;
+        ROS2::ROS2NamesRequestBus::BroadcastResult(
+            fullTopic, &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName, GetNamespace(), publisherConfig.m_topic);
         m_contactsPublisher = ros2Node->create_publisher<gazebo_msgs::msg::ContactsState>(fullTopic.data(), publisherConfig.GetQoS());
 
         m_onCollisionBeginHandler = AzPhysics::SimulatedBodyEvents::OnCollisionBegin::Handler(

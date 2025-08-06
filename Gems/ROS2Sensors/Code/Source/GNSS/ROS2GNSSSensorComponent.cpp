@@ -8,7 +8,7 @@
 
 #include "ROS2GNSSSensorComponent.h"
 #include <AzCore/Math/Matrix4x4.h>
-#include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2NamesBus.h>
 
 #include <Georeferencing/GeoreferenceBus.h>
 #include <ROS2Sensors/GNSS/GNSSPostProcessingRequestBus.h>
@@ -60,7 +60,9 @@ namespace ROS2Sensors
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for GNSS sensor");
 
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[GNSSMsgType];
-        const auto fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+        AZStd::string fullTopic;
+        ROS2::ROS2NamesRequestBus::BroadcastResult(
+            fullTopic, &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName, GetNamespace(), publisherConfig.m_topic);
         m_gnssPublisher = ros2Node->create_publisher<sensor_msgs::msg::NavSatFix>(fullTopic.data(), publisherConfig.GetQoS());
 
         m_gnssMsg.header.frame_id = "gnss_frame_id";

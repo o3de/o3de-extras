@@ -13,7 +13,7 @@
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2NamesBus.h>
 #include <ROS2Sensors/Lidar/ClassSegmentationBus.h>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 
@@ -85,15 +85,19 @@ namespace ROS2Sensors
                 m_canRaycasterPublish, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::CanHandlePublishing);
         }
 
+        const auto& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
+        AZStd::string fullTopic;
+        ROS2::ROS2NamesRequestBus::BroadcastResult(
+            fullTopic, &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName, GetNamespace(), publisherConfig.m_topic);
+
         if (m_canRaycasterPublish)
         {
-            const ROS2::TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
             auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
 
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterId,
                 &LidarRaycasterRequestBus::Events::ConfigurePointCloudPublisher,
-                ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic),
+                fullTopic,
                 ros2Frame->GetNamespacedFrameID().data(),
                 publisherConfig.GetQoS());
         }
@@ -102,15 +106,16 @@ namespace ROS2Sensors
             auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
             AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
 
-            const ROS2::TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
-            AZStd::string fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
             m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
 
             const auto resultFlags = m_lidarCore.GetResultFlags();
             if (IsFlagEnabled(RaycastResultFlags::SegmentationData, resultFlags))
             {
-                m_segmentationClassesPublisher = ros2Node->create_publisher<vision_msgs::msg::LabelInfo>(
-                    ROS2::ROS2Names::GetNamespacedName(GetNamespace(), "segmentation_classes").data(), publisherConfig.GetQoS());
+                AZStd::string segmentationTopic;
+                ROS2::ROS2NamesRequestBus::BroadcastResult(
+                    segmentationTopic, &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName, GetNamespace(), "segmentation_classes");
+                m_segmentationClassesPublisher =
+                    ros2Node->create_publisher<vision_msgs::msg::LabelInfo>(segmentationTopic.data(), publisherConfig.GetQoS());
             }
         }
 
@@ -169,9 +174,7 @@ namespace ROS2Sensors
     {
         const auto simTimestamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
         auto builder = PointCloud2MessageBuilder(
-            GetEntity()->FindComponent<ROS2::ROS2FrameComponent>()->GetNamespacedFrameID(),
-            simTimestamp,
-            results.GetCount());
+            GetEntity()->FindComponent<ROS2::ROS2FrameComponent>()->GetNamespacedFrameID(), simTimestamp, results.GetCount());
 
         builder.AddField("x", sensor_msgs::msg::PointField::FLOAT32)
             .AddField("y", sensor_msgs::msg::PointField::FLOAT32)

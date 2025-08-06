@@ -6,9 +6,9 @@
  *
  */
 
-#include <ROS2/ROS2Bus.h>
-#include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
+#include <ROS2/ROS2Bus.h>
+#include <ROS2/ROS2NamesBus.h>
 #include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
 
 #include "JointStatePublisher.h"
@@ -21,9 +21,16 @@ namespace ROS2Controllers
         , m_context(context)
     {
         auto topicConfiguration = m_configuration.m_topicConfiguration;
-        AZStd::string topic = ROS2::ROS2Names::GetNamespacedName(context.m_publisherNamespace, topicConfiguration.m_topic);
+
+        AZStd::string namespacedTopic;
+        ROS2::ROS2NamesRequestBus::BroadcastResult(
+            namespacedTopic,
+            &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName,
+            context.m_publisherNamespace,
+            topicConfiguration.m_topic);
         auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
-        m_jointStatePublisher = ros2Node->create_publisher<sensor_msgs::msg::JointState>(topic.data(), topicConfiguration.GetQoS());
+        m_jointStatePublisher =
+            ros2Node->create_publisher<sensor_msgs::msg::JointState>(namespacedTopic.data(), topicConfiguration.GetQoS());
     }
 
     JointStatePublisher::~JointStatePublisher()
@@ -35,7 +42,10 @@ namespace ROS2Controllers
     void JointStatePublisher::PublishMessage()
     {
         std_msgs::msg::Header rosHeader;
-        rosHeader.frame_id = ROS2::ROS2Names::GetNamespacedName(m_context.m_publisherNamespace, m_context.m_frameId).data();
+        AZStd::string namespacedFrameId;
+        ROS2::ROS2NamesRequestBus::BroadcastResult(
+            namespacedFrameId, &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName, m_context.m_publisherNamespace, m_context.m_frameId);
+        rosHeader.frame_id = namespacedFrameId.data();
         ROS2::ROS2ClockRequestBus::BroadcastResult(rosHeader.stamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
         m_jointStateMsg.header = rosHeader;
 

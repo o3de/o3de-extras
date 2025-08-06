@@ -18,7 +18,6 @@
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
-#include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <Source/ArticulationLinkComponent.h>
 #include <Source/HingeJointComponent.h>

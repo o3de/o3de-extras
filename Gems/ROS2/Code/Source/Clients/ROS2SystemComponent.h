@@ -11,6 +11,7 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <ROS2/ROS2Bus.h>
+#include <ROS2/ROS2NamesBus.h>
 #include <ROS2/TF/TransformInterface.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <memory>
@@ -44,6 +45,7 @@ namespace ROS2
         : public AZ::Component
         , public AZ::TickBus::Handler
         , protected ROS2Requests
+        , protected ROS2NamesRequestBus::Handler
         , protected TFInterfaceBus::Handler
     {
     public:
@@ -68,6 +70,16 @@ namespace ROS2
         ////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////
+        // ROS2NamesRequestBus handler implementation
+        AZStd::string GetNamespacedName(const AZStd::string& ns, const AZStd::string& name) override;
+        AZStd::string RosifyName(const AZStd::string& input) override;
+        AZ::Outcome<void, AZStd::string> ValidateNamespace(const AZStd::string& ros2Namespace) override;
+        AZ::Outcome<void, AZStd::string> ValidateNamespaceField(void* newValue, const AZ::Uuid& valueType) override;
+        AZ::Outcome<void, AZStd::string> ValidateTopic(const AZStd::string& topic) override;
+        AZ::Outcome<void, AZStd::string> ValidateTopicField(void* newValue, const AZ::Uuid& valueType) override;
+        ////////////////////////////////////////////////////////////////////////
+
+        ////////////////////////////////////////////////////////////////////////
         // AZ::Component interface implementation
         void Init() override;
         void Activate() override;
@@ -75,7 +87,7 @@ namespace ROS2
         ////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////
-        // AZTickBus interface implementation
+        // AZ::TickBus handler implementation
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
         ////////////////////////////////////////////////////////////////////////
 
