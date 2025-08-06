@@ -26,7 +26,7 @@ namespace ROS2SimulationInterfaces
         const auto simulatorFrameId = RegistryUtilities::GetSimulatorROS2Frame();
         const AZStd::string_view messageFrameId{ request.state.header.frame_id.c_str(), request.state.header.frame_id.length() };
         AZ::Transform transformOffset = AZ::Transform::CreateIdentity();
-        if (messageFrameId != simulatorFrameId)
+        if (!messageFrameId.empty() && simulatorFrameId != messageFrameId)
         {
             const builtin_interfaces::msg::Time time = request.state.header.stamp;
 

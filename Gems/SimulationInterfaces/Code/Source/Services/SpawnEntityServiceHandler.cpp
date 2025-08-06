@@ -55,7 +55,7 @@ namespace ROS2SimulationInterfaces
         // deal with frames
         const auto simulatorFrameId = RegistryUtilities::GetSimulatorROS2Frame();
         AZ::Transform transformOffset = AZ::Transform::CreateIdentity();
-        if (simulatorFrameId != messageFrameId)
+        if (!messageFrameId.empty() && simulatorFrameId != messageFrameId )
         {
             auto transformInterface = ROS2SimulationInterfaces::TFInterface::Get();
             AZ_Assert(transformInterface, "TFInterface is not available, cannot set entity state without transform offset.");
