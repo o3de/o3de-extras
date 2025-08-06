@@ -8,7 +8,6 @@
 
 #include <AzCore/Math/Uuid.h>
 #include <ROS2/ROS2EditorBus.h>
-#include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <ROS2Sensors/ROS2SensorsEditorBus.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>

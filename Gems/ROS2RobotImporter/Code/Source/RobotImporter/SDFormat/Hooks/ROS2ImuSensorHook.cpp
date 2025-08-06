@@ -8,7 +8,6 @@
 
 #include <AzCore/Math/Uuid.h>
 #include <ROS2/ROS2EditorBus.h>
-#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <ROS2Sensors/Imu/ImuSensorConfiguration.h>
 #include <ROS2Sensors/ROS2SensorsEditorBus.h>
