@@ -1,6 +1,6 @@
 {
     "SimulationInterfaces": {
-        "SimulatorFrame": "World",
+        "SimulatorFrame": "world",
         "PrintStateNameInGui": true,
         "StartInStoppedState": true,
         "KeyboardTransitions":

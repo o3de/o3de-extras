@@ -134,7 +134,11 @@ namespace ROS2SimulationInterfaces
     AZ::Outcome<AZ::Transform, AZStd::string> ROS2SimulationInterfacesSystemComponent::GetTransform(
         const AZStd::string& source, const AZStd::string& target, const builtin_interfaces::msg::Time& time)
     {
-        AZ_Assert(m_tfBuffer, "ROS2 TF buffer is not initialized.");
+        AZ_Error("ROS2SimulationInterfacesSystemComponent", m_tfBuffer, "This component was not activated, tf is not available" );
+        if (!m_tfBuffer)
+        {
+            return AZ::Failure("Component was not activated, TFInterface is not available.");
+        }
         try
         {
             const auto transform = m_tfBuffer->lookupTransform(source.c_str(), target.c_str(), time);

@@ -13,7 +13,7 @@
 namespace ROS2SimulationInterfaces::RegistryUtilities
 {
     const char* const RegistryKeySimulatorFrameId = "/SimulationInterfaces/SimulatorFrame";
-    const char* const DefaultFrameId = "World";
+    const char* const DefaultFrameId = "world";
 
     AZStd::optional<AZStd::string> GetName(const AZStd::string& serviceType)
     {

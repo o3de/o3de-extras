@@ -7,7 +7,7 @@
  */
 
 #pragma once
-#include "builtin_interfaces/msg/time.hpp"
+#include <builtin_interfaces/msg/time.hpp>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/string/string.h>
