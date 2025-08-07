@@ -7,7 +7,7 @@
  */
 
 #pragma once
-#include "builtin_interfaces/msg/time.hpp"
+#include <builtin_interfaces/msg/time.hpp>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/string/string.h>
@@ -20,7 +20,7 @@ namespace ROS2
     public:
         AZ_RTTI(TFInterfaceRequests, TFInterfaceTypeId);
 
-        //! Gets transform from source frame to target frame, at most recent time using ROS tf2 library.
+        //! Gets transform from source frame to target frame, at given time using ROS tf2 library.
         //! If the transform is not available, it will return an error message.
         //! @param source - source frame name
         //! @param target - target frame name
