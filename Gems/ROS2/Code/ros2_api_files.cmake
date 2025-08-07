@@ -23,6 +23,7 @@ set(FILES
     Include/ROS2/Sensor/Events/TickBasedSource.h
     Include/ROS2/Spawner/SpawnerBus.h
     Include/ROS2/Spawner/SpawnerBusHandler.h
+    Include/ROS2/TF/TransformInterface.h
     Include/ROS2/Utilities/ROS2Conversions.h
     Include/ROS2/Utilities/ROS2Conversions.inl
     Include/ROS2/Utilities/ROS2Names.h

@@ -47,21 +47,6 @@ namespace ROS2SimulationInterfaces
         }
     }
 
-    ROS2SimulationInterfacesSystemComponent::ROS2SimulationInterfacesSystemComponent()
-    {
-        if (TFInterface::Get() == nullptr)
-        {
-            TFInterface::Register(this);
-        }
-    }
-
-    ROS2SimulationInterfacesSystemComponent::~ROS2SimulationInterfacesSystemComponent()
-    {
-        if (TFInterface::Get() == this)
-        {
-            TFInterface::Unregister(this);
-        }
-    }
 
     void ROS2SimulationInterfacesSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
@@ -105,9 +90,6 @@ namespace ROS2SimulationInterfaces
         RegisterInterface<GetSimulationStateServiceHandler>(ros2Node);
         RegisterInterface<StepSimulationServiceHandler>(ros2Node);
 
-        // setup tf2 buffer and listener
-        m_tfBuffer = AZStd::make_shared<tf2_ros::Buffer>(ros2Node->get_clock());
-        m_tfListener = AZStd::make_shared<tf2_ros::TransformListener>(*m_tfBuffer);
     }
 
     void ROS2SimulationInterfacesSystemComponent::Deactivate()
@@ -130,27 +112,4 @@ namespace ROS2SimulationInterfaces
         }
         return result;
     }
-
-    AZ::Outcome<AZ::Transform, AZStd::string> ROS2SimulationInterfacesSystemComponent::GetTransform(
-        const AZStd::string& source, const AZStd::string& target, const builtin_interfaces::msg::Time& time)
-    {
-        AZ_Error("ROS2SimulationInterfacesSystemComponent", m_tfBuffer, "This component was not activated, tf is not available" );
-        if (!m_tfBuffer)
-        {
-            return AZ::Failure("Component was not activated, TFInterface is not available.");
-        }
-        try
-        {
-            const auto transform = m_tfBuffer->lookupTransform(source.c_str(), target.c_str(), time);
-            const auto q = ROS2::ROS2Conversions::FromROS2Quaternion(transform.transform.rotation);
-            const auto t = ROS2::ROS2Conversions::FromROS2Vector3(transform.transform.translation);
-            return AZ::Transform::CreateFromQuaternionAndTranslation(q, t);
-
-        } catch (const tf2::TransformException& ex)
-        {
-            return AZ::Failure(
-                AZStd::string::format("Failed to get transform from %s to %s: %s", source.c_str(), target.c_str(), ex.what()));
-        }
-    }
-
 } // namespace ROS2SimulationInterfaces

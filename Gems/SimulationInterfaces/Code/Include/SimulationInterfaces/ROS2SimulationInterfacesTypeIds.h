@@ -24,6 +24,4 @@ namespace ROS2SimulationInterfaces
     // API TypeIds
     inline constexpr const char* ROS2SimulationInterfacesRequestBusTypeId = "{00D08870-E329-4BD7-BB8C-F67FE369DE92}";
 
-    // Internal API TypeIds
-    inline constexpr const char* TFInterfaceTypeId = "{BC0C8C08-DC47-44AB-9A84-D853751D15F1}";
 } // namespace ROS2SimulationInterfaces

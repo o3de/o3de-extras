@@ -7,8 +7,8 @@
  */
 
 #include "SetEntityStateServiceHandler.h"
+#include <ROS2/TF/TransformInterface.h>
 #include "CommonUtilities.h"
-#include "Interfaces/TransformInterface.h"
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
@@ -29,8 +29,7 @@ namespace ROS2SimulationInterfaces
         if (!messageFrameId.empty() && simulatorFrameId != messageFrameId)
         {
             const builtin_interfaces::msg::Time time = request.state.header.stamp;
-
-            auto transformInterface = ROS2SimulationInterfaces::TFInterface::Get();
+            auto transformInterface = ROS2::TFInterface::Get();
             AZ_Assert(transformInterface, "TFInterface is not available, cannot set entity state without transform offset.");
             const auto transformOutcome = transformInterface->GetTransform(simulatorFrameId, messageFrameId, time);
 
