@@ -29,7 +29,7 @@ namespace ROS2SimulationInterfaces
         const AZStd::string_view entityNamespace{ request.entity_namespace.c_str(), request.entity_namespace.size() };
         const AZStd::string_view messageFrameId{ request.initial_pose.header.frame_id.c_str(),
                                                  request.initial_pose.header.frame_id.size() };
-        const builtin_interfaces::msg::Time time = request.initial_pose.header.stamp;
+        const builtin_interfaces::msg::Time zeroTime = builtin_interfaces::msg::Time();
 
         // Validate entity name
         if (!name.empty() && !ValidateEntityName(name))
@@ -59,7 +59,7 @@ namespace ROS2SimulationInterfaces
         {
             auto transformInterface = ROS2::TFInterface::Get();
             AZ_Assert(transformInterface, "TFInterface is not available, cannot set entity state without transform offset.");
-            const auto transformOutcome = transformInterface->GetTransform(simulatorFrameId, messageFrameId, time);
+            const auto transformOutcome = transformInterface->GetTransform(simulatorFrameId, messageFrameId, zeroTime);
 
             if (transformOutcome.IsSuccess())
             {
