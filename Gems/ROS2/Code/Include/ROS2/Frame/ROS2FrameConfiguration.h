@@ -28,6 +28,7 @@ namespace ROS2
 
         bool m_publishTransform = true;
         bool m_isDynamic = false;
+        bool m_forceDynamic = false;
 
         //! Sets the effective namespace shown in the Editor.
         //! @param effectiveNamespace namespace to be set.

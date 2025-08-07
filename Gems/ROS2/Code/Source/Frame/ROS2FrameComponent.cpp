@@ -145,8 +145,8 @@ namespace ROS2
         {
             AZ_TracePrintf("ROS2FrameComponent", "Setting up %s", GetNamespacedFrameID().data());
 
-            // The frame will always be dynamic if it's a top entity.
-            if (IsTopLevel())
+            // The frame will always be dynamic if it is a top entity or if its configuration forces it to be dynamic..
+            if (IsTopLevel() || m_forceDynamic)
             {
                 m_isDynamic = true;
             }
@@ -298,6 +298,7 @@ namespace ROS2
                 ->Field("Frame Name", &ROS2FrameComponent::m_frameName)
                 ->Field("Joint Name", &ROS2FrameComponent::m_jointName)
                 ->Field("Publish Transform", &ROS2FrameComponent::m_publishTransform)
+                ->Field("Force Dynamic", &ROS2FrameComponent::m_forceDynamic)
                 ->Field("Namespace Configuration", &ROS2FrameComponent::m_namespaceConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -321,6 +322,11 @@ namespace ROS2
                         &ROS2FrameComponent::m_publishTransform,
                         "Publish Transform",
                         "Publish the transform of this frame.")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2FrameComponent::m_forceDynamic,
+                        "Force Dynamic",
+                        "Force the frame to be dynamic.")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2FrameComponent::m_namespaceConfiguration,
@@ -352,7 +358,8 @@ namespace ROS2
         , m_frameName(configuration.m_frameName)
         , m_jointName(configuration.m_jointName)
         , m_publishTransform(configuration.m_publishTransform)
-        , m_isDynamic(configuration.m_isDynamic){};
+        , m_isDynamic(configuration.m_isDynamic)
+        , m_forceDynamic(configuration.m_forceDynamic){};
 
     ROS2FrameConfiguration ROS2FrameComponent::GetConfiguration() const
     {
