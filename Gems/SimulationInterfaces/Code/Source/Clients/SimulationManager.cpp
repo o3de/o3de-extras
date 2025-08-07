@@ -440,6 +440,10 @@ namespace SimulationInterfaces
             }
         case simulation_interfaces::msg::SimulationState::STATE_NO_WORLD:
             {
+                // restore initial state for variables
+                m_isSimulationPaused = false;
+                m_levelLoaded = false;
+                m_numberOfPhysicsSteps = 0;
                 break;
             }
         case simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD:
