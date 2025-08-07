@@ -126,6 +126,7 @@ namespace ROS2
 
         bool m_publishTransform;
         bool m_isDynamic;
+        bool m_forceDynamic;
 
         AZStd::unique_ptr<ROS2Transform> m_ros2Transform;
     };
