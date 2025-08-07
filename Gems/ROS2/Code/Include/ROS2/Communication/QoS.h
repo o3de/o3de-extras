@@ -63,7 +63,7 @@ namespace ROS2
                         ->DataElement(AZ::Edit::UIHandlers::Default, &QoS::m_depth, "History depth", "Determines DDS publisher queue size");
                 }
             }
-        };
+        }
 
         //! Convert and return a rclcpp::QoS instance based on member values (Editor combos selection).
         //! @return a <a href="https://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1QoS.html">ROS2 QoS struct</a>.
@@ -74,7 +74,8 @@ namespace ROS2
         }
 
     private:
-        AZ::Crc32 OnQoSSelected()
+        //! Helper function for the UI to refresh attributes and values when QoS is selected.
+        AZ::Crc32 OnQoSSelected() const
         {
             return AZ::Edit::PropertyRefreshLevels::AttributesAndValues;
         }

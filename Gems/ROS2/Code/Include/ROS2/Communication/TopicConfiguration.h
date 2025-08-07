@@ -50,7 +50,7 @@ namespace ROS2
                         ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_qos, "QoS", "Quality of Service");
                 }
             }
-        };
+        }
 
         AZStd::string m_type = "std_msgs::msg::Empty"; //!< descriptive topic type for identification.
         AZStd::string m_topic = "default_topic"; //!< Topic to publish. Final topic will have a namespace added.
@@ -63,8 +63,7 @@ namespace ROS2
         }
 
     private:
-        QoS m_qos = rclcpp::SensorDataQoS();
-
+        //! Helper function for the UI to validate topic names.
         AZ::Outcome<void, AZStd::string> ValidateTopicField(void* newValue, const AZ::Uuid& valueType)
         {
             AZ::Outcome<void, AZStd::string> outcome;
@@ -72,5 +71,7 @@ namespace ROS2
 
             return outcome;
         }
+
+        QoS m_qos = rclcpp::SensorDataQoS();
     };
 } // namespace ROS2

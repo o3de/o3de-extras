@@ -197,7 +197,7 @@ namespace ROS2RobotImporter::SDFormat
         const AZStd::string remappedNamespace = HooksUtils::ValueOfAny(pluginParams, namespaceRemapNames);
         AZ::Outcome<void, AZStd::string> namespaceValidation = AZ::Failure("ROS2NamesBus not available");
         ROS2::ROS2NamesRequestBus::BroadcastResult(namespaceValidation, &ROS2::ROS2NamesRequests::ValidateNamespace, remappedNamespace);
-        if (namespaceValidation.IsSuccess())
+        if (!namespaceValidation.IsSuccess())
         {
             AZ_Warning("PluginParser", false, "Encountered invalid namespace name while parsing URDF/SDF plugin.");
         }
