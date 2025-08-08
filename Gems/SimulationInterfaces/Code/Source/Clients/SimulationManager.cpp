@@ -11,6 +11,7 @@
 #include "SimulationInterfaces/SimulationMangerRequestBus.h"
 #include "SimulationInterfaces/WorldResource.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Settings/SettingsRegistry.h>
 #include <AzFramework/Components/ConsoleBus.h>
@@ -18,6 +19,8 @@
 #include <DebugDraw/DebugDrawBus.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
+#include <simulation_interfaces/msg/result.hpp>
+#include <simulation_interfaces/msg/simulation_state.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 #include <simulation_interfaces/srv/get_current_world.hpp>
 
@@ -344,8 +347,15 @@ namespace SimulationInterfaces
         SetSimulationPaused(false);
     }
 
-    void SimulationManager::RestartSimulation(ReloadLevelCallback completionCallback)
+    AZ::Outcome<void, FailedResult> SimulationManager::RestartSimulation(ReloadLevelCallback completionCallback)
     {
+        // check if simulation has loaded level - if not it is impossible to restart it since there is no default state
+        if (m_simulationState == simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD ||
+            m_simulationState == simulation_interfaces::msg::SimulationState::STATE_NO_WORLD)
+        {
+            return AZ::Failure(
+                FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Cannot reset simulation without loaded level"));
+        }
         m_reloadLevelCallback = completionCallback;
         // We need to delete all entities before reloading the level
         DeletionCompletedCb deleteAllCompletion = [](const AZ::Outcome<void, FailedResult>& result)
@@ -357,6 +367,7 @@ namespace SimulationInterfaces
 
         // delete spawned entities
         SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequests::DeleteAllEntities, deleteAllCompletion);
+        return AZ::Success();
     }
 
     SimulationState SimulationManager::GetSimulationState() const
