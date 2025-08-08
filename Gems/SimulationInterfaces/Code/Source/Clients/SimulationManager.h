@@ -12,6 +12,7 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Script/ScriptTimePoint.h>
 #include <AzCore/std/containers/array.h>
+#include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/utility/pair.h>
 #include <AzFramework/Entity/EntityContextBus.h>
 #include <AzFramework/Input/Devices/Keyboard/InputDeviceKeyboard.h>
@@ -64,6 +65,7 @@ namespace SimulationInterfaces
         bool IsSimulationStepsActive() const override;
         SimulationState GetSimulationState() const override;
         AZ::Outcome<void, FailedResult> SetSimulationState(SimulationState stateToSet) override;
+        bool EntitiesOperationsPossible() override;
 
         // AZ::TickBus::Handler
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;

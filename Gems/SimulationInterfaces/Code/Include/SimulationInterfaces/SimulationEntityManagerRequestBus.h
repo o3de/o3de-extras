@@ -105,7 +105,7 @@ namespace SimulationInterfaces
 
         //! Reset the simulation to begin.
         //! This will revert the entire simulation to the initial state.
-        virtual void ResetAllEntitiesToInitialState() = 0;
+        virtual AZ::Outcome<void, FailedResult> ResetAllEntitiesToInitialState() = 0;
     };
 
     class SimulationInterfacesBusTraits : public AZ::EBusTraits

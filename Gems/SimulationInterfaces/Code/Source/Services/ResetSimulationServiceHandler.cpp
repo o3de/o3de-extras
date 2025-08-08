@@ -8,6 +8,7 @@
 
 #include "ResetSimulationServiceHandler.h"
 #include "Services/ROS2ServiceBase.h"
+#include "SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h"
 #include "SimulationInterfaces/Result.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Outcome/Outcome.h>
@@ -36,9 +37,18 @@ namespace ROS2SimulationInterfaces
         if (request.scope == Request::SCOPE_STATE)
         {
             Response response;
-            SimulationInterfaces::SimulationEntityManagerRequestBus::Broadcast(
-                &SimulationInterfaces::SimulationEntityManagerRequests::ResetAllEntitiesToInitialState);
-            response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
+            AZ::Outcome<void, SimulationInterfaces::FailedResult> resetingOutcome;
+            SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
+                resetingOutcome, &SimulationInterfaces::SimulationEntityManagerRequests::ResetAllEntitiesToInitialState);
+            if (resetingOutcome.IsSuccess())
+            {
+                response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
+            }
+            else
+            {
+                response.result.result = resetingOutcome.GetError().m_errorCode;
+                response.result.error_message = resetingOutcome.GetError().m_errorString.c_str();
+            }
             return response;
         }
 

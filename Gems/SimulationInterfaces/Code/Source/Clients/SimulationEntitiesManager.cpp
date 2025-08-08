@@ -11,6 +11,7 @@
 #include <Clients/SimulationFeaturesAggregator.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
+#include <SimulationInterfaces/SimulationMangerRequestBus.h>
 
 #include "CommonUtilities.h"
 #include <AzCore/Asset/AssetManager.h>
@@ -18,6 +19,7 @@
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Console/IConsole.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Settings/SettingsRegistry.h>
 #include <AzCore/std/containers/vector.h>
@@ -327,6 +329,14 @@ namespace SimulationInterfaces
 
     AZ::Outcome<EntityNameList, FailedResult> SimulationEntitiesManager::GetEntities(const EntityFilters& filter)
     {
+        bool canOperate = false;
+        SimulationManagerRequestBus::BroadcastResult(canOperate, &SimulationManagerRequests::EntitiesOperationsPossible);
+        if (!canOperate)
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Simulator needs to have loaded world to allow entities manipulation"));
+        }
         if (!filter.m_tagsFilter.m_tags.empty())
         {
             AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
@@ -400,6 +410,14 @@ namespace SimulationInterfaces
 
     AZ::Outcome<EntityState, FailedResult> SimulationEntitiesManager::GetEntityState(const AZStd::string& name)
     {
+        bool canOperate = false;
+        SimulationManagerRequestBus::BroadcastResult(canOperate, &SimulationManagerRequests::EntitiesOperationsPossible);
+        if (!canOperate)
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Simulator needs to have loaded world to allow entities manipulation"));
+        }
         const auto findIt = m_simulatedEntityToEntityIdMap.find(name);
         if (findIt == m_simulatedEntityToEntityIdMap.end())
         {
@@ -427,6 +445,14 @@ namespace SimulationInterfaces
 
     AZ::Outcome<MultipleEntitiesStates, FailedResult> SimulationEntitiesManager::GetEntitiesStates(const EntityFilters& filter)
     {
+        bool canOperate = false;
+        SimulationManagerRequestBus::BroadcastResult(canOperate, &SimulationManagerRequests::EntitiesOperationsPossible);
+        if (!canOperate)
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Simulator needs to have loaded world to allow entities manipulation"));
+        }
         if (!filter.m_tagsFilter.m_tags.empty())
         {
             AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
@@ -453,6 +479,14 @@ namespace SimulationInterfaces
 
     AZ::Outcome<void, FailedResult> SimulationEntitiesManager::SetEntityState(const AZStd::string& name, const EntityState& state)
     {
+        bool canOperate = false;
+        SimulationManagerRequestBus::BroadcastResult(canOperate, &SimulationManagerRequests::EntitiesOperationsPossible);
+        if (!canOperate)
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Simulator needs to have loaded world to allow entities manipulation"));
+        }
         const auto findIt = m_simulatedEntityToEntityIdMap.find(name);
         if (findIt == m_simulatedEntityToEntityIdMap.end())
         {
@@ -524,6 +558,16 @@ namespace SimulationInterfaces
 
     void SimulationEntitiesManager::DeleteEntity(const AZStd::string& name, DeletionCompletedCb completedCb)
     {
+        bool canOperate = false;
+        SimulationManagerRequestBus::BroadcastResult(canOperate, &SimulationManagerRequests::EntitiesOperationsPossible);
+        if (!canOperate)
+        {
+            completedCb(AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Simulator needs to have loaded world to allow entities manipulation")));
+            return;
+        }
+
         const auto findIt = m_simulatedEntityToEntityIdMap.find(name);
         if (findIt == m_simulatedEntityToEntityIdMap.end())
         {
@@ -570,6 +614,16 @@ namespace SimulationInterfaces
 
     void SimulationEntitiesManager::DeleteAllEntities(DeletionCompletedCb completedCb)
     {
+        bool canOperate = false;
+        SimulationManagerRequestBus::BroadcastResult(canOperate, &SimulationManagerRequests::EntitiesOperationsPossible);
+        if (!canOperate)
+        {
+            completedCb(AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Simulator needs to have loaded world to allow entities manipulation")));
+            return;
+        }
+
         if (m_spawnedTickets.empty())
         {
             // early return for empty scene
@@ -627,6 +681,15 @@ namespace SimulationInterfaces
         const bool allowRename,
         SpawnCompletedCb completedCb)
     {
+        bool canOperate = false;
+        SimulationManagerRequestBus::BroadcastResult(canOperate, &SimulationManagerRequests::EntitiesOperationsPossible);
+        if (!canOperate)
+        {
+            completedCb(AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Simulator needs to have loaded world to allow entities manipulation")));
+            return;
+        }
         if (!allowRename)
         {
             // If API user does not allow renaming, check if name is unique
@@ -775,8 +838,17 @@ namespace SimulationInterfaces
         return newName;
     }
 
-    void SimulationEntitiesManager::ResetAllEntitiesToInitialState()
+    AZ::Outcome<void, FailedResult> SimulationEntitiesManager::ResetAllEntitiesToInitialState()
     {
+        bool canOperate = false;
+        SimulationManagerRequestBus::BroadcastResult(canOperate, &SimulationManagerRequests::EntitiesOperationsPossible);
+        if (!canOperate)
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Simulator needs to have loaded world to allow entities manipulation"));
+        }
+
         for (const auto& [entityId, initialState] : m_entityIdToInitialState)
         {
             AZStd::vector<AZ::EntityId> entityAndDescendants;
@@ -784,6 +856,7 @@ namespace SimulationInterfaces
 
             SetEntitiesState(entityAndDescendants, initialState);
         }
+        return AZ::Success();
     }
 
     void SimulationEntitiesManager::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)

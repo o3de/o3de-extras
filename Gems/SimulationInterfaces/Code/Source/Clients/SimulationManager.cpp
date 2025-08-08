@@ -473,6 +473,13 @@ namespace SimulationInterfaces
         return AZ::Success();
     }
 
+    bool SimulationManager::EntitiesOperationsPossible()
+    {
+        return (
+            m_simulationState != simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD &&
+            m_simulationState != simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
+    }
+
     bool SimulationManager::IsTransitionForbiddenInEditor(SimulationState requestedState)
     {
         // in the Editor we cannot reload level, so going to STOPPED state is forbidden, we cannot quit the editor so going to QUITTING

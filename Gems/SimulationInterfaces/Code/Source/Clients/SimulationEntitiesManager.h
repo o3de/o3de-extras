@@ -55,7 +55,7 @@ namespace SimulationInterfaces
             const AZ::Transform& initialPose,
             const bool allowRename,
             SpawnCompletedCb completedCb) override;
-        void ResetAllEntitiesToInitialState() override;
+        AZ::Outcome<void, FailedResult> ResetAllEntitiesToInitialState() override;
 
         // AZ::TickBus::Handler interface implementation
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
