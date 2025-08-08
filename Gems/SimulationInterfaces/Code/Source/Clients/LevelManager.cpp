@@ -135,12 +135,10 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
-        if (!request.offlineOnly)
-        {
-            constexpr const char* errorMsg = "Online search is not implemented yet";
-            AZ_Warning("SimulationInterfaces", false, errorMsg);
-            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
-        }
+
+        constexpr const char* errorMsg = "Online search is not implemented yet, only offline search is performed";
+        AZ_Warning("SimulationInterfaces", request.offlineOnly, errorMsg);
+
         const auto allLevels = GetAllAvailableLevels();
         if (!allLevels.IsSuccess())
         {
