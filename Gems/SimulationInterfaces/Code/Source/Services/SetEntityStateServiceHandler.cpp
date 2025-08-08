@@ -8,7 +8,6 @@
 
 #include "SetEntityStateServiceHandler.h"
 #include <ROS2/TF/TransformInterface.h>
-#include "CommonUtilities.h"
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 

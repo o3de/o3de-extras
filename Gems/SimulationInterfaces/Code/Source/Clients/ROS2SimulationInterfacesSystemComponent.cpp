@@ -8,8 +8,6 @@
 
 #include "ROS2SimulationInterfacesSystemComponent.h"
 
-#include "ROS2/Utilities/ROS2Conversions.h"
-
 #include <Actions/SimulateStepsActionServerHandler.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
@@ -24,8 +22,8 @@
 #include <Services/GetEntitiesServiceHandler.h>
 #include <Services/GetEntitiesStatesServiceHandler.h>
 #include <Services/GetEntityStateServiceHandler.h>
-#include <Services/GetSimulatorFeaturesServiceHandler.h>
 #include <Services/GetSimulationStateServiceHandler.h>
+#include <Services/GetSimulatorFeaturesServiceHandler.h>
 #include <Services/GetSpawnablesServiceHandler.h>
 #include <Services/ROS2ServiceBase.h>
 #include <Services/ResetSimulationServiceHandler.h>
@@ -46,7 +44,6 @@ namespace ROS2SimulationInterfaces
             serializeContext->Class<ROS2SimulationInterfacesSystemComponent, AZ::Component>()->Version(0);
         }
     }
-
 
     void ROS2SimulationInterfacesSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
@@ -89,7 +86,6 @@ namespace ROS2SimulationInterfaces
         RegisterInterface<SetSimulationStateServiceHandler>(ros2Node);
         RegisterInterface<GetSimulationStateServiceHandler>(ros2Node);
         RegisterInterface<StepSimulationServiceHandler>(ros2Node);
-
     }
 
     void ROS2SimulationInterfacesSystemComponent::Deactivate()

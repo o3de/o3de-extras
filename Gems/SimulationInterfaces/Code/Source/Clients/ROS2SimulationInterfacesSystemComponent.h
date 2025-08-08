@@ -14,11 +14,9 @@
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/API/ApplicationAPI.h>
-#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/transform_listener.h>
-
 #include <Interfaces/IROS2HandlerBase.h>
+#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
+
 namespace ROS2SimulationInterfaces
 {
     class ROS2SimulationInterfacesSystemComponent

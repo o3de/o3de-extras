@@ -194,7 +194,7 @@ namespace ROS2
     AZ::Outcome<AZ::Transform, AZStd::string> ROS2SystemComponent::GetTransform(
         const AZStd::string& source, const AZStd::string& target, const builtin_interfaces::msg::Time& time)
     {
-        AZ_Error("ROS2SimulationInterfacesSystemComponent", m_tfBuffer, "This component was not activated, tf is not available" );
+        AZ_Error("ROS2SystemComponent", m_tfBuffer, "This component was not activated, tf is not available");
         if (!m_tfBuffer)
         {
             return AZ::Failure("Component was not activated, TFInterface is not available.");
@@ -204,8 +204,8 @@ namespace ROS2
         try
         {
             const auto transform = m_tfBuffer->lookupTransform(source.c_str(), target.c_str(), time);
-            const auto q = ROS2::ROS2Conversions::FromROS2Quaternion(transform.transform.rotation);
-            const auto t = ROS2::ROS2Conversions::FromROS2Vector3(transform.transform.translation);
+            const auto q = ROS2Conversions::FromROS2Quaternion(transform.transform.rotation);
+            const auto t = ROS2Conversions::FromROS2Vector3(transform.transform.translation);
             return AZ::Transform::CreateFromQuaternionAndTranslation(q, t);
 
         } catch (const tf2::TransformException& ex)
