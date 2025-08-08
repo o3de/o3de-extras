@@ -19,4 +19,7 @@ namespace ROS2SimulationInterfaces::RegistryUtilities
     //! @return optional string with service name. If setting registry entry exists, its value is returned.
     //!         Otherwise AZStd::nullopt is returned
     [[nodiscard]] AZStd::optional<AZStd::string> GetName(const AZStd::string& serviceType);
+
+    //! Get the default frame name for the simulator in ROS2
+    [[nodiscard]] AZStd::string GetSimulatorROS2Frame();
 } // namespace ROS2SimulationInterfaces::RegistryUtilities

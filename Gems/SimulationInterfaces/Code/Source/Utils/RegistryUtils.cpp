@@ -12,6 +12,9 @@
 
 namespace ROS2SimulationInterfaces::RegistryUtilities
 {
+    const char* const RegistryKeySimulatorFrameId = "/SimulationInterfaces/SimulatorFrame";
+    const char* const DefaultFrameId = "world";
+
     AZStd::optional<AZStd::string> GetName(const AZStd::string& serviceType)
     {
         AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get();
@@ -28,4 +31,19 @@ namespace ROS2SimulationInterfaces::RegistryUtilities
             return AZStd::nullopt;
         }
     }
+
+    AZStd::string GetSimulatorROS2Frame()
+    {
+        AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get();
+        AZ_Assert(settingsRegistry, "Settings Registry is not available");
+        AZStd::string frameId;
+        if (!settingsRegistry->Get(frameId, RegistryKeySimulatorFrameId))
+        {
+            frameId = DefaultFrameId;
+            AZ_Warning(
+                "Simulation interfaces", false, "No simulator frame ID found in settings registry, using default: %s", frameId.c_str());
+        }
+        return frameId;
+    }
+
 } // namespace ROS2SimulationInterfaces::RegistryUtilities

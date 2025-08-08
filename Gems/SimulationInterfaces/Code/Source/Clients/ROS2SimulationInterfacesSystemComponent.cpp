@@ -22,8 +22,8 @@
 #include <Services/GetEntitiesServiceHandler.h>
 #include <Services/GetEntitiesStatesServiceHandler.h>
 #include <Services/GetEntityStateServiceHandler.h>
-#include <Services/GetSimulatorFeaturesServiceHandler.h>
 #include <Services/GetSimulationStateServiceHandler.h>
+#include <Services/GetSimulatorFeaturesServiceHandler.h>
 #include <Services/GetSpawnablesServiceHandler.h>
 #include <Services/ROS2ServiceBase.h>
 #include <Services/ResetSimulationServiceHandler.h>
@@ -108,5 +108,4 @@ namespace ROS2SimulationInterfaces
         }
         return result;
     }
-
 } // namespace ROS2SimulationInterfaces

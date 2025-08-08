@@ -59,7 +59,7 @@ ly_add_target(
             Gem::ROS2.Static
             Gem::DebugDraw.API
 )
-target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp std_msgs geometry_msgs simulation_interfaces rclcpp_action)
+target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp std_msgs geometry_msgs simulation_interfaces rclcpp_action tf2_ros)
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
 ly_add_target(

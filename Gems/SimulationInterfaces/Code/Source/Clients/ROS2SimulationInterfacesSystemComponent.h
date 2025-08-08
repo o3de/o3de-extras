@@ -14,16 +14,15 @@
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/API/ApplicationAPI.h>
-
-#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
-
 #include <Interfaces/IROS2HandlerBase.h>
+#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
 
 namespace ROS2SimulationInterfaces
 {
     class ROS2SimulationInterfacesSystemComponent
         : public AZ::Component
         , public ROS2SimulationInterfacesRequestBus::Handler
+
     {
     public:
         AZ_COMPONENT_DECL(ROS2SimulationInterfacesSystemComponent);
