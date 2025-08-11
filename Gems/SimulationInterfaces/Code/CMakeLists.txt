@@ -55,6 +55,7 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
+            Gem::LmbrCentral.API
         PRIVATE
             Gem::ROS2.Static
             Gem::DebugDraw.API
