@@ -33,7 +33,8 @@
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
-#include <Clients/SimulationFeaturesAggregator.h>
+#include <AzFramework/Entity/EntityContextBus.h>
+#include <AzFramework/Entity/GameEntityContextBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <SimulationInterfaces/Bounds.h>
 #include <SimulationInterfaces/Result.h>
@@ -753,8 +754,9 @@ namespace SimulationInterfaces
         if (!initialPose.IsOrthogonal())
         {
             AZ_Warning("SimulationInterfaces", false, "Initial pose is not orthogonal");
-            completedCb(AZ::Failure(FailedResult(
-                simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
+            completedCb(
+                AZ::Failure(FailedResult(
+                    simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
             return;
         }
 
@@ -783,33 +785,39 @@ namespace SimulationInterfaces
             return;
         }
 
+        // // // create entity
+        // AZ::Entity *parentEntity = nullptr;
+        // AzFramework::GameEntityContextRequestBus::BroadcastResult(parentEntity,
+        // &AzFramework::GameEntityContextRequests::CreateGameEntity, name.c_str()); AZ_Assert(parentEntity, "Parent entity is not
+        // available."); parentEntity->CreateComponent<AzFramework::TransformComponent>(); auto ros2FramComponent =
+        // parentEntity->CreateComponent<ROS2::ROS2FrameComponent>(); ros2FramComponent->UpdateNamespaceConfiguration(entityNamespace,
+        // ROS2::NamespaceConfiguration::NamespaceStrategy::Custom); parentEntity->Activate(); AZ_Assert(parentEntity->GetState() ==
+        // AZ::Entity::State::Active, "Entity is not active"); const AZ::EntityId parentEntityId = parentEntity->GetId();
+        //
+
         auto ticket = AzFramework::EntitySpawnTicket(spawnableAsset);
         AzFramework::SpawnAllEntitiesOptionalArgs optionalArgs;
 
-        optionalArgs.m_preInsertionCallback = [initialPose, entityNamespace, name](auto id, auto view)
+        optionalArgs.m_preInsertionCallback = [initialPose, entityNamespace](auto id, auto view)
         {
             if (view.empty())
             {
                 return;
             }
+            AZ::Entity* root = *view.begin();
+            // auto ros2FramComponent = root->CreateComponent<ROS2::ROS2FrameComponent>();
+            // ros2FramComponent->UpdateNamespaceConfiguration(entityNamespace, ROS2::NamespaceConfiguration::NamespaceStrategy::Custom);
+            //
 
-            for (auto* entity : view)
+            for (auto& entity : view)
             {
-                ROS2::ROS2FrameComponent* frameComponent = entity->template FindComponent<ROS2::ROS2FrameComponent>();
-                if (frameComponent)
+                auto* ros2Frame = entity->template FindComponent<ROS2::ROS2FrameComponent>();
+                if (ros2Frame)
                 {
-                    const AZStd::string f = frameComponent->GetNamespacedFrameID();
-                    if (f.empty())
-                    {
-                        frameComponent->SetFrameID(name);
-                    }
-                    else
-                    {
-                        frameComponent->SetFrameID(AZStd::string::format("%s/%s", entityNamespace.c_str(), f.c_str()));
-                    }
+                    ros2Frame->UpdateNamespaceConfiguration(entityNamespace, ROS2::NamespaceConfiguration::NamespaceStrategy::Custom);
+                    break;
                 }
             }
-            const AZ::Entity* root = *view.begin();
             auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
             if (transformInterface)
             {
