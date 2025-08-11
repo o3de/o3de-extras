@@ -90,12 +90,14 @@ namespace SimulationInterfaces
     void SimulationEntitiesManager::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("AssetCatalogService"));
+        required.push_back(AZ_CRC_CE("SimulationManagerService"));
         required.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
     }
 
     void SimulationEntitiesManager::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
         dependent.push_back(AZ_CRC_CE("PhysicsService"));
+        dependent.push_back(AZ_CRC_CE("SimulationManagerService"));
         dependent.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
     }
 
