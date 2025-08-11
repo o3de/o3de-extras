@@ -21,8 +21,8 @@ namespace ROS2SimulationInterfaces
             SimulationInterfaces::LoadWorldRequest request;
             request.failOnUnsupportedElement = ros2Request.fail_on_unsupported_element;
             request.ignoreMissingOrUnsupportedAssets = ros2Request.ignore_missing_or_unsupported_assets;
-            request.levelResource.m_uri = ros2Request.world_resource.uri.c_str();
-            request.levelResource.m_resourceString = ros2Request.world_resource.resource_string.c_str();
+            request.levelResource.m_uri = ros2Request.uri.c_str();
+            request.levelResource.m_resourceString = ros2Request.resource_string.c_str();
             return request;
         }
     } // namespace
