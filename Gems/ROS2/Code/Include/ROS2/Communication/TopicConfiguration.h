@@ -8,9 +8,11 @@
 #pragma once
 
 #include <AzCore/RTTI/RTTI.h>
+#include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
 #include <ROS2/Communication/QoS.h>
+#include <ROS2/ROS2NamesBus.h>
 #include <ROS2/ROS2TypeIds.h>
 
 namespace ROS2
@@ -20,12 +22,34 @@ namespace ROS2
     {
     public:
         AZ_TYPE_INFO(TopicConfiguration, TopicConfigurationTypeId);
-        static void Reflect(AZ::ReflectContext* context);
 
         TopicConfiguration() = default;
         TopicConfiguration(const QoS& qos)
             : m_qos(qos)
         {
+        }
+
+        static void Reflect(AZ::ReflectContext* context)
+        {
+            if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+            {
+                serializeContext->Class<TopicConfiguration>()
+                    ->Version(1)
+                    ->Field("Type", &TopicConfiguration::m_type)
+                    ->Field("Topic", &TopicConfiguration::m_topic)
+                    ->Field("QoS", &TopicConfiguration::m_qos);
+
+                if (AZ::EditContext* ec = serializeContext->GetEditContext())
+                {
+                    ec->Class<TopicConfiguration>("Publisher configuration", "")
+                        ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_type, "Type", "Type of topic messages")
+                        ->Attribute(AZ::Edit::Attributes::ReadOnly, true)
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_topic, "Topic", "Topic with no namespace")
+                        ->Attribute(AZ::Edit::Attributes::ChangeValidate, &TopicConfiguration::ValidateTopicField)
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_qos, "QoS", "Quality of Service");
+                }
+            }
         }
 
         AZStd::string m_type = "std_msgs::msg::Empty"; //!< descriptive topic type for identification.
@@ -39,6 +63,15 @@ namespace ROS2
         }
 
     private:
+        //! Helper function for the UI to validate topic names.
+        AZ::Outcome<void, AZStd::string> ValidateTopicField(void* newValue, const AZ::Uuid& valueType)
+        {
+            AZ::Outcome<void, AZStd::string> outcome;
+            ROS2NamesRequestBus::BroadcastResult(outcome, &ROS2NamesRequests::ValidateTopicField, newValue, valueType);
+
+            return outcome;
+        }
+
         QoS m_qos = rclcpp::SensorDataQoS();
     };
 } // namespace ROS2

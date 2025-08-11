@@ -14,7 +14,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2NamesBus.h>
 
 namespace ROS2Controllers
 {
@@ -22,7 +22,9 @@ namespace ROS2Controllers
     {
         auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
         AZ_Assert(ros2Frame, "Missing Frame Component!");
-        AZStd::string namespacedAction = ROS2::ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), m_gripperActionServerName);
+        AZStd::string namespacedAction;
+        ROS2::ROS2NamesRequestBus::BroadcastResult(
+            namespacedAction, &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName, ros2Frame->GetNamespace(), m_gripperActionServerName);
         AZ_Printf("GripperActionServerComponent", "Creating Gripper Action Server: %s\n", namespacedAction.c_str());
         m_gripperActionServer = AZStd::make_unique<GripperActionServer>(namespacedAction, GetEntityId());
         AZ::TickBus::Handler::BusConnect();

@@ -9,7 +9,7 @@
 #include "ROS2SDFormatHooksUtils.h"
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Communication/TopicConfiguration.h>
-#include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2NamesBus.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
@@ -106,7 +106,7 @@ namespace ROS2RobotImporter::SDFormat
     namespace HooksUtils::PluginParser
     {
         // Inserts name (key) and value (val) of given parameter to map.
-        void ParseRegularContent(const sdf::Element& content, HooksUtils::PluginParams& remappings)
+        void ParseRegularContent(const sdf::Element& content, HooksUtils::PluginParams& remapping)
         {
             const AZStd::string contentName = content.GetName().c_str();
             const sdf::ParamPtr contentValuePtr = content.GetValue();
@@ -119,17 +119,17 @@ namespace ROS2RobotImporter::SDFormat
             const AZStd::string contentValue = contentValuePtr->GetAsString().c_str();
             if (!contentValue.empty())
             {
-                remappings[contentName] = contentValue;
+                remapping[contentName] = contentValue;
             }
         }
 
         // Parses parameters present in ros element, inserting them to the map.
-        void ParseRos2Remapping(const sdf::Element& rosContent, HooksUtils::PluginParams& remappings)
+        void ParseRos2Remapping(const sdf::Element& rosContent, HooksUtils::PluginParams& remapping)
         {
             if (rosContent.GetName() != "remapping" && rosContent.GetName() != "argument")
             {
                 // parameter other than remapping or argument can be handled as regular parameter
-                ParseRegularContent(rosContent, remappings);
+                ParseRegularContent(rosContent, remapping);
                 return;
             }
 
@@ -174,9 +174,13 @@ namespace ROS2RobotImporter::SDFormat
             }
             AZStd::string prevTopic = contentValue.substr(startKey, contentValue.size() - startKey);
 
-            if (ROS2::ROS2Names::ValidateTopic(newTopic).IsSuccess() && ROS2::ROS2Names::ValidateTopic(prevTopic).IsSuccess())
+            AZ::Outcome<void, AZStd::string> newTopicValidation = AZ::Failure("ROS2NamesBus not available");
+            AZ::Outcome<void, AZStd::string> prevTopicValidation = AZ::Failure("ROS2NamesBus not available");
+            ROS2::ROS2NamesRequestBus::BroadcastResult(newTopicValidation, &ROS2::ROS2NamesRequests::ValidateTopic, newTopic);
+            ROS2::ROS2NamesRequestBus::BroadcastResult(prevTopicValidation, &ROS2::ROS2NamesRequests::ValidateTopic, prevTopic);
+            if (newTopicValidation.IsSuccess() && prevTopicValidation.IsSuccess())
             {
-                remappings[prevTopic] = newTopic;
+                remapping[prevTopic] = newTopic;
             }
             else
             {
@@ -191,7 +195,9 @@ namespace ROS2RobotImporter::SDFormat
 
         const static AZStd::vector<AZStd::string> namespaceRemapNames = { "robotNamespace", "namespace" };
         const AZStd::string remappedNamespace = HooksUtils::ValueOfAny(pluginParams, namespaceRemapNames);
-        if (!ROS2::ROS2Names::ValidateNamespace(remappedNamespace).IsSuccess())
+        AZ::Outcome<void, AZStd::string> namespaceValidation = AZ::Failure("ROS2NamesBus not available");
+        ROS2::ROS2NamesRequestBus::BroadcastResult(namespaceValidation, &ROS2::ROS2NamesRequests::ValidateNamespace, remappedNamespace);
+        if (!namespaceValidation.IsSuccess())
         {
             AZ_Warning("PluginParser", false, "Encountered invalid namespace name while parsing URDF/SDF plugin.");
         }

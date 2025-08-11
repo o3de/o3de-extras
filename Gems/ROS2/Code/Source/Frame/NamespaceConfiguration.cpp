@@ -9,7 +9,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <ROS2/Frame/NamespaceConfiguration.h>
-#include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2NamesBus.h>
 
 namespace ROS2
 {
@@ -28,10 +28,17 @@ namespace ROS2
             m_namespace = "";
             break;
         case NamespaceStrategy::Default:
-            m_namespace = m_isRoot ? ROS2Names::RosifyName(m_entityName) : "";
+            if (m_isRoot)
+            {
+                ROS2NamesRequestBus::BroadcastResult(m_namespace, &ROS2NamesRequests::RosifyName, m_entityName);
+            }
+            else
+            {
+                m_namespace = "";
+            }
             break;
         case NamespaceStrategy::FromEntityName:
-            m_namespace = ROS2Names::RosifyName(m_entityName);
+            ROS2NamesRequestBus::BroadcastResult(m_namespace, &ROS2NamesRequests::RosifyName, m_entityName);
             break;
         case NamespaceStrategy::Custom:
             m_namespace = m_customNamespace;
@@ -48,6 +55,14 @@ namespace ROS2
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 
+    AZ::Outcome<void, AZStd::string> NamespaceConfiguration::ValidateNamespaceField(void* newValue, const AZ::Uuid& valueType)
+    {
+        AZ::Outcome<void, AZStd::string> outcome;
+        ROS2NamesRequestBus::BroadcastResult(outcome, &ROS2NamesRequests::ValidateNamespaceField, newValue, valueType);
+
+        return outcome;
+    }
+
     AZStd::string NamespaceConfiguration::GetNamespace() const
     {
         if (m_parentNamespace.empty())
@@ -60,7 +75,9 @@ namespace ROS2
             return m_parentNamespace;
         }
 
-        return ROS2Names::GetNamespacedName(m_parentNamespace, m_namespace);
+        AZStd::string namespacedName;
+        ROS2NamesRequestBus::BroadcastResult(namespacedName, &ROS2NamesRequests::GetNamespacedName, m_parentNamespace, m_namespace);
+        return namespacedName;
     }
 
     AZStd::string NamespaceConfiguration::GetNamespace(const AZStd::string& parentNamespace) const
@@ -75,7 +92,9 @@ namespace ROS2
             return parentNamespace;
         }
 
-        return ROS2Names::GetNamespacedName(parentNamespace, m_namespace);
+        AZStd::string namespacedName;
+        ROS2NamesRequestBus::BroadcastResult(namespacedName, &ROS2NamesRequests::GetNamespacedName, parentNamespace, m_namespace);
+        return namespacedName;
     }
 
     void NamespaceConfiguration::SetNamespace(const AZStd::string& ros2Namespace, NamespaceStrategy strategy)
@@ -131,7 +150,7 @@ namespace ROS2
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Custom, "Custom")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &NamespaceConfiguration::m_customNamespace, "Namespace", "Namespace")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &NamespaceConfiguration::IsNamespaceCustom)
-                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateNamespaceField)
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &NamespaceConfiguration::ValidateNamespaceField)
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &NamespaceConfiguration::UpdateNamespace);
             }
         }

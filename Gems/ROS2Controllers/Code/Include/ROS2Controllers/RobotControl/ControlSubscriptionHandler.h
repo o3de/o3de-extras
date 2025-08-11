@@ -10,7 +10,7 @@
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2NamesBus.h>
 #include <rclcpp/rclcpp.hpp>
 
 namespace ROS2Controllers
@@ -42,8 +42,13 @@ namespace ROS2Controllers
             if (!m_controlSubscription)
             {
                 auto ros2Frame = entity->FindComponent<ROS2::ROS2FrameComponent>();
-                AZStd::string namespacedTopic =
-                    ROS2::ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), subscriberConfiguration.m_topic);
+
+                AZStd::string namespacedTopic;
+                ROS2::ROS2NamesRequestBus::BroadcastResult(
+                    namespacedTopic,
+                    &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName,
+                    ros2Frame->GetNamespace(),
+                    subscriberConfiguration.m_topic);
 
                 auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
                 m_controlSubscription = ros2Node->create_subscription<T>(

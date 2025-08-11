@@ -7,10 +7,10 @@
  */
 
 #include "ROS2ImuSensorComponent.h"
-#include <ROS2/ROS2Bus.h>
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
+#include <ROS2/ROS2Bus.h>
+#include <ROS2/ROS2NamesBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
-#include <ROS2/Utilities/ROS2Names.h>
 
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <Source/RigidBodyComponent.h>
@@ -87,7 +87,9 @@ namespace ROS2Sensors
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
         m_imuMsg.header.frame_id = GetNamespacedFrameID().c_str();
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType];
-        const auto fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+        AZStd::string fullTopic;
+        ROS2::ROS2NamesRequestBus::BroadcastResult(
+            fullTopic, &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName, GetNamespace(), publisherConfig.m_topic);
         m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
 
         ConfigureSensor();

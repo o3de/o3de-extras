@@ -10,9 +10,9 @@
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
-#include <ROS2/Utilities/ROS2Conversions.h>
-#include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
+#include <ROS2/ROS2NamesBus.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 
 namespace ROS2Sensors
 {
@@ -105,13 +105,17 @@ namespace ROS2Sensors
     {
         ROS2SensorComponentBase::Activate();
         // "odom" is globally fixed frame for all robots, no matter the namespace
-        m_odometryMsg.header.frame_id = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), "odom").c_str();
+        AZStd::string frameId;
+        ROS2::ROS2NamesRequestBus::BroadcastResult(frameId, &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName, GetNamespace(), "odom");
+        m_odometryMsg.header.frame_id = frameId.c_str();
         m_odometryMsg.child_frame_id = GetNamespacedFrameID().c_str();
         auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor");
 
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[OdometryMsgType];
-        const auto fullTopic = ROS2::ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+        AZStd::string fullTopic;
+        ROS2::ROS2NamesRequestBus::BroadcastResult(
+            fullTopic, &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName, GetNamespace(), publisherConfig.m_topic);
         m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
 
         StartSensor(

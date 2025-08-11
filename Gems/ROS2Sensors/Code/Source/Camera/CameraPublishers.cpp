@@ -10,8 +10,8 @@
 #include "CameraSensor.h"
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/ROS2Bus.h>
+#include <ROS2/ROS2NamesBus.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
-#include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2Sensors
 {
@@ -77,7 +77,9 @@ namespace ROS2Sensors
         {
             for (const auto& [channel, configuration] : configurations)
             {
-                AZStd::string fullTopic = ROS2::ROS2Names::GetNamespacedName(cameraNamespace, configuration.m_topic);
+                AZStd::string fullTopic;
+                ROS2::ROS2NamesRequestBus::BroadcastResult(
+                    fullTopic, &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName, cameraNamespace, configuration.m_topic);
                 auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
                 auto publisher = ros2Node->create_publisher<PublishedData>(fullTopic.data(), configuration.GetQoS());
                 publishers[channel] = publisher;

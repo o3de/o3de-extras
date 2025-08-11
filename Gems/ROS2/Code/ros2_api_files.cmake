@@ -5,6 +5,7 @@
 
 set(FILES
     Include/ROS2/ROS2Bus.h
+    Include/ROS2/ROS2NamesBus.h
     Include/ROS2/ROS2TypeIds.h
     Include/ROS2/Clock/ROS2ClockRequestBus.h
     Include/ROS2/Communication/PublisherConfiguration.h
@@ -26,5 +27,4 @@ set(FILES
     Include/ROS2/TF/TransformInterface.h
     Include/ROS2/Utilities/ROS2Conversions.h
     Include/ROS2/Utilities/ROS2Conversions.inl
-    Include/ROS2/Utilities/ROS2Names.h
 )

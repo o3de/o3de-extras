@@ -16,8 +16,6 @@
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
-#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
-#include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2RobotImporter/SDFormatModelPluginImporterHook.h>
 #include <Source/EditorArticulationLinkComponent.h>

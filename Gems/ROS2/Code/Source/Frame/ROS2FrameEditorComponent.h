@@ -11,10 +11,8 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
-#include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
 #include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
-#include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2TypeIds.h>
 
 namespace ROS2

@@ -65,21 +65,26 @@ namespace ROS2
     {
         AzToolsFramework::EditorEntityContextNotificationBus::Handler::BusConnect();
         AzToolsFramework::EditorEvents::Bus::Handler::BusConnect();
+        ROS2NamesRequestBus::Handler::BusConnect();
     }
 
     void ROS2EditorSystemComponent::Deactivate()
     {
+        ROS2NamesRequestBus::Handler::BusDisconnect();
         AzToolsFramework::EditorEvents::Bus::Handler::BusDisconnect();
         AzToolsFramework::EditorEntityContextNotificationBus::Handler::BusDisconnect();
     }
 
     void ROS2EditorSystemComponent::OnStartPlayInEditorBegin()
     {
+        ROS2NamesRequestBus::Handler::BusDisconnect(); // ROS2NamesRequestBus will be handled by ROS2SystemComponent
         ROS2SystemComponent::Activate();
     }
+
     void ROS2EditorSystemComponent::OnStopPlayInEditor()
     {
         ROS2SystemComponent::Deactivate();
+        ROS2NamesRequestBus::Handler::BusConnect(); // ROS2NamesRequestBus will not be handled by ROS2SystemComponent anymore
     }
 
     AZ::Component* ROS2EditorSystemComponent::CreateROS2FrameEditorComponent(AZ::Entity& entity)

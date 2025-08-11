@@ -19,7 +19,7 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2NamesBus.h>
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
 
@@ -202,7 +202,11 @@ namespace ROS2
 
     AZStd::string ROS2FrameComponent::GetGlobalFrameName() const
     {
-        return ROS2Names::GetNamespacedName(GetNamespace(), AZStd::string("odom"));
+        AZStd::string namespacedFrameName;
+        ROS2NamesRequestBus::BroadcastResult(
+            namespacedFrameName, &ROS2NamesRequests::GetNamespacedName, GetNamespace(), AZStd::string("odom"));
+
+        return namespacedFrameName;
     }
 
     void ROS2FrameComponent::UpdateNamespaceConfiguration(
@@ -254,7 +258,9 @@ namespace ROS2
 
     AZStd::string ROS2FrameComponent::GetNamespacedFrameID() const
     {
-        return ROS2Names::GetNamespacedName(GetNamespace(), m_frameName);
+        AZStd::string namespacedFrameID;
+        ROS2NamesRequestBus::BroadcastResult(namespacedFrameID, &ROS2NamesRequests::GetNamespacedName, GetNamespace(), m_frameName);
+        return namespacedFrameID;
     }
 
     void ROS2FrameComponent::SetFrameID(const AZStd::string& frameId)
@@ -275,7 +281,9 @@ namespace ROS2
 
     AZ::Name ROS2FrameComponent::GetNamespacedJointName() const
     {
-        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_jointName).c_str());
+        AZStd::string namespacedJointName;
+        ROS2NamesRequestBus::BroadcastResult(namespacedJointName, &ROS2NamesRequests::GetNamespacedName, GetNamespace(), m_jointName);
+        return AZ::Name(namespacedJointName.c_str());
     }
 
     void ROS2FrameComponent::SetJointName(const AZStd::string& jointName)
