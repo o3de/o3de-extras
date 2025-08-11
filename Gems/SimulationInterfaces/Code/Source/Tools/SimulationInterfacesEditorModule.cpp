@@ -52,10 +52,8 @@ namespace SimulationInterfaces
                     azrtti_typeid<ROS2SimulationInterfaces::ROS2SimulationInterfacesEditorSystemComponent>(),
                 };
             }
-            else
-            {
-                return AZ::ComponentTypeList{};
-            }
+
+            return AZ::ComponentTypeList{};
         }
     };
 } // namespace SimulationInterfaces
