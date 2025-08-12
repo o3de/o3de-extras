@@ -14,9 +14,10 @@ To understand how the manipulation feature works in O3DE, please refer to [Joint
 Make sure that your system meets [Requirements](https://development--o3deorg.netlify.app/docs/welcome-guide/requirements/).
 
 Install ROS 2 dependencies for this template:
-```bash
-sudo apt install ros-${ROS_DISTRO}-moveit ros-${ROS_DISTRO}-moveit-resources ros-${ROS_DISTRO}-depth-image-proc
+```shell
+sudo apt install ros-${ROS_DISTRO}-moveit ros-${ROS_DISTRO}-moveit-resources ros-${ROS_DISTRO}-depth-image-proc ros-${ROS_DISTRO}-simulation-interfaces
 ```
+
 ## How to set up a new project with the template
 
 Please follow the instructions in [ROS 2 Gem documentation](https://development--o3deorg.netlify.app/docs/user-guide/interactivity/robotics/project-configuration/)
@@ -42,7 +43,7 @@ The simulated robot is imported from public repository [panda_description](https
 
 And run the launch file in the project:
 
-```bash
+```shell
 ros2 launch Examples/panda_moveit_config_demo.launch.py
 ```
 
@@ -51,6 +52,39 @@ Now you should be able to use `Motion Planning` from `moveit_ros_visualization p
 To understand more about MoveIt and robotic manipulation, see [tutorials](https://moveit.picknik.ai/main/doc/tutorials/quickstart_in_rviz/quickstart_in_rviz_tutorial.html#getting-started).
 
 ![Panda rviz](Screenshots/RoboticManipulationRviz.png)
+
+
+## Simulation interfaces
+
+This template has [Simulation Interfaces](https://www.docs.o3de.org/docs/user-guide/interactivity/robotics/simulation-interfaces/) enabled. That allow you to spawn, move and despawn elements of the scene.
+
+To list spawnables items you can call service:
+```shell 
+ros2 service call /get_spawnables simulation_interfaces/srv/GetSpawnables 
+```
+
+To spawn object relative to robot (make sure that `panda_moveit_config_demo.launch.py` was launched):
+```shell
+ros2 service call /spawn_entity simulation_interfaces/srv/SpawnEntity '{
+    name: "Foo",
+    uri: "product_asset:///assets/prefabs/yellow_cube.spawnable",
+    entity_namespace: "Foo",
+    initial_pose:
+    {
+        header: {frame_id: "panda_link0"},
+        pose: {
+            position : {x: 0.4, y: 0.0, z: 1.0}
+        }
+    }
+}'
+```
+
+To despawn previously spawned box simply call:
+
+```shell
+ros2 service call /delete_entity simulation_interfaces/srv/DeleteEntity '{entity: "Foo"}'
+```
+To learn more please go to  [Simulation Interfaces](https://www.docs.o3de.org/docs/user-guide/interactivity/robotics/simulation-interfaces/).
 
 ## Working with custom manipulator
 

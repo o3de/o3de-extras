@@ -1,4 +1,8 @@
 {
+    "SimulationInterfaces": {
+        "SimulatorFrame": "world_simulator_frame",
+        "StartInStoppedState": false
+    },
     "O3DE":
     {
         "InputSystem":
@@ -8,9 +12,7 @@
                 "CaptureMouseCursor": false
             }
         },
-        "SimulationInterfaces": {
-        	"SimulatorFrame": "world_simulator_frame",
-    	},
+
         "ROS2":
         {
             "SteadyClock" : true,
