@@ -785,16 +785,6 @@ namespace SimulationInterfaces
             return;
         }
 
-        // // // create entity
-        // AZ::Entity *parentEntity = nullptr;
-        // AzFramework::GameEntityContextRequestBus::BroadcastResult(parentEntity,
-        // &AzFramework::GameEntityContextRequests::CreateGameEntity, name.c_str()); AZ_Assert(parentEntity, "Parent entity is not
-        // available."); parentEntity->CreateComponent<AzFramework::TransformComponent>(); auto ros2FramComponent =
-        // parentEntity->CreateComponent<ROS2::ROS2FrameComponent>(); ros2FramComponent->UpdateNamespaceConfiguration(entityNamespace,
-        // ROS2::NamespaceConfiguration::NamespaceStrategy::Custom); parentEntity->Activate(); AZ_Assert(parentEntity->GetState() ==
-        // AZ::Entity::State::Active, "Entity is not active"); const AZ::EntityId parentEntityId = parentEntity->GetId();
-        //
-
         auto ticket = AzFramework::EntitySpawnTicket(spawnableAsset);
         AzFramework::SpawnAllEntitiesOptionalArgs optionalArgs;
 
@@ -805,13 +795,10 @@ namespace SimulationInterfaces
                 return;
             }
             AZ::Entity* root = *view.begin();
-            // auto ros2FramComponent = root->CreateComponent<ROS2::ROS2FrameComponent>();
-            // ros2FramComponent->UpdateNamespaceConfiguration(entityNamespace, ROS2::NamespaceConfiguration::NamespaceStrategy::Custom);
-            //
 
-            for (auto& entity : view)
+            for (AZ::Entity* entity : view)
             {
-                auto* ros2Frame = entity->template FindComponent<ROS2::ROS2FrameComponent>();
+                auto* ros2Frame = entity->FindComponent<ROS2::ROS2FrameComponent>();
                 if (ros2Frame)
                 {
                     ros2Frame->UpdateNamespaceConfiguration(entityNamespace, ROS2::NamespaceConfiguration::NamespaceStrategy::Custom);
