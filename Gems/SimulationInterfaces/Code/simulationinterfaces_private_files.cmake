@@ -13,6 +13,8 @@ set(FILES
     Source/Clients/SimulationEntitiesManager.h
     Source/Clients/CommonUtilities.cpp
     Source/Clients/CommonUtilities.h
+    Source/Clients/NamedPosesManager.cpp
+    Source/Clients/NamedPosesManager.h
     Source/Clients/SimulationFeaturesAggregator.cpp
     Source/Clients/SimulationFeaturesAggregator.h
     Source/Clients/ROS2SimulationInterfacesSystemComponent.cpp
@@ -26,14 +28,14 @@ set(FILES
     Source/Services/GetEntitiesServiceHandler.h
     Source/Services/DeleteEntityServiceHandler.cpp
     Source/Services/DeleteEntityServiceHandler.h
-    Source/Services/GetEntitiesServiceHandler.cpp
-    Source/Services/GetEntitiesServiceHandler.h
+    Source/Services/GetNamedPoseBoundsServiceHandler.cpp
+    Source/Services/GetNamedPoseBoundsServiceHandler.h
+    Source/Services/GetNamedPosesServiceHandler.cpp
+    Source/Services/GetNamedPosesServiceHandler.h
     Source/Services/GetEntitiesStatesServiceHandler.cpp
     Source/Services/GetEntitiesStatesServiceHandler.h
     Source/Services/GetEntityStateServiceHandler.cpp
     Source/Services/GetEntityStateServiceHandler.h
-    Source/Services/DeleteEntityServiceHandler.cpp
-    Source/Services/DeleteEntityServiceHandler.h
     Source/Services/SetEntityStateServiceHandler.cpp
     Source/Services/SetEntityStateServiceHandler.h
     Source/Services/GetSpawnablesServiceHandler.cpp
@@ -53,4 +55,6 @@ set(FILES
     Source/Utils/RegistryUtils.cpp
     Source/Utils/RegistryUtils.h
     Source/Utils/Utils.h
+    Source/Components/NamedPoseComponent.cpp
+    Source/Components/NamedPoseComponent.h
 )

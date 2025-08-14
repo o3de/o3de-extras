@@ -55,6 +55,7 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
+            Gem::LmbrCentral.API
         PRIVATE
             Gem::ROS2.Static
             Gem::DebugDraw.API
@@ -145,6 +146,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
             PUBLIC
                 AZ::AzToolsFramework
                 Gem::ROS2.API
+                Gem::LmbrCentral.API
                 ${gem_name}.Private.Object
     )
 
