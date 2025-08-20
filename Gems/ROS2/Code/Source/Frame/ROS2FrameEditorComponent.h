@@ -12,8 +12,8 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
+#include <ROS2/Frame/ROS2FrameComponentBus.h>
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
-#include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2/ROS2TypeIds.h>
 
 namespace ROS2
@@ -27,7 +27,7 @@ namespace ROS2
     //! @note An entity can only have a single ROS2FrameEditorComponent.
     class ROS2FrameEditorComponent
         : public AzToolsFramework::Components::EditorComponentBase
-        , public ROS2FrameEditorComponentBus::Handler
+        , public ROS2FrameComponentBus::Handler
         , public AZ::EntityBus::Handler
         , public ROS2FrameInternalComponentBus::Handler
     {

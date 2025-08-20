@@ -149,12 +149,12 @@ namespace ROS2
             EnableTransformPublishing();
         }
 
-        ROS2FrameEditorComponentBus::Handler::BusConnect(GetEntityId());
+        ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2FrameComponent::Deactivate()
     {
-        ROS2FrameEditorComponentBus::Handler::BusDisconnect();
+        ROS2FrameComponentBus::Handler::BusDisconnect();
         if (m_configuration.m_publishTransform && IsDynamic())
         {
             AZ::TickBus::Handler::BusDisconnect();

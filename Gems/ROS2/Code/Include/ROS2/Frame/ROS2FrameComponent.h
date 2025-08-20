@@ -12,8 +12,8 @@
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
+#include <ROS2/Frame/ROS2FrameComponentBus.h>
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
-#include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2TypeIds.h>
 
@@ -32,7 +32,7 @@ namespace ROS2
     class ROS2FrameComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
-        , public ROS2FrameEditorComponentBus::Handler
+        , public ROS2FrameComponentBus::Handler
     {
         friend class JsonFrameComponentConfigSerializer;
 

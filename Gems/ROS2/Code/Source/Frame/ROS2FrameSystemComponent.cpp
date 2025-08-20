@@ -17,7 +17,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
+#include <ROS2/Frame/ROS2FrameComponentBus.h>
 
 namespace ROS2
 {
@@ -151,7 +151,7 @@ namespace ROS2
                     return path;
                 }
             }
-            if (ROS2FrameEditorComponentBus::HasHandlers(nextEntityId))
+            if (ROS2FrameComponentBus::HasHandlers(nextEntityId))
             {
                 path.push_back(nextEntityId);
                 break;
@@ -258,8 +258,8 @@ namespace ROS2
         auto predecessors = GetAllPredecessors(frameToRegister);
         for (const auto& predecessor : predecessors)
         {
-            ROS2FrameEditorComponentNotificationBus::Event(
-                predecessor, &ROS2FrameEditorComponentNotificationBus::Events::OnChildAdded, frameToRegister);
+            ROS2FrameComponentNotificationBus::Event(
+                predecessor, &ROS2FrameComponentNotificationBus::Events::OnChildAdded, frameToRegister);
         }
     }
 
@@ -334,8 +334,8 @@ namespace ROS2
 
         for (const auto& predecessor : predecessors)
         {
-            ROS2FrameEditorComponentNotificationBus::Event(
-                predecessor, &ROS2FrameEditorComponentNotificationBus::Events::OnChildRemoved, frameToUnregister);
+            ROS2FrameComponentNotificationBus::Event(
+                predecessor, &ROS2FrameComponentNotificationBus::Events::OnChildRemoved, frameToUnregister);
         }
     }
 
@@ -428,8 +428,8 @@ namespace ROS2
         {
             for (const auto& oldPredecessor : oldPredecessors)
             {
-                ROS2FrameEditorComponentNotificationBus::Event(
-                    oldPredecessor, &ROS2FrameEditorComponentNotificationBus::Events::OnChildRemoved, successor);
+                ROS2FrameComponentNotificationBus::Event(
+                    oldPredecessor, &ROS2FrameComponentNotificationBus::Events::OnChildRemoved, successor);
             }
         }
 
@@ -444,8 +444,8 @@ namespace ROS2
         {
             for (const auto& newPredecessor : newPredecessors)
             {
-                ROS2FrameEditorComponentNotificationBus::Event(
-                    newPredecessor, &ROS2FrameEditorComponentNotificationBus::Events::OnChildAdded, successor);
+                ROS2FrameComponentNotificationBus::Event(
+                    newPredecessor, &ROS2FrameComponentNotificationBus::Events::OnChildAdded, successor);
             }
         }
 
@@ -456,7 +456,7 @@ namespace ROS2
     void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZ::EntityId frameParentEntity, bool isActive)
     {
         AZStd::string ros2Namespace;
-        ROS2FrameEditorComponentBus::EventResult(ros2Namespace, frameParentEntity, &ROS2FrameEditorComponentBus::Events::GetNamespace);
+        ROS2FrameComponentBus::EventResult(ros2Namespace, frameParentEntity, &ROS2FrameComponentBus::Events::GetNamespace);
         UpdateNamespaces(frameEntity, ros2Namespace, isActive);
     }
 
@@ -467,7 +467,7 @@ namespace ROS2
         AZStd::string ros2Namespace;
         if (isActive)
         {
-            ROS2FrameEditorComponentBus::EventResult(ros2Namespace, frameEntity, &ROS2FrameEditorComponentBus::Events::GetNamespace);
+            ROS2FrameComponentBus::EventResult(ros2Namespace, frameEntity, &ROS2FrameComponentBus::Events::GetNamespace);
         }
         else
         {
