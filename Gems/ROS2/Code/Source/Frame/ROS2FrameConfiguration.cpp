@@ -57,7 +57,16 @@ namespace ROS2
     void ROS2FrameConfiguration::SetEffectiveNamespace(const AZStd::string& effectiveNamespace)
     {
         m_effectiveNamespace = effectiveNamespace;
-        m_fullName = effectiveNamespace + '/' + m_frameName;
+
+        // Update the full name display
+        if (effectiveNamespace.empty())
+        {
+            m_fullName = m_frameName;
+        }
+        else
+        {
+            m_fullName = effectiveNamespace + "/" + m_frameName;
+        }
     }
 
 } // namespace ROS2

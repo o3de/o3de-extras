@@ -6,6 +6,7 @@
  *
  */
 
+#include "AzCore/Outcome/Outcome.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <ROS2/Frame/NamespaceConfiguration.h>
@@ -25,8 +26,9 @@ namespace ROS2
         switch (m_namespaceStrategy)
         {
         case NamespaceStrategy::Empty:
-            m_namespace = "";
+            m_namespace.clear();
             break;
+
         case NamespaceStrategy::Default:
             if (m_isRoot)
             {
@@ -34,17 +36,21 @@ namespace ROS2
             }
             else
             {
-                m_namespace = "";
+                m_namespace.clear();
             }
             break;
+
         case NamespaceStrategy::FromEntityName:
             ROS2NamesRequestBus::BroadcastResult(m_namespace, &ROS2NamesRequests::RosifyName, m_entityName);
             break;
+
         case NamespaceStrategy::Custom:
             m_namespace = m_customNamespace;
             break;
+
         default:
-            AZ_Assert(false, "Unhandled namespace strategy");
+            AZ_Error("NamespaceConfiguration", false, "Unhandled namespace strategy: %d", static_cast<int>(m_namespaceStrategy));
+            m_namespace.clear();
             break;
         }
     }
@@ -57,9 +63,8 @@ namespace ROS2
 
     AZ::Outcome<void, AZStd::string> NamespaceConfiguration::ValidateNamespaceField(void* newValue, const AZ::Uuid& valueType)
     {
-        AZ::Outcome<void, AZStd::string> outcome;
+        AZ::Outcome<void, AZStd::string> outcome = AZ::Failure<AZStd::string>("ROS2NameRequests EBus is not available");
         ROS2NamesRequestBus::BroadcastResult(outcome, &ROS2NamesRequests::ValidateNamespaceField, newValue, valueType);
-
         return outcome;
     }
 
@@ -99,7 +104,6 @@ namespace ROS2
 
     void NamespaceConfiguration::SetNamespace(const AZStd::string& ros2Namespace, NamespaceStrategy strategy)
     {
-        m_namespace = ros2Namespace;
         m_namespaceStrategy = strategy;
 
         if (strategy == NamespaceStrategy::Custom)
@@ -123,7 +127,7 @@ namespace ROS2
 
     void NamespaceConfiguration::Init()
     {
-        // Make sure that the namespace is up to date.
+        // Ensure namespace is properly initialized
         OnNamespaceStrategySelected();
     }
 

@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include "AzCore/Component/ComponentBus.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/EBus/Policies.h>
@@ -71,4 +72,29 @@ namespace ROS2
 
     using ROS2FrameSystemInterface = AZ::Interface<ROS2FrameSystemRequests>;
     using ROS2FrameSystemBus = AZ::EBus<ROS2FrameSystemRequests>;
+
+    class ROS2FrameInternalComponentRequests : public AZ::ComponentBus
+    {
+    public:
+        AZ_RTTI(ROS2FrameInternalComponentRequests, "{52221A90-9DBD-4834-B661-C080D188B4B3}");
+
+        static const AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
+        static const AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
+        using BusIdType = AZ::EntityId;
+
+        //! Find the parent frame of the entity.
+        //! @return entityId of the parent frame or an invalid entityId if the frame is top level.
+        virtual AZ::EntityId GetFrameParent() const = 0;
+
+        //! Find all frame children of the frame.
+        //! @return set of all entityIds of children. Empty if no children or the frameEntityId is invalid.
+        virtual AZStd::set<AZ::EntityId> GetFrameChildren() const = 0;
+
+        //! Update the parent namespace and effective namespace.
+        //! This method should be called when updating the namespaces of all children of the frameEntity with changed namespace.
+        //! @param parentNamespace The namespace of the parent frame.
+        virtual void UpdateNamespace(const AZStd::string& parentNamespace) = 0;
+    };
+
+    using ROS2FrameInternalComponentBus = AZ::EBus<ROS2FrameInternalComponentRequests>;
 } // namespace ROS2

@@ -462,7 +462,7 @@ namespace ROS2
 
     void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentNamespace, bool isActive)
     {
-        ROS2FrameEditorComponentBus::Event(frameEntity, &ROS2FrameEditorComponentBus::Events::UpdateNamespace, parentNamespace);
+        ROS2FrameInternalComponentBus::Event(frameEntity, &ROS2FrameInternalComponentBus::Events::UpdateNamespace, parentNamespace);
         const AZStd::set<AZ::EntityId>& children = m_frameChildren.find(frameEntity)->second;
         AZStd::string ros2Namespace;
         if (isActive)

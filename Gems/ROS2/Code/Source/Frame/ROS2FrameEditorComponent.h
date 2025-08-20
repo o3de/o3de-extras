@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include "Frame/ROS2FrameSystemBus.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzFramework/Components/TransformComponent.h>
@@ -26,6 +27,7 @@ namespace ROS2
         : public AzToolsFramework::Components::EditorComponentBase
         , public ROS2FrameEditorComponentBus::Handler
         , public AZ::EntityBus::Handler
+        , public ROS2FrameInternalComponentBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2FrameEditorComponent, ROS2FrameEditorComponentTypeId, AzToolsFramework::Components::EditorComponentBase);

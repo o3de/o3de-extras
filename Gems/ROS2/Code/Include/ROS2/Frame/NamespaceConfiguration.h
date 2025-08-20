@@ -14,71 +14,77 @@
 
 namespace ROS2
 {
-    //! Configuration for handling of namespaces.
-    //! Namespaces are useful for various ROS2 components. This structure encapsulates the namespace itself,
-    //! composing namespaces and context-dependent default values.
-    //! @note This structure is handled through ROS2FrameComponent.
+    //! Configuration for handling ROS2 namespaces.
+    //!
+    //! Namespaces are essential for organizing ROS2 components, especially in multi-robot
+    //! simulations. This structure encapsulates namespace management, composition,
+    //! and context-dependent default values.
+    //!
+    //! @note This structure is managed through ROS2FrameComponent and provides
+    //!       flexible namespace strategies for different use cases.
     struct NamespaceConfiguration
     {
     public:
         AZ_TYPE_INFO(NamespaceConfiguration, NamespaceConfigurationTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
-        //! A choice of methods to handle namespaces.
-        //! @note Top level ROS2FrameComponent will likely be associated with an interesting object (robot). For multi-robot
-        //! simulations, namespaces are often derived from the robot name itself. For this reason, the default behavior
-        //! for top level ROS2FrameComponent is to generate the namespace from entity name.
+        //! Strategy for determining namespace values.
+        //! @note For multi-robot simulations, top-level ROS2FrameComponents typically
+        //!       represent robots and their namespaces are often derived from entity names.
+        //!       This is why the default behavior for top-level frames is FromEntityName.
         enum class NamespaceStrategy
         {
-            Default, //!< FromEntityName for top-level frames, Empty otherwise.
-            Empty, //!< An empty, blank namespace
-            FromEntityName, //!< Generate from Entity name, but substitute disallowed characters through RosifyName.
-            Custom //!< Non-empty and based on user-provided value.
+            Default, //!< FromEntityName for top-level frames, Empty for others
+            Empty, //!< Empty namespace (no prefix)
+            FromEntityName, //!< Generate from entity name using ROS2 naming conventions
+            Custom //!< User-defined namespace
         };
 
-        //! Set namespace based on context.
-        //! @param isRoot Whether or not the namespace belongs to top-level entity in the entity hierarchy.
-        //! @param entityName Raw (not ros-ified) name of the entity to which the namespace belongs.
+        //! Initialize namespace based on entity context.
+        //! @param isRoot Whether this namespace belongs to a top-level entity
+        //! @param entityName Raw entity name (will be converted to ROS2 naming conventions)
         void PopulateNamespace(bool isRoot, const AZStd::string& entityName);
 
-        //! Get the namespace of the frame, based on the parent namespace from the ROS2FrameSystemComponent.
-        //! @return namespace of the frame.
+        //! Get the complete namespace including parent namespaces.
+        //! @return Full namespace path from the namespace hierarchy
         AZStd::string GetNamespace() const;
 
-        //! Get the namespace of the frame, based on the provided namespace.
-        //! @param parentNamespace namespace of the parent frame.
-        //! @return namespace of the frame.
+        //! Get the namespace with explicit parent namespace.
+        //! @param parentNamespace The parent namespace to use
+        //! @return Combined namespace including the provided parent
         AZStd::string GetNamespace(const AZStd::string& parentNamespace) const;
 
-        //! Update namespace and strategy.
-        //! @param ros2Namespace Desired namespace.
-        //! @param strategy Namespace strategy.
+        //! Update namespace and strategy simultaneously.
+        //! @param ros2Namespace The desired namespace value
+        //! @param strategy The namespace strategy to apply
         void SetNamespace(const AZStd::string& ros2Namespace, NamespaceStrategy strategy);
 
-        //! Update the parents namespace.
-        //! @param parentNamespace parent namespace.
+        //! Set the parent namespace.
+        //! @param parentNamespace The namespace from parent frame
         void SetParentNamespace(const AZStd::string& parentNamespace);
 
-        //! Initializes the namespace configuration.
-        //! This function should be called in the Init functions of frame components.
+        //! Initialize the namespace configuration.
+        //! @note This should be called in component Init() methods
         void Init();
 
     private:
-        AZStd::string m_customNamespace = ""; //!< Custom namespace that can be set by the user
-        AZStd::string m_namespace = ""; //!< Current namespace (might be custom); set automatically
-        AZStd::string m_parentNamespace = ""; //!< Parent namespace (might be custom); set automatically
+        AZStd::string m_customNamespace; //!< User-defined namespace
+        AZStd::string m_namespace; //!< Current effective namespace
+        AZStd::string m_parentNamespace; //!< Parent namespace from hierarchy
         NamespaceStrategy m_namespaceStrategy = NamespaceStrategy::Default;
-        bool m_isRoot;
-        AZStd::string m_entityName;
+        bool m_isRoot = false; //!< Whether this is a root-level frame
+        AZStd::string m_entityName; //!< Raw entity name
 
-        //! Determine if namespace is using the Custom namespace strategy
+        //! Check if using custom namespace strategy.
         bool IsNamespaceCustom() const;
 
-        //! Update the namespace based on the current attributes
+        //! Update namespace based on current strategy and context.
         void UpdateNamespace();
 
-        //! Helpers methods for UI
+        //! UI callback for strategy selection.
         AZ::Crc32 OnNamespaceStrategySelected();
+
+        //! Validation callback for namespace input.
         AZ::Outcome<void, AZStd::string> ValidateNamespaceField(void* newValue, const AZ::Uuid& valueType);
     };
 } // namespace ROS2

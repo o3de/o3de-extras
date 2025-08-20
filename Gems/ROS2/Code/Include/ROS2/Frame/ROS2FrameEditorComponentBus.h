@@ -11,11 +11,12 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/std/containers/set.h>
 #include <AzFramework/Components/TransformComponent.h>
+#include <ROS2/Frame/ROS2FrameConfiguration.h>
 
 namespace ROS2
 {
-    //! Interface for the ROS2FrameEditorComponent.
-    //! Used to change and get information about the ROS2FrameEditorComponent.
+    //! Interface for the ROS2FrameComponent.
+    //! Used to change and get information about the ROS2FrameComponent.
     class ROS2FrameEditorComponentRequests : public AZ::ComponentBus
     {
     public:
@@ -41,19 +42,6 @@ namespace ROS2
         //! @return A complete namespace (including parent namespaces)
         virtual AZStd::string GetNamespace() const = 0;
 
-        //! Find the parent frame of the entity.
-        //! @return entityId of the parent frame or an invalid entityId if the frame is top level.
-        virtual AZ::EntityId GetFrameParent() const = 0;
-
-        //! Find all frame children of the frame.
-        //! @return set of all entityIds of children. Empty if no children or the frameEntityId is invalid.
-        virtual AZStd::set<AZ::EntityId> GetFrameChildren() const = 0;
-
-        //! Update the parent namespace and effective namespace.
-        //! This method should be called when updating the namespaces of all children of the frameEntity with changed namespace.
-        //! @param parentNamespace The namespace of the parent frame.
-        virtual void UpdateNamespace(const AZStd::string& parentNamespace) = 0;
-
         //! Global frame name in ros2 ecosystem.
         //! @return The name of the global frame with namespace attached. It is typically "odom", "map", "world".
         virtual AZStd::string GetGlobalFrameName() const = 0;
@@ -63,9 +51,26 @@ namespace ROS2
         //! @param jointName The joint name to set.
         virtual void SetJointName(const AZStd::string& jointName) = 0;
 
+        //! Set the frame ID (excluding namespace).
+        //! @note This is used to set the frame ID for the ROS2 messages.
+        //! @param frameId The frame ID to set.
+        virtual void SetFrameID(const AZStd::string& frameId) = 0;
+
         //! Check if the ROS 2 frame is top level.
         //! @return true if the ROS 2 Frame component has no frame parent.
         virtual bool IsTopLevel() const = 0;
+
+        //! Check if this frame publishes dynamic transforms.
+        //! @return true if transforms are published continuously to /tf, false if published once to /tf_static
+        virtual bool IsDynamic() const = 0;
+
+        //! Get the current configuration for this component.
+        //! @return The current configuration of the ROS2FrameComponent.
+        virtual ROS2FrameConfiguration GetConfiguration() const = 0;
+
+        //! Set the configuration for this component.
+        //! @param configuration The new configuration to apply
+        virtual void SetConfiguration(const ROS2FrameConfiguration& configuration) = 0;
     };
 
     using ROS2FrameEditorComponentBus = AZ::EBus<ROS2FrameEditorComponentRequests>;

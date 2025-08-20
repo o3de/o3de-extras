@@ -16,27 +16,31 @@
 
 namespace ROS2
 {
+    //! Configuration data for ROS2FrameComponent.
+    //!
+    //! This class encapsulates all configuration options for ROS2 frame management,
+    //! including namespace handling, frame naming, joint naming, and transform publishing settings.
     class ROS2FrameConfiguration final : public AZ::ComponentConfig
     {
     public:
         AZ_TYPE_INFO(ROS2FrameConfiguration, ROS2FrameConfigurationTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
-        NamespaceConfiguration m_namespaceConfiguration;
-        AZStd::string m_frameName = "sensor_frame";
-        AZStd::string m_jointName;
+        NamespaceConfiguration m_namespaceConfiguration; //!< Namespace management configuration
+        AZStd::string m_frameName = "sensor_frame"; //!< Base frame name (without namespace)
+        AZStd::string m_jointName; //!< Joint name for this frame (if applicable)
 
-        bool m_publishTransform = true;
-        bool m_isDynamic = false;
-        bool m_forceDynamic = false;
+        bool m_publishTransform = true; //!< Whether to publish transforms to ROS2
+        bool m_isDynamic = false; //!< Whether frame is dynamic (auto-determined)
+        bool m_forceDynamic = false; //!< Force frame to be dynamic regardless of joints
 
-        //! Sets the effective namespace shown in the Editor.
-        //! @param effectiveNamespace namespace to be set.
+        //! Update the effective namespace displayed in the Editor.
+        //! @param effectiveNamespace The computed namespace to display
         void SetEffectiveNamespace(const AZStd::string& effectiveNamespace);
 
     private:
-        AZStd::string m_effectiveNamespace = "";
-        AZStd::string m_fullName = m_frameName;
+        AZStd::string m_effectiveNamespace; //!< Computed namespace for display
+        AZStd::string m_fullName = m_frameName; //!< Full namespaced frame name for display
     };
 
 } // namespace ROS2
