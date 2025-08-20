@@ -143,14 +143,10 @@ namespace ROS2
 
         m_ros2Transform = AZStd::make_unique<ROS2Transform>(GetParentFrameID(), GetNamespacedFrameID(), IsDynamic());
 
-        if (IsDynamic())
+        // Only start automatic publishing if enabled
+        if (m_shouldStartPublishingOnActivate)
         {
-            AZ::TickBus::Handler::BusConnect();
-        }
-        else
-        {
-            // For static transforms, publish once immediately
-            m_ros2Transform->Publish(GetFrameTransform());
+            EnableTransformPublishing();
         }
 
         ROS2FrameEditorComponentBus::Handler::BusConnect(GetEntityId());
@@ -281,6 +277,28 @@ namespace ROS2
     void ROS2FrameComponent::SetJointName(const AZStd::string& jointName)
     {
         m_configuration.m_jointName = jointName;
+    }
+
+    void ROS2FrameComponent::DisablePublishingOnActivate()
+    {
+        m_shouldStartPublishingOnActivate = false;
+    }
+
+    void ROS2FrameComponent::EnableTransformPublishing()
+    {
+        if (!m_publishingInitialized && m_configuration.m_publishTransform)
+        {
+            m_publishingInitialized = true;
+            if (IsDynamic())
+            {
+                AZ::TickBus::Handler::BusConnect();
+            }
+            else
+            {
+                // For static transforms, publish once immediately
+                m_ros2Transform->Publish(GetFrameTransform());
+            }
+        }
     }
 
     void ROS2FrameComponent::Reflect(AZ::ReflectContext* context)

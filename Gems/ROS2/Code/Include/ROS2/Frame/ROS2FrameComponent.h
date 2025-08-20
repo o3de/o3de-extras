@@ -102,6 +102,13 @@ namespace ROS2
         //! @param strategy The namespace strategy to use
         void UpdateNamespaceConfiguration(const AZStd::string& ros2Namespace, NamespaceConfiguration::NamespaceStrategy strategy);
 
+        //! Disables transform publishing on component activation.
+        void DisablePublishingOnActivate();
+
+        //! Starts publishing transforms. Should be called only after DisablePublishingOnActivate was
+        //! called and the component is active.
+        void EnableTransformPublishing();
+
     private:
         //////////////////////////////////////////////////////////////////////////
         // AZ::TickBus::Handler overrides
@@ -129,5 +136,7 @@ namespace ROS2
         ROS2FrameConfiguration m_configuration;
 
         AZStd::unique_ptr<ROS2Transform> m_ros2Transform;
+        bool m_shouldStartPublishingOnActivate = true; //!< Track if automatic publishing is enabled
+        bool m_publishingInitialized = false; //!< Track if publishing has been initialized
     };
 } // namespace ROS2
