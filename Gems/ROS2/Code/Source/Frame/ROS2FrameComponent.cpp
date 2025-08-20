@@ -318,4 +318,9 @@ namespace ROS2
     {
         return m_configuration;
     }
+
+    void ROS2FrameComponent::SetConfiguration(const ROS2FrameConfiguration& configuration)
+    {
+        m_configuration = configuration;
+    }
 } // namespace ROS2

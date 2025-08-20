@@ -85,18 +85,22 @@ namespace ROS2
         //! Check if this is a top-level frame (no parent ROS2FrameComponent).
         bool IsTopLevel() const override;
 
-        //! Update both namespace and namespace strategy.
-        //! @param ros2Namespace The namespace to set
-        //! @param strategy The namespace strategy to use
-        void UpdateNamespaceConfiguration(const AZStd::string& ros2Namespace, NamespaceConfiguration::NamespaceStrategy strategy);
+        //! Check if this frame publishes dynamic transforms.
+        //! @return true if transforms are published continuously to /tf, false if published once to /tf_static
+        bool IsDynamic() const override;
 
         //! Get a copy of the current configuration.
         //! @return Current component configuration
-        ROS2FrameConfiguration GetConfiguration() const;
+        ROS2FrameConfiguration GetConfiguration() const override;
 
         //! Set the configuration for this component.
         //! @param configuration The new configuration to apply
         void SetConfiguration(const ROS2FrameConfiguration& configuration) override;
+
+        //! Update both namespace and namespace strategy.
+        //! @param ros2Namespace The namespace to set
+        //! @param strategy The namespace strategy to use
+        void UpdateNamespaceConfiguration(const AZStd::string& ros2Namespace, NamespaceConfiguration::NamespaceStrategy strategy);
 
     private:
         //////////////////////////////////////////////////////////////////////////
@@ -111,10 +115,6 @@ namespace ROS2
         //! @note Parent frame is not necessarily the immediate parent Transform - there
         //!       could be multiple Transforms in between without ROS2FrameComponents.
         AZ::Transform GetFrameTransform() const;
-
-        //! Check if this frame publishes dynamic transforms.
-        //! @return true if transforms are published continuously to /tf, false if published once to /tf_static
-        bool IsDynamic() const;
 
         //! Find the first parent entity with a ROS2FrameComponent.
         //! @return Pointer to parent ROS2FrameComponent, or nullptr if none found

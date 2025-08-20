@@ -18,11 +18,13 @@
 
 namespace ROS2
 {
-    //! This component marks a reference frame for ROS 2 ecosystem.
-    //! It serves as sensor data frame of reference and is responsible, through ROS2Transform, for publishing
-    //! ros2 static and dynamic transforms (/tf_static, /tf). It also facilitates namespace handling.
-    //! An entity can only have a single ROS2Frame on each level. Many ROS 2 Components require this component.
-    //! @note A robot should have this component on every level of entity hierarchy (for each joint, fixed or dynamic)
+    //! Editor component for ROS2 frame management in the O3DE Editor.
+    //!
+    //! This component provides the editor-specific functionality for ROS2 frames,
+    //! including real-time namespace updates
+    //! and configuration management. It serves as the editor counterpart to
+    //!
+    //! @note An entity can only have a single ROS2FrameEditorComponent.
     class ROS2FrameEditorComponent
         : public AzToolsFramework::Components::EditorComponentBase
         , public ROS2FrameEditorComponentBus::Handler
@@ -47,7 +49,8 @@ namespace ROS2
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 
-        //! Get the configuration of this component.
+        //! Get a copy of the current component configuration.
+        //! @return Current frame configuration
         ROS2FrameConfiguration GetConfiguration() const;
 
     private:
@@ -57,12 +60,15 @@ namespace ROS2
         AZStd::string GetNamespace() const override;
         void UpdateNamespace(const AZStd::string& parentNamespace) override;
         AZStd::string GetGlobalFrameName() const override;
-        bool IsTopLevel() const override; //!< True if this entity does not have a parent entity with ROS2.
+        bool IsTopLevel() const override;
+        bool IsDynamic() const override;
         AZ::EntityId GetFrameParent() const override;
         AZStd::set<AZ::EntityId> GetFrameChildren() const override;
-        void SetJointName(const AZStd::string& frameId) override;
+        void SetJointName(const AZStd::string& jointName) override;
+        void SetFrameID(const AZStd::string& frameId) override;
+        void SetConfiguration(const ROS2FrameConfiguration& configuration) override;
 
-        // AZ::EntityBus::Handler override.
+        // AZ::EntityBus::Handler override
         void OnEntityNameChanged(const AZStd::string& name) override;
 
         AZ::Crc32 OnFrameConfigurationChange();

@@ -8,25 +8,25 @@
 
 #include "ROS2FrameEditorComponent.h"
 #include "ROS2FrameSystemBus.h"
+
+#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
+#include <ROS2/ROS2NamesBus.h>
+
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Component/EntityUtils.h>
 #include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzToolsFramework/UI/PropertyEditor/PropertyEditorAPI.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
-#include <ROS2/ROS2Bus.h>
-#include <ROS2/ROS2NamesBus.h>
 
 namespace ROS2
 {
-    ROS2FrameEditorComponent::ROS2FrameEditorComponent(const ROS2FrameConfiguration ros2FrameConfiguration)
+    ROS2FrameEditorComponent::ROS2FrameEditorComponent(ROS2FrameConfiguration ros2FrameConfiguration)
+        : m_configuration(ros2FrameConfiguration)
     {
-        m_configuration = ros2FrameConfiguration;
     }
 
     void ROS2FrameEditorComponent::Init()
@@ -180,6 +180,23 @@ namespace ROS2
     ROS2FrameConfiguration ROS2FrameEditorComponent::GetConfiguration() const
     {
         return m_configuration;
+    }
+
+    void ROS2FrameEditorComponent::SetFrameID(const AZStd::string& frameId)
+    {
+        m_configuration.m_frameName = frameId;
+        OnFrameConfigurationChange();
+    }
+
+    bool ROS2FrameEditorComponent::IsDynamic() const
+    {
+        return m_configuration.m_isDynamic;
+    }
+
+    void ROS2FrameEditorComponent::SetConfiguration(const ROS2FrameConfiguration& configuration)
+    {
+        m_configuration = configuration;
+        OnFrameConfigurationChange();
     }
 
 } // namespace ROS2
