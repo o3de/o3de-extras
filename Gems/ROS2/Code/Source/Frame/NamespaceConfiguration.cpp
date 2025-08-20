@@ -6,7 +6,7 @@
  *
  */
 
-#include "AzCore/Outcome/Outcome.h"
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <ROS2/Frame/NamespaceConfiguration.h>
@@ -49,7 +49,7 @@ namespace ROS2
             break;
 
         default:
-            AZ_Error("NamespaceConfiguration", false, "Unhandled namespace strategy: %d", static_cast<int>(m_namespaceStrategy));
+            AZ_Assert(false, "Unhandled namespace strategy: %d", static_cast<int>(m_namespaceStrategy));
             m_namespace.clear();
             break;
         }

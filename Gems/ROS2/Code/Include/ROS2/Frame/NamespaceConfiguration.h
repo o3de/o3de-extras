@@ -35,7 +35,7 @@ namespace ROS2
         enum class NamespaceStrategy
         {
             Default, //!< FromEntityName for top-level frames, Empty for others
-            Empty, //!< Empty namespace (no prefix)
+            Empty, //!< Empty namespace
             FromEntityName, //!< Generate from entity name using ROS2 naming conventions
             Custom //!< User-defined namespace
         };

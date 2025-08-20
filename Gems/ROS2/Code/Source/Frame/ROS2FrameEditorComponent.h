@@ -22,7 +22,7 @@ namespace ROS2
     //!
     //! This component provides the editor-specific functionality for ROS2 frames,
     //! including real-time namespace updates
-    //! and configuration management. It serves as the editor counterpart to
+    //! and configuration management.
     //!
     //! @note An entity can only have a single ROS2FrameEditorComponent.
     class ROS2FrameEditorComponent

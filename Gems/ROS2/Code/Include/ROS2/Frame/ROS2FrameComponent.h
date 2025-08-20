@@ -59,7 +59,7 @@ namespace ROS2
         AZStd::string GetNamespacedFrameID() const override;
 
         //! Set the frame ID (without namespace).
-        //! @param frameId The frame identifier (namespace will be added automatically)
+        //! @param frameId The frame identifier. It should not contain any namespace prefix.
         void SetFrameID(const AZStd::string& frameId) override;
 
         //! Get the joint name including namespace.
@@ -70,7 +70,7 @@ namespace ROS2
 
         //! Set the joint name (without namespace).
         //! @note May be populated during URDF import or set manually in the Editor.
-        //! @param jointName The joint identifier (namespace prefix added automatically)
+        //! @param jointName The joint identifier. It should not contain any namespace prefix.
         void SetJointName(const AZStd::string& jointName) override;
 
         //! Get the complete namespace for this frame.

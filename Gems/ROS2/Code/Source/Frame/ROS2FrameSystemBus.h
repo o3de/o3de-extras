@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "AzCore/Component/ComponentBus.h"
+#include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/EBus/Policies.h>

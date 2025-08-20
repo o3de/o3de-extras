@@ -28,10 +28,10 @@ namespace ROS2
 
         NamespaceConfiguration m_namespaceConfiguration; //!< Namespace management configuration
         AZStd::string m_frameName = "sensor_frame"; //!< Base frame name (without namespace)
-        AZStd::string m_jointName; //!< Joint name for this frame (if applicable)
+        AZStd::string m_jointName; //!< Joint name for this frame
 
         bool m_publishTransform = true; //!< Whether to publish transforms to ROS2
-        bool m_isDynamic = false; //!< Whether frame is dynamic (auto-determined)
+        bool m_isDynamic = false; //!< Whether frame should be treated as dynamic (auto-determined)
         bool m_forceDynamic = false; //!< Force frame to be dynamic regardless of joints
 
         //! Update the effective namespace displayed in the Editor.
