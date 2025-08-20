@@ -18,20 +18,6 @@
 
 namespace ROS2
 {
-    // Custom JSON serializer for ROS2FrameComponent configuration to handle version conversion
-    class JsonFrameComponentConfigSerializer : public AZ::BaseJsonSerializer
-    {
-    public:
-        AZ_RTTI(ROS2::JsonFrameComponentConfigSerializer, ROS2FrameComponentTypeId, AZ::BaseJsonSerializer);
-        AZ_CLASS_ALLOCATOR_DECL;
-
-        AZ::JsonSerializationResult::Result Load(
-            void* outputValue,
-            const AZ::Uuid& outputValueTypeId,
-            const rapidjson::Value& inputValue,
-            AZ::JsonDeserializerContext& context) override;
-    };
-
     //! This component marks an interesting reference frame for ROS2 ecosystem.
     //! It serves as sensor data frame of reference and is responsible, through ROS2Transform, for publishing
     //! ros2 static and dynamic transforms (/tf_static, /tf). It also facilitates namespace handling.
@@ -119,14 +105,7 @@ namespace ROS2
         //! @see GetGlobalFrameName().
         AZStd::string GetParentFrameID() const;
 
-        // Deprecated values used for backwards compatibility
-        NamespaceConfiguration m_namespaceConfiguration;
-        AZStd::string m_frameName;
-        AZStd::string m_jointName;
-
-        bool m_publishTransform;
-        bool m_isDynamic;
-        bool m_forceDynamic;
+        ROS2FrameConfiguration m_configuration;
 
         AZStd::unique_ptr<ROS2Transform> m_ros2Transform;
     };
