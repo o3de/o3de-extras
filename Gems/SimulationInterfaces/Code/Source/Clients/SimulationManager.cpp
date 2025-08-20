@@ -11,6 +11,7 @@
 #include "SimulationInterfaces/SimulationMangerRequestBus.h"
 #include "SimulationInterfaces/WorldResource.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/Component/TickBus.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Settings/SettingsRegistry.h>
@@ -360,9 +361,14 @@ namespace SimulationInterfaces
         // We need to delete all entities before reloading the level
         DeletionCompletedCb deleteAllCompletion = [](const AZ::Outcome<void, FailedResult>& result)
         {
-            AZ_Trace("SimulationManager", "Delete all entities completed: %s, reload level", result.IsSuccess() ? "true" : "false");
-            // call level manager to reload the level
-            LevelManagerRequestBus::Broadcast(&LevelManagerRequests::ReloadLevel);
+            AZ_Info("SimulationManager", "Delete all entities completed: %s, reload level", result.IsSuccess() ? "true" : "false");
+            // queue required to allow all resources related to removed spawnables to be released, especially those related to level.pak
+            AZ::SystemTickBus::QueueFunction(
+                []()
+                {
+                    // call level manager to reload the level
+                    LevelManagerRequestBus::Broadcast(&LevelManagerRequests::ReloadLevel);
+                });
         };
 
         // delete spawned entities
@@ -419,9 +425,15 @@ namespace SimulationInterfaces
                     InitializeSimulationState();
                     m_levelLoaded = false;
                 }
-                else
+                else // transition from other state than load world
                 {
-                    RestartSimulation(nullptr);
+                    DeletionCompletedCb deleteAllCompletion = [this](const AZ::Outcome<void, FailedResult>& result)
+                    {
+                        AZ_Info("SimulationManager", "Delete all entities completed: %s", result.IsSuccess() ? "true" : "false");
+                        InitializeSimulationState();
+                    };
+                    // delete spawned entities
+                    SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequests::DeleteAllEntities, deleteAllCompletion);
                 }
 
                 break;

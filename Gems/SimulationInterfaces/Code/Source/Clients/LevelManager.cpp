@@ -8,6 +8,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/base.h>
 #include <AzCore/std/containers/vector.h>
+#include <AzCore/std/string/conversions.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/API/ApplicationAPI.h>
 #include <SimulationInterfaces/LevelManagerRequestBus.h>
@@ -184,8 +185,10 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, errorMsg));
         }
-        auto levelName = GetLevelNameFromAssetPath(levelPath);
-        currentWorld.m_worldResource.m_uri = levelPath;
+        AZStd::string levelPathStr{ levelPath };
+        AZStd::to_lower(levelPathStr.begin(), levelPathStr.end());
+        auto levelName = GetLevelNameFromAssetPath(levelPathStr);
+        currentWorld.m_worldResource.m_uri = levelPathStr;
         currentWorld.m_name = levelName;
         return AZ::Success(currentWorld);
     }
@@ -229,8 +232,8 @@ namespace SimulationInterfaces
 
         if (AZStd::find(levelsPaths.begin(), levelsPaths.end(), request.levelResource.m_uri) == levelsPaths.end())
         {
-            constexpr const char* errorMsg = "Requested world/level not found";
-            AZ_Warning("SimulationInterfaces", false, errorMsg);
+            const AZStd::string errorMsg = AZStd::string::format("Requested world/level %s not found", request.levelResource.m_uri.c_str());
+            AZ_Warning("SimulationInterfaces", false, errorMsg.c_str());
             return AZ::Failure(FailedResult(simulation_interfaces::srv::LoadWorld::Response::MISSING_ASSETS, errorMsg));
         }
 
@@ -242,7 +245,11 @@ namespace SimulationInterfaces
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, errorMsg));
         }
 
-        levelSystem->UnloadLevel();
+        // unload level if needed
+        if (GetCurrentWorld().IsSuccess())
+        {
+            levelSystem->UnloadLevel();
+        }
         // notify state machine
         SimulationManagerRequestBus::Broadcast(
             &SimulationManagerRequests::SetSimulationState, simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD);
@@ -334,7 +341,9 @@ namespace SimulationInterfaces
             }
             AZStd::string assetPath;
             AZ::Data::AssetCatalogRequestBus::BroadcastResult(assetPath, &AZ::Data::AssetCatalogRequestBus::Events::GetAssetPathById, id);
-            if (!assetPath.starts_with("levels"))
+            AZStd::string lowerCaseLevelPath = assetPath;
+            AZStd::to_lower(lowerCaseLevelPath.begin(), lowerCaseLevelPath.end());
+            if (!lowerCaseLevelPath.starts_with("levels"))
             {
                 return;
             }
