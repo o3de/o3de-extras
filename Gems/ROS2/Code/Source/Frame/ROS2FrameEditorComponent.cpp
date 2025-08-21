@@ -7,7 +7,8 @@
  */
 
 #include "ROS2FrameEditorComponent.h"
-#include "ROS2FrameSystemBus.h"
+#include "ROS2FrameEditorSystemBus.h"
+#include "ROS2FrameRegistrationBus.h"
 
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameComponentBus.h>
@@ -39,17 +40,17 @@ namespace ROS2
         ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
         ROS2FrameInternalComponentBus::Handler::BusConnect(GetEntityId());
         AZ::EntityBus::Handler::BusConnect(GetEntityId());
-        if (auto* frameSystemInterface = ROS2FrameSystemInterface::Get())
+        if (auto* frameRegistrationInterface = ROS2FrameRegistrationInterface::Get())
         {
-            frameSystemInterface->RegisterFrame(GetEntityId());
+            frameRegistrationInterface->RegisterFrame(GetEntityId());
         }
     }
 
     void ROS2FrameEditorComponent::Deactivate()
     {
-        if (auto* frameSystemInterface = ROS2FrameSystemInterface::Get())
+        if (auto* frameRegistrationInterface = ROS2FrameRegistrationInterface::Get())
         {
-            frameSystemInterface->UnregisterFrame(GetEntityId());
+            frameRegistrationInterface->UnregisterFrame(GetEntityId());
         }
         AZ::EntityBus::Handler::BusDisconnect();
         ROS2FrameInternalComponentBus::Handler::BusDisconnect();

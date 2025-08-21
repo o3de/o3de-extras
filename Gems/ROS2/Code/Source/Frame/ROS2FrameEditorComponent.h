@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "Frame/ROS2FrameSystemBus.h"
+#include "Frame/ROS2FrameEditorSystemBus.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzFramework/Components/TransformComponent.h>

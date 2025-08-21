@@ -7,7 +7,8 @@
  */
 #pragma once
 
-#include "ROS2FrameSystemBus.h"
+#include "ROS2FrameEditorSystemBus.h"
+#include "ROS2FrameRegistrationBus.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityId.h>
@@ -54,6 +55,7 @@ namespace ROS2
     class ROS2FrameSystemComponent
         : public AZ::Component
         , public ROS2FrameSystemInterface::Registrar
+        , public ROS2FrameRegistrationInterface::Registrar
     {
     public:
         AZ_COMPONENT(ROS2FrameSystemComponent, "{360c4b45-ac02-42d2-9e1a-1d77eb22a054}");

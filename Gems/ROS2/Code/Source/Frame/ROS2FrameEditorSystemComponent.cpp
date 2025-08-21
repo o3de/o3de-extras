@@ -6,9 +6,9 @@
  *
  */
 
-#include "ROS2FrameSystemComponent.h"
-#include "AzCore/std/containers/vector.h"
-#include "ROS2FrameSystemBus.h"
+#include "ROS2FrameEditorSystemComponent.h"
+#include "ROS2FrameEditorSystemBus.h"
+#include <AzCore/std/containers/vector.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/Entity.h>
@@ -56,6 +56,10 @@ namespace ROS2
         {
             ROS2FrameSystemInterface::Register(this);
         }
+        if (ROS2FrameRegistrationInterface::Get() == nullptr)
+        {
+            ROS2FrameRegistrationInterface::Register(this);
+        }
     }
 
     ROS2FrameSystemComponent::~ROS2FrameSystemComponent()
@@ -63,6 +67,10 @@ namespace ROS2
         if (ROS2FrameSystemInterface::Get() == this)
         {
             ROS2FrameSystemInterface::Unregister(this);
+        }
+        if (ROS2FrameRegistrationInterface::Get() == this)
+        {
+            ROS2FrameRegistrationInterface::Unregister(this);
         }
     }
 
