@@ -136,16 +136,6 @@ namespace ROS2
         }
     }
 
-    AZ::EntityId ROS2FrameEditorComponent::GetFrameParent() const
-    {
-        return ROS2FrameSystemInterface::Get()->GetParentEntityId(GetEntityId());
-    }
-
-    AZStd::set<AZ::EntityId> ROS2FrameEditorComponent::GetFrameChildren() const
-    {
-        return ROS2FrameSystemInterface::Get()->GetChildrenEntityId(GetEntityId());
-    }
-
     AZ::Crc32 ROS2FrameEditorComponent::OnFrameConfigurationChange()
     {
         ROS2FrameSystemInterface::Get()->NotifyChange(GetEntityId());

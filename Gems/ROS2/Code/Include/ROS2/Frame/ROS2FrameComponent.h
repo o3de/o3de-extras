@@ -107,7 +107,7 @@ namespace ROS2
 
         //! Starts publishing transforms. Should be called only after DisablePublishingOnActivate was
         //! called and the component is active.
-        void EnableTransformPublishing();
+        void EnableTransformPublishing() override;
 
     private:
         //////////////////////////////////////////////////////////////////////////

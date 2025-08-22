@@ -62,8 +62,6 @@ namespace ROS2
         AZStd::string GetGlobalFrameName() const override;
         bool IsTopLevel() const override;
         bool IsDynamic() const override;
-        AZ::EntityId GetFrameParent() const override;
-        AZStd::set<AZ::EntityId> GetFrameChildren() const override;
         void SetJointName(const AZStd::string& jointName) override;
         void SetFrameID(const AZStd::string& frameId) override;
         void SetConfiguration(const ROS2FrameConfiguration& configuration) override;

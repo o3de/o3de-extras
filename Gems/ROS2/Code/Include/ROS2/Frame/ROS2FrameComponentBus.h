@@ -71,6 +71,10 @@ namespace ROS2
         //! Set the configuration for this component.
         //! @param configuration The new configuration to apply
         virtual void SetConfiguration(const ROS2FrameConfiguration& configuration) = 0;
+
+        //! Starts publishing transforms. Should be called only after DisablePublishingOnActivate was
+        //! called and the component is active.
+        virtual void EnableTransformPublishing(){};
     };
 
     using ROS2FrameComponentBus = AZ::EBus<ROS2FrameComponentRequests>;

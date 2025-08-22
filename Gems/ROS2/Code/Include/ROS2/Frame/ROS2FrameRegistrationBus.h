@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
 #pragma once
 
 #include <AzCore/Component/EntityId.h>
@@ -14,7 +15,7 @@
 
 namespace ROS2
 {
-    //! Bus for registering and managing ROS2 frame components.
+    //! Bus for registering ROS2 frame components.
     //! This interface handles the basic lifecycle management of ROS2 frame components.
     class ROS2FrameRegistrationRequests
     {

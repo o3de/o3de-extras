@@ -21,7 +21,7 @@ namespace ROS2
     class ROS2FrameTrackingRequests
     {
     public:
-        AZ_RTTI(ROS2FrameTrackingRequests, "{A7B9C2D1-E4F6-7890-1234-567890ABCDEF}");
+        AZ_RTTI(ROS2FrameTrackingRequests, "{6B262459-BA1B-4C6C-A9FF-C21D2841CCC1}");
 
         //! Get all currently registered frame entities.
         //! @return Set of EntityIds representing all registered frames
