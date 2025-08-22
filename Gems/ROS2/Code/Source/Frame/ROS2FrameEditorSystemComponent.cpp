@@ -8,13 +8,14 @@
 
 #include "ROS2FrameEditorSystemComponent.h"
 #include "ROS2FrameEditorSystemBus.h"
-#include <AzCore/std/containers/vector.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/std/containers/set.h>
+#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
+#include <AzToolsFramework/Entity/EditorEntityContextBus.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameComponentBus.h>
@@ -50,8 +51,26 @@ namespace ROS2
         return m_frameEntities.size();
     }
 
-    ROS2FrameSystemComponent::ROS2FrameSystemComponent()
+    ROS2FrameEditorSystemComponent::ROS2FrameEditorSystemComponent()
     {
+    }
+
+    ROS2FrameEditorSystemComponent::~ROS2FrameEditorSystemComponent()
+    {
+    }
+
+    void ROS2FrameEditorSystemComponent::Reflect(AZ::ReflectContext* context)
+    {
+        if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
+        {
+            serialize->Class<ROS2FrameEditorSystemComponent, AZ::Component>()->Version(1)->Attribute(
+                AZ::Edit::Attributes::SystemComponentTags, AZStd::vector<AZ::Crc32>({ AZ_CRC_CE("AssetBuilder") }));
+        }
+    }
+
+    void ROS2FrameEditorSystemComponent::Activate()
+    {
+        // Register interfaces on activation
         if (ROS2FrameSystemInterface::Get() == nullptr)
         {
             ROS2FrameSystemInterface::Register(this);
@@ -60,10 +79,15 @@ namespace ROS2
         {
             ROS2FrameRegistrationInterface::Register(this);
         }
+
+        AzToolsFramework::EditorEntityContextNotificationBus::Handler::BusConnect();
     }
 
-    ROS2FrameSystemComponent::~ROS2FrameSystemComponent()
+    void ROS2FrameEditorSystemComponent::Deactivate()
     {
+        AzToolsFramework::EditorEntityContextNotificationBus::Handler::BusDisconnect();
+
+        // Unregister interfaces on deactivation
         if (ROS2FrameSystemInterface::Get() == this)
         {
             ROS2FrameSystemInterface::Unregister(this);
@@ -74,24 +98,7 @@ namespace ROS2
         }
     }
 
-    void ROS2FrameSystemComponent::Reflect(AZ::ReflectContext* context)
-    {
-        if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
-        {
-            serialize->Class<ROS2FrameSystemComponent, AZ::Component>()->Version(1)->Attribute(
-                AZ::Edit::Attributes::SystemComponentTags, AZStd::vector<AZ::Crc32>({ AZ_CRC_CE("AssetBuilder") }));
-        }
-    }
-
-    void ROS2FrameSystemComponent::Activate()
-    {
-    }
-
-    void ROS2FrameSystemComponent::Deactivate()
-    {
-    }
-
-    AZ::TransformInterface* ROS2FrameSystemComponent::GetEntityTransformInterface(const AZ::Entity* entity)
+    AZ::TransformInterface* ROS2FrameEditorSystemComponent::GetEntityTransformInterface(const AZ::Entity* entity)
     {
         if (!entity)
         {
@@ -103,7 +110,7 @@ namespace ROS2
         return interface;
     }
 
-    bool ROS2FrameSystemComponent::IsTopLevel(const AZ::EntityId& frameEntityId) const
+    bool ROS2FrameEditorSystemComponent::IsTopLevel(const AZ::EntityId& frameEntityId) const
     {
         if (m_frameParent.contains(frameEntityId))
         {
@@ -114,7 +121,7 @@ namespace ROS2
         return false;
     }
 
-    AZ::EntityId ROS2FrameSystemComponent::GetParentEntityId(const AZ::EntityId& frameEntityId) const
+    AZ::EntityId ROS2FrameEditorSystemComponent::GetParentEntityId(const AZ::EntityId& frameEntityId) const
     {
         if (m_frameParent.contains(frameEntityId))
         {
@@ -123,7 +130,7 @@ namespace ROS2
         return AZ::EntityId();
     }
 
-    AZStd::vector<AZ::EntityId> ROS2FrameSystemComponent::FindFrameParentPath(AZ::EntityId frameEntityId)
+    AZStd::vector<AZ::EntityId> ROS2FrameEditorSystemComponent::FindFrameParentPath(AZ::EntityId frameEntityId)
     {
         AZStd::vector<AZ::EntityId> path;
         path.push_back(frameEntityId);
@@ -172,7 +179,36 @@ namespace ROS2
         return path;
     }
 
-    void ROS2FrameSystemComponent::RegisterFrame(const AZ::EntityId& frameToRegister)
+    void ROS2FrameEditorSystemComponent::OnStartPlayInEditorBegin()
+    {
+        // Unregister interfaces when entering game mode
+        if (ROS2FrameSystemInterface::Get() == this)
+        {
+            ROS2FrameSystemInterface::Unregister(this);
+        }
+        if (ROS2FrameRegistrationInterface::Get() == this)
+        {
+            ROS2FrameRegistrationInterface::Unregister(this);
+        }
+        m_frameSystemComponent.Activate();
+    }
+
+    void ROS2FrameEditorSystemComponent::OnStopPlayInEditor()
+    {
+        m_frameSystemComponent.Deactivate();
+
+        // Re-register interfaces when exiting game mode
+        if (ROS2FrameSystemInterface::Get() == nullptr)
+        {
+            ROS2FrameSystemInterface::Register(this);
+        }
+        if (ROS2FrameRegistrationInterface::Get() == nullptr)
+        {
+            ROS2FrameRegistrationInterface::Register(this);
+        }
+    }
+
+    void ROS2FrameEditorSystemComponent::RegisterFrame(const AZ::EntityId& frameToRegister)
     {
         // Check if the frame is valid and if it's already registered;
         if (!frameToRegister.IsValid() || m_frameParent.contains(frameToRegister))
@@ -271,7 +307,7 @@ namespace ROS2
         }
     }
 
-    void ROS2FrameSystemComponent::UnregisterFrame(const AZ::EntityId& frameToUnregister)
+    void ROS2FrameEditorSystemComponent::UnregisterFrame(const AZ::EntityId& frameToUnregister)
     {
         // Check if the frame is already unregistered and valid
         if (!frameToUnregister.IsValid() || !m_frameParent.contains(frameToUnregister))
@@ -347,7 +383,7 @@ namespace ROS2
         }
     }
 
-    void ROS2FrameSystemComponent::MoveFrameDetach(
+    void ROS2FrameEditorSystemComponent::MoveFrameDetach(
         const AZ::EntityId& frameEntityId, const AZStd::set<AZ::EntityId>& newPathToParentFrameSet)
     {
         // Remove all handlers
@@ -377,7 +413,7 @@ namespace ROS2
         m_frameChildren.find(m_frameParent.find(frameEntityId)->second)->second.erase(frameEntityId);
     }
 
-    void ROS2FrameSystemComponent::MoveFrameAttach(
+    void ROS2FrameEditorSystemComponent::MoveFrameAttach(
         const AZ::EntityId& frameEntityId, const AZ::EntityId& newFrameParent, const AZStd::vector<AZ::EntityId>& newPathToParentFrame)
     {
         AZStd::set<AZ::EntityId>& oldWatchedEntities = m_watchedEntities.find(frameEntityId)->second;
@@ -409,7 +445,7 @@ namespace ROS2
         }
     }
 
-    void ROS2FrameSystemComponent::MoveFrame(const AZ::EntityId& frameEntityId, const AZ::EntityId& newParent)
+    void ROS2FrameEditorSystemComponent::MoveFrame(const AZ::EntityId& frameEntityId, const AZ::EntityId& newParent)
     {
         // Check if the frame is already registered and valid
         if (!frameEntityId.IsValid() || !m_frameParent.contains(frameEntityId))
@@ -461,14 +497,14 @@ namespace ROS2
         UpdateNamespaces(frameEntityId, newFrameParent);
     }
 
-    void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZ::EntityId frameParentEntity, bool isActive)
+    void ROS2FrameEditorSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZ::EntityId frameParentEntity, bool isActive)
     {
         AZStd::string ros2Namespace;
         ROS2FrameComponentBus::EventResult(ros2Namespace, frameParentEntity, &ROS2FrameComponentBus::Events::GetNamespace);
         UpdateNamespaces(frameEntity, ros2Namespace, isActive);
     }
 
-    void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentNamespace, bool isActive)
+    void ROS2FrameEditorSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentNamespace, bool isActive)
     {
         ROS2FrameInternalComponentBus::Event(frameEntity, &ROS2FrameInternalComponentBus::Events::UpdateNamespace, parentNamespace);
         const AZStd::set<AZ::EntityId>& children = m_frameChildren.find(frameEntity)->second;
@@ -487,7 +523,7 @@ namespace ROS2
         }
     }
 
-    void ROS2FrameSystemComponent::NotifyChange(const AZ::EntityId& frameEntityId)
+    void ROS2FrameEditorSystemComponent::NotifyChange(const AZ::EntityId& frameEntityId)
     {
         if (frameEntityId.IsValid() && m_frameParent.contains(frameEntityId))
         {
@@ -496,7 +532,7 @@ namespace ROS2
         }
     }
 
-    AZStd::set<AZ::EntityId> ROS2FrameSystemComponent::GetChildrenEntityId(const AZ::EntityId& frameEntityId) const
+    AZStd::set<AZ::EntityId> ROS2FrameEditorSystemComponent::GetChildrenEntityId(const AZ::EntityId& frameEntityId) const
     {
         if (!frameEntityId.IsValid() || !m_frameChildren.contains(frameEntityId))
         {
@@ -506,7 +542,7 @@ namespace ROS2
         return m_frameChildren.find(frameEntityId)->second;
     }
 
-    AZStd::vector<AZ::EntityId> ROS2FrameSystemComponent::GetAllPredecessors(const AZ::EntityId& frameEntityId) const
+    AZStd::vector<AZ::EntityId> ROS2FrameEditorSystemComponent::GetAllPredecessors(const AZ::EntityId& frameEntityId) const
     {
         AZStd::vector<AZ::EntityId> predecessors;
         auto childrenIt = m_frameParent.find(frameEntityId);
@@ -524,7 +560,7 @@ namespace ROS2
         return predecessors;
     }
 
-    AZStd::vector<AZ::EntityId> ROS2FrameSystemComponent::GetAllSuccessors(const AZ::EntityId& frameEntityId) const
+    AZStd::vector<AZ::EntityId> ROS2FrameEditorSystemComponent::GetAllSuccessors(const AZ::EntityId& frameEntityId) const
     {
         AZStd::vector<AZ::EntityId> successors;
         AZStd::set<AZ::EntityId> children = GetChildrenEntityId(frameEntityId);

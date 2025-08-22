@@ -8,10 +8,10 @@
 
 #include "ROS2FrameEditorComponent.h"
 #include "ROS2FrameEditorSystemBus.h"
-#include "ROS2FrameRegistrationBus.h"
 
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameComponentBus.h>
+#include <ROS2/Frame/ROS2FrameRegistrationBus.h>
 #include <ROS2/ROS2NamesBus.h>
 
 #include <AzCore/Component/ComponentApplicationBus.h>

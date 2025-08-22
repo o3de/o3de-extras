@@ -8,7 +8,7 @@
 #pragma once
 
 #include "ROS2FrameEditorSystemBus.h"
-#include "ROS2FrameRegistrationBus.h"
+#include "ROS2FrameSystemComponent.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityId.h>
@@ -18,6 +18,8 @@
 #include <AzCore/std/containers/map.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
+#include <AzToolsFramework/Entity/EditorEntityContextBus.h>
+#include <ROS2/Frame/ROS2FrameRegistrationBus.h>
 
 namespace ROS2
 {
@@ -52,13 +54,14 @@ namespace ROS2
     //! It is responsible for updating the namespaces of the frame entities and their children.
     //! It also notifies the ROS2FrameEditorComponent about changes in the tree.
     //! Used to register, unregister, track the frame entities in the level entity tree.
-    class ROS2FrameSystemComponent
+    class ROS2FrameEditorSystemComponent
         : public AZ::Component
         , public ROS2FrameSystemInterface::Registrar
         , public ROS2FrameRegistrationInterface::Registrar
+        , public AzToolsFramework::EditorEntityContextNotificationBus::Handler
     {
     public:
-        AZ_COMPONENT(ROS2FrameSystemComponent, "{360c4b45-ac02-42d2-9e1a-1d77eb22a054}");
+        AZ_COMPONENT(ROS2FrameEditorSystemComponent, "{360c4b45-ac02-42d2-9e1a-1d77eb22a054}");
         static void Reflect(AZ::ReflectContext* context);
 
         // AZ::Component overrides.
@@ -74,9 +77,13 @@ namespace ROS2
         AZ::EntityId GetParentEntityId(const AZ::EntityId& frameEntityId) const override;
         AZStd::set<AZ::EntityId> GetChildrenEntityId(const AZ::EntityId& frameEntityId) const override;
 
-        ROS2FrameSystemComponent();
+        // AzToolsFramework::EditorEntityContextNotificationBus::Handler overrides
+        void OnStartPlayInEditorBegin() override;
+        void OnStopPlayInEditor() override;
 
-        ~ROS2FrameSystemComponent();
+        ROS2FrameEditorSystemComponent();
+
+        ~ROS2FrameEditorSystemComponent();
 
     private:
         //! Find the path from the frameEntity to the frame parent of that entity.
@@ -114,5 +121,9 @@ namespace ROS2
 
         //! Check to prevent multiple conversions at the same time.
         bool m_conversionNeeded = false;
+
+        // Instance of the ROS2FrameSystemComponent. When Editor is launched the game system component is not created.
+        // It needs to be managed manually.
+        ROS2FrameSystemComponent m_frameSystemComponent;
     };
 } // namespace ROS2

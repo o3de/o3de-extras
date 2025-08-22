@@ -11,6 +11,7 @@
 
 #include <Clients/ROS2SystemComponent.h>
 #include <Clock/ROS2ClockSystemComponent.h>
+#include <Frame/ROS2FrameSystemComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2TypeIds.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
@@ -33,6 +34,7 @@ namespace ROS2
         m_descriptors.insert(
             m_descriptors.end(),
             {
+                ROS2FrameSystemComponent::CreateDescriptor(),
                 ROS2SystemComponent::CreateDescriptor(),
                 ROS2ClockSystemComponent::CreateDescriptor(),
                 ROS2FrameComponent::CreateDescriptor(),
@@ -48,8 +50,8 @@ namespace ROS2
 
     AZ::ComponentTypeList ROS2ModuleInterface::GetRequiredSystemComponents() const
     {
-        return AZ::ComponentTypeList{
-            azrtti_typeid<ROS2SystemComponent>(), azrtti_typeid<ROS2ClockSystemComponent>()
-        };
+        return AZ::ComponentTypeList{ azrtti_typeid<ROS2SystemComponent>(),
+                                      azrtti_typeid<ROS2ClockSystemComponent>(),
+                                      azrtti_typeid<ROS2FrameSystemComponent>() };
     }
 } // namespace ROS2

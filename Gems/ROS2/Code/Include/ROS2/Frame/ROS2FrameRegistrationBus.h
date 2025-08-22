@@ -19,7 +19,7 @@ namespace ROS2
     class ROS2FrameRegistrationRequests
     {
     public:
-        AZ_RTTI(ROS2FrameRegistrationRequests, "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}");
+        AZ_RTTI(ROS2FrameRegistrationRequests, "{D3BF1E33-96F7-4812-9E49-058389801396}");
 
         //! Register a ROS2FrameComponent with the system.
         //! All ROS2FrameComponents should register using this function during activation.

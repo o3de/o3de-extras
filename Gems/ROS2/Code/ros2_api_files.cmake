@@ -16,6 +16,7 @@ set(FILES
     Include/ROS2/Frame/ROS2FrameComponentBus.h
     Include/ROS2/Frame/ROS2FrameConfiguration.h
     Include/ROS2/Frame/ROS2Transform.h
+    Include/ROS2/Frame/ROS2FrameRegistrationBus.h
     Include/ROS2/Sensor/SensorConfiguration.h
     Include/ROS2/Sensor/SensorConfigurationRequestBus.h
     Include/ROS2/Sensor/ROS2SensorComponentBase.h
@@ -28,5 +29,4 @@ set(FILES
     Include/ROS2/TF/TransformInterface.h
     Include/ROS2/Utilities/ROS2Conversions.h
     Include/ROS2/Utilities/ROS2Conversions.inl
-
 )

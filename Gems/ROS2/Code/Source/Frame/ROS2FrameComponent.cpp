@@ -8,6 +8,7 @@
 
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
+#include <ROS2/Frame/ROS2FrameRegistrationBus.h>
 #include <ROS2/ROS2NamesBus.h>
 
 #include <AzCore/Component/Entity.h>
@@ -150,10 +151,22 @@ namespace ROS2
         }
 
         ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
+
+        // Register this frame with the frame system
+        if (auto* frameRegistration = ROS2FrameRegistrationInterface::Get())
+        {
+            frameRegistration->RegisterFrame(GetEntityId());
+        }
     }
 
     void ROS2FrameComponent::Deactivate()
     {
+        // Unregister this frame from the frame system
+        if (auto* frameRegistration = ROS2FrameRegistrationInterface::Get())
+        {
+            frameRegistration->UnregisterFrame(GetEntityId());
+        }
+
         ROS2FrameComponentBus::Handler::BusDisconnect();
         if (m_configuration.m_publishTransform && IsDynamic())
         {

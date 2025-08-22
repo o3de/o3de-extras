@@ -20,7 +20,8 @@ set(FILES
     Source/Clock/RealTimeSource.h
     Source/Frame/NamespaceConfiguration.cpp
     Source/Frame/ROS2FrameConfiguration.cpp
-    Source/Frame/ROS2FrameRegistrationBus.h
+    Source/Frame/ROS2FrameSystemComponent.cpp
+    Source/Frame/ROS2FrameSystemComponent.h
     Source/SimulationUtils/FollowingCameraConfiguration.cpp
     Source/SimulationUtils/FollowingCameraConfiguration.h
     Source/SimulationUtils/FollowingCameraComponent.cpp
