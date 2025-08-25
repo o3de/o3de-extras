@@ -491,7 +491,10 @@ namespace SimulationInterfaces
             {
                 AZ::Transform parentTransform;
                 AZ::TransformBus::EventResult(parentTransform, parentEntityId, &AZ::TransformBus::Events::GetWorldTM);
+                float scale = 1.0f;
+                AZ::TransformBus::EventResult(scale, entityId, &AZ::TransformBus::Events::GetLocalUniformScale);
                 auto transformToSet = parentTransform.GetInverse() * state.m_pose;
+                transformToSet.SetUniformScale(scale);
                 AZ::TransformBus::Event(entityId, &AZ::TransformBus::Events::SetLocalTM, transformToSet);
             }
             else
