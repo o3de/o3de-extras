@@ -82,6 +82,9 @@ namespace SimulationInterfaces
         //! \param desiredState The desired simulation state to transition to when the key is pressed
         void RegisterTransitionsKey(const AzFramework::InputChannelId& key, SimulationState sourceState, SimulationState desiredState);
 
+        //! Remove all registered keyboard transition keys
+        void UnregisterAllTransitionKeys();
+
         bool m_isSimulationPaused = false;
 
         uint64_t m_numberOfPhysicsSteps = 0;

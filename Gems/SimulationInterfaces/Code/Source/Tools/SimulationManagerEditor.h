@@ -44,5 +44,6 @@ namespace SimulationInterfaces
 
         // EditorEntityContextNotificationBus
         void OnStartPlayInEditorBegin() override;
+        void OnStopPlayInEditor() override;
     };
 } // namespace SimulationInterfaces
