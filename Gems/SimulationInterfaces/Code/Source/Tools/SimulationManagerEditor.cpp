@@ -65,12 +65,16 @@ namespace SimulationInterfaces
     {
         AzToolsFramework::EditorEntityContextNotificationBus::Handler::BusDisconnect();
         AzToolsFramework::EditorEvents::Bus::Handler::BusDisconnect();
-        BaseSystemComponent::Deactivate();
     }
 
     void SimulationManagerEditor::OnStartPlayInEditorBegin()
     {
         BaseSystemComponent::Activate();
+    }
+
+    void SimulationManagerEditor::OnStopPlayInEditor()
+    {
+        BaseSystemComponent::Deactivate();
     }
 
 } // namespace SimulationInterfaces

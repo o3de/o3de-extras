@@ -163,12 +163,10 @@ namespace SimulationInterfaces
         {
             SimulationManagerRequestBusInterface::Register(this);
         }
-        InputChannelEventListener::BusConnect();
     }
 
     SimulationManager::~SimulationManager()
     {
-        InputChannelEventListener::BusDisconnect();
         if (SimulationManagerRequestBusInterface::Get() == this)
         {
             SimulationManagerRequestBusInterface::Unregister(this);
@@ -242,10 +240,13 @@ namespace SimulationInterfaces
                 simulation_interfaces::msg::SimulationState::STATE_PLAYING,
                 simulation_interfaces::msg::SimulationState::STATE_PAUSED);
         }
+        InputChannelEventListener::BusConnect();
     }
 
     void SimulationManager::Deactivate()
     {
+        InputChannelEventListener::BusDisconnect();
+        UnregisterAllTransitionKeys();
         AZ::TickBus::Handler::BusDisconnect();
         SimulationManagerRequestBus::Handler::BusDisconnect();
     }
@@ -488,6 +489,11 @@ namespace SimulationInterfaces
         const auto uiHint =
             AZStd::string::format("Press %s to change simulation state to %s", uiKeyName.c_str(), GetStateName(desiredState).c_str());
         m_keyboardTransitions[sourceState] = { key, desiredState, uiHint };
+    }
+
+    void SimulationManager::UnregisterAllTransitionKeys()
+    {
+        m_keyboardTransitions.clear();
     }
 
     bool SimulationManager::OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel)
