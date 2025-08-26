@@ -38,5 +38,7 @@ namespace UnitTest
             RegisterNewSimulatedBody,
             AZ::Outcome<AZStd::string, FailedResult>(const AZStd::string& proposedName, const AZ::EntityId& entityId));
         MOCK_METHOD1(RemoveSimulatedEntity, AZ::Outcome<void, FailedResult>(const AZStd::string& name));
+        MOCK_METHOD2(SetEntityInfo, AZ::Outcome<void, FailedResult>(const AZStd::string& name, const EntityInfo& info));
+        MOCK_METHOD1(GetEntityInfo, AZ::Outcome<EntityInfo, FailedResult>(const AZStd::string& name));
     };
 } // namespace UnitTest
