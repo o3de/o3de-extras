@@ -10,12 +10,12 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Component/TickBus.h>
-#include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/string/string.h>
-#include <ROS2/Frame/ROS2FrameRegistrationBus.h>
 #include <ROS2/Frame/ROS2FrameComponentBus.h>
-#include <ROS2/Frame/ROS2FrameTrackingBus.h>
+#include <ROS2/Frame/ROS2FrameRegistrationBus.h>
+#include <ROS2/Frame/ROS2FrameTrackingInterface.h>
 
 namespace ROS2
 {

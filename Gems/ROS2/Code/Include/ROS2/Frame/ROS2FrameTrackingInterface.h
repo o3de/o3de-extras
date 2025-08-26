@@ -51,13 +51,5 @@ namespace ROS2
         virtual AZStd::unordered_set<AZStd::string> GetAllNamespacedFrameIds() const = 0;
     };
 
-    class ROS2FrameTrackingBusTraits : public AZ::EBusTraits
-    {
-    public:
-        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
-        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
-    };
-
     using ROS2FrameTrackingInterface = AZ::Interface<ROS2FrameTrackingRequests>;
-    using ROS2FrameTrackingBus = AZ::EBus<ROS2FrameTrackingRequests, ROS2FrameTrackingBusTraits>;
 } // namespace ROS2
