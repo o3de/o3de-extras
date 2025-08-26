@@ -104,7 +104,7 @@ namespace ROS2Controllers
                 { // Frame Component is required for joints.
                     continue;
                 }
-                const AZStd::string jointName(frameComponent->GetNamespacedJointName().GetCStr());
+                const AZStd::string jointName(frameComponent->GetJointName().c_str());
 
                 auto* hingeComponent = entity->FindComponent<PhysX::HingeJointComponent>();
                 auto* prismaticComponent = entity->FindComponent<PhysX::PrismaticJointComponent>();

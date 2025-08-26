@@ -119,7 +119,7 @@ namespace ROS2Controllers
                 break;
             }
 
-            const auto jointName = component->GetNamespacedJointName().GetStringView();
+            const auto jointName = component->GetNamespacedJointName();
             if (!jointName.empty())
             {
                 m_fingerJoints[jointName] = allJoints[jointName];

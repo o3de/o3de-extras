@@ -82,8 +82,8 @@ namespace ROS2Controllers
         AZStd::function<void(const AZ::Entity* entity)> getAllJointsHierarchy = [&](const AZ::Entity* entity)
         {
             AZ::Name jointName;
-            ROS2::ROS2FrameEditorComponentBus::EventResult(
-                jointName, entity->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::GetNamespacedJointName);
+            ROS2::ROS2FrameComponentBus::EventResult(
+                jointName, entity->GetId(), &ROS2::ROS2FrameComponentBus::Events::GetNamespacedJointName);
 
             const AZStd::string jointNameStr = jointName.GetCStr();
             const bool hasNonFixedJoints = JointUtils::HasNonFixedJoints(entity);

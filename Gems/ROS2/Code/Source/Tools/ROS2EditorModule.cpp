@@ -6,10 +6,10 @@
  *
  */
 
-#include "ROS2EditorSystemComponent.h"
 #include "ROS2EditorClockSystemComponent.h"
+#include "ROS2EditorSystemComponent.h"
 #include <Frame/ROS2FrameEditorComponent.h>
-#include <Frame/ROS2FrameSystemComponent.h>
+#include <Frame/ROS2FrameEditorSystemComponent.h>
 #include <ROS2/ROS2TypeIds.h>
 #include <ROS2ModuleInterface.h>
 #ifdef WITH_GAZEBO_MSGS
@@ -35,7 +35,7 @@ namespace ROS2
                   ROS2SpawnerEditorComponent::CreateDescriptor(),
                   ROS2SpawnPointEditorComponent::CreateDescriptor(),
 #endif
-                  ROS2FrameSystemComponent::CreateDescriptor(),
+                  ROS2FrameEditorSystemComponent::CreateDescriptor(),
                   ROS2FrameEditorComponent::CreateDescriptor() });
         }
 
@@ -43,7 +43,7 @@ namespace ROS2
         {
             return AZ::ComponentTypeList{
                 azrtti_typeid<ROS2EditorSystemComponent>(),
-                azrtti_typeid<ROS2FrameSystemComponent>(),
+                azrtti_typeid<ROS2FrameEditorSystemComponent>(),
                 azrtti_typeid<ROS2EditorClockSystemComponent>(),
             };
         }

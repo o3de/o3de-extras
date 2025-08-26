@@ -14,6 +14,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/std/functional.h>
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
+#include <ROS2/Frame/ROS2FrameComponentBus.h>
 #include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <ROS2Controllers/Manipulation/JointInfo.h>
@@ -105,8 +106,8 @@ namespace ROS2Controllers
         AZStd::function<void(const AZ::Entity* entity)> getAllJointsHierarchy = [&](const AZ::Entity* entity)
         {
             AZ::Name jointName;
-            ROS2::ROS2FrameEditorComponentBus::EventResult(
-                jointName, entity->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::GetNamespacedJointName);
+            ROS2::ROS2FrameComponentBus::EventResult(
+                jointName, entity->GetId(), &ROS2::ROS2FrameComponentBus::Events::GetNamespacedJointName);
 
             const AZStd::string jointNameStr = jointName.GetCStr();
             const bool hasNonFixedJoints = JointUtils::HasNonFixedJoints(entity);

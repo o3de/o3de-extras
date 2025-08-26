@@ -8,6 +8,9 @@
 #include <signal.h>
 
 #include "ROS2SystemComponent.h"
+
+#include "ROS2/Clock/ROS2ClockRequestBus.h"
+
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
@@ -64,7 +67,12 @@ namespace ROS2
         {
             behaviorContext->EBus<TFInterfaceBus>("TFInterfaceBus")
                 ->Attribute(AZ::Script::Attributes::Category, "ROS2")
-                ->Event("GetLatestTransform", &TFInterfaceRequests::GetLatestTransform);
+                ->Event(
+                    "GetLatestTransform", &TFInterfaceRequests::GetLatestTransform, { { { "Source Frame", "" }, { "Target Frame", "" } } })
+                ->Event(
+                    "PublishTransform",
+                    &TFInterfaceRequests::PublishTransform,
+                    { { { "Source Frame", "" }, { "Target Frame", "" }, { "Transform", "" }, { "Is Dynamic", "" } } });
         }
     }
 
@@ -352,6 +360,18 @@ namespace ROS2
             target.c_str(),
             result.GetError().c_str());
         return AZ::Transform::CreateIdentity();
+    }
+
+    void ROS2SystemComponent::PublishTransform(
+        const AZStd::string& source, const AZStd::string& target, const AZ::Transform& transform, bool isDynamic)
+    {
+        geometry_msgs::msg::TransformStamped t;
+        t.header.stamp = ROS2ClockInterface::Get()->GetROSTimestamp();
+        t.header.frame_id = source.c_str();
+        t.child_frame_id = target.c_str();
+        t.transform.rotation = ROS2Conversions::ToROS2Quaternion(transform.GetRotation());
+        t.transform.translation = ROS2Conversions::ToROS2Vector3(transform.GetTranslation());
+        BroadcastTransform(t, isDynamic);
     }
 
 } // namespace ROS2

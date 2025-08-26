@@ -9,7 +9,7 @@
 
 #include "TestFixture.h"
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-
+#include <ROS2/Frame/ROS2FrameComponentBus.h>
 namespace UnitTest
 {
     class SimulationInterfaceTestEnvironmentWithAssets : public SimulationInterfaceTestEnvironment
@@ -68,7 +68,7 @@ namespace UnitTest
         constexpr AZStd::string_view entityName = "MySuperDuperEntity";
         const AZ::Transform initialPose = AZ::Transform::CreateTranslation(AZ::Vector3(0.0f, 0.0f, 0.0f));
         constexpr AZStd::string_view uri = "product_asset:///sampleasset/testsimulationentity.spawnable";
-        constexpr AZStd::string_view entityNamespace = "";
+        constexpr AZStd::string_view entityNamespace = "FooNamespace";
         AZStd::atomic_bool completed = false;
         SpawnCompletedCb completedCb = [&](const AZ::Outcome<AZStd::string, FailedResult>& result)
         {
@@ -123,6 +123,18 @@ namespace UnitTest
         ASSERT_FALSE(entities.empty()) << "Simulated Entities Empty";
         const AZStd::string spawnedEntityName = entities.front();
         printf("Spawned entity name %s\n", spawnedEntityName.c_str());
+
+        // get entity id by name
+        AZ::Outcome<AZ::EntityId, FailedResult> entityIdResult;
+        SimulationEntityManagerRequestBus::BroadcastResult(
+            entityIdResult, &SimulationEntityManagerRequestBus::Events::GetEntityId, spawnedEntityName);
+
+        ASSERT_TRUE(entityIdResult.IsSuccess()) <<  "Failed to get entity id";
+        const AZ::EntityId entityId = entityIdResult.GetValue();
+        // check namespace
+        AZStd::string entityNamespaceOut;
+        ROS2::ROS2FrameComponentBus::EventResult(entityNamespaceOut, entityId, &ROS2::ROS2FrameComponentBus::Events::GetNamespace);
+        EXPECT_EQ(entityNamespaceOut, entityNamespace);
 
         // run physics simulation
         StepPhysics(100);
@@ -215,7 +227,6 @@ namespace UnitTest
             EXPECT_TRUE(result.IsSuccess());
         };
         SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::DeleteAllEntities, deleteAllCompletion);
-
         TickApp(100);
         EXPECT_TRUE(deletionWasCompleted);
         EXPECT_EQ(getNumberOfEntities(), 0);
