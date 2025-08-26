@@ -23,6 +23,7 @@
 #include <AzToolsFramework/Prefab/Procedural/ProceduralPrefabAsset.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
+#include <ROS2/Frame/ROS2FrameComponentBus.h>
 #include <ROS2/Frame/ROS2FrameEditorSystemBus.h>
 #include <ROS2/ROS2EditorBus.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
@@ -461,8 +462,8 @@ namespace ROS2RobotImporter
                 childEntityPtr->Activate();
                 if (childEntityPtr->GetState() == AZ::Entity::State::Active)
                 {
-                    ROS2::ROS2FrameEditorComponentBus::Event(
-                        childEntityPtr->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::SetJointName, azJointName);
+                    ROS2::ROS2FrameComponentBus::Event(
+                        childEntityPtr->GetId(), &ROS2::ROS2FrameComponentBus::Events::SetJointName, azJointName);
                     childEntityPtr->Deactivate();
                 }
                 else
