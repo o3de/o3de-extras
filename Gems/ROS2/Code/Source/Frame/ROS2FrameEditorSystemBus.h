@@ -21,7 +21,7 @@ namespace ROS2
     class ROS2FrameSystemRequests
     {
     public:
-        AZ_RTTI(ROS2FrameSystemRequests, "{24fe4584-0499-4a37-bc1a-00ca04bd22f5}");
+        AZ_RTTI(ROS2FrameSystemRequests, "{24FE4584-0499-4A37-BC1A-00CA04BD22F5}");
 
         //! Move the frame in the entity tree.
         //! Moves the frame entity and updates all namespaces.
