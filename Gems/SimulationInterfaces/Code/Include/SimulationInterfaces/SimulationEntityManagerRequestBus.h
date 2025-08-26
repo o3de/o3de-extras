@@ -37,6 +37,14 @@ namespace SimulationInterfaces
         AZStd::vector<EntityCategory> m_entityCategories;
     };
 
+    //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityInfo.msg">EntityInfo.msg</a>
+    struct EntityInfo
+    {
+        EntityCategory m_category;
+        AZStd::string m_description;
+        AZStd::vector<AZStd::string> m_tags;
+    };
+
     //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityState.msg">EntityState.msg</a>
     struct EntityState
     {
@@ -124,6 +132,11 @@ namespace SimulationInterfaces
         //! \param name Name of entity to unregister
         //! \return Returns failure if entity wasn't found
         virtual AZ::Outcome<void, FailedResult> RemoveSimulatedEntity(const AZStd::string& name) = 0;
+
+        //! Set informations such as category, description to spawned entity with given name
+        virtual AZ::Outcome<void, FailedResult> SetEntityInfo(const AZStd::string& name, const EntityInfo& info) = 0;
+        //! Get information about spawned entity, empty object is returned if no information was set before
+        virtual AZ::Outcome<EntityInfo, FailedResult> GetEntityInfo(const AZStd::string& name) = 0;
     };
 
     class SimulationInterfacesBusTraits : public AZ::EBusTraits

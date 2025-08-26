@@ -61,6 +61,8 @@ namespace SimulationInterfaces
         AZ::Outcome<AZStd::string, FailedResult> RegisterNewSimulatedBody(
             const AZStd::string& proposedName, const AZ::EntityId& entityId) override;
         AZ::Outcome<void, FailedResult> RemoveSimulatedEntity(const AZStd::string& name) override;
+        AZ::Outcome<void, FailedResult> SetEntityInfo(const AZStd::string& name, const EntityInfo& info) override;
+        AZ::Outcome<EntityInfo, FailedResult> GetEntityInfo(const AZStd::string& name) override;
 
         //! Registers simulated entity to entity id mapping.
         //! Note that the entityId will be registered under unique name.
@@ -74,6 +76,8 @@ namespace SimulationInterfaces
 
         //! Set the state of the entity and their descendants.
         void SetEntitiesState(const AZStd::vector<AZ::EntityId>& entityAndDescendants, const EntityState& state);
+        
+        void RemoveEntityInfoIfNeeded(const AZStd::string& name);
 
         // Helper method to check if world is loaded
         AZ::Outcome<void, FailedResult> IsWorldLoaded();
@@ -88,6 +92,11 @@ namespace SimulationInterfaces
         AZStd::unordered_map<AZStd::string, AZ::EntityId> m_simulatedEntityToEntityIdMap;
         AZStd::unordered_map<AZ::EntityId, AZStd::string> m_entityIdToSimulatedEntityMap;
         AZStd::unordered_map<AZ::EntityId, EntityState> m_entityIdToInitialState;
+
+        // Map holding entityInfo to assigned name
+        AZStd::unordered_map<AZStd::string, EntityInfo> m_nameToEntityInfo;
+        // Stores category to name which are forced to be unique by the standard, used for quicker lookup during filtering
+        AZStd::unordered_map<EntityCategory, AZStd::unordered_set<AZStd::string>> m_categoryToNames;
 
         AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, AzFramework::EntitySpawnTicket> m_spawnedTickets;
     };

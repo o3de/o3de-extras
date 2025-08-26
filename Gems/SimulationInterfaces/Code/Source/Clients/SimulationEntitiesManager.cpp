@@ -198,6 +198,8 @@ namespace SimulationInterfaces
                 // not implemented: simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
                 simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_GETTING,
                 simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_SETTING,
+                simulation_interfaces::msg::SimulatorFeatures::ENTITY_INFO_GETTING,
+                simulation_interfaces::msg::SimulatorFeatures::ENTITY_INFO_SETTING,
                 simulation_interfaces::msg::SimulatorFeatures::DELETING,
                 simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
                 simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
@@ -249,6 +251,7 @@ namespace SimulationInterfaces
             {
                 m_entityIdToInitialState.erase(findStateIt);
             }
+            RemoveEntityInfoIfNeeded(name);
             return AZ::Success();
         }
         return AZ::Failure(FailedResult(
@@ -569,7 +572,8 @@ namespace SimulationInterfaces
         {
             RemoveSimulatedEntity(name);
             const auto msg = AZStd::string::format(
-                "Entity %s was not spawned by this component, wont delete it but name will be removed from registry immediately", name.c_str());
+                "Entity %s was not spawned by this component, wont delete it but name will be removed from registry immediately",
+                name.c_str());
             completedCb(AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, msg)));
         }
     }
@@ -592,6 +596,8 @@ namespace SimulationInterfaces
         m_entityIdToSimulatedEntityMap.clear();
         m_simulatedEntityToEntityIdMap.clear();
         m_entityIdToInitialState.clear();
+        m_nameToEntityInfo.clear();
+        m_categoryToNames.clear();
 
         for (auto m_spawnedTicket : m_spawnedTickets)
         {
@@ -826,4 +832,60 @@ namespace SimulationInterfaces
         }
         return AZ::Success();
     }
+
+    AZ::Outcome<void, SimulationInterfaces::FailedResult> SimulationEntitiesManager::SetEntityInfo(
+        const AZStd::string& name, const EntityInfo& info)
+    {
+        if (!m_simulatedEntityToEntityIdMap.contains(name))
+        {
+            return AZ::Failure(SimulationInterfaces::FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
+        }
+        // check if entity with given name has entity info assigned, clear it if needed
+        RemoveEntityInfoIfNeeded(name);
+        // add to cache storing entityInfo by name. it is ensured that name is deleted if it already exists
+        m_nameToEntityInfo.insert({ name, info });
+        // assign entity name to category
+        // if set is not created yet, create it
+        if (!m_categoryToNames.contains(info.m_category))
+        {
+            m_categoryToNames.emplace(info.m_category, AZStd::unordered_set<AZStd::string>{});
+        }
+        m_categoryToNames.at(info.m_category).insert(name);
+
+        return AZ::Success();
+    }
+
+    AZ::Outcome<EntityInfo, SimulationInterfaces::FailedResult> SimulationEntitiesManager::GetEntityInfo(const AZStd::string& name)
+    {
+        if (!m_simulatedEntityToEntityIdMap.contains(name))
+        {
+            return AZ::Failure(SimulationInterfaces::FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
+        }
+
+        if (!m_nameToEntityInfo.contains(name))
+        {
+            const auto msg = AZStd::string::format("Entity with given name \"%s\" doesn't have assigned EntityInfo", name.c_str());
+            AZ_Warning("SpawnableSceneProviderSystemComponent", false, msg.c_str());
+            return AZ::Failure(SimulationInterfaces::FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, msg));
+        }
+        return AZ::Success(m_nameToEntityInfo.at(name));
+    }
+
+    void SimulationEntitiesManager::RemoveEntityInfoIfNeeded(const AZStd::string& name)
+    {
+        // if deleted entity had assigned entity info, remove it
+        if (m_nameToEntityInfo.contains(name))
+        {
+            auto info = m_nameToEntityInfo.at(name);
+            m_nameToEntityInfo.erase(name);
+            // if entity Info is added, entity name is added to category to name map, lack of this entity in this map is clearly a bug
+            AZ_Assert(m_categoryToNames.contains(info.m_category), "Failed to get entities with category %d", info.m_category);
+            m_categoryToNames.at(info.m_category).erase(name);
+        }
+    }
+
 } // namespace SimulationInterfaces

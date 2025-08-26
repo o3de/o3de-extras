@@ -24,6 +24,7 @@
 #include <Services/GetCurrentWorldServiceHandler.h>
 #include <Services/GetEntitiesServiceHandler.h>
 #include <Services/GetEntitiesStatesServiceHandler.h>
+#include <Services/GetEntityInfoServiceHandler.h>
 #include <Services/GetEntityStateServiceHandler.h>
 #include <Services/GetNamedPoseBoundsServiceHandler.h>
 #include <Services/GetNamedPosesServiceHandler.h>
@@ -33,6 +34,7 @@
 #include <Services/LoadWorldServiceHandler.h>
 #include <Services/ROS2ServiceBase.h>
 #include <Services/ResetSimulationServiceHandler.h>
+#include <Services/SetEntityInfoServiceHandler.h>
 #include <Services/SetEntityStateServiceHandler.h>
 #include <Services/SetSimulationStateServiceHandler.h>
 #include <Services/SpawnEntityServiceHandler.h>
@@ -99,6 +101,8 @@ namespace ROS2SimulationInterfaces
         RegisterInterface<StepSimulationServiceHandler>(ros2Node);
         RegisterInterface<GetNamedPosesServiceHandler>(ros2Node);
         RegisterInterface<GetNamedPoseBoundsServiceHandler>(ros2Node);
+        RegisterInterface<GetEntityInfoServiceHandler>(ros2Node);
+        RegisterInterface<SetEntityInfoServiceHandler>(ros2Node);
         RegisterInterface<GetAvailableWorldsServiceHandler>(ros2Node);
         if (!isAppEditor)
         {
