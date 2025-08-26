@@ -65,6 +65,7 @@ namespace ROS2
         void SetJointName(const AZStd::string& jointName) override;
         void SetFrameID(const AZStd::string& frameId) override;
         void SetConfiguration(const ROS2FrameConfiguration& configuration) override;
+        void EnableTransformPublishing() override;
 
         // AZ::EntityBus::Handler override
         void OnEntityNameChanged(const AZStd::string& name) override;

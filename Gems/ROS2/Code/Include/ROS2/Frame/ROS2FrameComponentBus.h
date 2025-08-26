@@ -74,7 +74,7 @@ namespace ROS2
 
         //! Starts publishing transforms. Should be called only after DisablePublishingOnActivate was
         //! called and the component is active.
-        virtual void EnableTransformPublishing(){};
+        virtual void EnableTransformPublishing() = 0;
     };
 
     using ROS2FrameComponentBus = AZ::EBus<ROS2FrameComponentRequests>;

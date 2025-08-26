@@ -7,10 +7,9 @@
  */
 
 #include "ROS2FrameSystemComponent.h"
-#include <AzCore/Serialization/SerializeContext.h>
-#include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Component/TickBus.h>
-#include <iostream>
+#include <AzCore/RTTI/BehaviorContext.h>
+#include <AzCore/Serialization/SerializeContext.h>
 
 namespace ROS2
 {

@@ -189,4 +189,9 @@ namespace ROS2
         OnFrameConfigurationChange();
     }
 
+    void ROS2FrameEditorComponent::EnableTransformPublishing()
+    {
+        // Empty method, ROS2FrameEditorComponent does not publish transforms.
+    }
+
 } // namespace ROS2
