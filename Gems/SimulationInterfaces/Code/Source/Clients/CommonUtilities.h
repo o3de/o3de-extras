@@ -31,7 +31,7 @@ namespace SimulationInterfaces::Utils
         const AZStd::unordered_map<AZStd::string, AZ::EntityId>& entitiesToFilter, const TagFilter& tagFilter);
 
     //! Helper function to check if entity tags matcher with given filter
-    bool AreTagsMatching(const TagFilter& tagFilter, const LmbrCentral::Tags& entityTags);
+    bool AreTagsMatching(const TagFilter& tagFilter, const AZStd::vector<AZStd::string>& entityTags);
 
     AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> GetSimulatedBody(AZ::EntityId entityId);
 

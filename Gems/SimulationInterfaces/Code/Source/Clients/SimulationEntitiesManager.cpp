@@ -192,10 +192,10 @@ namespace SimulationInterfaces
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
             AZStd::unordered_set<SimulationFeatureType>{
-                // not implemented: simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
+                simulation_interfaces::msg::SimulatorFeatures::ENTITY_TAGS,
                 simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_BOX,
                 // not implemented: simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS_CONVEX,
-                // not implemented: simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
+                simulation_interfaces::msg::SimulatorFeatures::ENTITY_CATEGORIES,
                 simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_GETTING,
                 simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_SETTING,
                 simulation_interfaces::msg::SimulatorFeatures::ENTITY_INFO_GETTING,
@@ -266,25 +266,15 @@ namespace SimulationInterfaces
             return AZ::Failure(outcome.GetError());
         }
 
-        if (!filter.m_tagsFilter.m_tags.empty())
-        {
-            AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
-            return AZ::Failure(
-                FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
-        }
-
-        if (!filter.m_entityCategories.empty())
-        {
-            AZ_Warning("SimulationInterfaces", false, "Entity Category filter is not implemented yet");
-            return AZ::Failure(FailedResult(
-                simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, "Entity Category filter is not implemented yet"));
-        }
-
         const bool reFilter = !filter.m_nameFilter.empty();
         const bool shapeCastFilter = filter.m_boundsShape != nullptr;
+        const bool categoriesFilter = !filter.m_entityCategories.empty();
+        const bool tagFilter = !filter.m_tagsFilter.m_tags.empty();
 
         AZStd::vector<AZStd::string> entities;
-        if (!shapeCastFilter)
+
+        // filtering based on category
+        if (!categoriesFilter)
         {
             // get all entities from the map
             entities.reserve(m_entityIdToSimulatedEntityMap.size());
@@ -298,6 +288,49 @@ namespace SimulationInterfaces
                 });
         }
         else
+        {
+            for (auto& category : filter.m_entityCategories)
+            {
+                AZ_Warning(
+                    "SpawnableSceneProviderSystemComponent",
+                    m_categoryToNames.contains(category),
+                    "Category %d doesn't exists in database, will be skipped",
+                    category);
+                if (m_categoryToNames.contains(category))
+                {
+                    AZStd::transform(
+                        m_categoryToNames.at(category).begin(),
+                        m_categoryToNames.at(category).end(),
+                        AZStd::back_inserter(entities),
+                        [](const auto& name)
+                        {
+                            return name.c_str();
+                        });
+                }
+            }
+        }
+
+        // filter based on tag
+        if (tagFilter)
+        {
+            const AZStd::vector<AZStd::string> prefilteredEntities = AZStd::move(entities);
+            entities.clear();
+            for (const auto& name : prefilteredEntities)
+            {
+                auto findIt = m_nameToEntityInfo.find(name);
+                if (findIt == m_nameToEntityInfo.end())
+                {
+                    continue;
+                }
+                // get entity tags
+                if (Utils::AreTagsMatching(filter.m_tagsFilter, findIt->second.m_tags))
+                {
+                    entities.push_back(name);
+                }
+            }
+        }
+
+        if (shapeCastFilter)
         {
             auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
             AZ_Assert(sceneInterface, "Physics scene interface is not available.");
@@ -313,9 +346,11 @@ namespace SimulationInterfaces
             request.m_pose = filter.m_boundsPose;
             request.m_maxResults = AZStd::numeric_limits<AZ::u32>::max();
             AzPhysics::SceneQueryHits result = sceneInterface->QueryScene(m_physicsScenesHandle, &request);
-
-            for (const auto& [name, entityId] : m_simulatedEntityToEntityIdMap)
+            const AZStd::vector<AZStd::string> prefilteredEntities = AZStd::move(entities);
+            entities.clear();
+            for (const auto& name : prefilteredEntities)
             {
+                const auto& entityId = m_simulatedEntityToEntityIdMap.at(name);
                 AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> simulatedBody = Utils::GetSimulatedBody(entityId);
                 if (simulatedBody.IsSuccess())
                 {
