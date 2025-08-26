@@ -27,6 +27,7 @@
 #include <Clients/ROS2SystemComponent.h>
 #include <Frame/ROS2FrameSystemComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameComponentBus.h>
 #include <ROS2/Frame/ROS2FrameTrackingInterface.h>
 #include <ROS2/ROS2Bus.h>
 
@@ -364,6 +365,181 @@ namespace UnitTest
         // Test getting entity by non-existent namespaced frame ID
         AZ::EntityId foundEntityId = trackingInterface->GetFrameEntityByNamespacedId("non_existent_frame");
         EXPECT_FALSE(foundEntityId.IsValid());
+    }
+
+    TEST_F(ROS2FrameComponentFixture, ComponentBus_BasicFunctionality)
+    {
+        ROS2::ROS2FrameConfiguration config;
+        config.m_frameName = "test_frame";
+        config.m_jointName = "test_joint";
+
+        AZ::Entity entity;
+        entity.SetName("test_entity");
+        entity.CreateComponent<AzFramework::TransformComponent>();
+        entity.CreateComponent<ROS2::ROS2FrameComponent>(config);
+
+        entity.Init();
+        entity.Activate();
+
+        // Test getting namespaced frame ID through bus
+        AZStd::string frameId;
+        ROS2::ROS2FrameComponentBus::EventResult(frameId, entity.GetId(), &ROS2::ROS2FrameComponentRequests::GetNamespacedFrameID);
+        EXPECT_FALSE(frameId.empty());
+        EXPECT_TRUE(frameId.find("test_frame") != AZStd::string::npos);
+
+        // Test getting namespaced joint name through bus
+        AZ::Name jointName;
+        ROS2::ROS2FrameComponentBus::EventResult(jointName, entity.GetId(), &ROS2::ROS2FrameComponentRequests::GetNamespacedJointName);
+        EXPECT_FALSE(jointName.GetStringView().empty());
+
+        // Test getting namespace through bus
+        AZStd::string namespace_;
+        ROS2::ROS2FrameComponentBus::EventResult(namespace_, entity.GetId(), &ROS2::ROS2FrameComponentRequests::GetNamespace);
+        EXPECT_FALSE(namespace_.empty());
+
+        // Test getting global frame name through bus
+        AZStd::string globalFrameName;
+        ROS2::ROS2FrameComponentBus::EventResult(globalFrameName, entity.GetId(), &ROS2::ROS2FrameComponentRequests::GetGlobalFrameName);
+        EXPECT_FALSE(globalFrameName.empty());
+
+        // Test IsTopLevel through bus
+        bool isTopLevel = false;
+        ROS2::ROS2FrameComponentBus::EventResult(isTopLevel, entity.GetId(), &ROS2::ROS2FrameComponentRequests::IsTopLevel);
+        EXPECT_TRUE(isTopLevel); // Should be top level since it has no parent
+    }
+
+    TEST_F(ROS2FrameComponentFixture, ComponentBus_SettersAndGetters)
+    {
+        ROS2::ROS2FrameConfiguration config;
+
+        AZ::Entity entity;
+        entity.SetName("test_entity");
+        entity.CreateComponent<AzFramework::TransformComponent>();
+        entity.CreateComponent<ROS2::ROS2FrameComponent>(config);
+
+        entity.Init();
+        entity.Activate();
+
+        // Get the default namespace
+        AZStd::string defaultNamespace;
+        ROS2::ROS2FrameComponentBus::EventResult(defaultNamespace, entity.GetId(), &ROS2::ROS2FrameComponentRequests::GetNamespace);
+        EXPECT_FALSE(defaultNamespace.empty());
+        EXPECT_STREQ(defaultNamespace.c_str(), "test_entity");
+
+        // Test setting joint name through bus
+        const AZStd::string newJointName = "new_joint_name";
+        ROS2::ROS2FrameComponentBus::Event(entity.GetId(), &ROS2::ROS2FrameComponentRequests::SetJointName, newJointName);
+
+        // Verify the joint name was set and includes the full namespace
+        AZ::Name retrievedJointName;
+        ROS2::ROS2FrameComponentBus::EventResult(
+            retrievedJointName, entity.GetId(), &ROS2::ROS2FrameComponentRequests::GetNamespacedJointName);
+        EXPECT_STREQ(retrievedJointName.GetCStr(), "test_entity/new_joint_name");
+
+        // Test setting frame ID through bus
+        const AZStd::string newFrameId = "new_frame_id";
+        ROS2::ROS2FrameComponentBus::Event(entity.GetId(), &ROS2::ROS2FrameComponentRequests::SetFrameID, newFrameId);
+
+        // Verify the frame ID was set and includes the full namespace
+        AZStd::string retrievedFrameId;
+        ROS2::ROS2FrameComponentBus::EventResult(retrievedFrameId, entity.GetId(), &ROS2::ROS2FrameComponentRequests::GetNamespacedFrameID);
+        EXPECT_STREQ(retrievedFrameId.c_str(), "test_entity/new_frame_id");
+    }
+
+    TEST_F(ROS2FrameComponentFixture, ComponentBus_ConfigurationManagement)
+    {
+        ROS2::ROS2FrameConfiguration initialConfig;
+        initialConfig.m_frameName = "initial_frame";
+        initialConfig.m_jointName = "initial_joint";
+
+        AZ::Entity entity;
+        entity.SetName("test_entity");
+        entity.CreateComponent<AzFramework::TransformComponent>();
+        entity.CreateComponent<ROS2::ROS2FrameComponent>(initialConfig);
+
+        entity.Init();
+        entity.Activate();
+
+        // Test getting configuration through bus
+        ROS2::ROS2FrameConfiguration retrievedConfig;
+        ROS2::ROS2FrameComponentBus::EventResult(retrievedConfig, entity.GetId(), &ROS2::ROS2FrameComponentRequests::GetConfiguration);
+        EXPECT_EQ(retrievedConfig.m_frameName, initialConfig.m_frameName);
+        EXPECT_EQ(retrievedConfig.m_jointName, initialConfig.m_jointName);
+
+        // Test setting new configuration through bus
+        ROS2::ROS2FrameConfiguration newConfig;
+        newConfig.m_frameName = "updated_frame";
+        newConfig.m_jointName = "updated_joint";
+        ROS2::ROS2FrameComponentBus::Event(entity.GetId(), &ROS2::ROS2FrameComponentRequests::SetConfiguration, newConfig);
+
+        // Verify the configuration was updated
+        ROS2::ROS2FrameConfiguration updatedConfig;
+        ROS2::ROS2FrameComponentBus::EventResult(updatedConfig, entity.GetId(), &ROS2::ROS2FrameComponentRequests::GetConfiguration);
+        EXPECT_EQ(updatedConfig.m_frameName, newConfig.m_frameName);
+        EXPECT_EQ(updatedConfig.m_jointName, newConfig.m_jointName);
+    }
+
+    TEST_F(ROS2FrameComponentFixture, ComponentBus_HierarchyTests)
+    {
+        ROS2::ROS2FrameConfiguration config;
+
+        // Create parent entity
+        AZ::Entity parentEntity;
+        parentEntity.SetName("parent_entity");
+        parentEntity.CreateComponent<AzFramework::TransformComponent>();
+        parentEntity.CreateComponent<ROS2::ROS2FrameComponent>(config);
+        parentEntity.Init();
+        parentEntity.Activate();
+
+        // Create child entity
+        AZ::Entity childEntity;
+        childEntity.SetName("child_entity");
+        childEntity.CreateComponent<AzFramework::TransformComponent>();
+        childEntity.CreateComponent<ROS2::ROS2FrameComponent>(config);
+        childEntity.Init();
+        childEntity.Activate();
+
+        // Set up parent-child relationship
+        AZ::TransformBus::Event(childEntity.GetId(), &AZ::TransformBus::Events::SetParent, parentEntity.GetId());
+
+        // Test that parent is top level
+        bool parentIsTopLevel = false;
+        ROS2::ROS2FrameComponentBus::EventResult(parentIsTopLevel, parentEntity.GetId(), &ROS2::ROS2FrameComponentRequests::IsTopLevel);
+        EXPECT_TRUE(parentIsTopLevel);
+
+        // Test that child is not top level
+        bool childIsTopLevel = true;
+        ROS2::ROS2FrameComponentBus::EventResult(childIsTopLevel, childEntity.GetId(), &ROS2::ROS2FrameComponentRequests::IsTopLevel);
+        EXPECT_FALSE(childIsTopLevel);
+
+        // Test namespace inheritance
+        AZStd::string parentNamespace;
+        ROS2::ROS2FrameComponentBus::EventResult(parentNamespace, parentEntity.GetId(), &ROS2::ROS2FrameComponentRequests::GetNamespace);
+
+        AZStd::string childNamespace;
+        ROS2::ROS2FrameComponentBus::EventResult(childNamespace, childEntity.GetId(), &ROS2::ROS2FrameComponentRequests::GetNamespace);
+
+        // Child namespace should include parent namespace
+        EXPECT_TRUE(childNamespace.find(parentNamespace) != AZStd::string::npos);
+    }
+
+    TEST_F(ROS2FrameComponentFixture, ComponentBus_InvalidEntityId)
+    {
+        // Test bus calls with invalid entity ID
+        AZ::EntityId invalidEntityId;
+
+        // These calls should not crash, but may return default/empty values
+        AZStd::string frameId;
+        ROS2::ROS2FrameComponentBus::EventResult(frameId, invalidEntityId, &ROS2::ROS2FrameComponentRequests::GetNamespacedFrameID);
+        EXPECT_TRUE(frameId.empty());
+
+        AZ::Name jointName;
+        ROS2::ROS2FrameComponentBus::EventResult(jointName, invalidEntityId, &ROS2::ROS2FrameComponentRequests::GetNamespacedJointName);
+        EXPECT_TRUE(jointName.GetStringView().empty());
+
+        // Test setters with invalid entity ID - should not crash
+        ROS2::ROS2FrameComponentBus::Event(invalidEntityId, &ROS2::ROS2FrameComponentRequests::SetJointName, "test_joint");
+        ROS2::ROS2FrameComponentBus::Event(invalidEntityId, &ROS2::ROS2FrameComponentRequests::SetFrameID, "test_frame");
     }
 
 } // namespace UnitTest
