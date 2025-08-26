@@ -7,7 +7,6 @@
  */
 #pragma once
 
-#include "ROS2FrameEditorSystemBus.h"
 #include "ROS2FrameSystemComponent.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/Entity.h>
@@ -19,6 +18,7 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
+#include <ROS2/Frame/ROS2FrameEditorSystemBus.h>
 #include <ROS2/Frame/ROS2FrameRegistrationBus.h>
 
 namespace ROS2
@@ -56,7 +56,7 @@ namespace ROS2
     //! Used to register, unregister, track the frame entities in the level entity tree.
     class ROS2FrameEditorSystemComponent
         : public AZ::Component
-        , public ROS2FrameSystemInterface::Registrar
+        , public ROS2FrameEditorSystemInterface::Registrar
         , public ROS2FrameRegistrationInterface::Registrar
         , public AzToolsFramework::EditorEntityContextNotificationBus::Handler
     {

@@ -18,10 +18,10 @@
 
 namespace ROS2
 {
-    class ROS2FrameSystemRequests
+    class ROS2FrameEditorSystemRequests
     {
     public:
-        AZ_RTTI(ROS2FrameSystemRequests, "{24FE4584-0499-4A37-BC1A-00CA04BD22F5}");
+        AZ_RTTI(ROS2FrameEditorSystemRequests, "{24FE4584-0499-4A37-BC1A-00CA04BD22F5}");
 
         //! Move the frame in the entity tree.
         //! Moves the frame entity and updates all namespaces.
@@ -52,16 +52,17 @@ namespace ROS2
         virtual AZStd::set<AZ::EntityId> GetChildrenEntityId(const AZ::EntityId& frameEntityId) const = 0;
     };
 
-    class ROS2FrameSystemBusTraits : public AZ::EBusTraits
+    class ROS2FrameEditorSystemBusTraits : public AZ::EBusTraits
     {
     public:
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
     };
 
-    using ROS2FrameSystemInterface = AZ::Interface<ROS2FrameSystemRequests>;
-    using ROS2FrameSystemBus = AZ::EBus<ROS2FrameSystemRequests>;
+    using ROS2FrameEditorSystemInterface = AZ::Interface<ROS2FrameEditorSystemRequests>;
 
+    // An internal bus used by the ROS2FrameEditorComponent to update the namespace of the component. This Bus is only used
+    // by the ROS2FrameEditorComponent and EditorSystemComponent.
     class ROS2FrameInternalComponentRequests : public AZ::ComponentBus
     {
     public:

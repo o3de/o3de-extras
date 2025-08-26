@@ -8,7 +8,6 @@ set(FILES
     Source/Frame/ROS2FrameEditorComponent.h
     Source/Frame/ROS2FrameEditorSystemComponent.cpp
     Source/Frame/ROS2FrameEditorSystemComponent.h
-    Source/Frame/ROS2FrameEditorSystemBus.h
     Source/Tools/ROS2EditorSystemComponent.cpp
     Source/Tools/ROS2EditorSystemComponent.h
     Source/Tools/ROS2EditorClockSystemComponent.cpp

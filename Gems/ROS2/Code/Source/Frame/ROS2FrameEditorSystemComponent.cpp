@@ -7,7 +7,6 @@
  */
 
 #include "ROS2FrameEditorSystemComponent.h"
-#include "ROS2FrameEditorSystemBus.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/Entity.h>
@@ -19,6 +18,7 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameComponentBus.h>
+#include <ROS2/Frame/ROS2FrameEditorSystemBus.h>
 
 namespace ROS2
 {
@@ -27,7 +27,7 @@ namespace ROS2
     {
         for (auto frameEntityId : m_frameEntities)
         {
-            ROS2FrameSystemInterface::Get()->MoveFrame(frameEntityId, newParent);
+            ROS2FrameEditorSystemInterface::Get()->MoveFrame(frameEntityId, newParent);
         }
     }
 
@@ -71,9 +71,9 @@ namespace ROS2
     void ROS2FrameEditorSystemComponent::Activate()
     {
         // Register interfaces on activation
-        if (ROS2FrameSystemInterface::Get() == nullptr)
+        if (ROS2FrameEditorSystemInterface::Get() == nullptr)
         {
-            ROS2FrameSystemInterface::Register(this);
+            ROS2FrameEditorSystemInterface::Register(this);
         }
         if (ROS2FrameRegistrationInterface::Get() == nullptr)
         {
@@ -88,9 +88,9 @@ namespace ROS2
         AzToolsFramework::EditorEntityContextNotificationBus::Handler::BusDisconnect();
 
         // Unregister interfaces on deactivation
-        if (ROS2FrameSystemInterface::Get() == this)
+        if (ROS2FrameEditorSystemInterface::Get() == this)
         {
-            ROS2FrameSystemInterface::Unregister(this);
+            ROS2FrameEditorSystemInterface::Unregister(this);
         }
         if (ROS2FrameRegistrationInterface::Get() == this)
         {
@@ -182,9 +182,9 @@ namespace ROS2
     void ROS2FrameEditorSystemComponent::OnStartPlayInEditorBegin()
     {
         // Unregister interfaces when entering game mode
-        if (ROS2FrameSystemInterface::Get() == this)
+        if (ROS2FrameEditorSystemInterface::Get() == this)
         {
-            ROS2FrameSystemInterface::Unregister(this);
+            ROS2FrameEditorSystemInterface::Unregister(this);
         }
         if (ROS2FrameRegistrationInterface::Get() == this)
         {
@@ -198,9 +198,9 @@ namespace ROS2
         m_frameSystemComponent.Deactivate();
 
         // Re-register interfaces when exiting game mode
-        if (ROS2FrameSystemInterface::Get() == nullptr)
+        if (ROS2FrameEditorSystemInterface::Get() == nullptr)
         {
-            ROS2FrameSystemInterface::Register(this);
+            ROS2FrameEditorSystemInterface::Register(this);
         }
         if (ROS2FrameRegistrationInterface::Get() == nullptr)
         {

@@ -7,10 +7,10 @@
  */
 
 #include "ROS2FrameEditorComponent.h"
-#include "ROS2FrameEditorSystemBus.h"
 
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameComponentBus.h>
+#include <ROS2/Frame/ROS2FrameEditorSystemBus.h>
 #include <ROS2/Frame/ROS2FrameRegistrationBus.h>
 #include <ROS2/ROS2NamesBus.h>
 
@@ -68,7 +68,7 @@ namespace ROS2
 
     bool ROS2FrameEditorComponent::IsTopLevel() const
     {
-        return ROS2FrameSystemInterface::Get()->IsTopLevel(GetEntityId());
+        return ROS2FrameEditorSystemInterface::Get()->IsTopLevel(GetEntityId());
     }
 
     AZStd::string ROS2FrameEditorComponent::GetNamespacedFrameID() const
@@ -138,7 +138,7 @@ namespace ROS2
 
     AZ::Crc32 ROS2FrameEditorComponent::OnFrameConfigurationChange()
     {
-        ROS2FrameSystemInterface::Get()->NotifyChange(GetEntityId());
+        ROS2FrameEditorSystemInterface::Get()->NotifyChange(GetEntityId());
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 

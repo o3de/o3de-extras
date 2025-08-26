@@ -7,13 +7,13 @@
  */
 #pragma once
 
-#include "Frame/ROS2FrameEditorSystemBus.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Frame/ROS2FrameComponentBus.h>
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
+#include <ROS2/Frame/ROS2FrameEditorSystemBus.h>
 #include <ROS2/ROS2TypeIds.h>
 
 namespace ROS2

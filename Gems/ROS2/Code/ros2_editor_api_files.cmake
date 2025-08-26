@@ -5,4 +5,5 @@
 
 set(FILES
     Include/ROS2/ROS2EditorBus.h
+    Include/ROS2/Frame/ROS2FrameEditorSystemBus.h
 )
