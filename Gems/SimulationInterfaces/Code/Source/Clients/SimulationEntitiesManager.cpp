@@ -121,14 +121,14 @@ namespace SimulationInterfaces
         }
     }
 
-    AZ::Outcome<AZStd::string, AZStd::string> SimulationEntitiesManager::RegisterNewSimulatedBody(
+    AZ::Outcome<AZStd::string, FailedResult> SimulationEntitiesManager::RegisterNewSimulatedBody(
         const AZStd::string& proposedName, const AZ::EntityId& entityId)
     {
         if (!entityId.IsValid())
         {
             constexpr const char* msg = "EntityId is not valid";
             AZ_Trace("SimulationInterfaces", msg);
-            return AZ::Failure(msg);
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, msg));
         }
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
@@ -136,16 +136,9 @@ namespace SimulationInterfaces
         {
             constexpr const char* msg = "Entity pointer is not valid";
             AZ_Trace("SimulationInterfaces", msg);
-            return AZ::Failure(msg);
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, msg));
         }
-        // check if entity is not spawned by this component
-        const auto ticketId = entity->GetEntitySpawnTicketId();
-        if (!m_spawnedTickets.contains(ticketId))
-        {
-            constexpr const char* msg = "Entity wasn't spawned by Simulation Interfaces, cannot register it";
-            AZ_Trace("SimulationInterfaces", msg);
-            return AZ::Failure(msg);
-        }
+
         // register entity
         const AZStd::string registeredName = this->AddSimulatedEntity(entityId, proposedName);
 
@@ -243,18 +236,24 @@ namespace SimulationInterfaces
         return simulatedEntityName;
     }
 
-    void SimulationEntitiesManager::RemoveSimulatedEntity(AZ::EntityId entityId)
+    AZ::Outcome<void, FailedResult> SimulationEntitiesManager::RemoveSimulatedEntity(const AZStd::string& name)
     {
-        if (auto findIt = m_entityIdToSimulatedEntityMap.find(entityId); findIt != m_entityIdToSimulatedEntityMap.end())
+        if (auto findIt = m_simulatedEntityToEntityIdMap.find(name); findIt != m_simulatedEntityToEntityIdMap.end())
         {
-            const auto& simulatedEntityName = findIt->second;
-            m_entityIdToSimulatedEntityMap.erase(findIt);
-            m_simulatedEntityToEntityIdMap.erase(simulatedEntityName);
+            // remove registry
+            const auto& entityId = findIt->second;
+            m_entityIdToSimulatedEntityMap.erase(entityId);
+            m_simulatedEntityToEntityIdMap.erase(findIt);
+            // remove initial state
+            if (auto findStateIt = m_entityIdToInitialState.find(entityId); findStateIt != m_entityIdToInitialState.end())
+            {
+                m_entityIdToInitialState.erase(findStateIt);
+            }
+            return AZ::Success();
         }
-        if (auto findIt = m_entityIdToInitialState.find(entityId); findIt != m_entityIdToInitialState.end())
-        {
-            m_entityIdToInitialState.erase(findIt);
-        }
+        return AZ::Failure(FailedResult(
+            simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+            AZStd::string::format("Failed to find entity with given name %s", name.c_str())));
     }
 
     AZ::Outcome<EntityNameList, FailedResult> SimulationEntitiesManager::GetEntities(const EntityFilters& filter)
@@ -558,17 +557,19 @@ namespace SimulationInterfaces
             auto ticket = m_spawnedTickets[ticketId];
             // remove ticket
             AzFramework::DespawnAllEntitiesOptionalArgs optionalArgs;
-            optionalArgs.m_completionCallback = [this, completedCb, entityId](AzFramework::EntitySpawnTicket::Id ticketId)
+            optionalArgs.m_completionCallback = [this, completedCb, name](AzFramework::EntitySpawnTicket::Id ticketId)
             {
                 m_spawnedTickets.erase(ticketId);
-                RemoveSimulatedEntity(entityId);
+                RemoveSimulatedEntity(name);
                 completedCb(AZ::Success());
             };
             spawner->DespawnAllEntities(ticket, optionalArgs);
         }
         else
         {
-            const auto msg = AZStd::string::format("Entity %s was not spawned by this component, wont delete it", name.c_str());
+            RemoveSimulatedEntity(name);
+            const auto msg = AZStd::string::format(
+                "Entity %s was not spawned by this component, wont delete it but name will be removed from registry immediately", name.c_str());
             completedCb(AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, msg)));
         }
     }

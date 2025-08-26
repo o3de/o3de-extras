@@ -34,5 +34,9 @@ namespace UnitTest
                 const AZ::Transform& initialPose,
                 const bool allowRename,
                 SpawnCompletedCb completedCb));
+        MOCK_METHOD2(
+            RegisterNewSimulatedBody,
+            AZ::Outcome<AZStd::string, FailedResult>(const AZStd::string& proposedName, const AZ::EntityId& entityId));
+        MOCK_METHOD1(RemoveSimulatedEntity, AZ::Outcome<void, FailedResult>(const AZStd::string& name));
     };
 } // namespace UnitTest

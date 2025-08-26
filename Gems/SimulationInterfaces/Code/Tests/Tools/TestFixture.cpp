@@ -70,6 +70,13 @@ namespace UnitTest
         entity->Activate();
         AZ_Assert(entity->GetState() == AZ::Entity::State::Active, "Entity is not active");
 
+        // register entity
+        AZ::Outcome<AZStd::string, SimulationInterfaces::FailedResult> output;
+        SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
+            output, &SimulationInterfaces::SimulationEntityManagerRequests::RegisterNewSimulatedBody, entityName, entity->GetId());
+        AZ_Assert(output.IsSuccess(), "Failed to register entity to simulation_interfaces, %s", output.GetError().m_errorString.c_str());
+        entity->SetName(output.GetValue()); // name could be change to ensure
+
         auto id = entity->GetId();
         m_entities.emplace(AZStd::make_pair(id, AZStd::move(entity)));
 
@@ -80,6 +87,11 @@ namespace UnitTest
     {
         for (auto& entity : m_entities)
         {
+            AZ::Outcome<void, SimulationInterfaces::FailedResult> output;
+            SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
+                output, &SimulationInterfaces::SimulationEntityManagerRequests::RemoveSimulatedEntity, entity.second->GetName());
+            AZ_Assert(
+                output.IsSuccess(), "Failed to unregister entity from simulation_interfaces, %s", output.GetError().m_errorString.c_str());
             entity.second->Deactivate();
         }
         m_entities.clear();
@@ -89,6 +101,11 @@ namespace UnitTest
         auto findIt = m_entities.find(entityId);
         if (findIt != m_entities.end())
         {
+            AZ::Outcome<void, SimulationInterfaces::FailedResult> output;
+            SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
+                output, &SimulationInterfaces::SimulationEntityManagerRequests::RemoveSimulatedEntity, findIt->second->GetName());
+            AZ_Assert(
+                output.IsSuccess(), "Failed to unregister entity from simulation_interfaces, %s", output.GetError().m_errorString.c_str());
             findIt->second->Deactivate();
             m_entities.erase(findIt);
         }

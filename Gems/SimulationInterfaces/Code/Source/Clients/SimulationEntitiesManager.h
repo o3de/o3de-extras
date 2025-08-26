@@ -58,13 +58,9 @@ namespace SimulationInterfaces
             const bool allowRename,
             SpawnCompletedCb completedCb) override;
         AZ::Outcome<void, FailedResult> ResetAllEntitiesToInitialState() override;
-
-        //! Registers a new simulated body to the simulation interface.
-        //! Note that the body handle will be registered under unique name
-        //! Note that body need to be configured to be registered
-        //! \param sceneHandle The scene handle to register the body to
-        //! \param bodyHandle The body handle to register
-        AZ::Outcome<AZStd::string, AZStd::string> RegisterNewSimulatedBody(const AZStd::string& proposedName, const AZ::EntityId& entityId);
+        AZ::Outcome<AZStd::string, FailedResult> RegisterNewSimulatedBody(
+            const AZStd::string& proposedName, const AZ::EntityId& entityId) override;
+        AZ::Outcome<void, FailedResult> RemoveSimulatedEntity(const AZStd::string& name) override;
 
         //! Registers simulated entity to entity id mapping.
         //! Note that the entityId will be registered under unique name.
@@ -72,9 +68,6 @@ namespace SimulationInterfaces
         //! \param proposedName Optional user proposed name for the simulated entity
         //! \return returns the simulated entity name
         AZStd::string AddSimulatedEntity(AZ::EntityId entityId, const AZStd::string& proposedName);
-
-        //! Removes simulated entity from the mapping.
-        void RemoveSimulatedEntity(AZ::EntityId entityId);
 
         //! Returns the simulated entity name for the given entity id.
         AZStd::string GetSimulatedEntityName(AZ::EntityId entityId, const AZStd::string& proposedName) const;
@@ -97,17 +90,6 @@ namespace SimulationInterfaces
         AZStd::unordered_map<AZ::EntityId, EntityState> m_entityIdToInitialState;
 
         AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, AzFramework::EntitySpawnTicket> m_spawnedTickets;
-
-        // struct SpawnCompletedCbData
-        // {
-        //     AZStd::string m_userProposedName; //! Name proposed by the User in spawn request
-        //     AZStd::string m_resultedName; //! Name of the entity in the simulation interface
-        //     SpawnCompletedCb m_completedCb; //! User callback to be called when the entity is registered
-        //     AZ::ScriptTimePoint m_spawnCompletedTime; //! Time at which the entity was spawned
-        //     bool m_registered = false; //! Flag to check if the entity was registered
-        // };
-        // AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, SpawnCompletedCbData>
-        //     m_spawnCompletedCallbacks; //! Callbacks to be called when the entity is registered
     };
 
 } // namespace SimulationInterfaces

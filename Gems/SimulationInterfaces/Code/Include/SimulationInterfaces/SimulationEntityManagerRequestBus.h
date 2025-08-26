@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "AzCore/std/containers/vector.h"
 #include "SimulationInterfacesTypeIds.h"
+#include <AzCore/std/containers/vector.h>
 
 #include "Result.h"
 #include "TagFilter.h"
@@ -110,6 +110,20 @@ namespace SimulationInterfaces
         //! Reset the simulation to begin.
         //! This will revert the entire simulation to the initial state.
         virtual AZ::Outcome<void, FailedResult> ResetAllEntitiesToInitialState() = 0;
+
+        //! Registers a new simulated body to the simulation interface.
+        //! This method adds entity to simulation Interfaces cache with its name and initial state
+        //! This method allows to register entity spawned by interface other than simulation_interfaces
+        //! \param proposedName Name to register entity under
+        //! \param entityId id of entity related to given name
+        virtual AZ::Outcome<AZStd::string, FailedResult> RegisterNewSimulatedBody(
+            const AZStd::string& proposedName, const AZ::EntityId& entityId) = 0;
+
+        //! Unregisters simulated body from the simulation interface.
+        //! This method doesn't despawn entity, it removes it from simulation_interfaces registry
+        //! \param name Name of entity to unregister
+        //! \return Returns failure if entity wasn't found
+        virtual AZ::Outcome<void, FailedResult> RemoveSimulatedEntity(const AZStd::string& name) = 0;
     };
 
     class SimulationInterfacesBusTraits : public AZ::EBusTraits
