@@ -11,6 +11,7 @@
 #include "SimulationInterfaces/NamedPoseManagerRequestBus.h"
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
+#include <AzFramework/Physics/Components/SimulatedBodyComponentBus.h>
 #include <simulation_interfaces/msg/tags_filter.hpp>
 
 namespace SimulationInterfaces::Utils
@@ -76,5 +77,23 @@ namespace SimulationInterfaces::Utils
             }
         }
         return filteredEntities;
+    }
+
+    AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> GetSimulatedBody(AZ::EntityId entityId)
+    {
+        AzPhysics::SimulatedBody* parentSimulatedBody = nullptr;
+        AzPhysics::SimulatedBodyComponentRequestsBus::EventResult(
+            parentSimulatedBody, entityId, &AzPhysics::SimulatedBodyComponentRequests::GetSimulatedBody);
+        if (parentSimulatedBody == nullptr)
+        {
+            auto msg = AZStd::string::format("Entity's simulated body doesn't exist");
+            return AZ::Failure(msg);
+        }
+        if (parentSimulatedBody->m_bodyHandle == AzPhysics::InvalidSimulatedBodyHandle)
+        {
+            auto msg = AZStd::string::format("Entity is not a valid simulated body");
+            return AZ::Failure(msg);
+        }
+        return AZ::Success(parentSimulatedBody);
     }
 } // namespace SimulationInterfaces::Utils

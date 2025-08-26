@@ -23,7 +23,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Entity/GameEntityContextBus.h>
-#include <AzFramework/Physics/Components/SimulatedBodyComponentBus.h>
+
 #include <AzFramework/Physics/Shape.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
 #include <AzFramework/Physics/SimulatedBodies/StaticRigidBody.h>
@@ -36,27 +36,6 @@
 
 namespace SimulationInterfaces
 {
-    namespace
-    {
-        AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> GetSimulatedBody(AZ::EntityId entityId)
-        {
-            AzPhysics::SimulatedBody* parentSimulatedBody = nullptr;
-            AzPhysics::SimulatedBodyComponentRequestsBus::EventResult(
-                parentSimulatedBody, entityId, &AzPhysics::SimulatedBodyComponentRequests::GetSimulatedBody);
-            if (parentSimulatedBody == nullptr)
-            {
-                auto msg = AZStd::string::format("Entity's simulated body doesn't exist");
-                return AZ::Failure(msg);
-            }
-            if (parentSimulatedBody->m_bodyHandle == AzPhysics::InvalidSimulatedBodyHandle)
-            {
-                auto msg = AZStd::string::format("Entity is not a valid simulated body");
-                return AZ::Failure(msg);
-            }
-            return AZ::Success(parentSimulatedBody);
-        }
-    } // namespace
-
     AZ_COMPONENT_IMPL(NamedPoseManager, "NamedPoseManager", NamedPoseManagerTypeId);
 
     void NamedPoseManager::Reflect(AZ::ReflectContext* context)
@@ -202,7 +181,7 @@ namespace SimulationInterfaces
                 AZStd::string::format("Named pose with given name %s has invalid entity ID", name.c_str())));
         }
         // get simulated body
-        auto simulatedBody = GetSimulatedBody(namedPoseEntityId);
+        auto simulatedBody = Utils::GetSimulatedBody(namedPoseEntityId);
         if (!simulatedBody.IsSuccess())
         {
             Bounds emptyBounds;

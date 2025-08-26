@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "AzCore/std/containers/vector.h"
 #include "SimulationInterfacesTypeIds.h"
 
 #include "Result.h"
@@ -16,9 +17,11 @@
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
+#include <simulation_interfaces/msg/entity_category.hpp>
 
 namespace SimulationInterfaces
 {
+    using EntityCategory = simulation_interfaces::msg::EntityCategory::_category_type;
     //! A set of filters to apply to entity queries. See GetEntities, GetEntitiesStates.
     //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityFilters.msg">EntityFilters.msg</a>
     struct EntityFilters
@@ -31,6 +34,7 @@ namespace SimulationInterfaces
         AZStd::shared_ptr<Physics::ShapeConfiguration>
             m_boundsShape; //! A shape to use for filtering entities, null means no bounds filtering
         AZ::Transform m_boundsPose{ AZ::Transform::CreateIdentity() };
+        AZStd::vector<EntityCategory> m_entityCategories;
     };
 
     //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityState.msg">EntityState.msg</a>

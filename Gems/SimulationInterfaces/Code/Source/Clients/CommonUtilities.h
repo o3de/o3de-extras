@@ -9,8 +9,10 @@
 #pragma once
 
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/string/string.h>
+#include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
 #include <LmbrCentral/Scripting/TagComponentBus.h>
 #include <SimulationInterfaces/TagFilter.h>
 
@@ -30,5 +32,7 @@ namespace SimulationInterfaces::Utils
 
     //! Helper function to check if entity tags matcher with given filter
     bool AreTagsMatching(const TagFilter& tagFilter, const LmbrCentral::Tags& entityTags);
+
+    AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> GetSimulatedBody(AZ::EntityId entityId);
 
 } // namespace SimulationInterfaces::Utils
