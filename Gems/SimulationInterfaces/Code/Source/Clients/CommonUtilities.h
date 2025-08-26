@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "SimulationInterfaces/Bounds.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/unordered_map.h>
@@ -34,5 +35,8 @@ namespace SimulationInterfaces::Utils
     bool AreTagsMatching(const TagFilter& tagFilter, const AZStd::vector<AZStd::string>& entityTags);
 
     AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> GetSimulatedBody(AZ::EntityId entityId);
+    
+    // convert collider to Bounds
+    AZ::Outcome<Bounds, AZStd::string> ConvertPhysicalShapeToBounds(AZStd::shared_ptr<Physics::Shape> shape,const AZ::EntityId& entityId);
 
 } // namespace SimulationInterfaces::Utils

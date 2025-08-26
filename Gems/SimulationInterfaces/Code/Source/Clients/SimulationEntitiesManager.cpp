@@ -13,9 +13,11 @@
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
 
+#include "AzCore/RTTI/RTTIMacros.h"
 #include "AzCore/std/algorithm.h"
 #include "AzFramework/Physics/Common/PhysicsSceneQueries.h"
 #include "CommonUtilities.h"
+#include "SimulationInterfaces/Bounds.h"
 #include "SimulationInterfaces/Result.h"
 #include <AzCore/Asset/AssetManager.h>
 #include <AzCore/Asset/AssetManagerBus.h>
@@ -200,6 +202,7 @@ namespace SimulationInterfaces
                 simulation_interfaces::msg::SimulatorFeatures::ENTITY_STATE_SETTING,
                 simulation_interfaces::msg::SimulatorFeatures::ENTITY_INFO_GETTING,
                 simulation_interfaces::msg::SimulatorFeatures::ENTITY_INFO_SETTING,
+                simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS,
                 simulation_interfaces::msg::SimulatorFeatures::DELETING,
                 simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
                 simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
@@ -923,4 +926,37 @@ namespace SimulationInterfaces
         }
     }
 
+    AZ::Outcome<Bounds, FailedResult> SimulationEntitiesManager::GetEntityBounds(const AZStd::string& name)
+    {
+        if (!m_simulatedEntityToEntityIdMap.contains(name))
+        {
+            return AZ::Failure(SimulationInterfaces::FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
+        }
+        auto simulatedBodyOutcome = Utils::GetSimulatedBody(m_simulatedEntityToEntityIdMap.at(name));
+        if (!simulatedBodyOutcome.IsSuccess())
+        {
+            return AZ::Success(Bounds{ 0, {} });
+        }
+        auto rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(simulatedBodyOutcome.GetValue());
+        if (!rigidBody)
+        {
+            return AZ::Success(Bounds{ 0, {} });
+        }
+        if (rigidBody->GetShapeCount() > 1)
+        {
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Entity Bounds in simulation interfaces doesn't support multiple shapes"));
+        }
+        auto shape = rigidBody->GetShape(0);
+        auto boundsOutput = Utils::ConvertPhysicalShapeToBounds(shape, m_simulatedEntityToEntityIdMap.at(name));
+        if (boundsOutput.IsSuccess())
+        {
+            return AZ::Success(boundsOutput.GetValue());
+        }
+
+        return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, boundsOutput.GetError()));
+    }
 } // namespace SimulationInterfaces

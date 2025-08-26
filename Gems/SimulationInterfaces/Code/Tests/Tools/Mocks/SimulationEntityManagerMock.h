@@ -1,4 +1,5 @@
 #pragma once
+#include "SimulationInterfaces/Bounds.h"
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -40,5 +41,6 @@ namespace UnitTest
         MOCK_METHOD1(RemoveSimulatedEntity, AZ::Outcome<void, FailedResult>(const AZStd::string& name));
         MOCK_METHOD2(SetEntityInfo, AZ::Outcome<void, FailedResult>(const AZStd::string& name, const EntityInfo& info));
         MOCK_METHOD1(GetEntityInfo, AZ::Outcome<EntityInfo, FailedResult>(const AZStd::string& name));
+        MOCK_METHOD1(GetEntityBounds, AZ::Outcome<Bounds, FailedResult>(const AZStd::string& name));
     };
 } // namespace UnitTest

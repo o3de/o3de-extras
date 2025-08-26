@@ -44,6 +44,8 @@ set(FILES
     Source/Services/SetEntityStateServiceHandler.h
     Source/Services/SetEntityInfoServiceHandler.cpp
     Source/Services/SetEntityInfoServiceHandler.h
+    Source/Services/GetEntityBoundsServiceHandler.cpp
+    Source/Services/GetEntityBoundsServiceHandler.h
     Source/Services/GetSpawnablesServiceHandler.cpp
     Source/Services/GetSpawnablesServiceHandler.h
     Source/Services/SpawnEntityServiceHandler.cpp
