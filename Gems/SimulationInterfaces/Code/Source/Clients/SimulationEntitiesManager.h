@@ -65,6 +65,7 @@ namespace SimulationInterfaces
         AZ::Outcome<EntityInfo, FailedResult> GetEntityInfo(const AZStd::string& name) override;
         AZ::Outcome<Bounds, FailedResult> GetEntityBounds(const AZStd::string& name) override;
         AZ::Outcome<AZ::EntityId, FailedResult> GetSimulatedEntityId(const AZStd::string& name) override;
+        AZ::Outcome<AZ::EntityId, FailedResult> GetSimulatedEntityRoot(const AZStd::string& name) override;
 
         //! Registers simulated entity to entity id mapping.
         //! Note that the entityId will be registered under unique name.
@@ -91,9 +92,14 @@ namespace SimulationInterfaces
         AzPhysics::SystemEvents::OnSceneRemovedEvent::Handler m_sceneRemovedHandler;
         AzPhysics::SceneHandle m_physicsScenesHandle = AzPhysics::InvalidSceneHandle;
 
+        // simulated entity name to tracked entity
         AZStd::unordered_map<AZStd::string, AZ::EntityId> m_simulatedEntityToEntityIdMap;
+        // tracked entity to simulated entity name
         AZStd::unordered_map<AZ::EntityId, AZStd::string> m_entityIdToSimulatedEntityMap;
         AZStd::unordered_map<AZ::EntityId, EntityState> m_entityIdToInitialState;
+        // simulated Entity name to prefab root (container entity). Not always equal to tracked entity. Applies only to entities spawned by
+        // the simulation Interfaces
+        AZStd::unordered_map<AZStd::string, AZ::EntityId> m_simulatedEntityToPrefabRoot;
 
         // Map holding entityInfo to assigned name
         AZStd::unordered_map<AZStd::string, EntityInfo> m_nameToEntityInfo;

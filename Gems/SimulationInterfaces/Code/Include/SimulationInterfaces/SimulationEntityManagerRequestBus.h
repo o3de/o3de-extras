@@ -145,6 +145,8 @@ namespace SimulationInterfaces
         virtual AZ::Outcome<Bounds, FailedResult> GetEntityBounds(const AZStd::string& name) = 0;
         //! Get Entity Id of the simulated Entity
         virtual AZ::Outcome<AZ::EntityId, FailedResult> GetSimulatedEntityId(const AZStd::string& name) = 0;
+        //! Get Entity Id of the root of the simulated Entity
+        virtual AZ::Outcome<AZ::EntityId, FailedResult> GetSimulatedEntityRoot(const AZStd::string& name) = 0;
     };
 
     class SimulationInterfacesBusTraits : public AZ::EBusTraits

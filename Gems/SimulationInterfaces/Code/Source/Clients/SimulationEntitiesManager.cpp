@@ -219,6 +219,7 @@ namespace SimulationInterfaces
 
         m_entityIdToSimulatedEntityMap.clear();
         m_simulatedEntityToEntityIdMap.clear();
+        m_simulatedEntityToPrefabRoot.clear();
         m_entityIdToInitialState.clear();
         m_spawnedTickets.clear();
     }
@@ -599,6 +600,9 @@ namespace SimulationInterfaces
         const auto ticketId = entity->GetEntitySpawnTicketId();
         if (m_spawnedTickets.find(ticketId) != m_spawnedTickets.end())
         {
+            // valid because this entity was spawned by this component
+            // data is added to beow map only in spawn completion callback
+            m_simulatedEntityToPrefabRoot.erase(name);
             // get spawner
             auto spawner = AZ::Interface<AzFramework::SpawnableEntitiesDefinition>::Get();
             AZ_Assert(spawner, "SpawnableEntitiesDefinition is not available.");
@@ -641,6 +645,7 @@ namespace SimulationInterfaces
         // clear collected data about simulated entities
         m_entityIdToSimulatedEntityMap.clear();
         m_simulatedEntityToEntityIdMap.clear();
+        m_simulatedEntityToPrefabRoot.clear();
         m_entityIdToInitialState.clear();
         m_nameToEntityInfo.clear();
         m_categoryToNames.clear();
@@ -818,6 +823,7 @@ namespace SimulationInterfaces
                 auto finalNameOutcome = RegisterNewSimulatedBody(spawnData->second.m_userProposedName, trackingEntity);
                 if (finalNameOutcome.IsSuccess())
                 {
+                    m_simulatedEntityToPrefabRoot[finalNameOutcome.GetValue()] = root->GetId();
                     spawnData->second.m_completedCb(AZ::Success(finalNameOutcome.GetValue()));
                 }
                 else
@@ -992,5 +998,16 @@ namespace SimulationInterfaces
                 AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
         }
         return AZ::Success(m_simulatedEntityToEntityIdMap.at(name));
+    }
+
+    AZ::Outcome<AZ::EntityId, FailedResult> SimulationEntitiesManager::GetSimulatedEntityRoot(const AZStd::string& name)
+    {
+        if (!m_simulatedEntityToPrefabRoot.contains(name))
+        {
+            return AZ::Failure(SimulationInterfaces::FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                AZStd::string::format("Entity with given name \"%s\" doesn't exists in available cache of prefab roots", name.c_str())));
+        }
+        return AZ::Success(m_simulatedEntityToPrefabRoot.at(name));
     }
 } // namespace SimulationInterfaces
