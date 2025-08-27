@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #include "LevelManager.h"
 #include "SimulationInterfaces/SimulationMangerRequestBus.h"
@@ -24,10 +31,10 @@
 #include <simulation_interfaces/srv/unload_world.hpp>
 
 // ordering important
-// begin
+// clang-format off
 #include <CryCommon/ILevelSystem.h>
 #include <CryCommon/ISystem.h>
-// end
+// clang-format on
 
 namespace SimulationInterfaces
 {
@@ -77,22 +84,6 @@ namespace SimulationInterfaces
         dependent.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
     }
 
-    LevelManager::LevelManager()
-    {
-        if (LevelManagerRequestBusInterface::Get() == nullptr)
-        {
-            LevelManagerRequestBusInterface::Register(this);
-        }
-    }
-
-    LevelManager::~LevelManager()
-    {
-        if (LevelManagerRequestBusInterface::Get() == this)
-        {
-            LevelManagerRequestBusInterface::Unregister(this);
-        }
-    }
-
     void LevelManager::Activate()
     {
         LevelManagerRequestBus::Handler::BusConnect();
@@ -137,8 +128,12 @@ namespace SimulationInterfaces
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
 
-        constexpr const char* errorMsg = "Online search is not implemented yet, only offline search is performed";
-        AZ_Warning("SimulationInterfaces", request.offlineOnly, errorMsg);
+        if (!request.offlineOnly)
+        {
+            constexpr const char* errorMsg = "Online search is not implemented yet, only pure offline search is supported";
+            AZ_Warning("SimulationInterfaces", false, errorMsg);
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
+        }
 
         const auto allLevels = GetAllAvailableLevels();
         if (!allLevels.IsSuccess())
@@ -258,6 +253,8 @@ namespace SimulationInterfaces
         {
             constexpr const char* errorMsg = "Failed to load world";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
+            SimulationManagerRequestBus::Broadcast(
+                &SimulationManagerRequests::SetSimulationState, simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
             return AZ::Failure(FailedResult(simulation_interfaces::srv::LoadWorld::Response::RESOURCE_PARSE_ERROR, errorMsg));
         }
         // notify state machine

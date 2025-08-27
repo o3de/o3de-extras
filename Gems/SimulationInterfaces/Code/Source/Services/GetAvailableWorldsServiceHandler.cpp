@@ -69,7 +69,7 @@ namespace ROS2SimulationInterfaces
                 AZStd::back_inserter(response.worlds),
                 [](const SimulationInterfaces::WorldResource& resource)
                 {
-                    return Utils::ConvertWorldResource(resource);
+                    return Utils::ConvertToRos2WorldResource(resource);
                 });
         }
         return response;

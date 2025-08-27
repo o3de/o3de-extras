@@ -77,8 +77,9 @@ namespace ROS2SimulationInterfaces
     {
         ROS2SimulationInterfacesRequestBus::Handler::BusConnect();
         AZ::ApplicationTypeQuery appType;
+        bool isAppEditor;
         AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
-        m_isAppEditor = (appType.IsValid() && appType.IsEditor());
+        isAppEditor = (appType.IsValid() && appType.IsEditor());
 
         rclcpp::Node::SharedPtr ros2Node = rclcpp::Node::SharedPtr(ROS2::ROS2Interface::Get()->GetNode());
         AZ_Assert(ros2Node, "ROS2 node is not available.");
@@ -99,7 +100,7 @@ namespace ROS2SimulationInterfaces
         RegisterInterface<GetNamedPosesServiceHandler>(ros2Node);
         RegisterInterface<GetNamedPoseBoundsServiceHandler>(ros2Node);
         RegisterInterface<GetAvailableWorldsServiceHandler>(ros2Node);
-        if (!m_isAppEditor)
+        if (!isAppEditor)
         {
             // services related to world loading and unloading are available only in GameLauncher
             // prevent creation of those service handlers

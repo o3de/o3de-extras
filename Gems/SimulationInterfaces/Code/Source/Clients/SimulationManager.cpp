@@ -348,7 +348,7 @@ namespace SimulationInterfaces
         SetSimulationPaused(false);
     }
 
-    AZ::Outcome<void, FailedResult> SimulationManager::RestartSimulation(ReloadLevelCallback completionCallback)
+    AZ::Outcome<void, FailedResult> SimulationManager::ResetSimulation(ReloadLevelCallback completionCallback)
     {
         // check if simulation has loaded level - if not it is impossible to restart it since there is no default state
         if (m_simulationState == simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD ||

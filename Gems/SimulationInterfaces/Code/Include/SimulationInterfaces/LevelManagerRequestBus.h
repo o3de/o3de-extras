@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "AzCore/Outcome/Outcome.h"
-#include "SimulationInterfaces/Resource.h"
-#include "SimulationInterfaces/Result.h"
-#include "SimulationInterfaces/TagFilter.h"
 #include "SimulationInterfacesTypeIds.h"
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
+#include <SimulationInterfaces/Resource.h>
+#include <SimulationInterfaces/Result.h>
+#include <SimulationInterfaces/TagFilter.h>
 
 #include "WorldResource.h"
 #include <AzCore/EBus/EBus.h>
@@ -75,6 +75,5 @@ namespace SimulationInterfaces
     };
 
     using LevelManagerRequestBus = AZ::EBus<LevelManagerRequests, LevelManagerRequestBusTraits>;
-    using LevelManagerRequestBusInterface = AZ::Interface<LevelManagerRequests>;
 
 } // namespace SimulationInterfaces

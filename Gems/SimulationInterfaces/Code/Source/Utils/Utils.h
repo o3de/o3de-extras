@@ -64,7 +64,7 @@ namespace ROS2SimulationInterfaces::Utils
         return AZ::Success(AZStd::move(filter));
     }
 
-    inline simulation_interfaces::msg::WorldResource ConvertWorldResource(const SimulationInterfaces::WorldResource& resource)
+    inline simulation_interfaces::msg::WorldResource ConvertToRos2WorldResource(const SimulationInterfaces::WorldResource& resource)
     {
         simulation_interfaces::msg::WorldResource worldResource;
         worldResource.name = resource.m_name.c_str();

@@ -37,7 +37,7 @@ namespace ROS2SimulationInterfaces
         else
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
-            response.world = Utils::ConvertWorldResource(currentWorld.GetValue());
+            response.world = Utils::ConvertToRos2WorldResource(currentWorld.GetValue());
         }
         return response;
     }

@@ -7,14 +7,14 @@
  */
 
 #include "ResetSimulationServiceHandler.h"
-#include "Services/ROS2ServiceBase.h"
-#include "SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h"
-#include "SimulationInterfaces/Result.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/optional.h>
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/ROS2Bus.h>
+#include <Services/ROS2ServiceBase.h>
+#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
+#include <SimulationInterfaces/Result.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
@@ -119,14 +119,14 @@ namespace ROS2SimulationInterfaces
                 response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
                 SendResponse(response);
             };
-            AZ::Outcome<void, SimulationInterfaces::FailedResult> restartPossible;
+            AZ::Outcome<void, SimulationInterfaces::FailedResult> restartOutcome;
             SimulationInterfaces::SimulationManagerRequestBus::BroadcastResult(
-                restartPossible, &SimulationInterfaces::SimulationManagerRequests::RestartSimulation, levelReloadCompletion);
-            if (!restartPossible.IsSuccess())
+                restartOutcome, &SimulationInterfaces::SimulationManagerRequests::ResetSimulation, levelReloadCompletion);
+            if (!restartOutcome.IsSuccess())
             {
                 Response invalidResponse;
-                invalidResponse.result.result = restartPossible.GetError().m_errorCode;
-                invalidResponse.result.error_message = restartPossible.GetError().m_errorString.c_str();
+                invalidResponse.result.result = restartOutcome.GetError().m_errorCode;
+                invalidResponse.result.error_message = restartOutcome.GetError().m_errorString.c_str();
                 return invalidResponse;
             }
 

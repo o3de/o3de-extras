@@ -57,7 +57,7 @@ namespace SimulationInterfaces
 
     private:
         // SimulationManagerRequestBus interface implementation
-        AZ::Outcome<void, FailedResult> RestartSimulation(ReloadLevelCallback completionCallback) override;
+        AZ::Outcome<void, FailedResult> ResetSimulation(ReloadLevelCallback completionCallback) override;
         void SetSimulationPaused(bool paused) override;
         void StepSimulation(AZ::u64 steps) override;
         bool IsSimulationPaused() const override;

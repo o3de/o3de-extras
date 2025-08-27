@@ -7,8 +7,8 @@
  */
 
 #pragma once
-#include "SimulationInterfaces/LevelManagerRequestBus.h"
 #include <AzCore/Component/Component.h>
+#include <SimulationInterfaces/LevelManagerRequestBus.h>
 
 namespace SimulationInterfaces
 {
@@ -26,10 +26,11 @@ namespace SimulationInterfaces
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
-        LevelManager();
-        ~LevelManager();
+        LevelManager() = default;
+        ~LevelManager() = default;
 
-        // AZ::Component
+    protected:
+        // AZ::Component interface implementation
         void Activate() override;
         void Deactivate() override;
 
