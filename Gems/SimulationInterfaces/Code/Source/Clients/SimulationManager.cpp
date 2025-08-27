@@ -7,9 +7,6 @@
  */
 
 #include "SimulationManager.h"
-#include "SimulationInterfaces/LevelManagerRequestBus.h"
-#include "SimulationInterfaces/SimulationMangerRequestBus.h"
-#include "SimulationInterfaces/WorldResource.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Outcome/Outcome.h>
@@ -18,8 +15,11 @@
 #include <AzFramework/Components/ConsoleBus.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <DebugDraw/DebugDrawBus.h>
+#include <SimulationInterfaces/LevelManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
+#include <SimulationInterfaces/SimulationMangerRequestBus.h>
+#include <SimulationInterfaces/WorldResource.h>
 #include <simulation_interfaces/msg/result.hpp>
 #include <simulation_interfaces/msg/simulation_state.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>

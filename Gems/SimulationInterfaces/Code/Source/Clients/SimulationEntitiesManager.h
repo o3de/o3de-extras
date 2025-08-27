@@ -100,6 +100,13 @@ namespace SimulationInterfaces
         AZStd::unordered_map<EntityCategory, AZStd::unordered_set<AZStd::string>> m_categoryToNames;
 
         AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, AzFramework::EntitySpawnTicket> m_spawnedTickets;
+
+        struct SpawnCompletedCbData
+        {
+            AZStd::string m_userProposedName; //! Name proposed by the User in spawn request
+            SpawnCompletedCb m_completedCb; //! User callback to be called when the entity is registered
+        };
+        AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, SpawnCompletedCbData> m_spawnCompletedCallbacks;
     };
 
 } // namespace SimulationInterfaces

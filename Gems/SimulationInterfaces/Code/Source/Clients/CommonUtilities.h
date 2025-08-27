@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "SimulationInterfaces/Bounds.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
 #include <LmbrCentral/Scripting/TagComponentBus.h>
+#include <SimulationInterfaces/Bounds.h>
 #include <SimulationInterfaces/TagFilter.h>
 
 namespace SimulationInterfaces::Utils
@@ -25,18 +25,18 @@ namespace SimulationInterfaces::Utils
     AZStd::string RelPathToUri(AZStd::string_view relPath);
     AZStd::string UriToRelPath(AZStd::string_view relPath);
 
-    //! Filter given map by given tag
-    //! @param entitiesToFilter map [entityName,entityId] which should be processed
+    //! Filter named poses given by map by given tag filter
+    //! @param entitiesToFilter map [entityName,entityId] describing NamedPoses which should be processed
     //! @param tagFilter definition of tag filter to apply
-    AZStd::unordered_map<AZStd::string, AZ::EntityId> FilterEntitiesByTag(
+    AZStd::unordered_map<AZStd::string, AZ::EntityId> FilterNamedPosesByTag(
         const AZStd::unordered_map<AZStd::string, AZ::EntityId>& entitiesToFilter, const TagFilter& tagFilter);
 
     //! Helper function to check if entity tags matcher with given filter
     bool AreTagsMatching(const TagFilter& tagFilter, const AZStd::vector<AZStd::string>& entityTags);
 
     AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> GetSimulatedBody(AZ::EntityId entityId);
-    
+
     // convert collider to Bounds
-    AZ::Outcome<Bounds, AZStd::string> ConvertPhysicalShapeToBounds(AZStd::shared_ptr<Physics::Shape> shape,const AZ::EntityId& entityId);
+    AZ::Outcome<Bounds, AZStd::string> ConvertPhysicalShapeToBounds(AZStd::shared_ptr<Physics::Shape> shape, const AZ::EntityId& entityId);
 
 } // namespace SimulationInterfaces::Utils

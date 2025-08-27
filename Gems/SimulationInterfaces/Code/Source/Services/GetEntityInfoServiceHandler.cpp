@@ -7,11 +7,11 @@
  */
 
 #include "GetEntityInfoServiceHandler.h"
-#include "Utils/RegistryUtils.h"
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <simulation_interfaces/msg/detail/entity_info__struct.hpp>
+#include <Utils/RegistryUtils.h>
+
 namespace ROS2SimulationInterfaces
 {
 
@@ -39,7 +39,6 @@ namespace ROS2SimulationInterfaces
             return response;
         }
 
-        const auto simulatorFrameId = RegistryUtilities::GetSimulatorROS2Frame();
         simulation_interfaces::msg::EntityInfo entityInfoMsg;
         entityInfoMsg.category.category = outcome.GetValue().m_category;
         entityInfoMsg.description = outcome.GetValue().m_description.c_str();

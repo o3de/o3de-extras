@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "AzCore/std/algorithm.h"
-#include "AzCore/std/iterator.h"
+#include <AzCore/std/algorithm.h>
+#include <AzCore/std/iterator.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
@@ -81,7 +81,7 @@ namespace ROS2SimulationInterfaces::Utils
         AZStd::transform(
             request.filters.tags.tags.begin(),
             request.filters.tags.tags.end(),
-            AZStd::inserter(filter.m_tagsFilter.m_tags,filter.m_tagsFilter.m_tags.end()),
+            AZStd::inserter(filter.m_tagsFilter.m_tags, filter.m_tagsFilter.m_tags.end()),
             [](const std::string& tag)
             {
                 return tag.c_str();

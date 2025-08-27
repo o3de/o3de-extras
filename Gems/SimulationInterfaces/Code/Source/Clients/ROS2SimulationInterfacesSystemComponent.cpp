@@ -126,9 +126,17 @@ namespace ROS2SimulationInterfaces
         }
     }
 
+    void ROS2SimulationInterfacesSystemComponent::AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatureType>& features)
+    {
+        m_externallyRegisteredFeatures.insert(features.begin(), features.end());
+    }
+
     AZStd::unordered_set<SimulationFeatureType> ROS2SimulationInterfacesSystemComponent::GetSimulationFeatures()
     {
         AZStd::unordered_set<SimulationFeatureType> result;
+        // add externally registered features
+        result.insert(m_externallyRegisteredFeatures.begin(), m_externallyRegisteredFeatures.end());
+        // add features from existing handlers
         for (auto& [handlerType, handler] : m_availableRos2Interface)
         {
             auto features = handler->GetProvidedFeatures();

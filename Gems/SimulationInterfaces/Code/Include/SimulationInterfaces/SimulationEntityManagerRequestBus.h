@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "AzCore/Outcome/Outcome.h"
-#include "AzCore/std/string/string.h"
-#include "SimulationInterfaces/Bounds.h"
 #include "SimulationInterfacesTypeIds.h"
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/vector.h>
+#include <AzCore/std/string/string.h>
+#include <SimulationInterfaces/Bounds.h>
 
 #include "Result.h"
 #include "TagFilter.h"

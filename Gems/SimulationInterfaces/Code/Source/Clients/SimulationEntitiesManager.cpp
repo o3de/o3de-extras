@@ -13,12 +13,8 @@
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
 
-#include "AzCore/RTTI/RTTIMacros.h"
-#include "AzCore/std/algorithm.h"
-#include "AzFramework/Physics/Common/PhysicsSceneQueries.h"
+#include "AzCore/Debug/Trace.h"
 #include "CommonUtilities.h"
-#include "SimulationInterfaces/Bounds.h"
-#include "SimulationInterfaces/Result.h"
 #include <AzCore/Asset/AssetManager.h>
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
@@ -27,18 +23,23 @@
 #include <AzCore/Console/IConsole.h>
 #include <AzCore/Math/Obb.h>
 #include <AzCore/Outcome/Outcome.h>
+#include <AzCore/RTTI/RTTIMacros.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Settings/SettingsRegistry.h>
+#include <AzCore/std/algorithm.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/regex.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Components/TransformComponent.h>
+#include <AzFramework/Physics/Common/PhysicsSceneQueries.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
+#include <SimulationInterfaces/Bounds.h>
+#include <SimulationInterfaces/Result.h>
 
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <simulation_interfaces/msg/result.hpp>
@@ -247,13 +248,14 @@ namespace SimulationInterfaces
         {
             // remove registry
             const auto& entityId = findIt->second;
-            m_entityIdToSimulatedEntityMap.erase(entityId);
-            m_simulatedEntityToEntityIdMap.erase(findIt);
             // remove initial state
             if (auto findStateIt = m_entityIdToInitialState.find(entityId); findStateIt != m_entityIdToInitialState.end())
             {
                 m_entityIdToInitialState.erase(findStateIt);
             }
+            m_entityIdToSimulatedEntityMap.erase(entityId);
+            m_simulatedEntityToEntityIdMap.erase(findIt);
+
             RemoveEntityInfoIfNeeded(name);
             return AZ::Success();
         }
@@ -294,12 +296,13 @@ namespace SimulationInterfaces
         {
             for (auto& category : filter.m_entityCategories)
             {
+                const auto categoryExists = m_categoryToNames.contains(category);
                 AZ_Warning(
                     "SpawnableSceneProviderSystemComponent",
-                    m_categoryToNames.contains(category),
+                    categoryExists,
                     "Category %d doesn't exists in database, will be skipped",
                     category);
-                if (m_categoryToNames.contains(category))
+                if (categoryExists)
                 {
                     AZStd::transform(
                         m_categoryToNames.at(category).begin(),
@@ -320,6 +323,7 @@ namespace SimulationInterfaces
             entities.clear();
             for (const auto& name : prefilteredEntities)
             {
+                // if entity doesn't have entity info it cannot be filtered by tag so it should be skipped
                 auto findIt = m_nameToEntityInfo.find(name);
                 if (findIt == m_nameToEntityInfo.end())
                 {
@@ -397,6 +401,10 @@ namespace SimulationInterfaces
                     {
                         entities.push_back(name);
                     }
+                }
+                else
+                {
+                    AZ_Warning("SimulationInterfaces", false, "Unsupported bounds type, skipped");
                 }
             }
         }
@@ -777,7 +785,7 @@ namespace SimulationInterfaces
         };
 
         optionalArgs.m_completionCallback =
-            [this, name, completedCb](AzFramework::EntitySpawnTicket::Id ticketId, AzFramework::SpawnableConstEntityContainerView view)
+            [this](AzFramework::EntitySpawnTicket::Id ticketId, AzFramework::SpawnableConstEntityContainerView view)
         {
             const AZ::Entity* root = *view.begin();
             AZ::EntityId trackingEntity{ AZ::EntityId::InvalidEntityId };
@@ -798,24 +806,35 @@ namespace SimulationInterfaces
                     break;
                 }
             }
+
             if (!trackingEntity.IsValid()) // physical entity was not found, assign root instead
             {
                 trackingEntity = root->GetId();
             }
-            auto finalNameOutcome = RegisterNewSimulatedBody(name, trackingEntity);
-            if (finalNameOutcome.IsSuccess())
+
+            auto spawnData = m_spawnCompletedCallbacks.find(ticketId);
+            if (spawnData != m_spawnCompletedCallbacks.end())
             {
-                completedCb(AZ::Success(finalNameOutcome.GetValue()));
-            }
-            else
-            {
-                completedCb(AZ::Failure(FailedResult(
-                    simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Failed to spawn/or register simulation entity")));
+                auto finalNameOutcome = RegisterNewSimulatedBody(spawnData->second.m_userProposedName, trackingEntity);
+                if (finalNameOutcome.IsSuccess())
+                {
+                    spawnData->second.m_completedCb(AZ::Success(finalNameOutcome.GetValue()));
+                }
+                else
+                {
+                    spawnData->second.m_completedCb(AZ::Failure(FailedResult(
+                        simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Failed to spawn/or register simulation entity")));
+                }
+                m_spawnCompletedCallbacks.erase(spawnData);
             }
         };
 
         spawner->SpawnAllEntities(ticket, optionalArgs);
         auto ticketId = ticket.GetId();
+        SpawnCompletedCbData data;
+        data.m_completedCb = completedCb;
+        data.m_userProposedName = name;
+        m_spawnCompletedCallbacks[ticketId] = data;
         m_spawnedTickets[ticketId] = ticket;
         AZ_Info("SimulationInterfaces", "Spawning uri %s with ticket id %d\n", uri.c_str(), ticketId);
     }
@@ -904,13 +923,14 @@ namespace SimulationInterfaces
                 AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
         }
 
-        if (!m_nameToEntityInfo.contains(name))
+        auto findIt = m_nameToEntityInfo.find(name);
+        if (findIt == m_nameToEntityInfo.end())
         {
             const auto msg = AZStd::string::format("Entity with given name \"%s\" doesn't have assigned EntityInfo", name.c_str());
             AZ_Warning("SpawnableSceneProviderSystemComponent", false, msg.c_str());
             return AZ::Failure(SimulationInterfaces::FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, msg));
         }
-        return AZ::Success(m_nameToEntityInfo.at(name));
+        return AZ::Success(findIt->second);
     }
 
     void SimulationEntitiesManager::RemoveEntityInfoIfNeeded(const AZStd::string& name)
@@ -944,12 +964,15 @@ namespace SimulationInterfaces
         {
             return AZ::Success(Bounds{ 0, {} });
         }
-        if (rigidBody->GetShapeCount() > 1)
+        if (rigidBody->GetShapeCount() == 0)
         {
             return AZ::Failure(FailedResult(
-                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
-                "Entity Bounds in simulation interfaces doesn't support multiple shapes"));
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Entity doesn't have colliders/boundss to return"));
         }
+        AZ_Warning(
+            "Simulation Interfaces",
+            rigidBody->GetShapeCount() == 1,
+            "Entity Bounds in simulation interfaces doesn't support multiple shapes, only first one will be taken ");
         auto shape = rigidBody->GetShape(0);
         auto boundsOutput = Utils::ConvertPhysicalShapeToBounds(shape, m_simulatedEntityToEntityIdMap.at(name));
         if (boundsOutput.IsSuccess())

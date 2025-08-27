@@ -66,7 +66,7 @@ namespace SimulationInterfaces::Utils
         return matchAllTags && true;
     }
 
-    AZStd::unordered_map<AZStd::string, AZ::EntityId> FilterEntitiesByTag(
+    AZStd::unordered_map<AZStd::string, AZ::EntityId> FilterNamedPosesByTag(
         const AZStd::unordered_map<AZStd::string, AZ::EntityId>& entitiesToFilter, const TagFilter& tagFilter)
     {
         AZStd::unordered_map<AZStd::string, AZ::EntityId> filteredEntities;

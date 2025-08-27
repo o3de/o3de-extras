@@ -6,14 +6,9 @@
  *
  */
 
-#include "Clients/NamedPosesManager.h"
+#include <Clients/NamedPosesManager.h>
 
 #include "CommonUtilities.h"
-#include "Components/NamedPoseComponent.h"
-#include "SimulationInterfaces/Bounds.h"
-#include "SimulationInterfaces/NamedPoseManagerRequestBus.h"
-#include "SimulationInterfaces/Result.h"
-#include "SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Math/Transform.h>
@@ -23,6 +18,11 @@
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Entity/GameEntityContextBus.h>
+#include <Components/NamedPoseComponent.h>
+#include <SimulationInterfaces/Bounds.h>
+#include <SimulationInterfaces/NamedPoseManagerRequestBus.h>
+#include <SimulationInterfaces/Result.h>
+#include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 
 #include <AzFramework/Physics/Shape.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
@@ -30,7 +30,6 @@
 #include <LmbrCentral/Scripting/TagComponentBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
-#include <simulation_interfaces/msg/detail/result__struct.hpp>
 #include <simulation_interfaces/msg/result.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 #include <simulation_interfaces/srv/spawn_entity.hpp>
@@ -154,7 +153,7 @@ namespace SimulationInterfaces
 
     AZ::Outcome<NamedPoseList, FailedResult> NamedPoseManager::GetNamedPoses(const TagFilter& tags)
     {
-        auto filteredEntities = Utils::FilterEntitiesByTag(m_namedPoseToEntityId, tags);
+        auto filteredEntities = Utils::FilterNamedPosesByTag(m_namedPoseToEntityId, tags);
         NamedPoseList namedPoseList;
         namedPoseList.reserve(filteredEntities.size());
         for (auto& [name, entityId] : filteredEntities)

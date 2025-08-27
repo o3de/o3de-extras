@@ -7,11 +7,10 @@
  */
 
 #include "SetEntityInfoServiceHandler.h"
-#include "Utils/RegistryUtils.h"
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <simulation_interfaces/msg/detail/entity_info__struct.hpp>
+
 namespace ROS2SimulationInterfaces
 {
 
