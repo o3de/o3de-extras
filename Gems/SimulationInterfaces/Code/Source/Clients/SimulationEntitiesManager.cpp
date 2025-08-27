@@ -982,4 +982,15 @@ namespace SimulationInterfaces
 
         return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, boundsOutput.GetError()));
     }
+
+    AZ::Outcome<AZ::EntityId, FailedResult> SimulationEntitiesManager::GetSimulatedEntityId(const AZStd::string& name)
+    {
+        if (!m_simulatedEntityToEntityIdMap.contains(name))
+        {
+            return AZ::Failure(SimulationInterfaces::FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
+        }
+        return AZ::Success(m_simulatedEntityToEntityIdMap.at(name));
+    }
 } // namespace SimulationInterfaces

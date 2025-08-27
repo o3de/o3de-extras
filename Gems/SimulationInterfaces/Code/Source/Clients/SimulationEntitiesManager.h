@@ -64,6 +64,7 @@ namespace SimulationInterfaces
         AZ::Outcome<void, FailedResult> SetEntityInfo(const AZStd::string& name, const EntityInfo& info) override;
         AZ::Outcome<EntityInfo, FailedResult> GetEntityInfo(const AZStd::string& name) override;
         AZ::Outcome<Bounds, FailedResult> GetEntityBounds(const AZStd::string& name) override;
+        AZ::Outcome<AZ::EntityId, FailedResult> GetSimulatedEntityId(const AZStd::string& name) override;
 
         //! Registers simulated entity to entity id mapping.
         //! Note that the entityId will be registered under unique name.

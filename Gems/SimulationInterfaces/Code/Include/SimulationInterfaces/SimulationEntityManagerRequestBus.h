@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "AzCore/Component/EntityId.h"
 #include "SimulationInterfacesTypeIds.h"
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/vector.h>
@@ -142,6 +143,8 @@ namespace SimulationInterfaces
         virtual AZ::Outcome<EntityInfo, FailedResult> GetEntityInfo(const AZStd::string& name) = 0;
         //! Get information about bounds of the entity with given name
         virtual AZ::Outcome<Bounds, FailedResult> GetEntityBounds(const AZStd::string& name) = 0;
+        //! Get Entity Id of the simulated Entity
+        virtual AZ::Outcome<AZ::EntityId, FailedResult> GetSimulatedEntityId(const AZStd::string& name) = 0;
     };
 
     class SimulationInterfacesBusTraits : public AZ::EBusTraits

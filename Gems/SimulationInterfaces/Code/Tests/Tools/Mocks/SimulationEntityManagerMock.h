@@ -42,5 +42,6 @@ namespace UnitTest
         MOCK_METHOD2(SetEntityInfo, AZ::Outcome<void, FailedResult>(const AZStd::string& name, const EntityInfo& info));
         MOCK_METHOD1(GetEntityInfo, AZ::Outcome<EntityInfo, FailedResult>(const AZStd::string& name));
         MOCK_METHOD1(GetEntityBounds, AZ::Outcome<Bounds, FailedResult>(const AZStd::string& name));
+        MOCK_METHOD1(GetSimulatedEntityId, AZ::Outcome<AZ::EntityId, FailedResult>(const AZStd::string& name));
     };
 } // namespace UnitTest

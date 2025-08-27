@@ -10,7 +10,7 @@
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <Utils/RegistryUtils.h>
+#include <SimulationInterfaces/RegistryUtils.h>
 
 namespace ROS2SimulationInterfaces
 {
