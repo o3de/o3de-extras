@@ -21,6 +21,7 @@
 #include <SimulationInterfaces/LevelManagerRequestBus.h>
 #include <SimulationInterfaces/Resource.h>
 #include <SimulationInterfaces/Result.h>
+#include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 #include <SimulationInterfaces/WorldResource.h>
@@ -86,7 +87,6 @@ namespace SimulationInterfaces
 
     void LevelManager::Activate()
     {
-        LevelManagerRequestBus::Handler::BusConnect();
         AZ::ApplicationTypeQuery appType;
         AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
         m_isAppEditor = (appType.IsValid() && appType.IsEditor());
@@ -104,14 +104,18 @@ namespace SimulationInterfaces
                                                              simulation_interfaces::msg::SimulatorFeatures::WORLD_LOADING,
                                                              simulation_interfaces::msg::SimulatorFeatures::WORLD_UNLOADING });
         }
+        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusConnect();
+        LevelManagerRequestBus::Handler::BusConnect();
     }
     void LevelManager::Deactivate()
     {
         LevelManagerRequestBus::Handler::BusDisconnect();
+        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
     }
 
     AZ::Outcome<WorldResourcesList, FailedResult> LevelManager::GetAvailableWorlds(const GetWorldsRequest& request)
     {
+        m_actionRequestedFromSimInterfaces = true;
         WorldResourcesList availableWorlds;
         // request validation
         if (!request.additionalSources.empty())
@@ -145,6 +149,7 @@ namespace SimulationInterfaces
             availableWorlds.emplace_back(
                 GetLevelNameFromAssetPath(levelPath), Resource{ levelPath, "" }, "", AZStd::vector<AZStd::string>{});
         }
+        m_actionRequestedFromSimInterfaces = false;
         return AZ::Success(availableWorlds);
     }
 
@@ -156,7 +161,7 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
-
+        m_actionRequestedFromSimInterfaces = true;
         WorldResource currentWorld;
         auto* levelInterface = AzFramework::LevelSystemLifecycleInterface::Get();
         if (levelInterface == nullptr)
@@ -185,6 +190,7 @@ namespace SimulationInterfaces
         auto levelName = GetLevelNameFromAssetPath(levelPathStr);
         currentWorld.m_worldResource.m_uri = levelPathStr;
         currentWorld.m_name = levelName;
+        m_actionRequestedFromSimInterfaces = false;
         return AZ::Success(currentWorld);
     }
 
@@ -196,7 +202,7 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
-
+        m_actionRequestedFromSimInterfaces = true;
         WorldResource loadedWorld;
 
         if (request.levelResource.m_resourceString.empty() && request.levelResource.m_uri.empty())
@@ -262,6 +268,7 @@ namespace SimulationInterfaces
             &SimulationManagerRequests::SetSimulationState, simulation_interfaces::msg::SimulationState::STATE_STOPPED);
         // fill up response
         loadedWorld.m_worldResource = request.levelResource;
+        m_actionRequestedFromSimInterfaces = false;
         return AZ::Success(loadedWorld);
     }
 
@@ -273,6 +280,7 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
+        m_actionRequestedFromSimInterfaces = true;
         const auto currentLevel = GetCurrentWorld();
         if (!currentLevel.IsSuccess())
         {
@@ -294,6 +302,7 @@ namespace SimulationInterfaces
         levelSystem->UnloadLevel();
         SimulationManagerRequestBus::Broadcast(
             &SimulationManagerRequests::SetSimulationState, simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
+        m_actionRequestedFromSimInterfaces = false;
         return AZ::Success();
     }
 
@@ -305,6 +314,7 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return;
         }
+        m_actionRequestedFromSimInterfaces = true;
         auto levelGathering = GetCurrentWorld();
         if (!levelGathering.IsSuccess())
         {
@@ -315,6 +325,7 @@ namespace SimulationInterfaces
         LoadWorldRequest request;
         request.levelResource = levelGathering.GetValue().m_worldResource;
         LoadWorld(request);
+        m_actionRequestedFromSimInterfaces = false;
     }
 
     AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> LevelManager::GetAllAvailableLevels()
@@ -352,4 +363,38 @@ namespace SimulationInterfaces
 
         return AZ::Success(levelNames);
     }
+
+    // below callbacks are triggered when simulation interfaces were used as well.
+    // methods related to simulation interfaces have their own handling so to not duplicate handling, calls in this method are possible only
+    // they were triggered in other way than simulation interfaces
+    void LevelManager::OnLoadingStart(const char* levelName)
+    {
+        if (!m_actionRequestedFromSimInterfaces)
+        {
+            SimulationManagerRequestBus::Broadcast(
+                &SimulationManagerRequests::SetSimulationState, simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD);
+        }
+    }
+    void LevelManager::OnLoadingComplete(const char* levelName)
+    {
+        if (!m_actionRequestedFromSimInterfaces)
+        {
+            SimulationManagerRequestBus::Broadcast(
+                &SimulationManagerRequests::SetSimulationState, simulation_interfaces::msg::SimulationState::STATE_STOPPED);
+        }
+    }
+    void LevelManager::OnUnloadComplete(const char* levelName)
+    {
+        if (!m_actionRequestedFromSimInterfaces)
+        {
+            SimulationEntityManagerRequestBus::Broadcast(
+                &SimulationEntityManagerRequests::DeleteAllEntities,
+                [](const AZ::Outcome<void, FailedResult>& outcome)
+                {
+                });
+            SimulationManagerRequestBus::Broadcast(
+                &SimulationManagerRequests::SetSimulationState, simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
+        }
+    }
+
 } // namespace SimulationInterfaces
