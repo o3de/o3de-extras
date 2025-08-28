@@ -275,7 +275,7 @@ namespace SimulationInterfaces
                     }
                     else if (getCurrentWorldOutcome.IsSuccess())
                     {
-                        m_startedWithLoadedLevel = true;
+                        m_levelLoadedAtStartup = getCurrentWorldOutcome.GetValue().m_worldResource.m_uri;
                         InitializeSimulationState();
                     }
                 });
@@ -288,6 +288,7 @@ namespace SimulationInterfaces
         UnregisterAllTransitionKeys();
         AZ::TickBus::Handler::BusDisconnect();
         SimulationManagerRequestBus::Handler::BusDisconnect();
+        m_levelLoadedAtStartup.reset();
     }
 
     bool SimulationManager::IsSimulationPaused() const
@@ -377,17 +378,19 @@ namespace SimulationInterfaces
         m_reloadLevelCallback = completionCallback;
         // We need to delete all entities before reloading the level
         DeletionCompletedCb deleteAllCompletion =
-            [startedWithLevel = m_startedWithLoadedLevel, completionCallback](const AZ::Outcome<void, FailedResult>& result)
+            [levelLoadedAtStartup = m_levelLoadedAtStartup, completionCallback](const AZ::Outcome<void, FailedResult>& result)
         {
             AZ_Info("SimulationManager", "Delete all entities completed: %s, reload level", result.IsSuccess() ? "true" : "false");
             // queue required to allow all resources related to removed spawnables to be released, especially those related to level.pak
             AZ::SystemTickBus::QueueFunction(
-                [startedWithLevel, completionCallback]()
+                [levelLoadedAtStartup, completionCallback]()
                 {
                     // call level manager to reload the level
-                    if (startedWithLevel)
+                    if (levelLoadedAtStartup.has_value())
                     {
-                        LevelManagerRequestBus::Broadcast(&LevelManagerRequests::ReloadLevel);
+                        LoadWorldRequest request;
+                        request.levelResource.m_uri = levelLoadedAtStartup.value();
+                        LevelManagerRequestBus::Broadcast(&LevelManagerRequests::LoadWorld, request);
                     }
                     else
                     {
