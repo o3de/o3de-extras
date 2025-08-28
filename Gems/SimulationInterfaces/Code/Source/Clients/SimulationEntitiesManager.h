@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "AzCore/Outcome/Outcome.h"
+#include "SimulationInterfaces/Result.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Script/ScriptTimePoint.h>
@@ -55,7 +57,7 @@ namespace SimulationInterfaces
             const AZ::Transform& initialPose,
             const bool allowRename,
             SpawnCompletedCb completedCb) override;
-        void ResetAllEntitiesToInitialState() override;
+        AZ::Outcome<void, FailedResult> ResetAllEntitiesToInitialState() override;
 
         // AZ::TickBus::Handler interface implementation
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
@@ -87,6 +89,9 @@ namespace SimulationInterfaces
 
         //! Set the state of the entity and their descendants.
         void SetEntitiesState(const AZStd::vector<AZ::EntityId>& entityAndDescendants, const EntityState& state);
+
+        // Helper method to check if world is loaded
+        AZ::Outcome<void, FailedResult> IsWorldLoaded();
 
         AzPhysics::SceneEvents::OnSimulationBodyAdded::Handler m_simulationBodyAddedHandler;
         AzPhysics::SceneEvents::OnSimulationBodyRemoved::Handler m_simulationBodyRemovedHandler;

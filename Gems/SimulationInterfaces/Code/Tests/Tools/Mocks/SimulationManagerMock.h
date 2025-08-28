@@ -18,7 +18,7 @@ namespace UnitTest
             SimulationInterfaces::SimulationManagerRequestBus::Handler::BusDisconnect();
         }
 
-        MOCK_METHOD1(ReloadLevel, void(ReloadLevelCallback));
+        MOCK_METHOD1(ResetSimulation, AZ::Outcome<void, FailedResult>(ReloadLevelCallback));
         MOCK_METHOD1(SetSimulationPaused, void(bool));
         MOCK_METHOD1(StepSimulation, void(AZ::u64));
         MOCK_METHOD(bool, IsSimulationPaused, (), (const));
@@ -26,5 +26,6 @@ namespace UnitTest
         MOCK_METHOD(bool, IsSimulationStepsActive, (), (const));
         MOCK_METHOD(SimulationState, GetSimulationState, (), (const));
         MOCK_METHOD1(SetSimulationState, AZ::Outcome<void, FailedResult>(SimulationState));
+        MOCK_METHOD0(EntitiesOperationsPossible, bool());
     };
 } // namespace UnitTest

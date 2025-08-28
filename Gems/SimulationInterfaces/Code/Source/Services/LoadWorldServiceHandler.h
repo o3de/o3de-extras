@@ -10,23 +10,23 @@
 
 #include "ROS2ServiceBase.h"
 #include <AzCore/std/string/string_view.h>
-#include <simulation_interfaces/srv/reset_simulation.hpp>
+#include <simulation_interfaces/srv/load_world.hpp>
 
 namespace ROS2SimulationInterfaces
 {
-    class ResetSimulationServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::ResetSimulation>
+
+    class LoadWorldServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::LoadWorld>
     {
     public:
         AZStd::string_view GetTypeName() const override
         {
-            return "ResetSimulation";
+            return "LoadWorld";
         }
 
         AZStd::string_view GetDefaultName() const override
         {
-            return "reset_simulation";
+            return "load_world";
         }
-
         AZStd::unordered_set<SimulationFeatureType> GetProvidedFeatures() override;
 
         AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) override;

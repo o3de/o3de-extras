@@ -24,7 +24,7 @@ namespace UnitTest
         MOCK_METHOD2(DeleteEntity, void(const AZStd::string& name, DeletionCompletedCb completedCb));
         MOCK_METHOD1(DeleteAllEntities, void(DeletionCompletedCb completedCb));
         MOCK_METHOD0(GetSpawnables, AZ::Outcome<SpawnableList, FailedResult>());
-        MOCK_METHOD0(ResetAllEntitiesToInitialState, void());
+        MOCK_METHOD0(ResetAllEntitiesToInitialState, AZ::Outcome<void, FailedResult>());
         MOCK_METHOD6(
             SpawnEntity,
             void(

@@ -23,6 +23,8 @@ namespace SimulationInterfaces
     inline constexpr const char* NamedPoseManagerTypeId = "{0F100078-C297-482C-BA56-644AB09F053F}";
     inline constexpr const char* NamedPoseManagerEditorTypeId = "{9E91A513-E1A5-43F0-B7B1-A759EEC23174}";
 
+    inline constexpr const char* LevelManagerTypeId = "{A9D5953D-F266-46D4-AD08-82CF10F426F7}";
+    inline constexpr const char* LevelManagerEditorTypeId = "{16C16216-279D-4215-9DF8-8AB4F15AC4C8}";
     // Module derived classes TypeIds
     inline constexpr const char* SimulationInterfacesModuleInterfaceTypeId = "{675797BF-E5D5-438A-BF86-4B4554F09CEF}";
     inline constexpr const char* SimulationInterfacesModuleTypeId = "{8D6741FD-3105-4CB0-9700-152123B6D135}";
@@ -41,5 +43,6 @@ namespace SimulationInterfaces
     inline constexpr const char* NamedPoseTypeId = "{C6B4A8BE-F39A-46ED-82E8-05BC260A1F31}";
     inline constexpr const char* NamedPoseComponentTypeId = "{A294B840-79CA-402D-A250-B5C3D958B518}";
     inline constexpr const char* NamedPoseEditorComponentTypeId = "{867002FC-ECA9-4CAE-A7B4-D2CA6FA14EF6}";
+    inline constexpr const char* LevelManagerRequestsTypeId = "{88519292-D032-4A2F-B323-FEDFE2E277EA}";
 
 } // namespace SimulationInterfaces

@@ -8,7 +8,8 @@
  */
 
 #include "TestFixture.h"
-#include "Clients/SimulationEntitiesManager.h"
+#include <Clients/SimulationEntitiesManager.h>
+#include <Clients/SimulationManager.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 namespace UnitTest
 {
@@ -20,17 +21,16 @@ namespace UnitTest
         AddActiveGems(requiredGems);
         AddDynamicModulePaths({ "PhysX5.Gem" });
         AddDynamicModulePaths({ "LmbrCentral" });
-        AddComponentDescriptors({
-            SimulationInterfaces::SimulationEntitiesManager::CreateDescriptor(),
-        });
-        AddRequiredComponents({ SimulationInterfaces::SimulationEntitiesManager::TYPEINFO_Uuid() });
+        AddComponentDescriptors(
+            AZStd::initializer_list<AZ::ComponentDescriptor*>{ SimulationInterfaces::SimulationEntitiesManager::CreateDescriptor(),
+                                                               SimulationInterfaces::SimulationManager::CreateDescriptor() });
+        AddRequiredComponents(
+            { SimulationInterfaces::SimulationEntitiesManager::TYPEINFO_Uuid(), SimulationInterfaces::SimulationManager::TYPEINFO_Uuid() });
     }
 
     void SimulationInterfaceTestEnvironment::PostSystemEntityActivate()
     {
         AZ::UserSettingsComponentRequestBus::Broadcast(&AZ::UserSettingsComponentRequests::DisableSaveOnFinalize);
-
-        // load asset catalog
     }
 
     AZ::ComponentApplication* SimulationInterfaceTestEnvironment::CreateApplicationInstance()

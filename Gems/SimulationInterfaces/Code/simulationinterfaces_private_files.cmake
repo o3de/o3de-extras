@@ -17,6 +17,8 @@ set(FILES
     Source/Clients/NamedPosesManager.h
     Source/Clients/SimulationFeaturesAggregator.cpp
     Source/Clients/SimulationFeaturesAggregator.h
+    Source/Clients/LevelManager.cpp
+    Source/Clients/LevelManager.h
     Source/Clients/ROS2SimulationInterfacesSystemComponent.cpp
     Source/Clients/ROS2SimulationInterfacesSystemComponent.h
     Source/Interfaces/IROS2HandlerBase.h
@@ -52,6 +54,15 @@ set(FILES
     Source/Services/GetSimulationStateServiceHandler.h
     Source/Services/StepSimulationServiceHandler.cpp
     Source/Services/StepSimulationServiceHandler.h
+    Source/Services/GetAvailableWorldsServiceHandler.cpp
+    Source/Services/GetAvailableWorldsServiceHandler.h
+    Source/Services/GetCurrentWorldServiceHandler.cpp
+    Source/Services/GetCurrentWorldServiceHandler.h
+    Source/Services/LoadWorldServiceHandler.cpp
+    Source/Services/LoadWorldServiceHandler.h
+    Source/Services/UnloadWorldServiceHandler.cpp
+    Source/Services/UnloadWorldServiceHandler.h
+
     Source/Utils/RegistryUtils.cpp
     Source/Utils/RegistryUtils.h
     Source/Utils/Utils.h

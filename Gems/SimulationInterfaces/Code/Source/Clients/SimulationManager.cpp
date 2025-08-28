@@ -7,9 +7,12 @@
  */
 
 #include "SimulationManager.h"
+#include "SimulationInterfaces/LevelManagerRequestBus.h"
 #include "SimulationInterfaces/SimulationMangerRequestBus.h"
-
+#include "SimulationInterfaces/WorldResource.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/Component/TickBus.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Settings/SettingsRegistry.h>
 #include <AzFramework/Components/ConsoleBus.h>
@@ -17,7 +20,10 @@
 #include <DebugDraw/DebugDrawBus.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
+#include <simulation_interfaces/msg/result.hpp>
+#include <simulation_interfaces/msg/simulation_state.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
+#include <simulation_interfaces/srv/get_current_world.hpp>
 
 namespace SimulationInterfaces
 {
@@ -61,7 +67,9 @@ namespace SimulationInterfaces
             { simulation_interfaces::msg::SimulationState::STATE_PAUSED, "STATE_PAUSED" },
             { simulation_interfaces::msg::SimulationState::STATE_PLAYING, "STATE_PLAYING" },
             { simulation_interfaces::msg::SimulationState::STATE_QUITTING, "STATE_QUITTING" },
-            { simulation_interfaces::msg::SimulationState::STATE_STOPPED, "STATE_STOPPED" }
+            { simulation_interfaces::msg::SimulationState::STATE_STOPPED, "STATE_STOPPED" },
+            { simulation_interfaces::msg::SimulationState::STATE_NO_WORLD, "STATE_NO_WORLD" },
+            { simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD, "STATE_LOADING_WORLD" }
         };
 
         constexpr AZStd::string_view PrintStateName = "/SimulationInterfaces/PrintStateNameInGui";
@@ -149,11 +157,13 @@ namespace SimulationInterfaces
     {
         required.push_back(AZ_CRC_CE("PhysicsService"));
         required.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
+        required.push_back(AZ_CRC_CE("LevelManagerService"));
     }
 
     void SimulationManager::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
         dependent.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
+        dependent.push_back(AZ_CRC_CE("LevelManagerService"));
         dependent.push_back(AZ_CRC_CE("DebugDrawTextService"));
     }
 
@@ -190,7 +200,6 @@ namespace SimulationInterfaces
 
     void SimulationManager::Activate()
     {
-        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
         SimulationManagerRequestBus::Handler::BusConnect();
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
@@ -209,12 +218,6 @@ namespace SimulationInterfaces
         {
             AZ::TickBus::Handler::BusConnect();
         }
-
-        AZ::SystemTickBus::QueueFunction(
-            [this]()
-            {
-                InitializeSimulationState();
-            });
 
         // Query registry for keyboard transition keys
         if (const auto stoppedToPlayingKey = GetKeyboardTransitionKey(KeyboardTransitionStoppedToPlaying))
@@ -241,6 +244,26 @@ namespace SimulationInterfaces
                 simulation_interfaces::msg::SimulationState::STATE_PAUSED);
         }
         InputChannelEventListener::BusConnect();
+
+        // wait one tick to allow all system to start to ensure correct bus calls related to setting simulation state
+        AZ::SystemTickBus::QueueFunction(
+            [this]()
+            {
+                // check if level is loaded
+                AZ::Outcome<WorldResource, FailedResult> getCurrentWorldOutcome;
+                LevelManagerRequestBus::BroadcastResult(getCurrentWorldOutcome, &LevelManagerRequestBus::Events::GetCurrentWorld);
+
+                if (!getCurrentWorldOutcome.IsSuccess() &&
+                    getCurrentWorldOutcome.GetError().m_errorCode == simulation_interfaces::srv::GetCurrentWorld::Response::NO_WORLD_LOADED)
+                {
+                    SetSimulationState(simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
+                }
+                else if (getCurrentWorldOutcome.IsSuccess())
+                {
+                    m_startedWithLoadedLevel = true;
+                    InitializeSimulationState();
+                }
+            });
     }
 
     void SimulationManager::Deactivate()
@@ -326,36 +349,44 @@ namespace SimulationInterfaces
         SetSimulationPaused(false);
     }
 
-    void SimulationManager::ReloadLevel(SimulationManagerRequests::ReloadLevelCallback completionCallback)
+    AZ::Outcome<void, FailedResult> SimulationManager::ResetSimulation(ReloadLevelCallback completionCallback)
     {
-        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusConnect();
-        m_reloadLevelCallback = completionCallback;
-
-        // We need to delete all entities before reloading the level
-        DeletionCompletedCb deleteAllCompletion = [](const AZ::Outcome<void, FailedResult>& result)
+        // check if simulation has loaded level - if not it is impossible to restart it since there is no default state
+        if (m_simulationState == simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD ||
+            m_simulationState == simulation_interfaces::msg::SimulationState::STATE_NO_WORLD)
         {
-            AZ_Trace("SimulationManager", "Delete all entities completed: %s, reload level", result.IsSuccess() ? "true" : "false");
-            const char* levelName = AZ::Interface<AzFramework::ILevelSystemLifecycle>::Get()->GetCurrentLevelName();
-            AzFramework::ConsoleRequestBus::Broadcast(&AzFramework::ConsoleRequests::ExecuteConsoleCommand, "UnloadLevel");
-            AZStd::string command = AZStd::string::format("LoadLevel %s", levelName);
-            AzFramework::ConsoleRequestBus::Broadcast(&AzFramework::ConsoleRequests::ExecuteConsoleCommand, command.c_str());
+            return AZ::Failure(
+                FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Cannot reset simulation without loaded level"));
+        }
+        m_reloadLevelCallback = completionCallback;
+        // We need to delete all entities before reloading the level
+        DeletionCompletedCb deleteAllCompletion =
+            [startedWithLevel = m_startedWithLoadedLevel, completionCallback](const AZ::Outcome<void, FailedResult>& result)
+        {
+            AZ_Info("SimulationManager", "Delete all entities completed: %s, reload level", result.IsSuccess() ? "true" : "false");
+            // queue required to allow all resources related to removed spawnables to be released, especially those related to level.pak
+            AZ::SystemTickBus::QueueFunction(
+                [startedWithLevel, completionCallback]()
+                {
+                    // call level manager to reload the level
+                    if (startedWithLevel)
+                    {
+                        LevelManagerRequestBus::Broadcast(&LevelManagerRequests::ReloadLevel);
+                    }
+                    else
+                    {
+                        LevelManagerRequestBus::Broadcast(&LevelManagerRequests::UnloadWorld);
+                        if (completionCallback)
+                        {
+                            completionCallback();
+                        }
+                    }
+                });
         };
 
         // delete spawned entities
         SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequests::DeleteAllEntities, deleteAllCompletion);
-    }
-
-    void SimulationManager::OnLoadingComplete(const char* levelName)
-    {
-        AZ_Printf("SimulationManager", "Level loading started: %s", levelName);
-        if (m_reloadLevelCallback)
-        {
-            m_reloadLevelCallback();
-            m_reloadLevelCallback = nullptr;
-        }
-        // reset of the simulation, assign the same state as at the beginning
-        InitializeSimulationState();
-        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
+        return AZ::Success();
     }
 
     SimulationState SimulationManager::GetSimulationState() const
@@ -397,12 +428,27 @@ namespace SimulationInterfaces
         {
         case simulation_interfaces::msg::SimulationState::STATE_STOPPED:
             {
-                SimulationManagerRequests::ReloadLevelCallback cb = []()
+                if (m_reloadLevelCallback)
                 {
-                    SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
-                        &SimulationInterfaces::SimulationManagerRequests::SetSimulationPaused, true);
-                };
-                ReloadLevel(cb);
+                    m_reloadLevelCallback();
+                    m_reloadLevelCallback = nullptr;
+                }
+                if (m_levelLoaded)
+                {
+                    InitializeSimulationState();
+                    m_levelLoaded = false;
+                }
+                else // transition from other state than load world
+                {
+                    DeletionCompletedCb deleteAllCompletion = [this](const AZ::Outcome<void, FailedResult>& result)
+                    {
+                        AZ_Info("SimulationManager", "Delete all entities completed: %s", result.IsSuccess() ? "true" : "false");
+                        InitializeSimulationState();
+                    };
+                    // delete spawned entities
+                    SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequests::DeleteAllEntities, deleteAllCompletion);
+                }
+
                 break;
             }
         case simulation_interfaces::msg::SimulationState::STATE_PLAYING:
@@ -428,6 +474,19 @@ namespace SimulationInterfaces
                     });
                 break;
             }
+        case simulation_interfaces::msg::SimulationState::STATE_NO_WORLD:
+            {
+                // restore initial state for variables
+                m_isSimulationPaused = false;
+                m_levelLoaded = false;
+                m_numberOfPhysicsSteps = 0;
+                break;
+            }
+        case simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD:
+            {
+                m_levelLoaded = true;
+                break;
+            }
         default:
             {
                 return AZ::Failure(FailedResult(
@@ -437,6 +496,13 @@ namespace SimulationInterfaces
         }
         m_simulationState = stateToSet;
         return AZ::Success();
+    }
+
+    bool SimulationManager::EntitiesOperationsPossible()
+    {
+        return (
+            m_simulationState != simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD &&
+            m_simulationState != simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
     }
 
     bool SimulationManager::IsTransitionForbiddenInEditor(SimulationState requestedState)
