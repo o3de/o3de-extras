@@ -7,13 +7,6 @@
  */
 
 #include "SimulationEntitiesManager.h"
-
-#include <Clients/SimulationFeaturesAggregator.h>
-#include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
-#include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
-#include <SimulationInterfaces/SimulationMangerRequestBus.h>
-
-#include "AzCore/Debug/Trace.h"
 #include "CommonUtilities.h"
 #include <AzCore/Asset/AssetManager.h>
 #include <AzCore/Asset/AssetManagerBus.h>
@@ -38,10 +31,13 @@
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
+#include <Clients/SimulationFeaturesAggregator.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
 #include <SimulationInterfaces/Bounds.h>
 #include <SimulationInterfaces/Result.h>
-
-#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
+#include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
+#include <SimulationInterfaces/SimulationMangerRequestBus.h>
 #include <simulation_interfaces/msg/result.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 #include <simulation_interfaces/srv/spawn_entity.hpp>
@@ -258,6 +254,13 @@ namespace SimulationInterfaces
             m_simulatedEntityToEntityIdMap.erase(findIt);
 
             RemoveEntityInfoIfNeeded(name);
+            
+            // remove info about root of simulated entity only if it was spawned by this component
+            if (m_simulatedEntityToPrefabRoot.contains(name))
+            {
+                m_simulatedEntityToPrefabRoot.erase(name);
+            }
+
             return AZ::Success();
         }
         return AZ::Failure(FailedResult(
@@ -600,9 +603,6 @@ namespace SimulationInterfaces
         const auto ticketId = entity->GetEntitySpawnTicketId();
         if (m_spawnedTickets.find(ticketId) != m_spawnedTickets.end())
         {
-            // valid because this entity was spawned by this component
-            // data is added to beow map only in spawn completion callback
-            m_simulatedEntityToPrefabRoot.erase(name);
             // get spawner
             auto spawner = AZ::Interface<AzFramework::SpawnableEntitiesDefinition>::Get();
             AZ_Assert(spawner, "SpawnableEntitiesDefinition is not available.");

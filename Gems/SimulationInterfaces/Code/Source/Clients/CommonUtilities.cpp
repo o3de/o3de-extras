@@ -84,20 +84,20 @@ namespace SimulationInterfaces::Utils
 
     AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> GetSimulatedBody(AZ::EntityId entityId)
     {
-        AzPhysics::SimulatedBody* parentSimulatedBody = nullptr;
+        AzPhysics::SimulatedBody* simulatedBody = nullptr;
         AzPhysics::SimulatedBodyComponentRequestsBus::EventResult(
-            parentSimulatedBody, entityId, &AzPhysics::SimulatedBodyComponentRequests::GetSimulatedBody);
-        if (parentSimulatedBody == nullptr)
+            simulatedBody, entityId, &AzPhysics::SimulatedBodyComponentRequests::GetSimulatedBody);
+        if (simulatedBody == nullptr)
         {
             auto msg = AZStd::string::format("Entity's simulated body doesn't exist");
             return AZ::Failure(msg);
         }
-        if (parentSimulatedBody->m_bodyHandle == AzPhysics::InvalidSimulatedBodyHandle)
+        if (simulatedBody->m_bodyHandle == AzPhysics::InvalidSimulatedBodyHandle)
         {
             auto msg = AZStd::string::format("Entity is not a valid simulated body");
             return AZ::Failure(msg);
         }
-        return AZ::Success(parentSimulatedBody);
+        return AZ::Success(simulatedBody);
     }
 
     AZ::Outcome<Bounds, AZStd::string> ConvertPhysicalShapeToBounds(AZStd::shared_ptr<Physics::Shape> shape, const AZ::EntityId& entityId)

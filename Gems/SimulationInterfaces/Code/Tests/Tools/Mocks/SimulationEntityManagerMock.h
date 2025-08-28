@@ -1,5 +1,5 @@
 #pragma once
-#include "SimulationInterfaces/Bounds.h"
+#include <SimulationInterfaces/Bounds.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

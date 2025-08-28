@@ -16,7 +16,6 @@
 #include <SimulationInterfaces/WorldResource.h>
 #include <simulation_interfaces/msg/bounds.hpp>
 #include <simulation_interfaces/msg/world_resource.hpp>
-#include <string>
 
 namespace ROS2SimulationInterfaces::Utils
 {
