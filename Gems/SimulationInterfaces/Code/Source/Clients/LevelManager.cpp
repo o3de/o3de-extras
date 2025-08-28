@@ -301,7 +301,7 @@ namespace SimulationInterfaces
     {
         if (m_isAppEditor)
         {
-            constexpr const char* errorMsg = "ReloadWorld is not supported in Editor";
+            [[maybe_unused]] constexpr const char* errorMsg = "ReloadWorld is not supported in Editor";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return;
         }
