@@ -260,6 +260,7 @@ namespace SimulationInterfaces
                 }
                 else if (getCurrentWorldOutcome.IsSuccess())
                 {
+                    m_startedWithLoadedLevel = true;
                     InitializeSimulationState();
                 }
             });
@@ -359,15 +360,27 @@ namespace SimulationInterfaces
         }
         m_reloadLevelCallback = completionCallback;
         // We need to delete all entities before reloading the level
-        DeletionCompletedCb deleteAllCompletion = [](const AZ::Outcome<void, FailedResult>& result)
+        DeletionCompletedCb deleteAllCompletion =
+            [startedWithLevel = m_startedWithLoadedLevel, completionCallback](const AZ::Outcome<void, FailedResult>& result)
         {
             AZ_Info("SimulationManager", "Delete all entities completed: %s, reload level", result.IsSuccess() ? "true" : "false");
             // queue required to allow all resources related to removed spawnables to be released, especially those related to level.pak
             AZ::SystemTickBus::QueueFunction(
-                []()
+                [startedWithLevel, completionCallback]()
                 {
                     // call level manager to reload the level
-                    LevelManagerRequestBus::Broadcast(&LevelManagerRequests::ReloadLevel);
+                    if (startedWithLevel)
+                    {
+                        LevelManagerRequestBus::Broadcast(&LevelManagerRequests::ReloadLevel);
+                    }
+                    else
+                    {
+                        LevelManagerRequestBus::Broadcast(&LevelManagerRequests::UnloadWorld);
+                        if (completionCallback)
+                        {
+                            completionCallback();
+                        }
+                    }
                 });
         };
 
