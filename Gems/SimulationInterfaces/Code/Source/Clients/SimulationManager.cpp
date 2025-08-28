@@ -245,25 +245,41 @@ namespace SimulationInterfaces
         }
         InputChannelEventListener::BusConnect();
 
-        // wait one tick to allow all system to start to ensure correct bus calls related to setting simulation state
-        AZ::SystemTickBus::QueueFunction(
-            [this]()
-            {
-                // check if level is loaded
-                AZ::Outcome<WorldResource, FailedResult> getCurrentWorldOutcome;
-                LevelManagerRequestBus::BroadcastResult(getCurrentWorldOutcome, &LevelManagerRequestBus::Events::GetCurrentWorld);
+        AZ::ApplicationTypeQuery appType;
+        AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
 
-                if (!getCurrentWorldOutcome.IsSuccess() &&
-                    getCurrentWorldOutcome.GetError().m_errorCode == simulation_interfaces::srv::GetCurrentWorld::Response::NO_WORLD_LOADED)
+        // wait one tick to allow all system to start to ensure correct bus calls related to setting simulation state
+        if (appType.IsEditor())
+        {
+            // if app is editor, buses for getting current world are inactive and return fail. In editor we need to simply initialize state
+            AZ::SystemTickBus::QueueFunction(
+                [this]()
                 {
-                    SetSimulationState(simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
-                }
-                else if (getCurrentWorldOutcome.IsSuccess())
-                {
-                    m_startedWithLoadedLevel = true;
                     InitializeSimulationState();
-                }
-            });
+                });
+        }
+        else if (appType.IsGame())
+        {
+            AZ::SystemTickBus::QueueFunction(
+                [this]()
+                {
+                    // check if level is loaded
+                    AZ::Outcome<WorldResource, FailedResult> getCurrentWorldOutcome;
+                    LevelManagerRequestBus::BroadcastResult(getCurrentWorldOutcome, &LevelManagerRequestBus::Events::GetCurrentWorld);
+
+                    if (!getCurrentWorldOutcome.IsSuccess() &&
+                        getCurrentWorldOutcome.GetError().m_errorCode ==
+                            simulation_interfaces::srv::GetCurrentWorld::Response::NO_WORLD_LOADED)
+                    {
+                        SetSimulationState(simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
+                    }
+                    else if (getCurrentWorldOutcome.IsSuccess())
+                    {
+                        m_startedWithLoadedLevel = true;
+                        InitializeSimulationState();
+                    }
+                });
+        }
     }
 
     void SimulationManager::Deactivate()
