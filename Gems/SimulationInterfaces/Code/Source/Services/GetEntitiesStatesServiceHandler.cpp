@@ -7,10 +7,10 @@
  */
 
 #include "GetEntitiesStatesServiceHandler.h"
+#include <Clients/CommonUtilities.h>
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <Utils/Utils.h>
 
 namespace ROS2SimulationInterfaces
 {
@@ -31,7 +31,7 @@ namespace ROS2SimulationInterfaces
         GetEntitiesStatesServiceHandler::Response response;
         response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
 
-        const auto getFilterResult = Utils::GetEntityFiltersFromRequest<Request>(request);
+        const auto getFilterResult = SimulationInterfaces::Utils::GetEntityFiltersFromRequest<Request>(request);
         if (!getFilterResult.IsSuccess())
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;

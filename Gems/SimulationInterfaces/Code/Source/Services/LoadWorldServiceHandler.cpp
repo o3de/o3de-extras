@@ -8,8 +8,8 @@
 
 #include "LoadWorldServiceHandler.h"
 #include "SimulationInterfaces/WorldResource.h"
-#include "Utils/Utils.h"
 #include <AzCore/std/string/string.h>
+#include <Clients/CommonUtilities.h>
 #include <SimulationInterfaces/LevelManagerRequestBus.h>
 
 namespace ROS2SimulationInterfaces
@@ -48,7 +48,7 @@ namespace ROS2SimulationInterfaces
         else
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
-            response.world = Utils::ConvertToRos2WorldResource(loadedWorld.GetValue());
+            response.world = SimulationInterfaces::Utils::ConvertToRos2WorldResource(loadedWorld.GetValue());
         }
         return response;
     }
