@@ -368,12 +368,17 @@ namespace SimulationInterfaces
 
     AZ::Outcome<void, FailedResult> SimulationManager::ResetSimulation(ReloadLevelCallback completionCallback)
     {
-        // check if simulation has loaded level - if not it is impossible to restart it since there is no default state
-        if (m_simulationState == simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD ||
-            m_simulationState == simulation_interfaces::msg::SimulationState::STATE_NO_WORLD)
+        // reset is possible only if simulation is already started - world is loaded, or simulation interfaces has in cache level loaded
+        // during startup. Only in this case reseting makes sense. If there is no info about level loaded at startup and there is no world
+        // loaded -> simulation is in the exactly same state as right after startup
+        if ((m_simulationState == simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD ||
+             m_simulationState == simulation_interfaces::msg::SimulationState::STATE_NO_WORLD) &&
+            !m_levelLoadedAtStartup.has_value())
         {
-            return AZ::Failure(
-                FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Cannot reset simulation without loaded level"));
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Cannot reset simulation without loaded level and without knowledge about level loaded during startup. Simulator is "
+                "already in the same state as after start up"));
         }
         m_reloadLevelCallback = completionCallback;
         // We need to delete all entities before reloading the level
