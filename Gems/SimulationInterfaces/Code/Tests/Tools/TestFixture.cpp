@@ -8,7 +8,7 @@
  */
 
 #include "TestFixture.h"
-#include "AzCore/Component/EntityId.h"
+#include <AzCore/Component/EntityId.h>
 #include <Clients/SimulationEntitiesManager.h>
 #include <Clients/SimulationManager.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>

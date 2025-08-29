@@ -267,6 +267,150 @@ namespace SimulationInterfaces
             AZStd::string::format("Failed to find entity with given name %s", name.c_str())));
     }
 
+    AZStd::vector<AZStd::string> SimulationEntitiesManager::FilterEntitiesByCategories(
+        AZStd::vector<AZStd::string>& prefilteredEntities, const AZStd::vector<EntityCategory>& categories)
+    {
+        AZStd::vector<AZStd::string> entities;
+        entities.reserve(prefilteredEntities.size());
+        for (auto& category : categories)
+        {
+            const auto categoryExists = m_categoryToNames.contains(category);
+            AZ_Warning(
+                "SpawnableSceneProviderSystemComponent",
+                categoryExists,
+                "Category %d doesn't exists in database, will be skipped",
+                category);
+            if (categoryExists)
+            {
+                AZStd::ranges::copy_if(
+                    prefilteredEntities,
+                    AZStd::back_inserter(entities),
+                    [this, category](const AZStd::string& entityName)
+                    {
+                        return m_categoryToNames.at(category).contains(entityName);
+                    });
+            }
+        }
+        prefilteredEntities.clear();
+        return entities;
+    }
+
+    AZStd::vector<AZStd::string> SimulationEntitiesManager::FilterEntitiesByTag(
+        AZStd::vector<AZStd::string>& prefilteredEntities, const TagFilter& tagFilter)
+    {
+        AZStd::vector<AZStd::string> entities;
+        entities.reserve(prefilteredEntities.size());
+        for (const auto& name : prefilteredEntities)
+        {
+            // if entity doesn't have entity info it cannot be filtered by tag so it should be skipped
+            auto findIt = m_nameToEntityInfo.find(name);
+            if (findIt == m_nameToEntityInfo.end())
+            {
+                continue;
+            }
+            // get entity tags
+            if (Utils::AreTagsMatching(tagFilter, findIt->second.m_tags))
+            {
+                entities.push_back(name);
+            }
+        }
+        prefilteredEntities.clear();
+        return entities;
+    }
+
+    AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> SimulationEntitiesManager::FilterEntitiesByBounds(
+        AZStd::vector<AZStd::string>& prefilteredEntities,
+        const AZStd::shared_ptr<Physics::ShapeConfiguration> shape,
+        const AZ::Transform& shapePose)
+    {
+        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        AZ_Assert(sceneInterface, "Physics scene interface is not available.");
+
+        if (m_physicsScenesHandle == AzPhysics::InvalidSceneHandle)
+        {
+            return AZ::Failure(
+                FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Physics scene interface is not available."));
+        }
+
+        AzPhysics::OverlapRequest request;
+        request.m_shapeConfiguration = shape;
+        request.m_pose = shapePose;
+        request.m_maxResults = AZStd::numeric_limits<AZ::u32>::max();
+        AzPhysics::SceneQueryHits result = sceneInterface->QueryScene(m_physicsScenesHandle, &request);
+        AZStd::vector<AZStd::string> entities;
+        entities.reserve(prefilteredEntities.size());
+
+        for (const auto& name : prefilteredEntities)
+        {
+            const auto& entityId = m_simulatedEntityToEntityIdMap.at(name);
+            AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> simulatedBody = Utils::GetSimulatedBody(entityId);
+            if (simulatedBody.IsSuccess())
+            {
+                auto rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(simulatedBody.GetValue());
+                // entity is simulated body and has collider, check overlap
+                if (rigidBody && rigidBody->GetShapeCount() > 0)
+                {
+                    // perform relatively expensive search only for entities which really can be inside the shape
+                    if (AZStd::ranges::contains(result.m_hits, entityId, &AzPhysics::SceneQueryHit::m_entityId))
+                    {
+                        entities.push_back(name);
+                    }
+                    // no matter of the results skip the rest of the loop since it is related to worldTM check
+                    continue;
+                }
+            }
+
+            // for non physical or no-colliding entities check if World TM is inside the control shape
+            AZ::Vector3 worldTranslation;
+            AZ::TransformBus::EventResult(worldTranslation, entityId, &AZ::TransformBus::Events::GetWorldTranslation);
+            // check if within bounds
+            if (auto boxShape = dynamic_cast<Physics::BoxShapeConfiguration*>(shape.get()))
+            {
+                auto oob = boxShape->ToObb(shapePose);
+                if (oob.Contains(worldTranslation))
+                {
+                    entities.push_back(name);
+                }
+            }
+            else if (auto sphereShape = dynamic_cast<Physics::SphereShapeConfiguration*>(shape.get()))
+            {
+                auto distance = shapePose.GetTranslation().GetDistance(worldTranslation);
+                if (distance <= sphereShape->m_radius)
+                {
+                    entities.push_back(name);
+                }
+            }
+            else
+            {
+                AZ_Warning("SimulationInterfaces", false, "Unsupported bounds type, skipped");
+            }
+        }
+        prefilteredEntities.clear();
+        return entities;
+    }
+
+    AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> SimulationEntitiesManager::FilterEntitiesByRegex(
+        AZStd::vector<AZStd::string>& prefilteredEntities, const AZStd::string& nameRegex)
+    {
+        AZStd::vector<AZStd::string> entities;
+        entities.reserve(prefilteredEntities.size());
+        const AZStd::regex regexSearch(nameRegex, AZStd::regex::extended);
+        if (!regexSearch.Valid())
+        {
+            AZ_Warning("SimulationInterfaces", false, "Invalid regex filter");
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "Invalid regex filter"));
+        }
+        AZStd::ranges::copy_if(
+            prefilteredEntities,
+            AZStd::back_inserter(entities),
+            [&regexSearch](const AZStd::string& entityName)
+            {
+                return AZStd::regex_search(entityName, regexSearch);
+            });
+        prefilteredEntities.clear();
+        return entities;
+    }
+
     AZ::Outcome<EntityNameList, FailedResult> SimulationEntitiesManager::GetEntities(const EntityFilters& filter)
     {
         if (auto outcome = IsWorldLoaded(); !outcome.IsSuccess())
@@ -281,153 +425,49 @@ namespace SimulationInterfaces
 
         AZStd::vector<AZStd::string> entities;
 
-        // filtering based on category
-        if (!categoriesFilter)
-        {
-            // get all entities from the map
-            entities.reserve(m_entityIdToSimulatedEntityMap.size());
-            AZStd::transform(
-                m_entityIdToSimulatedEntityMap.begin(),
-                m_entityIdToSimulatedEntityMap.end(),
-                AZStd::back_inserter(entities),
-                [](const auto& pair)
-                {
-                    return pair.second;
-                });
-        }
-        else
-        {
-            for (auto& category : filter.m_entityCategories)
+        // get all entities from the map
+        entities.reserve(m_entityIdToSimulatedEntityMap.size());
+        AZStd::transform(
+            m_entityIdToSimulatedEntityMap.begin(),
+            m_entityIdToSimulatedEntityMap.end(),
+            AZStd::back_inserter(entities),
+            [](const auto& pair)
             {
-                const auto categoryExists = m_categoryToNames.contains(category);
-                AZ_Warning(
-                    "SpawnableSceneProviderSystemComponent",
-                    categoryExists,
-                    "Category %d doesn't exists in database, will be skipped",
-                    category);
-                if (categoryExists)
-                {
-                    AZStd::transform(
-                        m_categoryToNames.at(category).begin(),
-                        m_categoryToNames.at(category).end(),
-                        AZStd::back_inserter(entities),
-                        [](const auto& name)
-                        {
-                            return name.c_str();
-                        });
-                }
-            }
+                return pair.second;
+            });
+
+        // filter by categories
+        if (categoriesFilter)
+        {
+            entities = FilterEntitiesByCategories(entities, filter.m_entityCategories);
         }
 
         // filter based on tag
         if (tagFilter)
         {
-            const AZStd::vector<AZStd::string> prefilteredEntities = AZStd::move(entities);
-            entities.clear();
-            for (const auto& name : prefilteredEntities)
-            {
-                // if entity doesn't have entity info it cannot be filtered by tag so it should be skipped
-                auto findIt = m_nameToEntityInfo.find(name);
-                if (findIt == m_nameToEntityInfo.end())
-                {
-                    continue;
-                }
-                // get entity tags
-                if (Utils::AreTagsMatching(filter.m_tagsFilter, findIt->second.m_tags))
-                {
-                    entities.push_back(name);
-                }
-            }
+            entities = FilterEntitiesByTag(entities, filter.m_tagsFilter);
         }
 
         if (shapeCastFilter)
         {
-            auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-            AZ_Assert(sceneInterface, "Physics scene interface is not available.");
-
-            if (m_physicsScenesHandle == AzPhysics::InvalidSceneHandle)
+            auto outcome = FilterEntitiesByBounds(entities, filter.m_boundsShape, filter.m_boundsPose);
+            if (!outcome.IsSuccess())
             {
-                return AZ::Failure(
-                    FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Physics scene interface is not available."));
+                return AZ::Failure(outcome.GetError());
             }
-
-            AzPhysics::OverlapRequest request;
-            request.m_shapeConfiguration = filter.m_boundsShape;
-            request.m_pose = filter.m_boundsPose;
-            request.m_maxResults = AZStd::numeric_limits<AZ::u32>::max();
-            AzPhysics::SceneQueryHits result = sceneInterface->QueryScene(m_physicsScenesHandle, &request);
-            const AZStd::vector<AZStd::string> prefilteredEntities = AZStd::move(entities);
-            entities.clear();
-            for (const auto& name : prefilteredEntities)
-            {
-                const auto& entityId = m_simulatedEntityToEntityIdMap.at(name);
-                AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> simulatedBody = Utils::GetSimulatedBody(entityId);
-                if (simulatedBody.IsSuccess())
-                {
-                    auto rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(simulatedBody.GetValue());
-                    // entity is simulated body and has collider, check overlap
-                    if (rigidBody && rigidBody->GetShapeCount() > 0)
-                    {
-                        // perform relatively expensive search only for entities which really can be inside the shape
-                        auto findIt = AZStd::find_if(
-                            result.m_hits.begin(),
-                            result.m_hits.end(),
-                            [id = entityId](const AzPhysics::SceneQueryHit& hit)
-                            {
-                                return hit.m_entityId == id;
-                            });
-                        if (findIt != result.m_hits.end())
-                        {
-                            entities.push_back(name);
-                        }
-                        // no matter of the results skip the rest of the loop since it is related to worldTM check
-                        continue;
-                    }
-                }
-
-                // for non physical or no-colliding entities check if World TM is inside the control shape
-                AZ::Vector3 worldTranslation;
-                AZ::TransformBus::EventResult(worldTranslation, entityId, &AZ::TransformBus::Events::GetWorldTranslation);
-                // check if within bounds
-                if (auto boxShape = dynamic_cast<Physics::BoxShapeConfiguration*>(filter.m_boundsShape.get()))
-                {
-                    auto oob = boxShape->ToObb(filter.m_boundsPose);
-                    if (oob.Contains(worldTranslation))
-                    {
-                        entities.push_back(name);
-                    }
-                }
-                else if (auto sphereShape = dynamic_cast<Physics::SphereShapeConfiguration*>(filter.m_boundsShape.get()))
-                {
-                    auto distance = filter.m_boundsPose.GetTranslation().GetDistance(worldTranslation);
-                    if (distance <= sphereShape->m_radius)
-                    {
-                        entities.push_back(name);
-                    }
-                }
-                else
-                {
-                    AZ_Warning("SimulationInterfaces", false, "Unsupported bounds type, skipped");
-                }
-            }
+            entities = outcome.GetValue();
         }
+
         if (reFilter)
         {
-            const AZStd::vector<AZStd::string> prefilteredEntities = AZStd::move(entities);
-            entities.clear();
-            const AZStd::regex regex(filter.m_nameFilter, AZStd::regex::extended);
-            if (!regex.Valid())
+            auto outcome = FilterEntitiesByRegex(entities, filter.m_nameFilter);
+
+            if (!outcome.IsSuccess())
             {
-                AZ_Warning("SimulationInterfaces", false, "Invalid regex filter");
-                return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_NOT_FOUND, "Invalid regex filter"));
+                return AZ::Failure(outcome.GetError());
             }
-            AZStd::ranges::copy_if(
-                prefilteredEntities,
-                AZStd::back_inserter(entities),
-                [&regex](const AZStd::string& entityName)
-                {
-                    return AZStd::regex_search(entityName, regex);
-                });
+
+            entities = outcome.GetValue();
         }
         return AZ::Success(entities);
     }
@@ -1009,4 +1049,5 @@ namespace SimulationInterfaces
         }
         return AZ::Success(m_simulatedEntityToPrefabRoot.at(name));
     }
+
 } // namespace SimulationInterfaces
