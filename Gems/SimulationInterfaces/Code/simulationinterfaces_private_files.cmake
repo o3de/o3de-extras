@@ -34,12 +34,18 @@ set(FILES
     Source/Services/GetNamedPoseBoundsServiceHandler.h
     Source/Services/GetNamedPosesServiceHandler.cpp
     Source/Services/GetNamedPosesServiceHandler.h
+    Source/Services/GetEntityInfoServiceHandler.cpp
+    Source/Services/GetEntityInfoServiceHandler.h
     Source/Services/GetEntitiesStatesServiceHandler.cpp
     Source/Services/GetEntitiesStatesServiceHandler.h
     Source/Services/GetEntityStateServiceHandler.cpp
     Source/Services/GetEntityStateServiceHandler.h
     Source/Services/SetEntityStateServiceHandler.cpp
     Source/Services/SetEntityStateServiceHandler.h
+    Source/Services/SetEntityInfoServiceHandler.cpp
+    Source/Services/SetEntityInfoServiceHandler.h
+    Source/Services/GetEntityBoundsServiceHandler.cpp
+    Source/Services/GetEntityBoundsServiceHandler.h
     Source/Services/GetSpawnablesServiceHandler.cpp
     Source/Services/GetSpawnablesServiceHandler.h
     Source/Services/SpawnEntityServiceHandler.cpp
@@ -62,9 +68,6 @@ set(FILES
     Source/Services/LoadWorldServiceHandler.h
     Source/Services/UnloadWorldServiceHandler.cpp
     Source/Services/UnloadWorldServiceHandler.h
-
-    Source/Utils/RegistryUtils.cpp
-    Source/Utils/RegistryUtils.h
     Source/Utils/Utils.h
     Source/Components/NamedPoseComponent.cpp
     Source/Components/NamedPoseComponent.h

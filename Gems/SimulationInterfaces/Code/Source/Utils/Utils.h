@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <AzCore/std/algorithm.h>
+#include <AzCore/std/iterator.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
@@ -31,12 +33,14 @@ namespace ROS2SimulationInterfaces::Utils
             }
             const auto& p1 = request.filters.bounds.points.front();
             const auto& p2 = request.filters.bounds.points.back();
-            if (p1.x > p2.x || p1.y > p2.y || p1.z > p2.z)
+            // https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/Bounds.msg
+            // Axis-aligned bounding box, points field should have two values, which are upper right and lower left corners of the box.
+            if (p1.x < p2.x || p1.y < p2.y || p1.z < p2.z)
             {
-                return AZ::Failure("Invalid points! The first point should be lower than the second point.");
+                return AZ::Failure("Invalid points! The first point should be higher than the second point.");
             }
-            const auto min = ROS2::ROS2Conversions::FromROS2Vector3(p1);
-            const auto max = ROS2::ROS2Conversions::FromROS2Vector3(p2);
+            const auto max = ROS2::ROS2Conversions::FromROS2Vector3(p1);
+            const auto min = ROS2::ROS2Conversions::FromROS2Vector3(p2);
             const AZ::Aabb aabb = AZ::Aabb::CreateFromMinMax(min, max);
             filter.m_boundsShape = AZStd::make_shared<Physics::BoxShapeConfiguration>(aabb.GetExtents());
         }
@@ -61,6 +65,26 @@ namespace ROS2SimulationInterfaces::Utils
                                     AZ::Quaternion::CreateIdentity(),
                                     1.0f };
         }
+
+        // copy categories
+        AZStd::transform(
+            request.filters.categories.begin(),
+            request.filters.categories.end(),
+            AZStd::back_inserter(filter.m_entityCategories),
+            [](const simulation_interfaces::msg::EntityCategory& category)
+            {
+                return category.category;
+            });
+        // copy tags
+        filter.m_tagsFilter.m_mode = request.filters.tags.filter_mode;
+        AZStd::transform(
+            request.filters.tags.tags.begin(),
+            request.filters.tags.tags.end(),
+            AZStd::inserter(filter.m_tagsFilter.m_tags, filter.m_tagsFilter.m_tags.end()),
+            [](const std::string& tag)
+            {
+                return tag.c_str();
+            });
         return AZ::Success(AZStd::move(filter));
     }
 

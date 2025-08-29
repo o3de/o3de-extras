@@ -10,6 +10,7 @@
 
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
@@ -44,10 +45,11 @@ namespace ROS2SimulationInterfaces
 
         // ROS2SimulationInterfacesRequestBus override
         AZStd::unordered_set<SimulationFeatureType> GetSimulationFeatures() override;
+        void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatureType>& features) override;
 
     private:
         AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<IROS2HandlerBase>> m_availableRos2Interface;
-
+        AZStd::unordered_set<SimulationFeatureType> m_externallyRegisteredFeatures;
         template<typename T>
         void RegisterInterface(rclcpp::Node::SharedPtr ros2Node)
         {

@@ -6,14 +6,9 @@
  *
  */
 
-#include "Clients/NamedPosesManager.h"
+#include <Clients/NamedPosesManager.h>
 
 #include "CommonUtilities.h"
-#include "Components/NamedPoseComponent.h"
-#include "SimulationInterfaces/Bounds.h"
-#include "SimulationInterfaces/NamedPoseManagerRequestBus.h"
-#include "SimulationInterfaces/Result.h"
-#include "SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Math/Transform.h>
@@ -23,7 +18,12 @@
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Entity/GameEntityContextBus.h>
-#include <AzFramework/Physics/Components/SimulatedBodyComponentBus.h>
+#include <Components/NamedPoseComponent.h>
+#include <SimulationInterfaces/Bounds.h>
+#include <SimulationInterfaces/NamedPoseManagerRequestBus.h>
+#include <SimulationInterfaces/Result.h>
+#include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
+
 #include <AzFramework/Physics/Shape.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
 #include <AzFramework/Physics/SimulatedBodies/StaticRigidBody.h>
@@ -36,27 +36,6 @@
 
 namespace SimulationInterfaces
 {
-    namespace
-    {
-        AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> GetSimulatedBody(AZ::EntityId entityId)
-        {
-            AzPhysics::SimulatedBody* parentSimulatedBody = nullptr;
-            AzPhysics::SimulatedBodyComponentRequestsBus::EventResult(
-                parentSimulatedBody, entityId, &AzPhysics::SimulatedBodyComponentRequests::GetSimulatedBody);
-            if (parentSimulatedBody == nullptr)
-            {
-                auto msg = AZStd::string::format("Entity's simulated body doesn't exist");
-                return AZ::Failure(msg);
-            }
-            if (parentSimulatedBody->m_bodyHandle == AzPhysics::InvalidSimulatedBodyHandle)
-            {
-                auto msg = AZStd::string::format("Entity is not a valid simulated body");
-                return AZ::Failure(msg);
-            }
-            return AZ::Success(parentSimulatedBody);
-        }
-    } // namespace
-
     AZ_COMPONENT_IMPL(NamedPoseManager, "NamedPoseManager", NamedPoseManagerTypeId);
 
     void NamedPoseManager::Reflect(AZ::ReflectContext* context)
@@ -174,7 +153,7 @@ namespace SimulationInterfaces
 
     AZ::Outcome<NamedPoseList, FailedResult> NamedPoseManager::GetNamedPoses(const TagFilter& tags)
     {
-        auto filteredEntities = Utils::FilterEntitiesByTag(m_namedPoseToEntityId, tags);
+        auto filteredEntities = Utils::FilterNamedPosesByTag(m_namedPoseToEntityId, tags);
         NamedPoseList namedPoseList;
         namedPoseList.reserve(filteredEntities.size());
         for (auto& [name, entityId] : filteredEntities)
@@ -202,7 +181,7 @@ namespace SimulationInterfaces
                 AZStd::string::format("Named pose with given name %s has invalid entity ID", name.c_str())));
         }
         // get simulated body
-        auto simulatedBody = GetSimulatedBody(namedPoseEntityId);
+        auto simulatedBody = Utils::GetSimulatedBody(namedPoseEntityId);
         if (!simulatedBody.IsSuccess())
         {
             Bounds emptyBounds;
@@ -235,57 +214,12 @@ namespace SimulationInterfaces
         }
 
         AZStd::shared_ptr<Physics::Shape> shape = staticRigidBody->GetShape(0);
-        auto config = shape->GetShapeConfiguration();
-        auto shapeType = config->GetShapeType();
-
-        // get final collider transform including entity TM and offsets
-        AZStd::pair<AZ::Vector3, AZ::Quaternion> colliderOffsets = shape->GetLocalPose();
-        AZ::Transform offsetTransform = AZ::Transform::CreateFromQuaternionAndTranslation(colliderOffsets.second, colliderOffsets.first);
-        AZ::Transform entityTransform;
-        AZ::TransformBus::EventResult(entityTransform, namedPoseEntityId, &AZ::TransformBus::Events::GetWorldTM);
-        AZ::Transform colliderAbsoluteTransform = entityTransform * offsetTransform;
-
-        Bounds bounds;
-        switch (shapeType)
+        auto boundsOutput = Utils::ConvertPhysicalShapeToBounds(shape, namedPoseEntityId);
+        if (boundsOutput.IsSuccess())
         {
-        case Physics::ShapeType::Box:
-            {
-                bounds.m_boundsType = simulation_interfaces::msg::Bounds::TYPE_BOX;
-
-                auto boxConfig = azdynamic_cast<Physics::BoxShapeConfiguration*>(config);
-                bounds.m_points.emplace_back(colliderAbsoluteTransform.GetTranslation() + (boxConfig->m_dimensions / 2)); // upper Right
-                bounds.m_points.emplace_back(colliderAbsoluteTransform.GetTranslation() - (boxConfig->m_dimensions / 2)); // bottom left
-                return bounds;
-            }
-        case Physics::ShapeType::Sphere:
-            {
-                bounds.m_boundsType = simulation_interfaces::msg::Bounds::TYPE_SPHERE;
-                auto sphereConfig = azdynamic_cast<Physics::SphereShapeConfiguration*>(config);
-                bounds.m_points.emplace_back(colliderAbsoluteTransform.GetTranslation()); // sphere center
-                bounds.m_points.emplace_back(sphereConfig->m_radius, 0.f, 0.f); // radius and two ignored fields
-                return bounds;
-            }
-        // this type of collider is currently unsupported by the PhysX engine, but this implementation uses provided abstractions and is
-        // independent from selected physics engine.
-        case Physics::ShapeType::ConvexHull:
-            {
-                bounds.m_boundsType = simulation_interfaces::msg::Bounds::TYPE_CONVEX_HULL;
-                AZStd::vector<AZ::Vector3> vertices;
-                AZStd::vector<AZ::u32> indices;
-                shape->GetGeometry(vertices, indices);
-                for (auto& vertex : vertices)
-                {
-                    bounds.m_points.emplace_back(colliderAbsoluteTransform.TransformPoint(vertex));
-                }
-                return bounds;
-            }
-        default:
-            {
-                return AZ::Failure(FailedResult(
-                    simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
-                    AZStd::string::format(
-                        "Passed shape type with id %d is not supported by simulation interfaces", static_cast<AZ::u8>(shapeType))));
-            }
+            return AZ::Success(boundsOutput.GetValue());
         }
+
+        return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, boundsOutput.GetError()));
     }
 } // namespace SimulationInterfaces

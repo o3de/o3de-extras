@@ -10,7 +10,7 @@
 
 #include <AzCore/std/functional.h>
 #include <Interfaces/IROS2HandlerBase.h>
-#include <Utils/RegistryUtils.h>
+#include <SimulationInterfaces/RegistryUtils.h>
 #include <rclcpp_action/rclcpp_action.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 

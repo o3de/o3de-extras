@@ -8,6 +8,7 @@
 
 #pragma once
 #include <AzCore/Component/Component.h>
+#include <AzFramework/API/ApplicationAPI.h>
 #include <SimulationInterfaces/LevelManagerRequestBus.h>
 
 namespace SimulationInterfaces
@@ -15,6 +16,7 @@ namespace SimulationInterfaces
     class LevelManager
         : public AZ::Component
         , protected LevelManagerRequestBus::Handler
+        , AzFramework::LevelSystemLifecycleNotificationBus::Handler
     {
     public:
         AZ_COMPONENT_DECL(LevelManager);
@@ -41,6 +43,15 @@ namespace SimulationInterfaces
         AZ::Outcome<WorldResource, FailedResult> LoadWorld(const LoadWorldRequest& request) override;
         AZ::Outcome<void, FailedResult> UnloadWorld() override;
         void ReloadLevel() override;
+
+        // LevelSystemLifecycleNotificationBus implementation
+        void OnLoadingStart(const char* levelName) override;
+        void OnLoadingComplete(const char* levelName) override;
+        void OnUnloadComplete(const char* levelName) override;
+
+        // indicates whether action related to levels was triggered by simulation interfaces or not
+        // if it was triggered by imgui etc, it should trigger fallback
+        AZStd::atomic<bool> m_actionRequestedFromSimInterfaces = false;
 
         AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> GetAllAvailableLevels();
         bool m_isAppEditor = false;

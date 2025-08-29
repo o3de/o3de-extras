@@ -321,12 +321,14 @@ namespace UnitTest
         const AZ::Vector3 dims(4.0f, 5.0f, 6.0f);
         const AZ::Vector3 point2 = point1 + dims;
 
-        request->filters.bounds.points[0].x = point1.GetX();
-        request->filters.bounds.points[0].y = point1.GetY();
-        request->filters.bounds.points[0].z = point1.GetZ();
-        request->filters.bounds.points[1].x = point2.GetX();
-        request->filters.bounds.points[1].y = point2.GetY();
-        request->filters.bounds.points[1].z = point2.GetZ();
+        // order of defined box is upper right, bottom left 
+        // https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/Bounds.msg
+        request->filters.bounds.points[0].x = point2.GetX();
+        request->filters.bounds.points[0].y = point2.GetY();
+        request->filters.bounds.points[0].z = point2.GetZ();
+        request->filters.bounds.points[1].x = point1.GetX();
+        request->filters.bounds.points[1].y = point1.GetY();
+        request->filters.bounds.points[1].z = point1.GetZ();
         request->filters.bounds.type = simulation_interfaces::msg::Bounds::TYPE_BOX;
 
         EXPECT_CALL(mock, GetEntities(_))

@@ -24,6 +24,8 @@
 #include <Services/GetCurrentWorldServiceHandler.h>
 #include <Services/GetEntitiesServiceHandler.h>
 #include <Services/GetEntitiesStatesServiceHandler.h>
+#include <Services/GetEntityBoundsServiceHandler.h>
+#include <Services/GetEntityInfoServiceHandler.h>
 #include <Services/GetEntityStateServiceHandler.h>
 #include <Services/GetNamedPoseBoundsServiceHandler.h>
 #include <Services/GetNamedPosesServiceHandler.h>
@@ -33,6 +35,7 @@
 #include <Services/LoadWorldServiceHandler.h>
 #include <Services/ROS2ServiceBase.h>
 #include <Services/ResetSimulationServiceHandler.h>
+#include <Services/SetEntityInfoServiceHandler.h>
 #include <Services/SetEntityStateServiceHandler.h>
 #include <Services/SetSimulationStateServiceHandler.h>
 #include <Services/SpawnEntityServiceHandler.h>
@@ -99,6 +102,9 @@ namespace ROS2SimulationInterfaces
         RegisterInterface<StepSimulationServiceHandler>(ros2Node);
         RegisterInterface<GetNamedPosesServiceHandler>(ros2Node);
         RegisterInterface<GetNamedPoseBoundsServiceHandler>(ros2Node);
+        RegisterInterface<GetEntityInfoServiceHandler>(ros2Node);
+        RegisterInterface<SetEntityInfoServiceHandler>(ros2Node);
+        RegisterInterface<GetEntityBoundsServiceHandler>(ros2Node);
         RegisterInterface<GetAvailableWorldsServiceHandler>(ros2Node);
         if (!isAppEditor)
         {
@@ -120,9 +126,17 @@ namespace ROS2SimulationInterfaces
         }
     }
 
+    void ROS2SimulationInterfacesSystemComponent::AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatureType>& features)
+    {
+        m_externallyRegisteredFeatures.insert(features.begin(), features.end());
+    }
+
     AZStd::unordered_set<SimulationFeatureType> ROS2SimulationInterfacesSystemComponent::GetSimulationFeatures()
     {
         AZStd::unordered_set<SimulationFeatureType> result;
+        // add externally registered features
+        result.insert(m_externallyRegisteredFeatures.begin(), m_externallyRegisteredFeatures.end());
+        // add features from existing handlers
         for (auto& [handlerType, handler] : m_availableRos2Interface)
         {
             auto features = handler->GetProvidedFeatures();

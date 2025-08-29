@@ -7,8 +7,8 @@
  */
 
 #include "NamedPoseManagerEditor.h"
-#include "Clients/NamedPosesManager.h"
 #include <AzCore/Serialization/SerializeContext.h>
+#include <Clients/NamedPosesManager.h>
 
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 

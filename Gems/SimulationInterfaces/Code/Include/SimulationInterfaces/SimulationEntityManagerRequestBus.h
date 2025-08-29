@@ -8,17 +8,23 @@
 
 #pragma once
 
-#include "SimulationInterfacesTypeIds.h"
-
 #include "Result.h"
+#include "SimulationInterfacesTypeIds.h"
 #include "TagFilter.h"
+#include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
+#include <AzCore/Outcome/Outcome.h>
+#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
+#include <SimulationInterfaces/Bounds.h>
+#include <simulation_interfaces/msg/entity_category.hpp>
 
 namespace SimulationInterfaces
 {
+    using EntityCategory = simulation_interfaces::msg::EntityCategory::_category_type;
     //! A set of filters to apply to entity queries. See GetEntities, GetEntitiesStates.
     //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityFilters.msg">EntityFilters.msg</a>
     struct EntityFilters
@@ -31,6 +37,15 @@ namespace SimulationInterfaces
         AZStd::shared_ptr<Physics::ShapeConfiguration>
             m_boundsShape; //! A shape to use for filtering entities, null means no bounds filtering
         AZ::Transform m_boundsPose{ AZ::Transform::CreateIdentity() };
+        AZStd::vector<EntityCategory> m_entityCategories;
+    };
+
+    //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityInfo.msg">EntityInfo.msg</a>
+    struct EntityInfo
+    {
+        EntityCategory m_category;
+        AZStd::string m_description;
+        AZStd::vector<AZStd::string> m_tags;
     };
 
     //! @see <a href="https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityState.msg">EntityState.msg</a>
@@ -106,6 +121,44 @@ namespace SimulationInterfaces
         //! Reset the simulation to begin.
         //! This will revert the entire simulation to the initial state.
         virtual AZ::Outcome<void, FailedResult> ResetAllEntitiesToInitialState() = 0;
+
+        //! Registers a new simulated body to the simulation interface.
+        //! This method adds entity to simulation Interfaces cache with its name and initial state
+        //! This method allows to register entity spawned by interface other than simulation_interfaces
+        //! If given name already exists in the registry, new unique name will be created. 
+        //! @param proposedName Name to register entity under
+        //! @param entityId id of entity related to given name
+        //! @return final name which was used to register simulated body
+        virtual AZ::Outcome<AZStd::string, FailedResult> RegisterNewSimulatedBody(
+            const AZStd::string& proposedName, const AZ::EntityId& entityId) = 0;
+
+        //! Unregisters simulated body from the simulation interface.
+        //! This method doesn't despawn entity, it removes it from simulation_interfaces registry
+        //! @param name Name of entity to unregister
+        //! @return Returns failure if entity wasn't found
+        virtual AZ::Outcome<void, FailedResult> UnregisterSimulatedBody(const AZStd::string& name) = 0;
+
+        //! Set informations such as category, description to spawned entity with given name
+        //! @param name name of entity to set info for
+        //! @param info object with entity info
+        virtual AZ::Outcome<void, FailedResult> SetEntityInfo(const AZStd::string& name, const EntityInfo& info) = 0;
+        //! Get information about spawned entity, empty object is returned if no information was set before
+        //! @param name Name of entity to get
+        //! @return Returns entityIf of the entity or fail if entity doesn't exist
+        virtual AZ::Outcome<EntityInfo, FailedResult> GetEntityInfo(const AZStd::string& name) = 0;
+        //! Get information about bounds of the entity with given name
+        //! @param name Name of entity to get
+        //! @return Returns bounds of the entity or fail if entity doesn't exist
+        virtual AZ::Outcome<Bounds, FailedResult> GetEntityBounds(const AZStd::string& name) = 0;
+        //! Get Entity Id of the simulated Entity, for physical prefabs it will be first physical entity,
+        //! For non-physical entities prefab root will be returned
+        //! @param name Name of entity to get
+        //! @return Returns entityId of the entity or fail if entity doesn't exist
+        virtual AZ::Outcome<AZ::EntityId, FailedResult> GetEntityId(const AZStd::string& name) = 0;
+        //! Get Entity Id of the root of the prefab spawned as simulated Entity
+        //! @param name Name of entity to get
+        //! @return Returns entityId of the entity or fail if entity doesn't exist
+        virtual AZ::Outcome<AZ::EntityId, FailedResult> GetEntityRoot(const AZStd::string& name) = 0;
     };
 
     class SimulationInterfacesBusTraits : public AZ::EBusTraits
