@@ -125,8 +125,10 @@ namespace SimulationInterfaces
         //! Registers a new simulated body to the simulation interface.
         //! This method adds entity to simulation Interfaces cache with its name and initial state
         //! This method allows to register entity spawned by interface other than simulation_interfaces
+        //! If given name already exists in the registry, new unique name will be created. 
         //! @param proposedName Name to register entity under
         //! @param entityId id of entity related to given name
+        //! @return final name which was used to register simulated body
         virtual AZ::Outcome<AZStd::string, FailedResult> RegisterNewSimulatedBody(
             const AZStd::string& proposedName, const AZ::EntityId& entityId) = 0;
 
@@ -134,7 +136,7 @@ namespace SimulationInterfaces
         //! This method doesn't despawn entity, it removes it from simulation_interfaces registry
         //! @param name Name of entity to unregister
         //! @return Returns failure if entity wasn't found
-        virtual AZ::Outcome<void, FailedResult> RemoveSimulatedEntity(const AZStd::string& name) = 0;
+        virtual AZ::Outcome<void, FailedResult> UnregisterSimulatedBody(const AZStd::string& name) = 0;
 
         //! Set informations such as category, description to spawned entity with given name
         //! @param name name of entity to set info for
@@ -152,11 +154,11 @@ namespace SimulationInterfaces
         //! For non-physical entities prefab root will be returned
         //! @param name Name of entity to get
         //! @return Returns entityId of the entity or fail if entity doesn't exist
-        virtual AZ::Outcome<AZ::EntityId, FailedResult> GetSimulatedEntityId(const AZStd::string& name) = 0;
+        virtual AZ::Outcome<AZ::EntityId, FailedResult> GetEntityId(const AZStd::string& name) = 0;
         //! Get Entity Id of the root of the prefab spawned as simulated Entity
         //! @param name Name of entity to get
         //! @return Returns entityId of the entity or fail if entity doesn't exist
-        virtual AZ::Outcome<AZ::EntityId, FailedResult> GetSimulatedEntityRoot(const AZStd::string& name) = 0;
+        virtual AZ::Outcome<AZ::EntityId, FailedResult> GetEntityRoot(const AZStd::string& name) = 0;
     };
 
     class SimulationInterfacesBusTraits : public AZ::EBusTraits

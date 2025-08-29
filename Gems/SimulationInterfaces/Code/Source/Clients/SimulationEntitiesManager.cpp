@@ -147,8 +147,7 @@ namespace SimulationInterfaces
         auto simulatedBody = Utils::GetSimulatedBody(entityId);
         if (simulatedBody.IsSuccess())
         {
-            auto* rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(simulatedBody.GetValue());
-            if (rigidBody)
+            if (auto* rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(simulatedBody.GetValue()))
             {
                 initialState.m_twistLinear = rigidBody->GetLinearVelocity();
                 initialState.m_twistAngular = rigidBody->GetAngularVelocity();
@@ -239,7 +238,7 @@ namespace SimulationInterfaces
         return simulatedEntityName;
     }
 
-    AZ::Outcome<void, FailedResult> SimulationEntitiesManager::RemoveSimulatedEntity(const AZStd::string& name)
+    AZ::Outcome<void, FailedResult> SimulationEntitiesManager::UnregisterSimulatedBody(const AZStd::string& name)
     {
         if (auto findIt = m_simulatedEntityToEntityIdMap.find(name); findIt != m_simulatedEntityToEntityIdMap.end())
         {
@@ -254,7 +253,7 @@ namespace SimulationInterfaces
             m_simulatedEntityToEntityIdMap.erase(findIt);
 
             RemoveEntityInfoIfNeeded(name);
-            
+
             // remove info about root of simulated entity only if it was spawned by this component
             if (m_simulatedEntityToPrefabRoot.contains(name))
             {
@@ -613,14 +612,14 @@ namespace SimulationInterfaces
             optionalArgs.m_completionCallback = [this, completedCb, name](AzFramework::EntitySpawnTicket::Id ticketId)
             {
                 m_spawnedTickets.erase(ticketId);
-                RemoveSimulatedEntity(name);
+                UnregisterSimulatedBody(name);
                 completedCb(AZ::Success());
             };
             spawner->DespawnAllEntities(ticket, optionalArgs);
         }
         else
         {
-            RemoveSimulatedEntity(name);
+            UnregisterSimulatedBody(name);
             const auto msg = AZStd::string::format(
                 "Entity %s was not spawned by this component, wont delete it but name will be removed from registry immediately",
                 name.c_str());
@@ -989,7 +988,7 @@ namespace SimulationInterfaces
         return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, boundsOutput.GetError()));
     }
 
-    AZ::Outcome<AZ::EntityId, FailedResult> SimulationEntitiesManager::GetSimulatedEntityId(const AZStd::string& name)
+    AZ::Outcome<AZ::EntityId, FailedResult> SimulationEntitiesManager::GetEntityId(const AZStd::string& name)
     {
         if (!m_simulatedEntityToEntityIdMap.contains(name))
         {
@@ -1000,7 +999,7 @@ namespace SimulationInterfaces
         return AZ::Success(m_simulatedEntityToEntityIdMap.at(name));
     }
 
-    AZ::Outcome<AZ::EntityId, FailedResult> SimulationEntitiesManager::GetSimulatedEntityRoot(const AZStd::string& name)
+    AZ::Outcome<AZ::EntityId, FailedResult> SimulationEntitiesManager::GetEntityRoot(const AZStd::string& name)
     {
         if (!m_simulatedEntityToPrefabRoot.contains(name))
         {

@@ -310,7 +310,7 @@ namespace SimulationInterfaces
     {
         if (m_isAppEditor)
         {
-            constexpr const char* errorMsg = "ReloadWorld is not supported in Editor";
+            [[maybe_unused]] constexpr const char* errorMsg = "ReloadWorld is not supported in Editor";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return;
         }
@@ -387,6 +387,7 @@ namespace SimulationInterfaces
     {
         if (!m_actionRequestedFromSimInterfaces)
         {
+            // literally order entities removal. Other way they would stay after reload
             SimulationEntityManagerRequestBus::Broadcast(
                 &SimulationEntityManagerRequests::DeleteAllEntities,
                 [](const AZ::Outcome<void, FailedResult>& outcome)

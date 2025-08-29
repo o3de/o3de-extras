@@ -8,9 +8,11 @@
  */
 
 #include "TestFixture.h"
+#include "AzCore/Component/EntityId.h"
 #include <Clients/SimulationEntitiesManager.h>
 #include <Clients/SimulationManager.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
+#include <gtest/gtest.h>
 namespace UnitTest
 {
     void SimulationInterfaceTestEnvironment::AddGemsAndComponents()
@@ -74,8 +76,16 @@ namespace UnitTest
         AZ::Outcome<AZStd::string, SimulationInterfaces::FailedResult> output;
         SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
             output, &SimulationInterfaces::SimulationEntityManagerRequests::RegisterNewSimulatedBody, entityName, entity->GetId());
-        AZ_Assert(output.IsSuccess(), "Failed to register entity to simulation_interfaces, %s", output.GetError().m_errorString.c_str());
-        entity->SetName(output.GetValue()); // name could be change to ensure
+        // function return type is different than void, so ASSERT_TRUE cannot be used. Expect_true and early return is added to mimic assert
+        // behaviour
+        EXPECT_TRUE(output.IsSuccess()) << "Failed to register entity to simulation_interfaces, "
+                                        << output.GetError().m_errorString.c_str();
+        if (!output.IsSuccess())
+        {
+            return AZ::EntityId{ AZ::EntityId::InvalidEntityId };
+        }
+        entity->SetName(output.GetValue()); // name in simulation_interfaces registry could be change to ensure uniqueness. Apply new name
+                                            // to the created entity
 
         auto id = entity->GetId();
         m_entities.emplace(AZStd::make_pair(id, AZStd::move(entity)));
@@ -89,7 +99,7 @@ namespace UnitTest
         {
             AZ::Outcome<void, SimulationInterfaces::FailedResult> output;
             SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
-                output, &SimulationInterfaces::SimulationEntityManagerRequests::RemoveSimulatedEntity, entity.second->GetName());
+                output, &SimulationInterfaces::SimulationEntityManagerRequests::UnregisterSimulatedBody, entity.second->GetName());
             AZ_Assert(
                 output.IsSuccess(), "Failed to unregister entity from simulation_interfaces, %s", output.GetError().m_errorString.c_str());
             entity.second->Deactivate();
@@ -103,7 +113,7 @@ namespace UnitTest
         {
             AZ::Outcome<void, SimulationInterfaces::FailedResult> output;
             SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
-                output, &SimulationInterfaces::SimulationEntityManagerRequests::RemoveSimulatedEntity, findIt->second->GetName());
+                output, &SimulationInterfaces::SimulationEntityManagerRequests::UnregisterSimulatedBody, findIt->second->GetName());
             AZ_Assert(
                 output.IsSuccess(), "Failed to unregister entity from simulation_interfaces, %s", output.GetError().m_errorString.c_str());
             findIt->second->Deactivate();

@@ -51,7 +51,7 @@ namespace SimulationInterfaces
 
         // indicates whether action related to levels was triggered by simulation interfaces or not
         // if it was triggered by imgui etc, it should trigger fallback
-        bool m_actionRequestedFromSimInterfaces = false;
+        AZStd::atomic<bool> m_actionRequestedFromSimInterfaces = false;
 
         AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> GetAllAvailableLevels();
         bool m_isAppEditor = false;

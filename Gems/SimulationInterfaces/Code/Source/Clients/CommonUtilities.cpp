@@ -89,12 +89,12 @@ namespace SimulationInterfaces::Utils
             simulatedBody, entityId, &AzPhysics::SimulatedBodyComponentRequests::GetSimulatedBody);
         if (simulatedBody == nullptr)
         {
-            auto msg = AZStd::string::format("Entity's simulated body doesn't exist");
+            const auto msg = AZStd::string::format("Entity's simulated body doesn't exist");
             return AZ::Failure(msg);
         }
         if (simulatedBody->m_bodyHandle == AzPhysics::InvalidSimulatedBodyHandle)
         {
-            auto msg = AZStd::string::format("Entity is not a valid simulated body");
+            const auto msg = AZStd::string::format("Entity is not a valid simulated body");
             return AZ::Failure(msg);
         }
         return AZ::Success(simulatedBody);
@@ -106,8 +106,9 @@ namespace SimulationInterfaces::Utils
         auto shapeType = config->GetShapeType();
 
         // get final collider transform including entity TM and offsets
-        AZStd::pair<AZ::Vector3, AZ::Quaternion> colliderOffsets = shape->GetLocalPose();
-        AZ::Transform offsetTransform = AZ::Transform::CreateFromQuaternionAndTranslation(colliderOffsets.second, colliderOffsets.first);
+        auto [colliderOffsetTranslation, collideerOffsetRotation] = shape->GetLocalPose();
+        AZ::Transform offsetTransform =
+            AZ::Transform::CreateFromQuaternionAndTranslation(collideerOffsetRotation, colliderOffsetTranslation);
         AZ::Transform entityTransform;
         AZ::TransformBus::EventResult(entityTransform, entityId, &AZ::TransformBus::Events::GetWorldTM);
         AZ::Transform colliderAbsoluteTransform = entityTransform * offsetTransform;

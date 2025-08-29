@@ -60,12 +60,12 @@ namespace SimulationInterfaces
         AZ::Outcome<void, FailedResult> ResetAllEntitiesToInitialState() override;
         AZ::Outcome<AZStd::string, FailedResult> RegisterNewSimulatedBody(
             const AZStd::string& proposedName, const AZ::EntityId& entityId) override;
-        AZ::Outcome<void, FailedResult> RemoveSimulatedEntity(const AZStd::string& name) override;
+        AZ::Outcome<void, FailedResult> UnregisterSimulatedBody(const AZStd::string& name) override;
         AZ::Outcome<void, FailedResult> SetEntityInfo(const AZStd::string& name, const EntityInfo& info) override;
         AZ::Outcome<EntityInfo, FailedResult> GetEntityInfo(const AZStd::string& name) override;
         AZ::Outcome<Bounds, FailedResult> GetEntityBounds(const AZStd::string& name) override;
-        AZ::Outcome<AZ::EntityId, FailedResult> GetSimulatedEntityId(const AZStd::string& name) override;
-        AZ::Outcome<AZ::EntityId, FailedResult> GetSimulatedEntityRoot(const AZStd::string& name) override;
+        AZ::Outcome<AZ::EntityId, FailedResult> GetEntityId(const AZStd::string& name) override;
+        AZ::Outcome<AZ::EntityId, FailedResult> GetEntityRoot(const AZStd::string& name) override;
 
         //! Registers simulated entity to entity id mapping.
         //! Note that the entityId will be registered under unique name.
@@ -80,6 +80,7 @@ namespace SimulationInterfaces
         //! Set the state of the entity and their descendants.
         void SetEntitiesState(const AZStd::vector<AZ::EntityId>& entityAndDescendants, const EntityState& state);
 
+        //! Removes entity info for entity with given name from the simulation interfaces registry, only if exists
         void RemoveEntityInfoIfNeeded(const AZStd::string& name);
 
         // Helper method to check if world is loaded

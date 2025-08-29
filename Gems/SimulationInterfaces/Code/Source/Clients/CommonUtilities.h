@@ -32,11 +32,20 @@ namespace SimulationInterfaces::Utils
         const AZStd::unordered_map<AZStd::string, AZ::EntityId>& entitiesToFilter, const TagFilter& tagFilter);
 
     //! Helper function to check if entity tags matcher with given filter
+    //! @param tagFilter filter defined by simulation interfaces with rules of the tag matching
+    //! @param entityTags tags assigned to entity which is being tested
+    //! @return status of tag matching
     bool AreTagsMatching(const TagFilter& tagFilter, const AZStd::vector<AZStd::string>& entityTags);
 
+    //! Helper function to retrieve simulated body from the entity byt given ID
+    //! @param entityId entity ID of the entity with potential simulated body
+    //! @return pointer to simulated body, or failure in case when simulated body wasn't found
     AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> GetSimulatedBody(AZ::EntityId entityId);
 
-    // convert collider to Bounds
+    //! Helper method which converts collider to Bounds defined by the simulation interfaces
+    //! @param shape physics shape you want to convert
+    //! @param entityId id of the physical shape owner
+    //! @return simulation interfaces style bound or failure in something was wrong during processing
     AZ::Outcome<Bounds, AZStd::string> ConvertPhysicalShapeToBounds(AZStd::shared_ptr<Physics::Shape> shape, const AZ::EntityId& entityId);
 
 } // namespace SimulationInterfaces::Utils
