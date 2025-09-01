@@ -270,7 +270,7 @@ namespace SimulationInterfaces
     }
 
     AZStd::vector<AZStd::string> SimulationEntitiesManager::FilterEntitiesByCategories(
-        AZStd::vector<AZStd::string>& prefilteredEntities, const AZStd::vector<EntityCategory>& categories)
+        const AZStd::vector<AZStd::string>& prefilteredEntities, const AZStd::vector<EntityCategory>& categories)
     {
         AZStd::vector<AZStd::string> entities;
         entities.reserve(prefilteredEntities.size());
@@ -293,12 +293,11 @@ namespace SimulationInterfaces
                     });
             }
         }
-        prefilteredEntities.clear();
         return entities;
     }
 
     AZStd::vector<AZStd::string> SimulationEntitiesManager::FilterEntitiesByTag(
-        AZStd::vector<AZStd::string>& prefilteredEntities, const TagFilter& tagFilter)
+        const AZStd::vector<AZStd::string>& prefilteredEntities, const TagFilter& tagFilter)
     {
         AZStd::vector<AZStd::string> entities;
         entities.reserve(prefilteredEntities.size());
@@ -316,12 +315,11 @@ namespace SimulationInterfaces
                 entities.push_back(name);
             }
         }
-        prefilteredEntities.clear();
         return entities;
     }
 
     AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> SimulationEntitiesManager::FilterEntitiesByBounds(
-        AZStd::vector<AZStd::string>& prefilteredEntities,
+        const AZStd::vector<AZStd::string>& prefilteredEntities,
         const AZStd::shared_ptr<Physics::ShapeConfiguration> shape,
         const AZ::Transform& shapePose)
     {
@@ -387,12 +385,11 @@ namespace SimulationInterfaces
                 AZ_Warning("SimulationInterfaces", false, "Unsupported bounds type, skipped");
             }
         }
-        prefilteredEntities.clear();
         return entities;
     }
 
     AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> SimulationEntitiesManager::FilterEntitiesByRegex(
-        AZStd::vector<AZStd::string>& prefilteredEntities, const AZStd::string& nameRegex)
+        const AZStd::vector<AZStd::string>& prefilteredEntities, const AZStd::string& nameRegex)
     {
         AZStd::vector<AZStd::string> entities;
         entities.reserve(prefilteredEntities.size());
@@ -409,7 +406,6 @@ namespace SimulationInterfaces
             {
                 return AZStd::regex_search(entityName, regexSearch);
             });
-        prefilteredEntities.clear();
         return entities;
     }
 
