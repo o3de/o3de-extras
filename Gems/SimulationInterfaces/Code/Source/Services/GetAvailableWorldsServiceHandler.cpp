@@ -10,11 +10,11 @@
 #include "SimulationInterfaces/TagFilter.h"
 #include "SimulationInterfaces/WorldResource.h"
 #include <AzCore/std/string/string.h>
+#include <Clients/CommonUtilities.h>
 #include <SimulationInterfaces/LevelManagerRequestBus.h>
 #include <simulation_interfaces/msg/result.hpp>
 #include <simulation_interfaces/msg/tags_filter.hpp>
 #include <simulation_interfaces/msg/world_resource.hpp>
-#include "Utils/Utils.h"
 
 namespace ROS2SimulationInterfaces
 {
@@ -38,7 +38,7 @@ namespace ROS2SimulationInterfaces
             return request;
         }
     } // namespace
-    
+
     AZStd::unordered_set<SimulationFeatureType> GetAvailableWorldsServiceHandler::GetProvidedFeatures()
     {
         return AZStd::unordered_set<SimulationFeatureType>{ SimulationFeatures::AVAILABLE_WORLDS };
@@ -69,7 +69,7 @@ namespace ROS2SimulationInterfaces
                 AZStd::back_inserter(response.worlds),
                 [](const SimulationInterfaces::WorldResource& resource)
                 {
-                    return Utils::ConvertToRos2WorldResource(resource);
+                    return SimulationInterfaces::Utils::ConvertToRos2WorldResource(resource);
                 });
         }
         return response;

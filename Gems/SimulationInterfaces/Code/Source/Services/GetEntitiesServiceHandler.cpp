@@ -8,8 +8,8 @@
 
 #include "GetEntitiesServiceHandler.h"
 #include <AzFramework/Physics/ShapeConfiguration.h>
+#include <Clients/CommonUtilities.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <Utils/Utils.h>
 
 namespace ROS2SimulationInterfaces
 {
@@ -29,7 +29,7 @@ namespace ROS2SimulationInterfaces
         Response response;
         response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
 
-        const auto getFilterResult = Utils::GetEntityFiltersFromRequest<Request>(request);
+        const auto getFilterResult = SimulationInterfaces::Utils::GetEntityFiltersFromRequest<Request>(request);
         if (!getFilterResult.IsSuccess())
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
