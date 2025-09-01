@@ -26,14 +26,7 @@ namespace ROS2SimulationInterfaces
         SimulationInterfaces::EntityInfo entityInfo;
         entityInfo.m_category = request.info.category.category;
         entityInfo.m_description = request.info.description.c_str();
-        AZStd::transform(
-            request.info.tags.begin(),
-            request.info.tags.end(),
-            AZStd::back_inserter(entityInfo.m_tags),
-            [](const std::string& item)
-            {
-                return item.c_str();
-            });
+        AZStd::ranges::transform(request.info.tags, AZStd::back_inserter(entityInfo.m_tags), &std::string::c_str);
 
         AZ::Outcome<void, SimulationInterfaces::FailedResult> outcome;
         SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(

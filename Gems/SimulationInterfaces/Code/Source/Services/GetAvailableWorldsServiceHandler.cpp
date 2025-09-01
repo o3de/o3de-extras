@@ -9,6 +9,8 @@
 #include "GetAvailableWorldsServiceHandler.h"
 #include "SimulationInterfaces/TagFilter.h"
 #include "SimulationInterfaces/WorldResource.h"
+#include <AzCore/std/iterator.h>
+#include <AzCore/std/ranges/ranges_algorithm.h>
 #include <AzCore/std/string/string.h>
 #include <Clients/CommonUtilities.h>
 #include <SimulationInterfaces/LevelManagerRequestBus.h>
@@ -26,15 +28,11 @@ namespace ROS2SimulationInterfaces
             SimulationInterfaces::GetWorldsRequest request;
             request.continueOnError = ros2Request.continue_on_error;
             request.offlineOnly = ros2Request.offline_only;
-            for (const auto& source : ros2Request.additional_sources)
-            {
-                request.additionalSources.emplace_back(source.c_str());
-            }
+            // copy additional sources
+            AZStd::ranges::transform(ros2Request.additional_sources, AZStd::back_inserter(request.additionalSources), &std::string::c_str);
             request.filter.m_mode = ros2Request.filter.filter_mode;
-            for (const auto& tag : ros2Request.filter.tags)
-            {
-                request.filter.m_tags.insert(tag.c_str());
-            }
+            AZStd::ranges::transform(
+                ros2Request.filter.tags, AZStd::inserter(request.filter.m_tags, request.filter.m_tags.end()), &std::string::c_str);
             return request;
         }
     } // namespace
@@ -63,14 +61,7 @@ namespace ROS2SimulationInterfaces
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
             const auto& worldsList = availableWorlds.GetValue();
-            AZStd::transform(
-                worldsList.begin(),
-                worldsList.end(),
-                AZStd::back_inserter(response.worlds),
-                [](const SimulationInterfaces::WorldResource& resource)
-                {
-                    return SimulationInterfaces::Utils::ConvertToRos2WorldResource(resource);
-                });
+            AZStd::ranges::transform(worldsList, AZStd::back_inserter(response.worlds), &SimulationInterfaces::Utils::ConvertToRos2WorldResource);
         }
         return response;
     }

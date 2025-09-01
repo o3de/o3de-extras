@@ -21,6 +21,8 @@
 #include <AzCore/Settings/SettingsRegistry.h>
 #include <AzCore/std/algorithm.h>
 #include <AzCore/std/containers/vector.h>
+#include <AzCore/std/ranges/elements_view.h>
+#include <AzCore/std/ranges/ranges_algorithm.h>
 #include <AzCore/std/string/regex.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Components/TransformComponent.h>
@@ -423,18 +425,9 @@ namespace SimulationInterfaces
         const bool categoriesFilter = !filter.m_entityCategories.empty();
         const bool tagFilter = !filter.m_tagsFilter.m_tags.empty();
 
-        AZStd::vector<AZStd::string> entities;
-
         // get all entities from the map
-        entities.reserve(m_entityIdToSimulatedEntityMap.size());
-        AZStd::transform(
-            m_entityIdToSimulatedEntityMap.begin(),
-            m_entityIdToSimulatedEntityMap.end(),
-            AZStd::back_inserter(entities),
-            [](const auto& pair)
-            {
-                return pair.second;
-            });
+        const auto valueView = AZStd::ranges::views::values(m_entityIdToSimulatedEntityMap);
+        AZStd::vector<AZStd::string> entities{ valueView.begin(), valueView.end() };
 
         // filter by categories
         if (categoriesFilter)
