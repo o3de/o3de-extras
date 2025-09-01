@@ -83,7 +83,7 @@ namespace SimulationInterfaces
         void UnregisterAllTransitionKeys();
 
         bool m_isSimulationPaused = false;
-        bool m_startedWithLoadedLevel = false;
+        AZStd::optional<AZStd::string> m_levelLoadedAtStartup;
 
         uint64_t m_numberOfPhysicsSteps = 0;
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_simulationFinishEvent;

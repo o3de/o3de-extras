@@ -275,7 +275,7 @@ namespace SimulationInterfaces
                     }
                     else if (getCurrentWorldOutcome.IsSuccess())
                     {
-                        m_startedWithLoadedLevel = true;
+                        m_levelLoadedAtStartup = getCurrentWorldOutcome.GetValue().m_worldResource.m_uri;
                         InitializeSimulationState();
                     }
                 });
@@ -288,6 +288,7 @@ namespace SimulationInterfaces
         UnregisterAllTransitionKeys();
         AZ::TickBus::Handler::BusDisconnect();
         SimulationManagerRequestBus::Handler::BusDisconnect();
+        m_levelLoadedAtStartup.reset();
     }
 
     bool SimulationManager::IsSimulationPaused() const
@@ -367,27 +368,34 @@ namespace SimulationInterfaces
 
     AZ::Outcome<void, FailedResult> SimulationManager::ResetSimulation(ReloadLevelCallback completionCallback)
     {
-        // check if simulation has loaded level - if not it is impossible to restart it since there is no default state
-        if (m_simulationState == simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD ||
-            m_simulationState == simulation_interfaces::msg::SimulationState::STATE_NO_WORLD)
+        // reset is possible only if simulation is already started - world is loaded, or simulation interfaces has in cache level loaded
+        // during startup. Only in this case reseting makes sense. If there is no info about level loaded at startup and there is no world
+        // loaded -> simulation is in the exactly same state as right after startup
+        if ((m_simulationState == simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD ||
+             m_simulationState == simulation_interfaces::msg::SimulationState::STATE_NO_WORLD) &&
+            !m_levelLoadedAtStartup.has_value())
         {
-            return AZ::Failure(
-                FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Cannot reset simulation without loaded level"));
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Cannot reset simulation without loaded level and without knowledge about level loaded during startup. Simulator is "
+                "already in the same state as after start up"));
         }
         m_reloadLevelCallback = completionCallback;
         // We need to delete all entities before reloading the level
         DeletionCompletedCb deleteAllCompletion =
-            [startedWithLevel = m_startedWithLoadedLevel, completionCallback](const AZ::Outcome<void, FailedResult>& result)
+            [levelLoadedAtStartup = m_levelLoadedAtStartup, completionCallback](const AZ::Outcome<void, FailedResult>& result)
         {
             AZ_Info("SimulationManager", "Delete all entities completed: %s, reload level", result.IsSuccess() ? "true" : "false");
             // queue required to allow all resources related to removed spawnables to be released, especially those related to level.pak
             AZ::SystemTickBus::QueueFunction(
-                [startedWithLevel, completionCallback]()
+                [levelLoadedAtStartup, completionCallback]()
                 {
                     // call level manager to reload the level
-                    if (startedWithLevel)
+                    if (levelLoadedAtStartup.has_value())
                     {
-                        LevelManagerRequestBus::Broadcast(&LevelManagerRequests::ReloadLevel);
+                        LoadWorldRequest request;
+                        request.levelResource.m_uri = levelLoadedAtStartup.value();
+                        LevelManagerRequestBus::Broadcast(&LevelManagerRequests::LoadWorld, request);
                     }
                     else
                     {
