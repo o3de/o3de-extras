@@ -11,6 +11,7 @@
 #include "SimulationInterfaces/NamedPoseManagerRequestBus.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/std/containers/vector.h>
+#include <AzCore/std/ranges/ranges_algorithm.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Physics/Components/SimulatedBodyComponentBus.h>
@@ -48,7 +49,7 @@ namespace SimulationInterfaces::Utils
         bool matchAllTags = tagFilter.m_mode == simulation_interfaces::msg::TagsFilter::FILTER_MODE_ALL;
         for (auto& tag : tagFilter.m_tags)
         {
-            bool tagExistInEntity = AZStd::find(entityTags.begin(), entityTags.end(), tag) != entityTags.end();
+            bool tagExistInEntity = AZStd::ranges::contains(entityTags, tag);
             // if all tags need to match but entity doesn't have requested one, return with false
             if (matchAllTags && !tagExistInEntity)
             {
@@ -162,15 +163,7 @@ namespace SimulationInterfaces::Utils
         worldResource.description = resource.m_description.c_str();
         worldResource.world_resource.uri = resource.m_worldResource.m_uri.c_str();
         worldResource.world_resource.resource_string = resource.m_worldResource.m_resourceString.c_str();
-        AZStd::transform(
-            resource.m_tags.begin(),
-            resource.m_tags.end(),
-            AZStd::back_inserter(worldResource.tags),
-            [](const AZStd::string& tag)
-            {
-                std::string stdTag(tag.c_str());
-                return stdTag;
-            });
+        AZStd::ranges::transform(resource.m_tags, AZStd::back_inserter(worldResource.tags), &AZStd::string::c_str);
         return worldResource;
     }
 } // namespace SimulationInterfaces::Utils

@@ -49,14 +49,7 @@ namespace ROS2SimulationInterfaces
         }
 
         const auto& entityNameList = outcome.GetValue();
-        AZStd::transform(
-            entityNameList.begin(),
-            entityNameList.end(),
-            std::back_inserter(stdEntities),
-            [](const AZStd::string& entityName)
-            {
-                return entityName.c_str();
-            });
+        AZStd::ranges::transform(entityNameList, AZStd::back_inserter(stdEntities), &AZStd::string::c_str);
         response.entities = stdEntities;
 
         return response;

@@ -69,14 +69,15 @@ namespace SimulationInterfaces
 
         // helper methods to filter entities by different filters
         AZStd::vector<AZStd::string> FilterEntitiesByCategories(
-            AZStd::vector<AZStd::string>& prefilteredEntities, const AZStd::vector<EntityCategory>& categories);
-        AZStd::vector<AZStd::string> FilterEntitiesByTag(AZStd::vector<AZStd::string>& prefilteredEntities, const TagFilter& tagFilter);
+            const AZStd::vector<AZStd::string>& prefilteredEntities, const AZStd::vector<EntityCategory>& categories);
+        AZStd::vector<AZStd::string> FilterEntitiesByTag(
+            const AZStd::vector<AZStd::string>& prefilteredEntities, const TagFilter& tagFilter);
         AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> FilterEntitiesByBounds(
-            AZStd::vector<AZStd::string>& prefilteredEntities,
+            const AZStd::vector<AZStd::string>& prefilteredEntities,
             const AZStd::shared_ptr<Physics::ShapeConfiguration> shape,
             const AZ::Transform& shapePose);
         AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> FilterEntitiesByRegex(
-            AZStd::vector<AZStd::string>& prefilteredEntities, const AZStd::string& regex);
+            const AZStd::vector<AZStd::string>& prefilteredEntities, const AZStd::string& regex);
 
         //! Registers simulated entity to entity id mapping.
         //! Note that the entityId will be registered under unique name.

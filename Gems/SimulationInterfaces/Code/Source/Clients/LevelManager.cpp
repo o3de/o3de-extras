@@ -15,6 +15,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/base.h>
 #include <AzCore/std/containers/vector.h>
+#include <AzCore/std/ranges/ranges_algorithm.h>
 #include <AzCore/std/string/conversions.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/API/ApplicationAPI.h>
@@ -231,7 +232,7 @@ namespace SimulationInterfaces
         }
         const auto& levelsPaths = levelNamesResult.GetValue();
 
-        if (AZStd::find(levelsPaths.begin(), levelsPaths.end(), request.levelResource.m_uri) == levelsPaths.end())
+        if (!AZStd::ranges::contains(levelsPaths, request.levelResource.m_uri))
         {
             const AZStd::string errorMsg = AZStd::string::format("Requested world/level %s not found", request.levelResource.m_uri.c_str());
             AZ_Warning("SimulationInterfaces", false, errorMsg.c_str());

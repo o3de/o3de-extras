@@ -124,6 +124,8 @@ namespace ROS2SimulationInterfaces
         {
             handler.reset();
         }
+        m_availableRos2Interface.clear();
+        m_externallyRegisteredFeatures.clear();
     }
 
     void ROS2SimulationInterfacesSystemComponent::AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatureType>& features)

@@ -7,10 +7,10 @@
  */
 
 #include "GetEntityInfoServiceHandler.h"
+#include <AzCore/std/ranges/ranges_algorithm.h>
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <SimulationInterfaces/RegistryUtils.h>
 
 namespace ROS2SimulationInterfaces
 {
@@ -43,14 +43,7 @@ namespace ROS2SimulationInterfaces
         entityInfoMsg.category.category = outcome.GetValue().m_category;
         entityInfoMsg.description = outcome.GetValue().m_description.c_str();
 
-        AZStd::transform(
-            outcome.GetValue().m_tags.begin(),
-            outcome.GetValue().m_tags.end(),
-            AZStd::back_inserter(entityInfoMsg.tags),
-            [](const AZStd::string& item)
-            {
-                return item.c_str();
-            });
+        AZStd::ranges::transform(outcome.GetValue().m_tags, AZStd::back_inserter(entityInfoMsg.tags), &AZStd::string::c_str);
 
         response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
         response.info = entityInfoMsg;

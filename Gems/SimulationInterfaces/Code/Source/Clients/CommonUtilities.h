@@ -11,6 +11,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/ranges/ranges_algorithm.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
@@ -20,6 +21,7 @@
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/TagFilter.h>
 #include <SimulationInterfaces/WorldResource.h>
+#include <simulation_interfaces/msg/entity_category.hpp>
 #include <simulation_interfaces/msg/world_resource.hpp>
 
 namespace SimulationInterfaces::Utils
@@ -104,24 +106,15 @@ namespace SimulationInterfaces::Utils
         }
 
         // copy categories
-        AZStd::transform(
-            request.filters.categories.begin(),
-            request.filters.categories.end(),
+        AZStd::ranges::transform(
+            request.filters.categories,
             AZStd::back_inserter(filter.m_entityCategories),
-            [](const simulation_interfaces::msg::EntityCategory& category)
-            {
-                return category.category;
-            });
-        // copy tags
+            &simulation_interfaces::msg::EntityCategory::category);
         filter.m_tagsFilter.m_mode = request.filters.tags.filter_mode;
-        AZStd::transform(
-            request.filters.tags.tags.begin(),
-            request.filters.tags.tags.end(),
-            AZStd::inserter(filter.m_tagsFilter.m_tags, filter.m_tagsFilter.m_tags.end()),
-            [](const std::string& tag)
-            {
-                return tag.c_str();
-            });
+        // copy tags
+        AZStd::ranges::transform(
+            request.filters.tags.tags, AZStd::inserter(filter.m_tagsFilter.m_tags, filter.m_tagsFilter.m_tags.end()), &std::string::c_str);
+
         return AZ::Success(AZStd::move(filter));
     }
 

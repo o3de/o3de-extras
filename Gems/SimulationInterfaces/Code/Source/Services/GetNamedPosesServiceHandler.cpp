@@ -31,10 +31,7 @@ namespace ROS2SimulationInterfaces
         AZ::Outcome<NamedPoseList, FailedResult> namedPosesO3DE;
         TagFilter tagFilter;
         tagFilter.m_mode = request.tags.filter_mode;
-        for (const auto& tag : request.tags.tags)
-        {
-            tagFilter.m_tags.emplace(tag.c_str());
-        }
+        AZStd::ranges::transform(request.tags.tags, AZStd::inserter(tagFilter.m_tags, tagFilter.m_tags.end()), &std::string::c_str);
 
         NamedPoseManagerRequestBus::BroadcastResult(namedPosesO3DE, &NamedPoseManagerRequests::GetNamedPoses, tagFilter);
         Response response;

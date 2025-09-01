@@ -33,18 +33,16 @@ namespace ROS2SimulationInterfaces
             return response;
         }
 
+        auto convertToROS2 = [](const SimulationInterfaces::Spawnable& spawnable)
+        {
+            simulation_interfaces::msg::Spawnable simSpawnable;
+            simSpawnable.uri = spawnable.m_uri.c_str();
+            simSpawnable.description = spawnable.m_description.c_str();
+            return simSpawnable;
+        };
+
         const auto& spawnableList = outcome.GetValue();
-        AZStd::transform(
-            spawnableList.begin(),
-            spawnableList.end(),
-            AZStd::back_inserter(response.spawnables),
-            [](const SimulationInterfaces::Spawnable& spawnable)
-            {
-                simulation_interfaces::msg::Spawnable simSpawnable;
-                simSpawnable.uri = spawnable.m_uri.c_str();
-                simSpawnable.description = spawnable.m_description.c_str();
-                return simSpawnable;
-            });
+        AZStd::ranges::transform(spawnableList, AZStd::back_inserter(response.spawnables), convertToROS2);
 
         return response;
     }
