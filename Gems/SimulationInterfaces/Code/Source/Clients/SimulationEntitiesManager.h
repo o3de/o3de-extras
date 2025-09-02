@@ -56,6 +56,7 @@ namespace SimulationInterfaces
             const AZStd::string& entityNamespace,
             const AZ::Transform& initialPose,
             const bool allowRename,
+            PreInsertionCb preinsertionCb,
             SpawnCompletedCb completedCb) override;
         AZ::Outcome<void, FailedResult> ResetAllEntitiesToInitialState() override;
         AZ::Outcome<AZStd::string, FailedResult> RegisterNewSimulatedBody(
@@ -125,6 +126,7 @@ namespace SimulationInterfaces
         {
             AZStd::string m_userProposedName; //! Name proposed by the User in spawn request
             SpawnCompletedCb m_completedCb; //! User callback to be called when the entity is registered
+            PreInsertionCb m_preInsertionCb; //! User callback to be called when entity prefab is added but inactive
         };
         AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, SpawnCompletedCbData> m_spawnCompletedCallbacks;
     };

@@ -75,6 +75,19 @@ namespace ROS2SimulationInterfaces
         }
 
         const AZ::Transform initialPose = transformOffset * ROS2::ROS2Conversions::FromROS2Pose(request.initial_pose.pose);
+        SimulationInterfaces::PreInsertionCb preinsertionCB =
+            [this](const AZ::Outcome<AzFramework::SpawnableEntityContainerView, SimulationInterfaces::FailedResult>& outcome)
+        {
+            if (!outcome.IsSuccess())
+            {
+                Response response;
+                const auto& failedResult = outcome.GetError();
+                response.result.result = failedResult.m_errorCode;
+                response.result.error_message = failedResult.m_errorString.c_str();
+
+                SendResponse(response);
+            }
+        };
         SimulationInterfaces::SimulationEntityManagerRequestBus::Broadcast(
             &SimulationInterfaces::SimulationEntityManagerRequests::SpawnEntity,
             name,
@@ -82,6 +95,7 @@ namespace ROS2SimulationInterfaces
             entityNamespace,
             initialPose,
             request.allow_renaming,
+            preinsertionCB,
             [this](const AZ::Outcome<AZStd::string, SimulationInterfaces::FailedResult>& outcome)
             {
                 Response response;

@@ -26,7 +26,7 @@ namespace UnitTest
         MOCK_METHOD1(DeleteAllEntities, void(DeletionCompletedCb completedCb));
         MOCK_METHOD0(GetSpawnables, AZ::Outcome<SpawnableList, FailedResult>());
         MOCK_METHOD0(ResetAllEntitiesToInitialState, AZ::Outcome<void, FailedResult>());
-        MOCK_METHOD6(
+        MOCK_METHOD7(
             SpawnEntity,
             void(
                 const AZStd::string& name,
@@ -34,6 +34,7 @@ namespace UnitTest
                 const AZStd::string& entityNamespace,
                 const AZ::Transform& initialPose,
                 const bool allowRename,
+                PreInsertionCb preinsertionCb,
                 SpawnCompletedCb completedCb));
         MOCK_METHOD2(
             RegisterNewSimulatedBody,
