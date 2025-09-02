@@ -75,6 +75,9 @@ namespace UnitTest
             EXPECT_TRUE(result.IsSuccess());
             completed = true;
         };
+        PreInsertionCb preinsertionCB = [](const AZ::Outcome<AzFramework::SpawnableEntityContainerView, FailedResult>& outcome)
+        {
+        };
 
         constexpr bool allowRename = false;
         SimulationEntityManagerRequestBus::Broadcast(
@@ -84,6 +87,7 @@ namespace UnitTest
             entityNamespace,
             initialPose,
             allowRename,
+            preinsertionCB,
             completedCb);
 
         // entities are spawned asynchronously, so we need to tick the app to let the entity be spawned
@@ -104,6 +108,7 @@ namespace UnitTest
             entityNamespace,
             initialPose,
             allowRename,
+            preinsertionCB,
             failedSpawnCompletedCb);
         EXPECT_TRUE(completed2);
 
@@ -173,11 +178,32 @@ namespace UnitTest
         {
         };
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity1", uri, entityNamespace, initialPose, false, cb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity,
+            "entity1",
+            uri,
+            entityNamespace,
+            initialPose,
+            false,
+            preinsertionCB,
+            cb);
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity2", uri, entityNamespace, initialPose, false, cb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity,
+            "entity2",
+            uri,
+            entityNamespace,
+            initialPose,
+            false,
+            preinsertionCB,
+            cb);
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity3", uri, entityNamespace, initialPose, false, cb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity,
+            "entity3",
+            uri,
+            entityNamespace,
+            initialPose,
+            false,
+            preinsertionCB,
+            cb);
         TickApp(100);
         EXPECT_EQ(getNumberOfEntities(), 3);
 

@@ -447,13 +447,14 @@ namespace UnitTest
         request->allow_renaming = true;
 
         auto future = client->async_send_request(request);
-        EXPECT_CALL(mock, SpawnEntity(_, _, _, _, _, _))
+        EXPECT_CALL(mock, SpawnEntity(_, _, _, _, _, _, _))
             .WillOnce(::testing::Invoke(
                 [](const AZStd::string& name,
                    const AZStd::string& uri,
                    const AZStd::string& entityNamespace,
                    const AZ::Transform& initialPose,
                    const bool allowRename,
+                   PreInsertionCb preinsertionCb,
                    SpawnCompletedCb completedCb)
                 {
                     EXPECT_EQ(name, "valid_name");
