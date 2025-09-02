@@ -67,6 +67,8 @@ endif()
 ly_add_target(
     NAME ${gem_name}.Static STATIC
     NAMESPACE Gem
+    PLATFORM_INCLUDE_FILES
+        ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/ros2_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
     FILES_CMAKE
         ros2_header_files.cmake
         ros2_files.cmake
@@ -266,10 +268,8 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 BUILD_DEPENDENCIES
                     PRIVATE
                         AZ::AzTest
-                        AZ::AzTestShared
-                        AZ::AzToolsFramework
+                        AZ::AzManipulatorTestFramework.Static
                         Gem::${gem_name}.Editor.Static
-                        3rdParty::sdformat
             )
 
             # Add ROS2.Editor.Tests to googletest

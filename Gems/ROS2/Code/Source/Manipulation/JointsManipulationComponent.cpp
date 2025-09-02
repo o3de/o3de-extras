@@ -15,6 +15,7 @@
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <ROS2/Utilities/ROS2Names.h>
@@ -183,7 +184,8 @@ namespace ROS2
         publisherContext.m_entityId = GetEntityId();
 
         m_jointStatePublisher = AZStd::make_unique<JointStatePublisher>(m_jointStatePublisherConfiguration, publisherContext);
-        m_lastTickTimestamp = ROS2Interface::Get()->GetROSTimestamp();
+        ROS2::ROS2ClockRequestBus::BroadcastResult(m_lastTickTimestamp, &ROS2ClockRequestBus::Events::GetROSTimestamp);
+
         AZ::TickBus::Handler::BusConnect();
         JointsManipulationRequestBus::Handler::BusConnect(GetEntityId());
     }
@@ -449,7 +451,8 @@ namespace ROS2
             }
             m_jointStatePublisher->InitializePublisher();
         }
-        auto simTimestamp = ROS2Interface::Get()->GetROSTimestamp();
+        builtin_interfaces::msg::Time simTimestamp;
+        ROS2ClockRequestBus::BroadcastResult(simTimestamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
         float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastTickTimestamp, simTimestamp);
         MoveToSetPositions(deltaSimTime);
         m_lastTickTimestamp = simTimestamp;

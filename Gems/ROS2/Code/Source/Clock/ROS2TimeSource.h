@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
+#pragma once
+
+#include "ITimeSource.h"
+
+namespace ROS2
+{
+    //! The ROS2TimeSource provides the time taken from the ROS 2. By default
+    //! this is system_time but it can be configured to provide the time from the other sources.
+    class ROS2TimeSource : public ITimeSource
+    {
+    public:
+        virtual ~ROS2TimeSource() = default;
+
+        // ITimeSource overrides ...
+        void Activate() override {};
+        void Deactivate() override {};
+
+        //! Get ROS 2 time as ROS2 message.
+        //! @see ROS2Requests::GetROSTimestamp() for more details.
+        builtin_interfaces::msg::Time GetROSTimestamp() const override;
+
+        //! Sets the time source to the given time.
+        //! @param time The time to set the time source to.
+        //! @return An outcome indicating success or failure.
+        AZ::Outcome<void, AZStd::string> AdjustTime(const builtin_interfaces::msg::Time& time) override;
+    };
+
+} // namespace ROS2

@@ -8,6 +8,7 @@
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <Camera/ROS2EditorCameraSystemComponent.h>
+#include <Clock/ROS2EditorClockSystemComponent.h>
 #include <Frame/ROS2FrameSystemComponent.h>
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
@@ -42,20 +43,23 @@ namespace ROS2
 
             m_descriptors.insert(
                 m_descriptors.end(),
-                { ROS2EditorSystemComponent::CreateDescriptor(),
-                  ROS2EditorCameraSystemComponent::CreateDescriptor(),
-                  LidarRegistrarEditorSystemComponent::CreateDescriptor(),
-                  ROS2RobotImporterEditorSystemComponent::CreateDescriptor(),
-                  ROS2CameraSensorEditorComponent::CreateDescriptor(),
+                {
+                    ROS2EditorSystemComponent::CreateDescriptor(),
+                    ROS2EditorCameraSystemComponent::CreateDescriptor(),
+                    LidarRegistrarEditorSystemComponent::CreateDescriptor(),
+                    ROS2RobotImporterEditorSystemComponent::CreateDescriptor(),
+                    ROS2CameraSensorEditorComponent::CreateDescriptor(),
 #ifdef WITH_GAZEBO_MSGS
-                  ROS2SpawnerEditorComponent::CreateDescriptor(),
-                  ROS2SpawnPointEditorComponent::CreateDescriptor(),
+                    ROS2SpawnerEditorComponent::CreateDescriptor(),
+                    ROS2SpawnPointEditorComponent::CreateDescriptor(),
 #endif
-                  SdfAssetBuilderSystemComponent::CreateDescriptor(),
-                  JointsManipulationEditorComponent::CreateDescriptor(),
-                  JointsPositionsEditorComponent::CreateDescriptor(),
-                  ROS2FrameSystemComponent::CreateDescriptor(),
-                  ROS2FrameEditorComponent::CreateDescriptor() });
+                    SdfAssetBuilderSystemComponent::CreateDescriptor(),
+                    JointsManipulationEditorComponent::CreateDescriptor(),
+                    JointsPositionsEditorComponent::CreateDescriptor(),
+                    ROS2FrameSystemComponent::CreateDescriptor(),
+                    ROS2FrameEditorComponent::CreateDescriptor(),
+                    ROS2EditorClockSystemComponent::CreateDescriptor(),
+                });
         }
 
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
@@ -64,6 +68,7 @@ namespace ROS2
                 azrtti_typeid<ROS2EditorSystemComponent>(),           azrtti_typeid<ROS2EditorCameraSystemComponent>(),
                 azrtti_typeid<LidarRegistrarEditorSystemComponent>(), azrtti_typeid<ROS2RobotImporterEditorSystemComponent>(),
                 azrtti_typeid<SdfAssetBuilderSystemComponent>(),      azrtti_typeid<ROS2FrameSystemComponent>(),
+                azrtti_typeid<ROS2EditorClockSystemComponent>(),
             };
         }
     };

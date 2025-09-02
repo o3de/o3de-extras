@@ -11,7 +11,7 @@
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
-
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 namespace ROS2
 {
     void PhysicsBasedSource::Reflect(AZ::ReflectContext* context)
@@ -25,13 +25,10 @@ namespace ROS2
     void PhysicsBasedSource::Start()
     {
         m_onSceneSimulationEventHandler.Disconnect();
-        const auto* ros2Interface = ROS2Interface::Get();
-        AZ_Assert(ros2Interface, "ROS2 interface is not initialized.");
-
         m_onSceneSimulationEventHandler = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
-            [this, ros2Interface](AzPhysics::SceneHandle sceneHandle, float deltaTime)
+            [this](AzPhysics::SceneHandle sceneHandle, float deltaTime)
             {
-                const auto simulationTime = ros2Interface->GetROSTimestamp();
+                const auto simulationTime = ROS2ClockInterface::Get()->GetROSTimestamp();
                 const float deltaSimulationTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simulationTime);
                 m_sourceEvent.Signal(sceneHandle, deltaSimulationTime);
                 m_lastSimulationTime = simulationTime;

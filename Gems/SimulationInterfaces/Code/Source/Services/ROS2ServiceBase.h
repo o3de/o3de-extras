@@ -11,7 +11,7 @@
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/optional.h>
 #include <Interfaces/IROS2HandlerBase.h>
-#include <Utils/RegistryUtils.h>
+#include <SimulationInterfaces/RegistryUtils.h>
 #include <rclcpp/service.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
 
@@ -42,6 +42,11 @@ namespace ROS2SimulationInterfaces
             m_serviceHandle->send_response(*m_lastRequestHeader, response);
         }
 
+        bool IsValid() override
+        {
+            return m_serviceHandle != nullptr;
+        }
+
     protected:
         //! This function is called when a service request is received.
         virtual AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) = 0;
@@ -57,15 +62,26 @@ namespace ROS2SimulationInterfaces
         void CreateService(rclcpp::Node::SharedPtr& node)
         {
             // get the service name from the type name
-            AZStd::string serviceName = RegistryUtilities::GetName(GetTypeName());
+            // passing an empty string to settings registry disables ROS 2 action
+            AZStd::optional<AZStd::string> serviceName = RegistryUtilities::GetName(GetTypeName());
 
-            if (serviceName.empty())
+            // do not create a ROS 2 action if the value is empty
+            if (serviceName.has_value() && serviceName.value().empty())
+            {
+                AZ_Trace(
+                    "SimulationInterfaces",
+                    "Service name for type %s is set to empty string, service won't be created",
+                    GetTypeName().data());
+                return;
+            }
+
+            if (!serviceName.has_value())
             {
                 // if the service name is empty, use the default name
                 serviceName = GetDefaultName();
             }
 
-            const std::string serviceNameStr{ serviceName.c_str(), serviceName.size() };
+            const std::string serviceNameStr{ serviceName.value().c_str(), serviceName.value().size() };
             m_serviceHandle = node->create_service<RosServiceType>(
                 serviceNameStr,
                 [this](

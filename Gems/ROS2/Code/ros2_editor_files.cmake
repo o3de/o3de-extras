@@ -96,6 +96,8 @@ set(FILES
     Source/Frame/ROS2FrameSystemBus.h
     Source/SystemComponents/ROS2EditorSystemComponent.cpp
     Source/SystemComponents/ROS2EditorSystemComponent.h
+    Source/Clock/ROS2EditorClockSystemComponent.cpp
+    Source/Clock/ROS2EditorClockSystemComponent.h
 )
 
 # optional, legacy features compilation

@@ -1,4 +1,5 @@
 #pragma once
+#include <SimulationInterfaces/Bounds.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -24,7 +25,7 @@ namespace UnitTest
         MOCK_METHOD2(DeleteEntity, void(const AZStd::string& name, DeletionCompletedCb completedCb));
         MOCK_METHOD1(DeleteAllEntities, void(DeletionCompletedCb completedCb));
         MOCK_METHOD0(GetSpawnables, AZ::Outcome<SpawnableList, FailedResult>());
-        MOCK_METHOD0(ResetAllEntitiesToInitialState, void());
+        MOCK_METHOD0(ResetAllEntitiesToInitialState, AZ::Outcome<void, FailedResult>());
         MOCK_METHOD6(
             SpawnEntity,
             void(
@@ -34,5 +35,14 @@ namespace UnitTest
                 const AZ::Transform& initialPose,
                 const bool allowRename,
                 SpawnCompletedCb completedCb));
+        MOCK_METHOD2(
+            RegisterNewSimulatedBody,
+            AZ::Outcome<AZStd::string, FailedResult>(const AZStd::string& proposedName, const AZ::EntityId& entityId));
+        MOCK_METHOD1(UnregisterSimulatedBody, AZ::Outcome<void, FailedResult>(const AZStd::string& name));
+        MOCK_METHOD2(SetEntityInfo, AZ::Outcome<void, FailedResult>(const AZStd::string& name, const EntityInfo& info));
+        MOCK_METHOD1(GetEntityInfo, AZ::Outcome<EntityInfo, FailedResult>(const AZStd::string& name));
+        MOCK_METHOD1(GetEntityBounds, AZ::Outcome<Bounds, FailedResult>(const AZStd::string& name));
+        MOCK_METHOD1(GetEntityId, AZ::Outcome<AZ::EntityId, FailedResult>(const AZStd::string& name));
+        MOCK_METHOD1(GetEntityRoot, AZ::Outcome<AZ::EntityId, FailedResult>(const AZStd::string& name));
     };
 } // namespace UnitTest

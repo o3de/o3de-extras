@@ -13,8 +13,12 @@ set(FILES
     Source/Clients/SimulationEntitiesManager.h
     Source/Clients/CommonUtilities.cpp
     Source/Clients/CommonUtilities.h
+    Source/Clients/NamedPosesManager.cpp
+    Source/Clients/NamedPosesManager.h
     Source/Clients/SimulationFeaturesAggregator.cpp
     Source/Clients/SimulationFeaturesAggregator.h
+    Source/Clients/LevelManager.cpp
+    Source/Clients/LevelManager.h
     Source/Clients/ROS2SimulationInterfacesSystemComponent.cpp
     Source/Clients/ROS2SimulationInterfacesSystemComponent.h
     Source/Interfaces/IROS2HandlerBase.h
@@ -26,31 +30,44 @@ set(FILES
     Source/Services/GetEntitiesServiceHandler.h
     Source/Services/DeleteEntityServiceHandler.cpp
     Source/Services/DeleteEntityServiceHandler.h
-    Source/Services/GetEntitiesServiceHandler.cpp
-    Source/Services/GetEntitiesServiceHandler.h
+    Source/Services/GetNamedPoseBoundsServiceHandler.cpp
+    Source/Services/GetNamedPoseBoundsServiceHandler.h
+    Source/Services/GetNamedPosesServiceHandler.cpp
+    Source/Services/GetNamedPosesServiceHandler.h
+    Source/Services/GetEntityInfoServiceHandler.cpp
+    Source/Services/GetEntityInfoServiceHandler.h
     Source/Services/GetEntitiesStatesServiceHandler.cpp
     Source/Services/GetEntitiesStatesServiceHandler.h
     Source/Services/GetEntityStateServiceHandler.cpp
     Source/Services/GetEntityStateServiceHandler.h
-    Source/Services/DeleteEntityServiceHandler.cpp
-    Source/Services/DeleteEntityServiceHandler.h
     Source/Services/SetEntityStateServiceHandler.cpp
     Source/Services/SetEntityStateServiceHandler.h
+    Source/Services/SetEntityInfoServiceHandler.cpp
+    Source/Services/SetEntityInfoServiceHandler.h
+    Source/Services/GetEntityBoundsServiceHandler.cpp
+    Source/Services/GetEntityBoundsServiceHandler.h
     Source/Services/GetSpawnablesServiceHandler.cpp
     Source/Services/GetSpawnablesServiceHandler.h
     Source/Services/SpawnEntityServiceHandler.cpp
     Source/Services/SpawnEntityServiceHandler.h
     Source/Services/ResetSimulationServiceHandler.cpp
     Source/Services/ResetSimulationServiceHandler.h
-    Source/Services/GetSimulationFeaturesServiceHandler.cpp
-    Source/Services/GetSimulationFeaturesServiceHandler.h
+    Source/Services/GetSimulatorFeaturesServiceHandler.cpp
+    Source/Services/GetSimulatorFeaturesServiceHandler.h
     Source/Services/SetSimulationStateServiceHandler.cpp
     Source/Services/SetSimulationStateServiceHandler.h
     Source/Services/GetSimulationStateServiceHandler.cpp
     Source/Services/GetSimulationStateServiceHandler.h
     Source/Services/StepSimulationServiceHandler.cpp
     Source/Services/StepSimulationServiceHandler.h
-    Source/Utils/RegistryUtils.cpp
-    Source/Utils/RegistryUtils.h
-    Source/Utils/Utils.h
+    Source/Services/GetAvailableWorldsServiceHandler.cpp
+    Source/Services/GetAvailableWorldsServiceHandler.h
+    Source/Services/GetCurrentWorldServiceHandler.cpp
+    Source/Services/GetCurrentWorldServiceHandler.h
+    Source/Services/LoadWorldServiceHandler.cpp
+    Source/Services/LoadWorldServiceHandler.h
+    Source/Services/UnloadWorldServiceHandler.cpp
+    Source/Services/UnloadWorldServiceHandler.h
+    Source/Components/NamedPoseComponent.cpp
+    Source/Components/NamedPoseComponent.h
 )

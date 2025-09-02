@@ -6,11 +6,7 @@
 set(FILES
         Include/ROS2/Camera/CameraCalibrationRequestBus.h
         Include/ROS2/Camera/CameraPostProcessingRequestBus.h
-        Include/ROS2/Clock/ROS2Clock.h
-        Include/ROS2/Clock/ITimeSource.h
-        Include/ROS2/Clock/ROS2TimeSource.h
-        Include/ROS2/Clock/SimulationTimeSource.h
-        Include/ROS2/Clock/RealTimeSource.h
+        Include/ROS2/Clock/ROS2ClockRequestBus.h
         Include/ROS2/Communication/PublisherConfiguration.h
         Include/ROS2/Communication/TopicConfiguration.h
         Include/ROS2/Communication/QoS.h

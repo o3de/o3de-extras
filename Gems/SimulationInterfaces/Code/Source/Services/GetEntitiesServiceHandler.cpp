@@ -8,8 +8,8 @@
 
 #include "GetEntitiesServiceHandler.h"
 #include <AzFramework/Physics/ShapeConfiguration.h>
+#include <Clients/CommonUtilities.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <Utils/Utils.h>
 
 namespace ROS2SimulationInterfaces
 {
@@ -29,7 +29,7 @@ namespace ROS2SimulationInterfaces
         Response response;
         response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
 
-        const auto getFilterResult = Utils::GetEntityFiltersFromRequest<Request>(request);
+        const auto getFilterResult = SimulationInterfaces::Utils::GetEntityFiltersFromRequest<Request>(request);
         if (!getFilterResult.IsSuccess())
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
@@ -49,14 +49,7 @@ namespace ROS2SimulationInterfaces
         }
 
         const auto& entityNameList = outcome.GetValue();
-        AZStd::transform(
-            entityNameList.begin(),
-            entityNameList.end(),
-            std::back_inserter(stdEntities),
-            [](const AZStd::string& entityName)
-            {
-                return entityName.c_str();
-            });
+        AZStd::ranges::transform(entityNameList, AZStd::back_inserter(stdEntities), &AZStd::string::c_str);
         response.entities = stdEntities;
 
         return response;

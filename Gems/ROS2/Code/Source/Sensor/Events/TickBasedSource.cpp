@@ -11,6 +11,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <AzCore/std/numeric.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 namespace ROS2
 {
     void TickBasedSource::Reflect(AZ::ReflectContext* context)
@@ -40,7 +41,11 @@ namespace ROS2
     {
         AZ_UNUSED(time);
         AZ_UNUSED(deltaTime);
-        const auto expectedSimulationLoopTime = ROS2Interface::Get()->GetExpectedSimulationLoopTime();
+        float expectedSimulationLoopTime = -1.f;
+        // query time ROS2 system
+        ROS2ClockRequestBus::BroadcastResult(
+            expectedSimulationLoopTime, &ROS2ClockRequestBus::Events::GetExpectedLoopTime);
+        AZ_Assert(expectedSimulationLoopTime >= 0.f, "Did not receive expected simulation loop time from ROS2ClockRequestBus");
         m_sourceEvent.Signal(expectedSimulationLoopTime);
 
     }
