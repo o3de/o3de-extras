@@ -12,7 +12,6 @@
                 "CaptureMouseCursor": false
             }
         },
-
         "ROS2":
         {
             "SteadyClock" : true,

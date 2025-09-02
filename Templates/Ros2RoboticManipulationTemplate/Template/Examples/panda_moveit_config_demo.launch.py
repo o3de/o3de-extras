@@ -89,7 +89,8 @@ def launch_setup(context, *args, **kwargs):
                     package='depth_image_proc',
                     plugin='depth_image_proc::PointCloudXyzrgbNode',
                     name='point_cloud_xyzrgb_node',
-                    remappings=[('rgb/image_rect_color', '/camera_image_color'),
+                    remappings=[('rgb/camera_info', '/color_camera_info'),
+                                ('rgb/image_rect_color', '/camera_image_color'),
                                 ('depth_registered/image_rect','/camera_image_depth'),
                                 ('/points','/pointcloud')]
                 ),
@@ -106,14 +107,6 @@ def launch_setup(context, *args, **kwargs):
         output="both",
         parameters=[moveit_config.robot_description],
     )
-    static_tf2 = Node(
-        package="tf2_ros",
-        executable="static_transform_publisher",
-        name="static_transform_publisher",
-        output="log",
-        arguments=["1.593", "2.6582444", "0.7025851", "0.0", "0.0", "0.0", "world_simulator_frame", "world"],
-    )
-
    
     nodes_to_start = [
         rviz_node,
@@ -121,7 +114,6 @@ def launch_setup(context, *args, **kwargs):
         robot_state_publisher,
         run_move_group_node,
         rgbd_pc,
-        static_tf2
     ]
 
     return nodes_to_start
