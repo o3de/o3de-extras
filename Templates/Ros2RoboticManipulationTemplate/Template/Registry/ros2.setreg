@@ -1,8 +1,4 @@
 {
-    "SimulationInterfaces": {
-        "SimulatorFrame": "world_simulator_frame",
-        "StartInStoppedState": false
-    },
     "O3DE":
     {
         "InputSystem":
