@@ -5,5 +5,3 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 #
 #
-
-set(PAL_TRAIT_OPENXRVK_SUPPORTED TRUE)

@@ -22,6 +22,8 @@
 #include <Atom/RPI.Public/ViewportContext.h>
 #include <Atom/RPI.Public/ViewportContextBus.h>
 
+#include "OpenXRVk/OpenXRVkUtils.h"
+
 
 namespace OpenXRVk
 {
@@ -115,23 +117,6 @@ namespace OpenXRVk
         cameraTransform.SetTranslation(newPosition);
 
         AZ::TransformBus::Event(GetEntityId(), &AZ::TransformBus::Events::SetWorldTM, cameraTransform);
-    }
-
-
-    static float ReadActionHandleFloat(IOpenXRActions* iface, IOpenXRActions::ActionHandle actionHandle, float deadZone = 0.05f)
-    {
-        auto outcome = iface->GetActionStateFloat(actionHandle);
-        if (!outcome.IsSuccess())
-        {
-            // Most likely the controller went to sleep.
-            return 0.0f;
-        }
-        float value = outcome.GetValue();
-        if (fabsf(value) < deadZone)
-        {
-            return 0.0f;
-        }
-        return value;
     }
 
     void XRCameraMovementComponent::ProcessOpenXRActions()
