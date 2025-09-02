@@ -11,7 +11,7 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <Lidar/LidarSystem.h>
-#include <ROS2/Clock/ROS2ClockRequestBus.h>
+#include <ROS2/Clock/ROS2Clock.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/TF/TransformInterface.h>
 #include <builtin_interfaces/msg/time.hpp>
@@ -45,7 +45,7 @@ namespace ROS2
     class ROS2SystemComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
-        , protected ROS2Requests
+        , protected ROS2RequestBus::Handler
         , protected TFInterfaceBus::Handler
     {
     public:
@@ -65,7 +65,10 @@ namespace ROS2
         // ROS2RequestBus::Handler overrides
         std::shared_ptr<rclcpp::Node> GetNode() const override;
         void ConnectOnNodeChanged(NodeChangedEvent::Handler& handler) override;
+        builtin_interfaces::msg::Time GetROSTimestamp() const override;
         void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) override;
+        const ROS2Clock& GetSimulationClock() const override;
+        float GetExpectedSimulationLoopTime() const override;
         //////////////////////////////////////////////////////////////////////////
 
     protected:
@@ -89,13 +92,21 @@ namespace ROS2
         ////////////////////////////////////////////////////////////////////////
 
     private:
+        void InitClock();
+
         std::vector<geometry_msgs::msg::TransformStamped> m_frameTransforms;
+
         std::shared_ptr<rclcpp::Node> m_ros2Node;
         AZStd::shared_ptr<rclcpp::executors::SingleThreadedExecutor> m_executor;
         AZStd::unique_ptr<tf2_ros::TransformBroadcaster> m_dynamicTFBroadcaster;
+        AZStd::unique_ptr<ROS2Clock> m_simulationClock;
         AZStd::unique_ptr<tf2_ros::StaticTransformBroadcaster> m_staticTFBroadcaster;
         AZStd::shared_ptr<tf2_ros::Buffer> m_tfBuffer;
         AZStd::shared_ptr<tf2_ros::TransformListener> m_tfListener;
         NodeChangedEvent m_nodeChangedEvent;
+
+        AZStd::deque<float> m_simulationLoopTimes;
+        builtin_interfaces::msg::Time m_lastSimulationTime;
+        float m_simulationLoopTimeMedian = 1.f / 60.0f;
     };
 } // namespace ROS2

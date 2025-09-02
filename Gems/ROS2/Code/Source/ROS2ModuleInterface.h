@@ -12,7 +12,6 @@
 #include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <Camera/ROS2CameraSystemComponent.h>
-#include <Clock/ROS2ClockSystemComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
 #include <Gripper/FingerGripperComponent.h>
 #include <Gripper/GripperActionServerComponent.h>
@@ -45,9 +44,9 @@
 #include <VehicleDynamics/VehicleModelComponent.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
 #ifdef WITH_GAZEBO_MSGS
-#include <ContactSensor/ROS2ContactSensorComponent.h>
 #include <Spawner/ROS2SpawnPointComponent.h>
 #include <Spawner/ROS2SpawnerComponent.h>
+#include <ContactSensor/ROS2ContactSensorComponent.h>
 #endif
 namespace ROS2
 {
@@ -63,7 +62,6 @@ namespace ROS2
                 m_descriptors.end(),
                 {
                     ROS2SystemComponent::CreateDescriptor(),
-                    ROS2ClockSystemComponent::CreateDescriptor(),
                     ROS2SystemCameraComponent::CreateDescriptor(),
                     ROS2SensorComponentBase<TickBasedSource>::CreateDescriptor(),
                     ROS2SensorComponentBase<PhysicsBasedSource>::CreateDescriptor(),
@@ -113,7 +111,6 @@ namespace ROS2
                 azrtti_typeid<ROS2SystemCameraComponent>(),
                 azrtti_typeid<LidarRegistrarSystemComponent>(),
                 azrtti_typeid<ROS2RobotImporterSystemComponent>(),
-                azrtti_typeid<ROS2ClockSystemComponent>(),
             };
         }
     };

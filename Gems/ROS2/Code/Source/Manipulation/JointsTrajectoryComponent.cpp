@@ -12,7 +12,6 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
@@ -31,7 +30,7 @@ namespace ROS2
         m_followTrajectoryServer = AZStd::make_unique<FollowJointTrajectoryActionServer>(namespacedAction, GetEntityId());
         AZ::TickBus::Handler::BusConnect();
         JointsTrajectoryRequestBus::Handler::BusConnect(GetEntityId());
-        ROS2::ROS2ClockRequestBus::BroadcastResult(m_lastTickTimestamp, &ROS2ClockRequestBus::Events::GetROSTimestamp);
+        m_lastTickTimestamp = ROS2Interface::Get()->GetROSTimestamp();
     }
 
     ManipulationJoints& JointsTrajectoryComponent::GetManipulationJoints()
@@ -107,7 +106,7 @@ namespace ROS2
             return validationResult;
         }
         m_trajectoryGoal = *trajectoryGoal;
-        ROS2::ROS2ClockRequestBus::BroadcastResult(m_trajectoryExecutionStartTime, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
+        m_trajectoryExecutionStartTime = rclcpp::Time(ROS2::ROS2Interface::Get()->GetROSTimestamp());
         m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Executing;
         return AZ::Success();
     }
@@ -225,10 +224,7 @@ namespace ROS2
 
         auto desiredGoal = m_trajectoryGoal.trajectory.points.front();
         rclcpp::Duration targetGoalTime = rclcpp::Duration(desiredGoal.time_from_start); //!< Requested arrival time for trajectory point.
-        builtin_interfaces::msg::Time timestamp;
-        ROS2::ROS2ClockRequestBus::BroadcastResult(timestamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
-
-        rclcpp::Time timeNow = rclcpp::Time(timestamp); //!< Current simulation time.
+        rclcpp::Time timeNow = rclcpp::Time(ROS2::ROS2Interface::Get()->GetROSTimestamp()); //!< Current simulation time.
         rclcpp::Duration threshold = rclcpp::Duration::from_nanoseconds(1e7);
 
         if (m_trajectoryExecutionStartTime + targetGoalTime <= timeNow + threshold)
@@ -263,10 +259,8 @@ namespace ROS2
             GetManipulationJoints();
             return;
         }
-        
-        builtin_interfaces::msg::Time simTimestamp;
-        ROS2::ROS2ClockRequestBus::BroadcastResult(simTimestamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
-        const float deltaSimulatedTime = ROS2::ROS2Conversions::GetTimeDifference(simTimestamp, m_lastTickTimestamp);
+        const auto simTimestamp = ROS2Interface::Get()->GetROSTimestamp();
+        const float deltaSimulatedTime = ROS2Conversions::GetTimeDifference(simTimestamp, m_lastTickTimestamp);
         m_lastTickTimestamp = simTimestamp;
         const uint64_t deltaTimeNs = deltaSimulatedTime * 1'000'000'000;
         FollowTrajectory(deltaTimeNs);

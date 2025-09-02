@@ -26,6 +26,7 @@ set(FILES
         Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
         Source/Camera/CameraUtilities.cpp
         Source/Camera/CameraUtilities.h
+        Source/Clock/ROS2Clock.cpp
         Source/Clock/ROS2TimeSource.cpp
         Source/Clock/SimulationTimeSource.cpp
         Source/Clock/RealTimeSource.cpp
@@ -166,15 +167,6 @@ set(FILES
         Source/VehicleDynamics/WheelControllerComponent.cpp
         Source/VehicleDynamics/WheelControllerComponent.h
         Source/VehicleDynamics/WheelDynamicsData.h
-        Source/Clock/ITimeSource.h
-        Source/Clock/ROS2ClockSystemComponent.h
-        Source/Clock/ROS2ClockSystemComponent.cpp
-        Source/Clock/ROS2TimeSource.cpp
-        Source/Clock/ROS2TimeSource.h
-        Source/Clock/SimulationTimeSource.cpp
-        Source/Clock/SimulationTimeSource.h
-        Source/Clock/RealTimeSource.cpp
-        Source/Clock/RealTimeSource.h
         )
 
 # optional, legacy features compilation

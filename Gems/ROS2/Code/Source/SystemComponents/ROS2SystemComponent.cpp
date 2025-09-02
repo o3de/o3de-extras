@@ -9,6 +9,9 @@
 
 #include "ROS2SystemComponent.h"
 #include <Lidar/LidarCore.h>
+#include <ROS2/Clock/ROS2TimeSource.h>
+#include <ROS2/Clock/RealTimeSource.h>
+#include <ROS2/Clock/SimulationTimeSource.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
@@ -18,7 +21,6 @@
 
 #include <Atom/RPI.Public/Pass/PassSystemInterface.h>
 
-#include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -33,6 +35,9 @@
 
 namespace ROS2
 {
+    constexpr AZStd::string_view ClockTypeConfigurationKey = "/O3DE/ROS2/ClockType";
+    constexpr AZStd::string_view PublishClockConfigurationKey = "/O3DE/ROS2/PublishClock";
+    constexpr size_t FramesNumberForStats = 60;
 
     void ROS2SystemComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -82,7 +87,6 @@ namespace ROS2
     void ROS2SystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC("AssetDatabaseService", 0x3abf5601));
-        required.push_back(AZ_CRC_CE("ROS2ClockService"));
     }
 
     void ROS2SystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
@@ -119,15 +123,56 @@ namespace ROS2
         rclcpp::init(0, 0);
 
         // handle signals, e.g. via `Ctrl+C` hotkey or `kill` command
-        auto handler = [](int sig){
+        auto handler = [](int sig)
+        {
             rclcpp::shutdown(); // shutdown rclcpp
             std::raise(sig); // shutdown o3de
-            };
+        };
         signal(SIGINT, handler);
         signal(SIGTERM, handler);
     }
+
+    void ROS2SystemComponent::InitClock()
+    {
+        AZStd::unordered_map<AZStd::string, AZStd::function<AZStd::unique_ptr<ITimeSource>()>> clocksMap;
+        clocksMap["realtime"] = []()
+        {
+            AZ_Info("ROS2SystemComponent", "Enabling realtime clock.");
+            return AZStd::make_unique<RealTimeSource>();
+        };
+        clocksMap["simulation"] = []()
+        {
+            AZ_Info("ROS2SystemComponent", "Enabling simulation clock.");
+            return AZStd::make_unique<SimulationTimeSource>();
+        };
+        clocksMap["ros2"] = []()
+        {
+            AZ_Info("ROS2SystemComponent", "Enabling ros 2 clock.");
+            return AZStd::make_unique<ROS2TimeSource>();
+        };
+        AZStd::string clockType{ "" };
+        bool publishClock{ true };
+        auto* registry = AZ::SettingsRegistry::Get();
+        AZ_Assert(registry, "No Registry available");
+        if (registry)
+        {
+            registry->Get(publishClock, PublishClockConfigurationKey);
+            registry->Get(clockType, ClockTypeConfigurationKey);
+            if (clocksMap.contains(clockType))
+            {
+                m_simulationClock = AZStd::make_unique<ROS2Clock>(clocksMap[clockType](), publishClock);
+                return;
+            }
+        }
+        AZ_Info(
+            "ROS2SystemComponent", "Cannot read registry or the clock type '%s' is unknown, enabling simulation clock.", clockType.c_str());
+        m_simulationClock = AZStd::make_unique<ROS2Clock>(clocksMap["simulation"](), publishClock);
+    }
+
     void ROS2SystemComponent::Activate()
     {
+        InitClock();
+        m_simulationClock->Activate();
         m_ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node");
         m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
         m_executor->add_node(m_ros2Node);
@@ -135,9 +180,7 @@ namespace ROS2
         m_staticTFBroadcaster = AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(m_ros2Node);
         m_dynamicTFBroadcaster = AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Node);
 
-        // setup tf2 buffer and listener
-        m_tfBuffer = AZStd::make_shared<tf2_ros::Buffer>(m_ros2Node->get_clock());
-        m_tfListener = AZStd::make_shared<tf2_ros::TransformListener>(*m_tfBuffer);
+        ROS2RequestBus::Handler::BusConnect();
 
         // setup tf2 buffer and listener
         m_tfBuffer = AZStd::make_shared<tf2_ros::Buffer>(m_ros2Node->get_clock());
@@ -152,18 +195,29 @@ namespace ROS2
     {
         TFInterfaceBus::Handler::BusDisconnect();
         AZ::TickBus::Handler::BusDisconnect();
-
+        ROS2RequestBus::Handler::BusDisconnect();
+        if (m_simulationClock)
+        {
+            m_simulationClock->Deactivate();
+        }
         m_dynamicTFBroadcaster.reset();
         m_staticTFBroadcaster.reset();
         if (m_executor)
         {
-            if (m_ros2Node) {
+            if (m_ros2Node)
+            {
                 m_executor->remove_node(m_ros2Node);
             }
             m_executor.reset();
         }
+        m_simulationClock.reset();
         m_ros2Node.reset();
         m_nodeChangedEvent.Signal(m_ros2Node);
+    }
+
+    builtin_interfaces::msg::Time ROS2SystemComponent::GetROSTimestamp() const
+    {
+        return m_simulationClock->GetROSTimestamp();
     }
 
     std::shared_ptr<rclcpp::Node> ROS2SystemComponent::GetNode() const
@@ -174,6 +228,11 @@ namespace ROS2
     void ROS2SystemComponent::ConnectOnNodeChanged(NodeChangedEvent::Handler& handler)
     {
         handler.Connect(m_nodeChangedEvent);
+    }
+
+    const ROS2Clock& ROS2SystemComponent::GetSimulationClock() const
+    {
+        return *m_simulationClock;
     }
 
     void ROS2SystemComponent::BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic)
@@ -195,8 +254,29 @@ namespace ROS2
             m_dynamicTFBroadcaster->sendTransform(m_frameTransforms);
             m_frameTransforms.clear();
 
+            m_simulationClock->Tick();
             m_executor->spin_some();
         }
+        // Calculate simulation loop time
+        const auto simulationTimestamp = m_simulationClock->GetROSTimestamp();
+        const float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simulationTimestamp);
+
+        // Filter out the outliers
+        m_simulationLoopTimes.push_back(deltaSimTime);
+        if (m_simulationLoopTimes.size() > FramesNumberForStats)
+        {
+            m_simulationLoopTimes.pop_front();
+        }
+        AZStd::vector<float> frameTimeSorted{ m_simulationLoopTimes.begin(), m_simulationLoopTimes.end() };
+        AZStd::sort(frameTimeSorted.begin(), frameTimeSorted.end());
+        m_simulationLoopTimeMedian = frameTimeSorted[frameTimeSorted.size() / 2];
+
+        m_lastSimulationTime = simulationTimestamp;
+    }
+
+    float ROS2SystemComponent::GetExpectedSimulationLoopTime() const
+    {
+        return m_simulationLoopTimeMedian;
     }
 
     AZ::Outcome<AZ::Transform, AZStd::string> ROS2SystemComponent::GetTransform(

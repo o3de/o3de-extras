@@ -11,12 +11,10 @@
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/PointCloudMessageBuilder.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
-#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Lidar/ClassSegmentationBus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
-#include <ROS2/Clock/ROS2ClockRequestBus.h>
 
 namespace ROS2
 {
@@ -143,7 +141,7 @@ namespace ROS2
     {
         if (m_canRaycasterPublish && m_sensorConfiguration.m_publishingEnabled)
         {
-            const builtin_interfaces::msg::Time timestamp = ROS2ClockInterface::Get()->GetROSTimestamp();
+            const builtin_interfaces::msg::Time timestamp = ROS2Interface::Get()->GetROSTimestamp();
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterId,
                 &LidarRaycasterRequestBus::Events::UpdatePublisherTimestamp,
@@ -165,11 +163,8 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::PublishRaycastResults(const RaycastResults& results)
     {
-        const auto simTimestamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
         auto builder = PointCloud2MessageBuilder(
-            GetEntity()->FindComponent<ROS2::ROS2FrameComponent>()->GetFrameID(),
-            simTimestamp,
-            results.GetCount());
+            GetEntity()->FindComponent<ROS2FrameComponent>()->GetFrameID(), ROS2Interface::Get()->GetROSTimestamp(), results.GetCount());
 
         builder.AddField("x", sensor_msgs::msg::PointField::FLOAT32)
             .AddField("y", sensor_msgs::msg::PointField::FLOAT32)

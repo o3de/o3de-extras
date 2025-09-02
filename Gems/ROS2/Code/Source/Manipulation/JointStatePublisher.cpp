@@ -9,7 +9,6 @@
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
-#include <ROS2/Clock/ROS2ClockRequestBus.h>
 
 #include "JointStatePublisher.h"
 #include "ManipulationUtils.h"
@@ -36,7 +35,7 @@ namespace ROS2
     {
         std_msgs::msg::Header rosHeader;
         rosHeader.frame_id = ROS2Names::GetNamespacedName(m_context.m_publisherNamespace, m_context.m_frameId).data();
-        ROS2::ROS2ClockRequestBus::BroadcastResult(rosHeader.stamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
+        rosHeader.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         m_jointStateMsg.header = rosHeader;
 
         AZ_Assert(m_jointNames.size() == m_jointStateMsg.name.size(), "The expected message size doesn't match with the joint list size");

@@ -13,7 +13,6 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
-#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <geometry_msgs/msg/wrench.hpp>
 
@@ -144,7 +143,7 @@ namespace ROS2
         const auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         AZ_Assert(ros2Frame, "Invalid component pointer value");
         msg.header.frame_id = ros2Frame->GetFrameID().data();
-        msg.header.stamp = ROS2ClockInterface::Get()->GetROSTimestamp();
+        msg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
 
         {
             // If there are no active collisions, then there is nothing to send

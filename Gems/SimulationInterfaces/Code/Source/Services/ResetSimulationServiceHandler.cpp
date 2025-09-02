@@ -10,7 +10,6 @@
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/optional.h>
-#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <Services/ROS2ServiceBase.h>
 #include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
@@ -76,13 +75,12 @@ namespace ROS2SimulationInterfaces
 
         if (request.scope == Request::SCOPE_TIME)
         {
-            auto* interface = ROS2::ROS2ClockInterface::Get();
+            auto* interface = ROS2::ROS2Interface::Get();
             AZ_Assert(interface, "ROS2ClockInterface is not available");
-
             builtin_interfaces::msg::Time time;
             time.sec = 0;
             time.nanosec = 0;
-            auto results = interface->AdjustTime(time);
+            auto results = interface->GetSimulationClock().AdjustTime(time);
 
             if (results.IsSuccess())
             {
