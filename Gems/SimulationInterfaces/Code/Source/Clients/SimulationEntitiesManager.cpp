@@ -728,6 +728,7 @@ namespace SimulationInterfaces
         const AZStd::string& entityNamespace,
         const AZ::Transform& initialPose,
         const bool allowRename,
+        PreInsertionCb preinsertionCb,
         SpawnCompletedCb completedCb)
     {
         if (auto outcome = IsWorldLoaded(); !outcome.IsSuccess())
@@ -788,10 +789,16 @@ namespace SimulationInterfaces
         auto ticket = AzFramework::EntitySpawnTicket(spawnableAsset);
         AzFramework::SpawnAllEntitiesOptionalArgs optionalArgs;
 
-        optionalArgs.m_preInsertionCallback = [initialPose, entityNamespace](auto id, auto view)
+        optionalArgs.m_preInsertionCallback = [this, initialPose, entityNamespace](auto id, auto view)
         {
+            auto spawnData = m_spawnCompletedCallbacks.find(id);
             if (view.empty())
             {
+                if (spawnData != m_spawnCompletedCallbacks.end())
+                {
+                    spawnData->second.m_preInsertionCb(
+                        AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Spawned prefab is empty")));
+                }
                 return;
             }
             AZ::Entity* root = *view.begin();
@@ -809,6 +816,11 @@ namespace SimulationInterfaces
             if (transformInterface)
             {
                 transformInterface->SetWorldTM(initialPose);
+            }
+            // run preinsertion Callback if exists
+            if (spawnData != m_spawnCompletedCallbacks.end())
+            {
+                spawnData->second.m_preInsertionCb(AZ::Success(view));
             }
         };
 
@@ -861,7 +873,9 @@ namespace SimulationInterfaces
         spawner->SpawnAllEntities(ticket, optionalArgs);
         auto ticketId = ticket.GetId();
         SpawnCompletedCbData data;
-        data.m_completedCb = completedCb;
+        // to ensure that callbacks are valid
+        data.m_completedCb = completedCb ? completedCb : SpawnCompletedCb{};
+        data.m_preInsertionCb = preinsertionCb ? preinsertionCb : PreInsertionCb{};
         data.m_userProposedName = name;
         m_spawnCompletedCallbacks[ticketId] = data;
         m_spawnedTickets[ticketId] = ticket;

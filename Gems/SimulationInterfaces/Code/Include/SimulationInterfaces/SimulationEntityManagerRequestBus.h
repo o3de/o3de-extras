@@ -19,6 +19,7 @@
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
+#include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
 #include <SimulationInterfaces/Bounds.h>
 #include <simulation_interfaces/msg/entity_category.hpp>
 
@@ -69,6 +70,8 @@ namespace SimulationInterfaces
     using SpawnableList = AZStd::vector<Spawnable>;
     using DeletionCompletedCb = AZStd::function<void(const AZ::Outcome<void, FailedResult>&)>;
     using SpawnCompletedCb = AZStd::function<void(const AZ::Outcome<AZStd::string, FailedResult>&)>;
+    using PreInsertionCb =
+        AZStd::function<void(const AZ::Outcome<AzFramework::SpawnableEntityContainerView, FailedResult>&)>;
 
     class SimulationEntityManagerRequests
     {
@@ -116,6 +119,7 @@ namespace SimulationInterfaces
             const AZStd::string& entityNamespace,
             const AZ::Transform& initialPose,
             const bool allowRename,
+            PreInsertionCb preinsertionCb,
             SpawnCompletedCb completedCb) = 0;
 
         //! Reset the simulation to begin.
@@ -125,7 +129,7 @@ namespace SimulationInterfaces
         //! Registers a new simulated body to the simulation interface.
         //! This method adds entity to simulation Interfaces cache with its name and initial state
         //! This method allows to register entity spawned by interface other than simulation_interfaces
-        //! If given name already exists in the registry, new unique name will be created. 
+        //! If given name already exists in the registry, new unique name will be created.
         //! @param proposedName Name to register entity under
         //! @param entityId id of entity related to given name
         //! @return final name which was used to register simulated body
