@@ -83,7 +83,7 @@ namespace ROS2
 
     bool ROS2FrameEditorComponent::IsTopLevel() const
     {
-        AZ_Warning("ROS2FrameComponent", false, "Not implemented yet");
+        AZ_Warning("ROS2FrameEditorComponent", false, "Not implemented yet");
         return false;
     }
 

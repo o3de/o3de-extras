@@ -812,7 +812,7 @@ namespace SimulationInterfaces
                     auto config = frameComponent->GetConfiguration();
                     config.m_namespaceConfiguration.m_customNamespace = entityNamespace;
                     config.m_namespaceConfiguration.m_namespaceStrategy = ROS2::NamespaceConfiguration::NamespaceStrategy::Custom;
-                    AZ_Printf("ROS2::ROS2FrameComponent", "Setting namespace to %s for entity %s\n", entityNamespace.c_str(), entity->GetName().c_str());
+                    AZ_Printf("SimulationInterfaces::SpawnEntity", "Setting namespace to %s for entity %s\n", entityNamespace.c_str(), entity->GetName().c_str());
                     frameComponent->SetConfiguration(config);
                     break;
                 }
