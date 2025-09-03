@@ -76,7 +76,7 @@ namespace ROS2
             }
         }
 
-        const auto name_space = ComputeNamespace(m_configuration, GetEntityId());
+        const auto name_space = ComputeNamespace(GetEntityId());
 
         return GetNamespacedName(name_space, odometryFrame);
     }
@@ -89,18 +89,18 @@ namespace ROS2
 
     AZStd::string ROS2FrameEditorComponent::GetNamespacedFrameID() const
     {
-        auto name_space = ComputeNamespace(m_configuration, GetEntityId());
-        return GetNamespacedName(name_space, m_configuration.m_frameName);
+        auto computedNamespace = ComputeNamespace(GetEntityId());
+        return GetNamespacedName(computedNamespace, m_configuration.m_frameName);
     }
 
     AZStd::string ROS2FrameEditorComponent::GetNamespace() const
     {
-        return ComputeNamespace(m_configuration, GetEntityId());
+        return ComputeNamespace(GetEntityId());
     }
 
     void ROS2FrameEditorComponent::UpdateNamespace()
     {
-        m_effectiveNamespace = ComputeNamespace(m_configuration, GetEntityId());
+        m_effectiveNamespace = ComputeNamespace(GetEntityId());
         m_fullName = GetNamespacedName(m_effectiveNamespace, m_configuration.m_frameName);
 
         AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Event(
@@ -109,8 +109,8 @@ namespace ROS2
 
     AZStd::string ROS2FrameEditorComponent::GetNamespacedJointName() const
     {
-        auto name_space = ComputeNamespace(m_configuration, GetEntityId());
-        return GetNamespacedName(name_space, m_configuration.m_jointName);
+        auto computedNamespace = ComputeNamespace(GetEntityId());
+        return GetNamespacedName(computedNamespace, m_configuration.m_jointName);
     }
 
     void ROS2FrameEditorComponent::SetJointName(const AZStd::string& jointName)
@@ -170,7 +170,7 @@ namespace ROS2
 
     AZ::Crc32 ROS2FrameEditorComponent::OnFrameConfigurationChange()
     {
-        m_effectiveNamespace = ComputeNamespace(m_configuration, GetEntityId());
+        m_effectiveNamespace = ComputeNamespace(GetEntityId());
         m_fullName = GetNamespacedName(m_effectiveNamespace, m_configuration.m_frameName);
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }

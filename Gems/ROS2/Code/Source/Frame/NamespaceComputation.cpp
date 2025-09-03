@@ -31,7 +31,6 @@ namespace ROS2
         //! Helper to concatenate parts of a path with '/' separator.
         AZStd::string ConcatenatePath(const AZStd::vector<AZStd::string>& path)
         {
-
             AZStd::string result;
             for (const auto& part : path)
             {
@@ -44,11 +43,13 @@ namespace ROS2
             return result;
         }
 
-        //! Helper to retrieve the ROS2FrameConfiguration from the entity with the given ID, if it has a ROS2FrameComponent or ROS2FrameEditorComponent.
+        //! Helper to retrieve the ROS2FrameConfiguration from the entity with the given ID, if it has a ROS2FrameComponent or
+        //! ROS2FrameEditorComponent.
         AZStd::optional<ROS2FrameConfiguration> GetConfigurationFromComponent(AZ::EntityId id)
         {
             AZ::Entity* entity = nullptr;
             AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, id);
+            AZ_Assert(entity, "No entity for id : %s", id.ToString().c_str());
             if (!entity)
             {
                 return AZStd::nullopt;
@@ -99,7 +100,7 @@ namespace ROS2
             }
             TraverseTransforms(parentId, predecessors);
         }
-    }
+    } // namespace
 
     bool HasROS2FrameComponent(AZ::EntityId id)
     {
@@ -109,15 +110,8 @@ namespace ROS2
         {
             return false;
         }
-        if (entity->FindComponent(AZ::Uuid(ROS2FrameEditorComponentTypeId)))
-        {
-            return true;
-        }
-        if (entity->FindComponent(AZ::Uuid(ROS2FrameComponentTypeId)))
-        {
-            return true;
-        }
-        return false;
+        return (
+            entity->FindComponent(AZ::Uuid(ROS2FrameEditorComponentTypeId)) || entity->FindComponent(AZ::Uuid(ROS2FrameComponentTypeId)));
     }
 
     AZStd::vector<AZ::EntityId> GetAllAncestorTransformBus(const AZ::EntityId& id)
@@ -215,7 +209,7 @@ namespace ROS2
         return ConcatenatePath(resolvedNames);
     }
 
-    AZStd::string ComputeNamespace(const ROS2FrameConfiguration& configuration, AZ::EntityId entity)
+    AZStd::string ComputeNamespace(AZ::EntityId entity)
     {
         // Compute namespace based on ancestor frames.
         const AZStd::vector<AZ::EntityId> predecessors = GetAllAncestorTransformBus(entity);

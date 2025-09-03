@@ -17,7 +17,7 @@ namespace ROS2
 {
     //! This method computes the namespace for a given entity based on the provided configuration.
     //! It considers the namespace strategy defined in the configuration and the entity's position in the hierarchy
-    AZStd::string ComputeNamespace(const ROS2FrameConfiguration& configuration, AZ::EntityId entity);
+    AZStd::string ComputeNamespace(AZ::EntityId entity);
 
     //! This method computes the namespace for vector of configurations and associated names.
     //! The configurations are expected to be ordered from the root to the leaf entity.

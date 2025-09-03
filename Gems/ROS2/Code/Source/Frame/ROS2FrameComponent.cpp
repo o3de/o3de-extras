@@ -129,7 +129,7 @@ namespace ROS2
 
     void ROS2FrameComponent::ComputeNamespaceAndFrameName()
     {
-        m_computedNamespace = ComputeNamespace(m_configuration, GetEntityId());
+        m_computedNamespace = ComputeNamespace(GetEntityId());
         m_computedFrameName = GetNamespacedName(m_computedNamespace, m_configuration.m_frameName);
         m_computedJointName = GetNamespacedName(m_computedNamespace, m_configuration.m_jointName);
     }
@@ -289,7 +289,7 @@ namespace ROS2
     {
         ComputeNamespaceAndFrameName();
         m_disabled = false;
-        AZ::TickBus::Handler::BusDisconnect();
+        AZ::TickBus::Handler::BusConnect();
     }
 
     AZStd::string ROS2FrameComponent::GetNamespace() const
