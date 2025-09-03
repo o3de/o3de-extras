@@ -45,9 +45,6 @@ namespace ROS2
         //! @param jointName The joint name to set.
         virtual void SetJointName(const AZStd::string& jointName) = 0;
 
-        //! Check if the ROS 2 frame is top level.
-        //! @return true if the ROS 2 Frame component has no frame parent.
-        virtual bool IsTopLevel() const = 0;
     };
 
     using ROS2FrameEditorComponentBus = AZ::EBus<ROS2FrameEditorComponentRequests>;

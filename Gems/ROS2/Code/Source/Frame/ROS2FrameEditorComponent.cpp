@@ -81,12 +81,6 @@ namespace ROS2
         return GetNamespacedName(name_space, odometryFrame);
     }
 
-    bool ROS2FrameEditorComponent::IsTopLevel() const
-    {
-        AZ_Warning("ROS2FrameEditorComponent", false, "Not implemented yet");
-        return false;
-    }
-
     AZStd::string ROS2FrameEditorComponent::GetNamespacedFrameID() const
     {
         auto computedNamespace = ComputeNamespace(GetEntityId());
