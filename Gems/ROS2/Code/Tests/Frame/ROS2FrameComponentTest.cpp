@@ -376,8 +376,8 @@ namespace UnitTest
 
         // Create multiple frame entities
         constexpr int numFrames = 3;
-        std::vector<AZStd::unique_ptr<AZ::Entity>> entities;
-        std::vector<AZStd::string> expectedFrameIds;
+        AZStd::vector<AZStd::unique_ptr<AZ::Entity>> entities;
+        AZStd::vector<AZStd::string> expectedFrameIds;
 
         for (int i = 0; i < numFrames; ++i)
         {

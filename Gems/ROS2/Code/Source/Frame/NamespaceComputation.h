@@ -47,4 +47,10 @@ namespace ROS2
     //! Returns the last entity that has a ROS2FrameComponent or ROS2FrameEditorComponent.
     AZ::EntityId GetLastEntityWithROS2FrameComponent(const AZStd::vector<AZ::EntityId>& predecessors);
 
+    //! Global frame name in ros2 ecosystem.
+    //! It is configurable through Settings Registry at /O3DE/ROS2/GlobalFrameName
+    //! If not configured, it defaults to "odom".
+    //! If empty, root frame is not published by the simulator.
+    //! It is typically "odom", "map", "world".
+    AZStd::string GetGlobalFrameIDFromRegistry();
 } // namespace ROS2

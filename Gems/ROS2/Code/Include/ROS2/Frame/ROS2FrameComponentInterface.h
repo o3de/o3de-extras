@@ -15,9 +15,9 @@ namespace ROS2
     //! Base class to get and set ROS2FrameConfiguration on components that have it.
     class ROSFrameInterface
     {
+    public:
         AZ_RTTI(ROSFrameInterface, ROSFrameInterfaceTypeId);
 
-    public:
         //! Getter for configuration, always available
         virtual ROS2FrameConfiguration GetConfiguration() const = 0;
 

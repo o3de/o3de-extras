@@ -47,11 +47,11 @@ namespace ROS2
         //! @return The frame name without namespace prefix
         virtual AZStd::string GetFrameName() const = 0;
 
-        //! Global frame name in ros2 ecosystem.
+        //! Global frame name in ros2 ecosystem with namespace.
         //! It is configurable through Settings Registry at /O3DE/ROS2/GlobalFrameName
         //! If not configured, it defaults to "odom".
         //! If empty, root frame is not published by the simulator.
-        //! It is typically "odom", "map", "world".
+        //! It is typically "odom", "map", "world", "myRobot/odom"
         virtual AZStd::string GetGlobalFrameID() const = 0;
     };
 

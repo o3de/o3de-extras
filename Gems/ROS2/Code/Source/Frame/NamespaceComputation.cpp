@@ -19,7 +19,10 @@ namespace ROS2
 {
     namespace
     {
+        inline constexpr const char* DefaultGlobalFrameName = "odom";
+        inline constexpr const char* DefaultGlobalFrameNameConfigurationKey = "/O3DE/ROS2/GlobalFrameName";
         constexpr char FramePathSeparator = '/';
+
         //! Helper to get the name of an entity from its EntityId.
         AZStd::string GetName(AZ::EntityId id)
         {
@@ -224,6 +227,23 @@ namespace ROS2
             }
         }
         return ComputeNamespace(configurations);
+    }
+
+    AZStd::string GetGlobalFrameIDFromRegistry()
+    {
+        // Get odometry frame, from settings registry
+        AZStd::string odometryFrame;
+        auto* registry = AZ::SettingsRegistry::Get();
+        AZ_Error("ROS2FrameComponent", registry, "No settings registry found, using default odometry frame name");
+        if (registry)
+        {
+            if (!registry->Get(odometryFrame, DefaultGlobalFrameNameConfigurationKey))
+            {
+                odometryFrame = DefaultGlobalFrameName;
+            }
+        }
+
+       return odometryFrame;
     }
 
 } // namespace ROS2

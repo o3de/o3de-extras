@@ -64,21 +64,9 @@ namespace ROS2
 
     AZStd::string ROS2FrameEditorComponent::GetGlobalFrameID() const
     {
-        // Get odometry frame, from settings registry
-        AZStd::string odometryFrame;
-        auto* registry = AZ::SettingsRegistry::Get();
-        AZ_Error("ROS2FrameComponent", registry, "No settings registry found, using default odometry frame name");
-        if (registry)
-        {
-            if (!registry->Get(odometryFrame, DefaultGlobalFrameNameConfigurationKey))
-            {
-                odometryFrame = DefaultGlobalFrameName;
-            }
-        }
-
-        const auto name_space = ComputeNamespace(GetEntityId());
-
-        return GetNamespacedName(name_space, odometryFrame);
+        const AZStd::string odometryFrame = GetGlobalFrameIDFromRegistry();
+        const auto computedNamespace = ComputeNamespace(GetEntityId());
+        return GetNamespacedName(computedNamespace, odometryFrame);
     }
 
     AZStd::string ROS2FrameEditorComponent::GetNamespacedFrameID() const

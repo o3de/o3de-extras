@@ -168,8 +168,8 @@ namespace ROS2
             const bool isTopLevel = !m_parentFrame.has_value();
             const bool dynamic = m_configuration.m_forceDynamic || Internal::IsDynamicHeuristic(isTopLevel, GetEntity());
             AZ_Printf(
-                "m_ros2Transform",
-                "publishing transform from %s to %s, type %s",
+                "ROS2FrameComponent",
+                "Publishing transform from %s to %s, type %s",
                 m_sourceFrame->c_str(),
                 GetNamespacedFrameID().c_str(),
                 dynamic ? "dynamic" : "static");
@@ -340,16 +340,7 @@ namespace ROS2
 
     AZStd::string ROS2FrameComponent::GetGlobalFrameID() const
     {
-        AZStd::string odometryFrame;
-        auto* registry = AZ::SettingsRegistry::Get();
-        AZ_Error("ROS2FrameComponent", registry, "No settings registry found, using default odometry frame name");
-        if (registry)
-        {
-            if (!registry->Get(odometryFrame, DefaultGlobalFrameNameConfigurationKey))
-            {
-                odometryFrame = DefaultGlobalFrameName;
-            }
-        }
+        const AZStd::string odometryFrame = GetGlobalFrameIDFromRegistry();
         if (odometryFrame.empty())
         {
             return "";
