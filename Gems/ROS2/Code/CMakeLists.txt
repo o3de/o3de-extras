@@ -268,8 +268,10 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 BUILD_DEPENDENCIES
                     PRIVATE
                         AZ::AzTest
-                        AZ::AzManipulatorTestFramework.Static
+                        AZ::AzTestShared
+                        AZ::AzToolsFramework
                         Gem::${gem_name}.Editor.Static
+                        3rdParty::sdformat
             )
 
             # Add ROS2.Editor.Tests to googletest
