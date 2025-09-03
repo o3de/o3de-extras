@@ -158,7 +158,7 @@ namespace ROS2
         return GetFirstEntityWithROS2FrameComponent(ancestors);
     }
 
-    AZStd::set<AZ::EntityId> ROS2FrameEditorComponent::GetFrameChildren() const
+    AZStd::set<AZ::EntityId> ROS2FrameEditorComponent::GetFrameDescendants() const
     {
         // get all descendants
         AZStd::vector<AZ::EntityId> children;

@@ -103,34 +103,29 @@ namespace ROS2Controllers
         }
         m_initialPositions.clear();
 
-        AZStd::function<void(const AZ::Entity* entity)> getAllJointsHierarchy = [&](const AZ::Entity* entity)
+        AZStd::set<AZ::EntityId> childrenEntityIds;
+        ROS2::ROS2FrameEditorComponentBus::EventResult(
+            childrenEntityIds, GetEntityId(), &ROS2::ROS2FrameEditorComponentBus::Events::GetFrameDescendants);
+
+        for (const auto& entityId : childrenEntityIds)
         {
+            AZ::Entity* childEntity = nullptr;
+            AZ::ComponentApplicationBus::BroadcastResult(childEntity, &AZ::ComponentApplicationBus::Events::FindEntity, entityId);
+            AZ_Assert(childEntity, "Entity not found!");
+
             AZ::Name jointName;
             ROS2::ROS2FrameComponentBus::EventResult(
-                jointName, entity->GetId(), &ROS2::ROS2FrameComponentBus::Events::GetNamespacedJointName);
+                jointName, childEntity->GetId(), &ROS2::ROS2FrameComponentBus::Events::GetNamespacedJointName);
 
             const AZStd::string jointNameStr = jointName.GetCStr();
-            const bool hasNonFixedJoints = JointUtils::HasNonFixedJoints(entity);
+            const bool hasNonFixedJoints = JointUtils::HasNonFixedJoints(childEntity);
             if (!jointNameStr.empty() && hasNonFixedJoints)
             {
                 m_initialPositions.emplace_back(AZStd::make_pair(jointNameStr, configBackup[jointNameStr]));
             }
 
-            AZStd::set<AZ::EntityId> childrenEntityIds;
-            ROS2::ROS2FrameEditorComponentBus::EventResult(
-                childrenEntityIds, entity->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::GetFrameChildren);
-            if (!childrenEntityIds.empty())
-            {
-                for (const auto& entityId : childrenEntityIds)
-                {
-                    AZ::Entity* childEntity = nullptr;
-                    AZ::ComponentApplicationBus::BroadcastResult(childEntity, &AZ::ComponentApplicationBus::Events::FindEntity, entityId);
-                    AZ_Assert(childEntity, "Entity not found!");
-                    getAllJointsHierarchy(childEntity);
-                }
-            }
-        };
-        getAllJointsHierarchy(GetEntity());
+
+        }
         undo.MarkEntityDirty(GetEntity()->GetId());
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }

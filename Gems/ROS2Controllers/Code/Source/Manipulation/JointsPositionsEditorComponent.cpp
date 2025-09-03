@@ -94,7 +94,7 @@ namespace ROS2Controllers
 
             AZStd::set<AZ::EntityId> childrenEntityIds;
             ROS2::ROS2FrameEditorComponentBus::EventResult(
-                childrenEntityIds, entity->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::GetFrameChildren);
+                childrenEntityIds, entity->GetId(), &ROS2::ROS2FrameEditorComponentBus::Events::GetFrameDescendants);
             if (!childrenEntityIds.empty())
             {
                 for (const auto& entityId : childrenEntityIds)

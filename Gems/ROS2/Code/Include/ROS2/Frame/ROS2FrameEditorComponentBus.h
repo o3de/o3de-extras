@@ -32,9 +32,9 @@ namespace ROS2
         //! @return entityId of the parent frame or an invalid entityId if the frame is top level.
         virtual AZ::EntityId GetFrameParent() const = 0;
 
-        //! Find all frame children of the frame.
+        //! Find all frame descendants of the frame.
         //! @return set of all entityIds of children. Empty if no children or the frameEntityId is invalid.
-        virtual AZStd::set<AZ::EntityId> GetFrameChildren() const = 0;
+        virtual AZStd::set<AZ::EntityId> GetFrameDescendants() const = 0;
 
         //! Ask component to recompute its namespace based on the hierarchy and its configuration.
         //! called when some changes happen in the o3de transform tree or when configuration changes.
