@@ -121,10 +121,10 @@ namespace ROS2
 
         ROS2FrameComponentBus::Handler::BusDisconnect(GetEntityId());
 
+        AZ::TickBus::Handler::BusDisconnect();
         m_parentFrame.reset();
         m_sourceFrame.reset();
         m_ros2Transform.reset();
-        AZ::TickBus::Handler::BusDisconnect();
     }
 
     void ROS2FrameComponent::ComputeNamespaceAndFrameName()
