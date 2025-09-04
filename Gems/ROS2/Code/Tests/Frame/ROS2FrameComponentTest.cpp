@@ -7,7 +7,6 @@
  *
  */
 
-#include "../../../../../../../engine/o3de/Code/Framework/AzCore/AzCore/std/typetraits/has_virtual_destructor.h"
 #include "Frame/NamespaceComputation.h"
 #include "Frame/ROS2FrameGameSystemComponent.h"
 #include <AzCore/Asset/AssetManagerComponent.h>
@@ -37,7 +36,6 @@
 #include <memory>
 #include <string>
 #include <string_view>
-#include <vector>
 
 namespace UnitTest
 {
@@ -61,8 +59,9 @@ namespace UnitTest
             AZStd::initializer_list<AZ::ComponentDescriptor*>{ ROS2::ROS2FrameComponent::CreateDescriptor(),
                                                                ROS2::ROS2SystemComponent::CreateDescriptor(),
                                                                ROS2::ROS2FrameGameSystemComponent::CreateDescriptor() });
-        AddRequiredComponents(AZStd::to_array<AZ::TypeId const>(
-            { ROS2::ROS2SystemComponent::TYPEINFO_Uuid(), ROS2::ROS2FrameGameSystemComponent::TYPEINFO_Uuid() }));
+        AddRequiredComponents(
+            AZStd::to_array<AZ::TypeId const>(
+                { ROS2::ROS2SystemComponent::TYPEINFO_Uuid(), ROS2::ROS2FrameGameSystemComponent::TYPEINFO_Uuid() }));
     }
 
     AZ::ComponentApplication* ROS2FrameComponentTestEnvironment::CreateApplicationInstance()
@@ -281,8 +280,6 @@ namespace UnitTest
 
     TEST_F(ROS2FrameComponentFixture, ComponentBusInterface)
     {
-
-
         ROS2::ROS2FrameConfiguration config;
         config.m_frameName = "test_frame";
         config.m_jointName = "test_joint";
@@ -319,7 +316,7 @@ namespace UnitTest
         EXPECT_EQ(jointName_result, "test_entity/test_joint");
         EXPECT_EQ(jointNameRaw_result, "test_joint");
         EXPECT_EQ(frameName_result, "test_frame");
-        EXPECT_EQ(globalFrameName_result, "test_entity/"+globalNamespace); // Uses default global frame name
+        EXPECT_EQ(globalFrameName_result, "test_entity/" + globalNamespace); // Uses default global frame name
     }
 
     TEST_F(ROS2FrameComponentFixture, FrameTrackingInterfaceBasic)
@@ -413,7 +410,7 @@ namespace UnitTest
             EXPECT_TRUE(trackingInterface->IsFrameRegistered(entities[i]->GetId()));
 
             auto namespacedFrameId = trackingInterface->GetNamespacedFrameId(entities[i]->GetId());
-            ASSERT_TRUE(namespacedFrameId.size()>0);
+            ASSERT_TRUE(namespacedFrameId.size() > 0);
             EXPECT_EQ(namespacedFrameId, expectedFrameIds[i]);
 
             auto foundEntityId = trackingInterface->GetFrameEntityByNamespacedId(expectedFrameIds[i]);
@@ -445,7 +442,7 @@ namespace UnitTest
         EXPECT_FALSE(trackingInterface->IsFrameRegistered(invalidEntityId));
 
         auto invalidNamespacedFrameId = trackingInterface->GetNamespacedFrameId(invalidEntityId);
-        EXPECT_FALSE(invalidNamespacedFrameId.size()>0);
+        EXPECT_FALSE(invalidNamespacedFrameId.size() > 0);
 
         // Test lookup with non-existent namespaced frame ID
         auto invalidEntityLookup = trackingInterface->GetFrameEntityByNamespacedId("non_existent/frame");
@@ -460,7 +457,7 @@ namespace UnitTest
         EXPECT_FALSE(trackingInterface->IsFrameRegistered(entityWithoutFrame.GetId()));
 
         auto noFrameNamespacedId = trackingInterface->GetNamespacedFrameId(entityWithoutFrame.GetId());
-        EXPECT_FALSE(noFrameNamespacedId.size()>0);
+        EXPECT_FALSE(noFrameNamespacedId.size() > 0);
     }
 
     TEST_F(ROS2FrameComponentFixture, FrameTrackingInterfaceNamespaceChanges)
@@ -484,7 +481,7 @@ namespace UnitTest
         // Check initial registration
         EXPECT_TRUE(trackingInterface->IsFrameRegistered(entity.GetId()));
         auto initialFrameId = trackingInterface->GetNamespacedFrameId(entity.GetId());
-        ASSERT_TRUE(initialFrameId.size()>0);
+        ASSERT_TRUE(initialFrameId.size() > 0);
         EXPECT_EQ(initialFrameId, "initial_namespace/dynamic_frame");
 
         // Change namespace configuration
@@ -498,7 +495,7 @@ namespace UnitTest
         // Check updated registration
         EXPECT_TRUE(trackingInterface->IsFrameRegistered(entity.GetId()));
         auto updatedFrameId = trackingInterface->GetNamespacedFrameId(entity.GetId());
-        ASSERT_TRUE(updatedFrameId.size()>0);
+        ASSERT_TRUE(updatedFrameId.size() > 0);
         EXPECT_EQ(updatedFrameId, "updated_namespace/dynamic_frame");
 
         // Old frame ID should not exist anymore
