@@ -16,6 +16,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 #include <AzCore/Slice/SliceAssetHandler.h>
 #include <AzCore/UserSettings/UserSettingsComponent.h>
 #include <AzCore/std/containers/array.h>
@@ -309,7 +310,11 @@ namespace UnitTest
         ROS2::ROS2FrameComponentBus::EventResult(
             globalFrameName_result, entity.GetId(), &ROS2::ROS2FrameComponentRequests::GetGlobalFrameID);
 
-        const auto globalNamespace = ROS2::GetGlobalFrameIDFromRegistry();
+        const AZStd::string globalNamespace{ "odom" };
+        if (auto* registry = AZ::SettingsRegistry::Get())
+        {
+            registry->Set("/O3DE/ROS2/GlobalFrameName", globalNamespace);
+        }
 
         EXPECT_EQ(namespace_result, "test_entity");
         EXPECT_EQ(frameId_result, "test_entity/test_frame");
@@ -350,7 +355,7 @@ namespace UnitTest
 
         // Check namespaced frame ID lookup
         auto namespacedFrameId = trackingInterface->GetNamespacedFrameId(entity.GetId());
-        ASSERT_TRUE(namespacedFrameId.size() > 0);
+        ASSERT_FALSE(namespacedFrameId.empty());
         EXPECT_STREQ(namespacedFrameId.c_str(), "tracked_entity/tracked_frame");
 
         auto allFrameIds = trackingInterface->GetAllNamespacedFrameIds();
@@ -410,7 +415,7 @@ namespace UnitTest
             EXPECT_TRUE(trackingInterface->IsFrameRegistered(entities[i]->GetId()));
 
             auto namespacedFrameId = trackingInterface->GetNamespacedFrameId(entities[i]->GetId());
-            ASSERT_TRUE(namespacedFrameId.size() > 0);
+            ASSERT_FALSE(namespacedFrameId.empty());
             EXPECT_EQ(namespacedFrameId, expectedFrameIds[i]);
 
             auto foundEntityId = trackingInterface->GetFrameEntityByNamespacedId(expectedFrameIds[i]);
@@ -442,7 +447,7 @@ namespace UnitTest
         EXPECT_FALSE(trackingInterface->IsFrameRegistered(invalidEntityId));
 
         auto invalidNamespacedFrameId = trackingInterface->GetNamespacedFrameId(invalidEntityId);
-        EXPECT_FALSE(invalidNamespacedFrameId.size() > 0);
+        EXPECT_TRUE(invalidNamespacedFrameId.empty());
 
         // Test lookup with non-existent namespaced frame ID
         auto invalidEntityLookup = trackingInterface->GetFrameEntityByNamespacedId("non_existent/frame");
@@ -457,7 +462,7 @@ namespace UnitTest
         EXPECT_FALSE(trackingInterface->IsFrameRegistered(entityWithoutFrame.GetId()));
 
         auto noFrameNamespacedId = trackingInterface->GetNamespacedFrameId(entityWithoutFrame.GetId());
-        EXPECT_FALSE(noFrameNamespacedId.size() > 0);
+        EXPECT_TRUE(noFrameNamespacedId.empty());
     }
 
     TEST_F(ROS2FrameComponentFixture, FrameTrackingInterfaceNamespaceChanges)
@@ -481,7 +486,7 @@ namespace UnitTest
         // Check initial registration
         EXPECT_TRUE(trackingInterface->IsFrameRegistered(entity.GetId()));
         auto initialFrameId = trackingInterface->GetNamespacedFrameId(entity.GetId());
-        ASSERT_TRUE(initialFrameId.size() > 0);
+        ASSERT_FALSE(initialFrameId.empty());
         EXPECT_EQ(initialFrameId, "initial_namespace/dynamic_frame");
 
         // Change namespace configuration
@@ -495,7 +500,7 @@ namespace UnitTest
         // Check updated registration
         EXPECT_TRUE(trackingInterface->IsFrameRegistered(entity.GetId()));
         auto updatedFrameId = trackingInterface->GetNamespacedFrameId(entity.GetId());
-        ASSERT_TRUE(updatedFrameId.size() > 0);
+        ASSERT_FALSE(updatedFrameId.empty());
         EXPECT_EQ(updatedFrameId, "updated_namespace/dynamic_frame");
 
         // Old frame ID should not exist anymore

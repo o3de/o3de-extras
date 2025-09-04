@@ -123,8 +123,6 @@ namespace ROS2Controllers
             {
                 m_initialPositions.emplace_back(AZStd::make_pair(jointNameStr, configBackup[jointNameStr]));
             }
-
-
         }
         undo.MarkEntityDirty(GetEntity()->GetId());
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
