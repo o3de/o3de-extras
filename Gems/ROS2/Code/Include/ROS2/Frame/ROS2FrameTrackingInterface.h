@@ -20,10 +20,13 @@ namespace ROS2
 {
     //! Interface for querying and tracking ROS2 frame components in the system.
     //! This interface provides access to the frame registry maintained by the ROS2FrameSystemComponent.
-    class ROS2FrameTrackingRequests
+    class ROS2FrameTrackingRequests : public AZ::EBusTraits
     {
     public:
         AZ_RTTI(ROS2FrameTrackingRequests, ROS2FrameTrackingInterfaceTypeId);
+
+        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
+        static const AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
 
         //! Get all currently registered frame entities.
         //! @return Set of EntityIds representing all registered frames
@@ -40,18 +43,28 @@ namespace ROS2
 
         //! Get the entity ID for a frame with the given namespaced frame ID.
         //! @param namespacedFrameId The namespaced frame ID to search for
-        //! @return EntityId of the frame, or nullopt if not found
-        virtual AZStd::optional<AZ::EntityId> GetFrameEntityByNamespacedId(const AZStd::string& namespacedFrameId) const = 0;
+        //! @return EntityId of the frame, or invalid entity Id if not found
+        virtual AZ::EntityId GetFrameEntityByNamespacedId(const AZStd::string& namespacedFrameId) const = 0;
 
         //! Get the namespaced frame ID for a given entity.
         //! @param frameEntityId The EntityId to get the namespaced frame ID for
-        //! @return The namespaced frame ID, or nullopt if not found
-        virtual AZStd::optional<AZStd::string> GetNamespacedFrameId(const AZ::EntityId& frameEntityId) const = 0;
+        //! @return The namespaced frame ID, or empty if not found
+        virtual AZStd::string GetNamespacedFrameId(const AZ::EntityId& frameEntityId) const = 0;
 
         //! Get all namespaced frame IDs currently tracked.
         //! @return Set of all namespaced frame IDs
         virtual AZStd::unordered_set<AZStd::string> GetAllNamespacedFrameIds() const = 0;
+
+        //! Disable an entity to allows modification to its components.
+        //! This will cache the entity's local transform and parent data
+        virtual void DisableEntitySafely(const AZ::EntityId& entityToDisable) = 0;
+
+        //! Enable the entity previously disabled with DisableEntitySafely.
+        //! @param entityToDisable The entity to re-enable
+        //! This will restore the entity's local transform and parent data
+        virtual void EnableEntitySafely(const AZ::EntityId& entityToDisable) = 0;
     };
 
     using ROS2FrameTrackingInterface = AZ::Interface<ROS2FrameTrackingRequests>;
+    using ROS2FrameTrackingRequestBus = AZ::EBus<ROS2FrameTrackingRequests>;
 } // namespace ROS2

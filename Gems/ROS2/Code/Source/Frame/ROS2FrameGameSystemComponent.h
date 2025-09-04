@@ -14,13 +14,15 @@
 #include <AzCore/Component/EntityId.h>
 #include <ROS2/Frame/ROS2FrameTrackingInterface.h>
 #include <ROS2/ROS2TypeIds.h>
+#include <AzCore/Math/Transform.h>
+#include <AzCore/std/containers/map.h>
 
 namespace ROS2
 {
     class ROS2FrameGameSystemComponent
         : public AZ::Component
         , protected ROS2FrameSystemInterface::Registrar
-        , protected ROS2FrameTrackingInterface::Registrar
+        , protected ROS2FrameTrackingRequestBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2FrameGameSystemComponent, ROS2FrameGameSystemComponentTypeId);
@@ -38,17 +40,21 @@ namespace ROS2
         void RegisterFrame(const AZ::EntityId& frameEntityId) override;
         void UnregisterFrame(const AZ::EntityId& frameEntityId) override;
 
-        // ROS2FrameTrackingInterface::Registrar
+        // ROS2FrameTrackingRequestBus::Handler
         const AZStd::unordered_set<AZ::EntityId>& GetRegisteredFrames() const override;
         bool IsFrameRegistered(const AZ::EntityId& frameEntityId) const override;
         size_t GetRegisteredFrameCount() const override;
-        AZStd::optional<AZ::EntityId> GetFrameEntityByNamespacedId(const AZStd::string& namespacedFrameId) const override;
-        AZStd::optional<AZStd::string> GetNamespacedFrameId(const AZ::EntityId& frameEntityId) const override;
+        AZ::EntityId GetFrameEntityByNamespacedId(const AZStd::string& namespacedFrameId) const override;
+        AZStd::string GetNamespacedFrameId(const AZ::EntityId& frameEntityId) const override;
         AZStd::unordered_set<AZStd::string> GetAllNamespacedFrameIds() const override;
+        void DisableEntitySafely(const AZ::EntityId& entityToDisable) override;
+        void EnableEntitySafely(const AZ::EntityId& entityToEnable) override;
 
         AZStd::unordered_set<AZ::EntityId> m_registeredEntities; //!< Set of all registered frame entities.
 
         AZStd::map<AZ::EntityId, AZStd::string> m_entityIdToFrameId;
         AZStd::map<AZStd::string, AZ::EntityId> m_frameIdToEntityId;
+        using EntityIdTransformPair = AZStd::pair<AZ::EntityId, AZ::Transform>;
+        AZStd::unordered_map<AZ::EntityId, AZStd::vector<EntityIdTransformPair>> m_cachedChildTransforms;
     };
 } // namespace ROS2

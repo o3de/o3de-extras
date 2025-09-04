@@ -244,7 +244,16 @@ namespace ROS2
             }
         }
 
-       return odometryFrame;
+        // check if name is rosified
+        AZStd::string odometryFrameRosified;
+        ROS2NamesRequestBus::BroadcastResult(odometryFrameRosified, &ROS2NamesRequests::RosifyName, odometryFrame);
+        AZ_Warning(
+            "GetGlobalFrameIDFromRegistry",
+            odometryFrameRosified == odometryFrame,
+            "Odometry frame name '%s' was not a valid ROS2 name, using rosified version '%s' instead",
+            odometryFrame.c_str(),
+            odometryFrameRosified.c_str());
+        return odometryFrameRosified;
     }
 
 } // namespace ROS2
