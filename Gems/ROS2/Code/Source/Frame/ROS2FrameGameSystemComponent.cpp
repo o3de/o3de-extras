@@ -92,7 +92,7 @@ namespace ROS2
         m_entityIdToFrameId.erase(frameEntityId);
     }
 
-    const AZStd::unordered_set<AZ::EntityId>& ROS2FrameGameSystemComponent::GetRegisteredFrames() const
+    const AZStd::unordered_set<AZ::EntityId>& ROS2FrameGameSystemComponent::GetRegisteredFrameEntityIds() const
     {
         return m_registeredEntities;
     }

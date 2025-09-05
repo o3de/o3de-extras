@@ -30,7 +30,7 @@ namespace ROS2
 
         //! Get all currently registered frame entities.
         //! @return Set of EntityIds representing all registered frames
-        virtual const AZStd::unordered_set<AZ::EntityId>& GetRegisteredFrames() const = 0;
+        virtual const AZStd::unordered_set<AZ::EntityId>& GetRegisteredFrameEntityIds() const = 0;
 
         //! Check if a specific frame entity is registered.
         //! @param frameEntityId The EntityId to check

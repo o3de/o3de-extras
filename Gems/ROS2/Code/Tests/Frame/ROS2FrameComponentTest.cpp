@@ -331,7 +331,7 @@ namespace UnitTest
 
         // Initially no frames should be registered
         EXPECT_EQ(trackingInterface->GetRegisteredFrameCount(), 0);
-        EXPECT_TRUE(trackingInterface->GetRegisteredFrames().empty());
+        EXPECT_TRUE(trackingInterface->GetRegisteredFrameEntityIds().empty());
         EXPECT_TRUE(trackingInterface->GetAllNamespacedFrameIds().empty());
 
         // Create and activate a frame component
@@ -349,9 +349,9 @@ namespace UnitTest
         // Frame should now be registered
         EXPECT_EQ(trackingInterface->GetRegisteredFrameCount(), 1);
         EXPECT_TRUE(trackingInterface->IsFrameRegistered(entity.GetId()));
-        EXPECT_FALSE(trackingInterface->GetRegisteredFrames().empty());
-        EXPECT_EQ(trackingInterface->GetRegisteredFrames().size(), 1);
-        EXPECT_TRUE(trackingInterface->GetRegisteredFrames().contains(entity.GetId()));
+        EXPECT_FALSE(trackingInterface->GetRegisteredFrameEntityIds().empty());
+        EXPECT_EQ(trackingInterface->GetRegisteredFrameEntityIds().size(), 1);
+        EXPECT_TRUE(trackingInterface->GetRegisteredFrameEntityIds().contains(entity.GetId()));
 
         // Check namespaced frame ID lookup
         auto namespacedFrameId = trackingInterface->GetNamespacedFrameId(entity.GetId());
@@ -372,7 +372,7 @@ namespace UnitTest
 
         EXPECT_EQ(trackingInterface->GetRegisteredFrameCount(), 0);
         EXPECT_FALSE(trackingInterface->IsFrameRegistered(entity.GetId()));
-        EXPECT_TRUE(trackingInterface->GetRegisteredFrames().empty());
+        EXPECT_TRUE(trackingInterface->GetRegisteredFrameEntityIds().empty());
         EXPECT_TRUE(trackingInterface->GetAllNamespacedFrameIds().empty());
     }
 
@@ -406,7 +406,7 @@ namespace UnitTest
 
         // Check all frames are registered
         EXPECT_EQ(trackingInterface->GetRegisteredFrameCount(), numFrames);
-        EXPECT_EQ(trackingInterface->GetRegisteredFrames().size(), numFrames);
+        EXPECT_EQ(trackingInterface->GetRegisteredFrameEntityIds().size(), numFrames);
         EXPECT_EQ(trackingInterface->GetAllNamespacedFrameIds().size(), numFrames);
 
         // Check each frame individually
@@ -434,7 +434,7 @@ namespace UnitTest
         entities[0]->Deactivate();
         entities[2]->Deactivate();
         EXPECT_EQ(trackingInterface->GetRegisteredFrameCount(), 0);
-        EXPECT_TRUE(trackingInterface->GetRegisteredFrames().empty());
+        EXPECT_TRUE(trackingInterface->GetRegisteredFrameEntityIds().empty());
     }
 
     TEST_F(ROS2FrameComponentFixture, FrameTrackingInterfaceEdgeCases)

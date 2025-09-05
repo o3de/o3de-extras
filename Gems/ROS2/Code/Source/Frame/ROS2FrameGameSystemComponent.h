@@ -41,7 +41,7 @@ namespace ROS2
         void UnregisterFrame(const AZ::EntityId& frameEntityId) override;
 
         // ROS2FrameTrackingRequestBus::Handler
-        const AZStd::unordered_set<AZ::EntityId>& GetRegisteredFrames() const override;
+        const AZStd::unordered_set<AZ::EntityId>& GetRegisteredFrameEntityIds() const override;
         bool IsFrameRegistered(const AZ::EntityId& frameEntityId) const override;
         size_t GetRegisteredFrameCount() const override;
         AZ::EntityId GetFrameEntityByNamespacedId(const AZStd::string& namespacedFrameId) const override;

@@ -9,8 +9,7 @@
 
 #include "ROS2SystemComponent.h"
 
-#include "ROS2/Clock/ROS2ClockRequestBus.h"
-
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
