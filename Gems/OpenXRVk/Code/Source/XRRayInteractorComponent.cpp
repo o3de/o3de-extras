@@ -39,6 +39,8 @@
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 
+#include "OpenXRVk/OpenXRVkUtils.h"
+
 namespace OpenXRVk
 {
     const AZStd::string baseColorPropertyName = "baseColor.color";
@@ -276,22 +278,6 @@ namespace OpenXRVk
                     assignmentId, baseColorPropertyName, m_initialRayColor);
             }
         }
-    }
-
-    static float ReadActionHandleFloat(IOpenXRActions* iface, IOpenXRActions::ActionHandle actionHandle, float deadZone = 0.05f)
-    {
-        auto outcome = iface->GetActionStateFloat(actionHandle);
-        if (!outcome.IsSuccess())
-        {
-            // Most likely the controller went to sleep.
-            return 0.0f;
-        }
-        float value = outcome.GetValue();
-        if (fabsf(value) < deadZone)
-        {
-            return 0.0f;
-        }
-        return value;
     }
 
     void XRRayInteractorComponent::ProcessOpenXRActions()

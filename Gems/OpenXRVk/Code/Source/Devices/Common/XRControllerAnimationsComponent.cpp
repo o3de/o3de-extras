@@ -18,6 +18,8 @@
 
 #include <Integration/AnimGraphComponentBus.h>
 
+#include "OpenXRVk/OpenXRVkUtils.h"
+
 namespace OpenXRVk
 {
     void XRControllerAnimationsComponent::Reflect(AZ::ReflectContext* context)
@@ -86,7 +88,6 @@ namespace OpenXRVk
     }
 
     extern AZ::Transform ReadActionHandlePose(IOpenXRActions* iface, IOpenXRActions::ActionHandle actionHandle);
-    extern float ReadActionHandleFloat(IOpenXRActions* iface, IOpenXRActions::ActionHandle actionHandle, float deadZone);
 
     void XRControllerAnimationsComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint timePoint)
     {
