@@ -37,6 +37,8 @@ ly_add_target(
            AZ::AzCore
 )
 
+target_interface_depends_on_ros2_package(${gem_name}.API simulation_interfaces 1.1.0 REQUIRED)
+
 # The ${gem_name}.Private.Object target is an internal target
 # It should not be used outside of this Gems CMakeLists.txt
 ly_add_target(
