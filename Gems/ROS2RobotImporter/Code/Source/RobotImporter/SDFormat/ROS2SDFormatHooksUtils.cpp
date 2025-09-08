@@ -203,8 +203,8 @@ namespace ROS2RobotImporter::SDFormat
         }
         else if (!remappedNamespace.empty())
         {
-            frameConfiguration.m_namespaceConfiguration.SetNamespace(
-                remappedNamespace, ROS2::NamespaceConfiguration::NamespaceStrategy::Custom);
+            frameConfiguration.m_namespaceConfiguration.m_namespaceStrategy = ROS2::NamespaceConfiguration::NamespaceStrategy::Custom;
+            frameConfiguration.m_namespaceConfiguration.m_customNamespace = remappedNamespace;
         }
 
         if (pluginParams.contains("frameName"))

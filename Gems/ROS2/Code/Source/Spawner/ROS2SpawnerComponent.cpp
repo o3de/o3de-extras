@@ -301,7 +301,10 @@ namespace ROS2
                 entity->SetName(instanceName);
                 if (!spawnableNamespace.empty())
                 {
-                    frameComponent->UpdateNamespaceConfiguration(spawnableNamespace, NamespaceConfiguration::NamespaceStrategy::Custom);
+                    auto configuration = frameComponent->GetConfiguration();
+                    configuration.m_namespaceConfiguration.m_customNamespace = spawnableNamespace;
+                    configuration.m_namespaceConfiguration.m_namespaceStrategy = ROS2::NamespaceConfiguration::NamespaceStrategy::Custom;
+                    frameComponent->SetConfiguration(configuration);
                 }
                 break;
             }

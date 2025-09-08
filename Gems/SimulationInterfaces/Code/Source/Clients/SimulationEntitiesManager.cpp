@@ -803,12 +803,17 @@ namespace SimulationInterfaces
             }
             AZ::Entity* root = *view.begin();
 
-            for (AZ::Entity* entity : view)
+            for (auto* entity : view)
             {
-                auto* ros2Frame = entity->FindComponent<ROS2::ROS2FrameComponent>();
-                if (ros2Frame)
+                ROS2::ROS2FrameComponent* frameComponent = entity->template FindComponent<ROS2::ROS2FrameComponent>();
+                if (frameComponent)
                 {
-                    ros2Frame->UpdateNamespaceConfiguration(entityNamespace, ROS2::NamespaceConfiguration::NamespaceStrategy::Custom);
+                    const AZStd::string f = frameComponent->GetNamespacedFrameID();
+                    auto config = frameComponent->GetConfiguration();
+                    config.m_namespaceConfiguration.m_customNamespace = entityNamespace;
+                    config.m_namespaceConfiguration.m_namespaceStrategy = ROS2::NamespaceConfiguration::NamespaceStrategy::Custom;
+                    AZ_Printf("SimulationInterfaces::SpawnEntity", "Setting namespace to %s for entity %s\n", entityNamespace.c_str(), entity->GetName().c_str());
+                    frameComponent->SetConfiguration(config);
                     break;
                 }
             }

@@ -20,7 +20,6 @@ namespace ROS2
     //! @note This structure is handled through ROS2FrameComponent.
     struct NamespaceConfiguration
     {
-    public:
         AZ_TYPE_INFO(NamespaceConfiguration, NamespaceConfigurationTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
@@ -36,49 +35,13 @@ namespace ROS2
             Custom //!< Non-empty and based on user-provided value.
         };
 
-        //! Set namespace based on context.
-        //! @param isRoot Whether or not the namespace belongs to top-level entity in the entity hierarchy.
-        //! @param entityName Raw (not ros-ified) name of the entity to which the namespace belongs.
-        void PopulateNamespace(bool isRoot, const AZStd::string& entityName);
-
-        //! Get the namespace of the frame, based on the parent namespace from the ROS2FrameSystemComponent.
-        //! @return namespace of the frame.
-        AZStd::string GetNamespace() const;
-
-        //! Get the namespace of the frame, based on the provided namespace.
-        //! @param parentNamespace namespace of the parent frame.
-        //! @return namespace of the frame.
-        AZStd::string GetNamespace(const AZStd::string& parentNamespace) const;
-
-        //! Update namespace and strategy.
-        //! @param ros2Namespace Desired namespace.
-        //! @param strategy Namespace strategy.
-        void SetNamespace(const AZStd::string& ros2Namespace, NamespaceStrategy strategy);
-
-        //! Update the parents namespace.
-        //! @param parentNamespace parent namespace.
-        void SetParentNamespace(const AZStd::string& parentNamespace);
-
-        //! Initializes the namespace configuration.
-        //! This function should be called in the Init functions of frame components.
-        void Init();
-
-    private:
         AZStd::string m_customNamespace = ""; //!< Custom namespace that can be set by the user
-        AZStd::string m_namespace = ""; //!< Current namespace (might be custom); set automatically
-        AZStd::string m_parentNamespace = ""; //!< Parent namespace (might be custom); set automatically
         NamespaceStrategy m_namespaceStrategy = NamespaceStrategy::Default;
-        bool m_isRoot;
-        AZStd::string m_entityName;
-
+    private:
         //! Determine if namespace is using the Custom namespace strategy
         bool IsNamespaceCustom() const;
 
-        //! Update the namespace based on the current attributes
-        void UpdateNamespace();
-
         //! Helpers methods for UI
-        AZ::Crc32 OnNamespaceStrategySelected();
         AZ::Outcome<void, AZStd::string> ValidateNamespaceField(void* newValue, const AZ::Uuid& valueType);
     };
 } // namespace ROS2
