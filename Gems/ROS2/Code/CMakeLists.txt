@@ -66,7 +66,6 @@ else()
 endif()
 
 # Add the static target with the API Interface and the code
-# TODO: This target should be removed after API is fully implemented with buses
 ly_add_target(
     NAME ${gem_name}.Static STATIC
     NAMESPACE Gem
