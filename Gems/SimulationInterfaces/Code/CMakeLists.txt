@@ -37,6 +37,11 @@ ly_add_target(
            AZ::AzCore
 )
 
+# link simulation_interfaces to API, function target_depends_on_ros2_packages links only on as PUBLIC 
+find_package(simulation_interfaces 1.1.0 REQUIRED)
+include(${simulation_interfaces_DIR}/simulation_interfacesConfig.cmake OPTIONAL)
+target_link_libraries(${gem_name}.API INTERFACE ${simulation_interfaces_TARGETS})
+
 # The ${gem_name}.Private.Object target is an internal target
 # It should not be used outside of this Gems CMakeLists.txt
 ly_add_target(
