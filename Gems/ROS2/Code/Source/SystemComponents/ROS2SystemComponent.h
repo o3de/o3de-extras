@@ -89,6 +89,7 @@ namespace ROS2
         AZ::Outcome<AZ::Transform, AZStd::string> GetTransform(
             const AZStd::string& source, const AZStd::string& target, const builtin_interfaces::msg::Time& time) override;
         AZ::Transform GetLatestTransform(const AZStd::string& source, const AZStd::string& target) override;
+        void PublishTransform(const AZStd::string& source, const AZStd::string& target, const AZ::Transform& transform, bool isDynamic) override;
         ////////////////////////////////////////////////////////////////////////
 
     private:

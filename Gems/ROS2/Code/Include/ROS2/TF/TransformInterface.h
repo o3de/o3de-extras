@@ -7,10 +7,10 @@
  */
 
 #pragma once
-#include <builtin_interfaces/msg/time.hpp>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/string/string.h>
+#include <builtin_interfaces/msg/time.hpp>
 
 namespace ROS2
 {
@@ -37,6 +37,15 @@ namespace ROS2
         //! If the transform is not available, it will return an identity transform.
         //! @note This method is useful for scripting use-case
         virtual AZ::Transform GetLatestTransform(const AZStd::string& source, const AZStd::string& target) = 0;
+
+        //! Publishes a transform between source and target frames with current time stamp.
+        //! @param source - source frame name
+        //! @param target - target frame name
+        //! @param transform - AZ::Transform representing the transformation from source to target frame
+        //! @param isDynamic - if true, the transform is dynamic and should be published continuously
+        //! @note This method is useful for scripting use-case
+        virtual void PublishTransform(const AZStd::string& source, const AZStd::string& target, const AZ::Transform& transform, bool isDynamic) = 0;
+        
     };
     class TFInterfaceTraits
         : public AZ::EBusTraits
