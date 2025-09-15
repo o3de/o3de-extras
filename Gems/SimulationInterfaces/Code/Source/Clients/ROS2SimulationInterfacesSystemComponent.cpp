@@ -27,9 +27,9 @@
 #include <Services/GetEntityBoundsServiceHandler.h>
 #include <Services/GetEntityInfoServiceHandler.h>
 #include <Services/GetEntityStateServiceHandler.h>
-#include <Services/GetSimulationStateServiceHandler.h>
 #include <Services/GetNamedPoseBoundsServiceHandler.h>
 #include <Services/GetNamedPosesServiceHandler.h>
+#include <Services/GetSimulationStateServiceHandler.h>
 #include <Services/GetSimulatorFeaturesServiceHandler.h>
 #include <Services/GetSpawnablesServiceHandler.h>
 #include <Services/LoadWorldServiceHandler.h>

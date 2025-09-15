@@ -11,10 +11,10 @@
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/string/string.h>
-#include <ROS2/ROS2TypeIds.h>
 
 namespace ROS2
 {
+    inline constexpr const char* TFInterfaceTypeId = "{BC0C8C08-DC47-44AB-9A84-D853751D15F1}";
     class TFInterfaceRequests
     {
     public:
