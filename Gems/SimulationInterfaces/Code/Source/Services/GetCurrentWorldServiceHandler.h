@@ -10,23 +10,22 @@
 
 #include "ROS2ServiceBase.h"
 #include <AzCore/std/string/string_view.h>
-#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
-#include <simulation_interfaces/srv/get_simulator_features.hpp>
+#include <simulation_interfaces/srv/get_current_world.hpp>
 
 namespace ROS2SimulationInterfaces
 {
 
-    class GetSimulationFeaturesServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::GetSimulatorFeatures>
+    class GetCurrentWorldServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::GetCurrentWorld>
     {
     public:
         AZStd::string_view GetTypeName() const override
         {
-            return "GetSimulationFeatures";
+            return "GetCurrentWorld";
         }
 
         AZStd::string_view GetDefaultName() const override
         {
-            return "get_simulation_features";
+            return "get_current_world";
         }
         AZStd::unordered_set<SimulationFeatureType> GetProvidedFeatures() override;
 

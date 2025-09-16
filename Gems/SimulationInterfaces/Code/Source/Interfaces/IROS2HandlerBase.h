@@ -24,5 +24,6 @@ namespace ROS2SimulationInterfaces
         virtual AZStd::string_view GetTypeName() const = 0;
         virtual AZStd::string_view GetDefaultName() const = 0;
         virtual void Initialize(rclcpp::Node::SharedPtr& node) = 0;
+        virtual bool IsValid() = 0;
     };
 } // namespace ROS2SimulationInterfaces

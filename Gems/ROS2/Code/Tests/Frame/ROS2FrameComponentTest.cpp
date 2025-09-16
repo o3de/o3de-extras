@@ -53,8 +53,9 @@ namespace UnitTest
     {
         AddActiveGems(AZStd::to_array<AZStd::string_view>({ "ROS2" }));
         AddDynamicModulePaths({});
-        AddComponentDescriptors(AZStd::initializer_list<AZ::ComponentDescriptor*>{ ROS2::ROS2FrameComponent::CreateDescriptor(),
-                                                                                   ROS2::ROS2SystemComponent::CreateDescriptor() });
+        AddComponentDescriptors(
+            AZStd::initializer_list<AZ::ComponentDescriptor*>{ ROS2::ROS2FrameComponent::CreateDescriptor(),
+                                                               ROS2::ROS2SystemComponent::CreateDescriptor() });
         AddRequiredComponents(AZStd::to_array<AZ::TypeId const>({ ROS2::ROS2SystemComponent::TYPEINFO_Uuid() }));
     }
 
@@ -180,7 +181,7 @@ namespace UnitTest
 
 } // namespace UnitTest
 
-// required to support running integration tests with Qt and PhysX
+// required to support running integration tests with Qt
 AZTEST_EXPORT int AZ_UNIT_TEST_HOOK_NAME(int argc, char** argv)
 {
     ::testing::InitGoogleMock(&argc, argv);

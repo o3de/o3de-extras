@@ -13,11 +13,14 @@
 #include <Lidar/LidarSystem.h>
 #include <ROS2/Clock/ROS2Clock.h>
 #include <ROS2/ROS2Bus.h>
+#include <ROS2/TF/TransformInterface.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
+#include <tf2_ros/buffer.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <tf2_ros/transform_broadcaster.h>
+#include <tf2_ros/transform_listener.h>
 
 /**
  * \mainpage
@@ -43,6 +46,7 @@ namespace ROS2
         : public AZ::Component
         , public AZ::TickBus::Handler
         , protected ROS2RequestBus::Handler
+        , protected TFInterfaceBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2SystemComponent, "{cb28d486-afa4-4a9f-a237-ac5eb42e1c87}");
@@ -79,6 +83,15 @@ namespace ROS2
         // AZTickBus interface implementation
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
         ////////////////////////////////////////////////////////////////////////
+
+        ////////////////////////////////////////////////////////////////////////
+        // TFInterface implementation
+        AZ::Outcome<AZ::Transform, AZStd::string> GetTransform(
+            const AZStd::string& source, const AZStd::string& target, const builtin_interfaces::msg::Time& time) override;
+        AZ::Transform GetLatestTransform(const AZStd::string& source, const AZStd::string& target) override;
+        void PublishTransform(const AZStd::string& source, const AZStd::string& target, const AZ::Transform& transform, bool isDynamic) override;
+        ////////////////////////////////////////////////////////////////////////
+
     private:
         void InitClock();
 
@@ -87,8 +100,10 @@ namespace ROS2
         std::shared_ptr<rclcpp::Node> m_ros2Node;
         AZStd::shared_ptr<rclcpp::executors::SingleThreadedExecutor> m_executor;
         AZStd::unique_ptr<tf2_ros::TransformBroadcaster> m_dynamicTFBroadcaster;
-        AZStd::unique_ptr<tf2_ros::StaticTransformBroadcaster> m_staticTFBroadcaster;
         AZStd::unique_ptr<ROS2Clock> m_simulationClock;
+        AZStd::unique_ptr<tf2_ros::StaticTransformBroadcaster> m_staticTFBroadcaster;
+        AZStd::shared_ptr<tf2_ros::Buffer> m_tfBuffer;
+        AZStd::shared_ptr<tf2_ros::TransformListener> m_tfListener;
         NodeChangedEvent m_nodeChangedEvent;
 
         AZStd::deque<float> m_simulationLoopTimes;

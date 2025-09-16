@@ -10,10 +10,13 @@
 
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/Script/ScriptTimePoint.h>
+#include <AzCore/std/string/string.h>
 #include <AzFramework/Entity/EntityContextBus.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
+#include <SimulationInterfaces/Result.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
 namespace SimulationInterfaces
@@ -21,7 +24,6 @@ namespace SimulationInterfaces
     class SimulationEntitiesManager
         : public AZ::Component
         , protected SimulationEntityManagerRequestBus::Handler
-        , protected AZ::TickBus::Handler
     {
     public:
         AZ_COMPONENT_DECL(SimulationEntitiesManager);
@@ -54,23 +56,29 @@ namespace SimulationInterfaces
             const AZStd::string& entityNamespace,
             const AZ::Transform& initialPose,
             const bool allowRename,
+            PreInsertionCb preinsertionCb,
             SpawnCompletedCb completedCb) override;
-        void ResetAllEntitiesToInitialState() override;
+        AZ::Outcome<void, FailedResult> ResetAllEntitiesToInitialState() override;
+        AZ::Outcome<AZStd::string, FailedResult> RegisterNewSimulatedBody(
+            const AZStd::string& proposedName, const AZ::EntityId& entityId) override;
+        AZ::Outcome<void, FailedResult> UnregisterSimulatedBody(const AZStd::string& name) override;
+        AZ::Outcome<void, FailedResult> SetEntityInfo(const AZStd::string& name, const EntityInfo& info) override;
+        AZ::Outcome<EntityInfo, FailedResult> GetEntityInfo(const AZStd::string& name) override;
+        AZ::Outcome<Bounds, FailedResult> GetEntityBounds(const AZStd::string& name) override;
+        AZ::Outcome<AZ::EntityId, FailedResult> GetEntityId(const AZStd::string& name) override;
+        AZ::Outcome<AZ::EntityId, FailedResult> GetEntityRoot(const AZStd::string& name) override;
 
-        // AZ::TickBus::Handler interface implementation
-        void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
-
-        //! Registers a new simulated body to the simulation interface.
-        //! Note that the body handle will be registered under unique name
-        //! Note that body need to be configured to be registered
-        //! \param sceneHandle The scene handle to register the body to
-        //! \param bodyHandle The body handle to register
-        bool RegisterNewSimulatedBody(AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle);
-
-        //! Registers a new simulated body to the simulation interface.
-        //! Returns the list of handles that were not registered
-        AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>> RegisterNewSimulatedBodies(
-            const AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>>& handles);
+        // helper methods to filter entities by different filters
+        AZStd::vector<AZStd::string> FilterEntitiesByCategories(
+            const AZStd::vector<AZStd::string>& prefilteredEntities, const AZStd::vector<EntityCategory>& categories);
+        AZStd::vector<AZStd::string> FilterEntitiesByTag(
+            const AZStd::vector<AZStd::string>& prefilteredEntities, const TagFilter& tagFilter);
+        AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> FilterEntitiesByBounds(
+            const AZStd::vector<AZStd::string>& prefilteredEntities,
+            const AZStd::shared_ptr<Physics::ShapeConfiguration> shape,
+            const AZ::Transform& shapePose);
+        AZ::Outcome<AZStd::vector<AZStd::string>, FailedResult> FilterEntitiesByRegex(
+            const AZStd::vector<AZStd::string>& prefilteredEntities, const AZStd::string& regex);
 
         //! Registers simulated entity to entity id mapping.
         //! Note that the entityId will be registered under unique name.
@@ -79,14 +87,17 @@ namespace SimulationInterfaces
         //! \return returns the simulated entity name
         AZStd::string AddSimulatedEntity(AZ::EntityId entityId, const AZStd::string& proposedName);
 
-        //! Removes simulated entity from the mapping.
-        void RemoveSimulatedEntity(AZ::EntityId entityId);
-
         //! Returns the simulated entity name for the given entity id.
         AZStd::string GetSimulatedEntityName(AZ::EntityId entityId, const AZStd::string& proposedName) const;
 
         //! Set the state of the entity and their descendants.
         void SetEntitiesState(const AZStd::vector<AZ::EntityId>& entityAndDescendants, const EntityState& state);
+
+        //! Removes entity info for entity with given name from the simulation interfaces registry, only if exists
+        void RemoveEntityInfoIfNeeded(const AZStd::string& name);
+
+        // Helper method to check if world is loaded
+        AZ::Outcome<void, FailedResult> IsWorldLoaded();
 
         AzPhysics::SceneEvents::OnSimulationBodyAdded::Handler m_simulationBodyAddedHandler;
         AzPhysics::SceneEvents::OnSimulationBodyRemoved::Handler m_simulationBodyRemovedHandler;
@@ -95,24 +106,29 @@ namespace SimulationInterfaces
         AzPhysics::SystemEvents::OnSceneRemovedEvent::Handler m_sceneRemovedHandler;
         AzPhysics::SceneHandle m_physicsScenesHandle = AzPhysics::InvalidSceneHandle;
 
-        AZStd::vector<AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle>>
-            m_unconfiguredScenesHandles; //! Set of yet-invalid scenes handles, that are waiting for configuration
+        // simulated entity name to tracked entity
         AZStd::unordered_map<AZStd::string, AZ::EntityId> m_simulatedEntityToEntityIdMap;
+        // tracked entity to simulated entity name
         AZStd::unordered_map<AZ::EntityId, AZStd::string> m_entityIdToSimulatedEntityMap;
         AZStd::unordered_map<AZ::EntityId, EntityState> m_entityIdToInitialState;
+        // simulated Entity name to prefab root (container entity). Not always equal to tracked entity. Applies only to entities spawned by
+        // the simulation Interfaces
+        AZStd::unordered_map<AZStd::string, AZ::EntityId> m_simulatedEntityToPrefabRoot;
+
+        // Map holding entityInfo to assigned name
+        AZStd::unordered_map<AZStd::string, EntityInfo> m_nameToEntityInfo;
+        // Stores category to name which are forced to be unique by the standard, used for quicker lookup during filtering
+        AZStd::unordered_map<EntityCategory, AZStd::unordered_set<AZStd::string>> m_categoryToNames;
 
         AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, AzFramework::EntitySpawnTicket> m_spawnedTickets;
 
         struct SpawnCompletedCbData
         {
             AZStd::string m_userProposedName; //! Name proposed by the User in spawn request
-            AZStd::string m_resultedName; //! Name of the entity in the simulation interface
             SpawnCompletedCb m_completedCb; //! User callback to be called when the entity is registered
-            AZ::ScriptTimePoint m_spawnCompletedTime; //! Time at which the entity was spawned
-            bool m_registered = false; //! Flag to check if the entity was registered
+            PreInsertionCb m_preInsertionCb; //! User callback to be called when entity prefab is added but inactive
         };
-        AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, SpawnCompletedCbData>
-            m_spawnCompletedCallbacks; //! Callbacks to be called when the entity is registered
+        AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, SpawnCompletedCbData> m_spawnCompletedCallbacks;
     };
 
 } // namespace SimulationInterfaces

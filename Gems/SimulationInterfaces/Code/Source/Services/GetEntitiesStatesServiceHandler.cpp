@@ -7,10 +7,10 @@
  */
 
 #include "GetEntitiesStatesServiceHandler.h"
-#include <ROS2/ROS2Bus.h>
+#include "ROS2/ROS2Bus.h"
+#include <Clients/CommonUtilities.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <Utils/Utils.h>
 
 namespace ROS2SimulationInterfaces
 {
@@ -31,7 +31,7 @@ namespace ROS2SimulationInterfaces
         GetEntitiesStatesServiceHandler::Response response;
         response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
 
-        const auto getFilterResult = Utils::GetEntityFiltersFromRequest<Request>(request);
+        const auto getFilterResult = SimulationInterfaces::Utils::GetEntityFiltersFromRequest<Request>(request);
         if (!getFilterResult.IsSuccess())
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
@@ -54,6 +54,7 @@ namespace ROS2SimulationInterfaces
 
         response.entities.reserve(multipleEntitiesStates.size());
         response.states.reserve(multipleEntitiesStates.size());
+        const auto simulatorFrameId = RegistryUtilities::GetSimulatorROS2Frame();
         for (auto& [entityName, entityState] : multipleEntitiesStates)
         {
             // entity name
@@ -61,7 +62,7 @@ namespace ROS2SimulationInterfaces
             // entity state
             simulation_interfaces::msg::EntityState simulationInterfacesEntityState;
             simulationInterfacesEntityState.header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
-            simulationInterfacesEntityState.header.frame_id = "";
+            simulationInterfacesEntityState.header.frame_id = simulatorFrameId.c_str();
             simulationInterfacesEntityState.pose = ROS2::ROS2Conversions::ToROS2Pose(entityState.m_pose);
             simulationInterfacesEntityState.twist.linear = ROS2::ROS2Conversions::ToROS2Vector3(entityState.m_twistLinear);
             simulationInterfacesEntityState.twist.angular = ROS2::ROS2Conversions::ToROS2Vector3(entityState.m_twistAngular);

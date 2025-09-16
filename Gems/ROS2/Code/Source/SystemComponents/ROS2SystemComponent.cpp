@@ -58,13 +58,23 @@ namespace ROS2
             {
                 ec->Class<ROS2SystemComponent>(
                       "ROS 2 System Component",
-                      "This component is responsible for creating ROS 2 node and executor, provides ROS 2 interfaces, manages ROS 2 clock and "
-                      "publishes transforms.")
+                      "This component is responsible for creating ROS 2 node and executor, provides ROS 2 interfaces "
+                      "and publishes transforms.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("System"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true);
             }
+        }
+        if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            behaviorContext->EBus<TFInterfaceBus>("TFInterfaceBus")
+                ->Attribute(AZ::Script::Attributes::Category, "ROS2")
+                ->Event("GetLatestTransform", &TFInterfaceRequests::GetLatestTransform)
+                ->Event(
+                    "PublishTransform",
+                    &TFInterfaceRequests::PublishTransform,
+                    { { { "Source Frame", "" }, { "Target Frame", "" }, { "Transform", "" }, { "Is Dynamic", "" } } });
         }
     }
 
@@ -93,10 +103,18 @@ namespace ROS2
         {
             ROS2Interface::Register(this);
         }
+        if (TFInterface::Get() == nullptr)
+        {
+            TFInterface::Register(this);
+        }
     }
 
     ROS2SystemComponent::~ROS2SystemComponent()
     {
+        if (TFInterface::Get() == this)
+        {
+            TFInterface::Unregister(this);
+        }
         if (ROS2Interface::Get() == this)
         {
             ROS2Interface::Unregister(this);
@@ -109,10 +127,11 @@ namespace ROS2
         rclcpp::init(0, 0);
 
         // handle signals, e.g. via `Ctrl+C` hotkey or `kill` command
-        auto handler = [](int sig){
+        auto handler = [](int sig)
+        {
             rclcpp::shutdown(); // shutdown rclcpp
             std::raise(sig); // shutdown o3de
-            };
+        };
         signal(SIGINT, handler);
         signal(SIGTERM, handler);
     }
@@ -149,7 +168,8 @@ namespace ROS2
                 return;
             }
         }
-        AZ_Info("ROS2SystemComponent", "Cannot read registry or the clock type '%s' is unknown, enabling simulation clock.", clockType.c_str());
+        AZ_Info(
+            "ROS2SystemComponent", "Cannot read registry or the clock type '%s' is unknown, enabling simulation clock.", clockType.c_str());
         m_simulationClock = AZStd::make_unique<ROS2Clock>(clocksMap["simulation"](), publishClock);
     }
 
@@ -165,22 +185,31 @@ namespace ROS2
         m_dynamicTFBroadcaster = AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Node);
 
         ROS2RequestBus::Handler::BusConnect();
+
+        // setup tf2 buffer and listener
+        m_tfBuffer = AZStd::make_shared<tf2_ros::Buffer>(m_ros2Node->get_clock());
+        m_tfListener = AZStd::make_shared<tf2_ros::TransformListener>(*m_tfBuffer);
+
         AZ::TickBus::Handler::BusConnect();
+        TFInterfaceBus::Handler::BusConnect();
         m_nodeChangedEvent.Signal(m_ros2Node);
     }
 
     void ROS2SystemComponent::Deactivate()
     {
+        TFInterfaceBus::Handler::BusDisconnect();
         AZ::TickBus::Handler::BusDisconnect();
         ROS2RequestBus::Handler::BusDisconnect();
-        if (m_simulationClock) {
+        if (m_simulationClock)
+        {
             m_simulationClock->Deactivate();
         }
         m_dynamicTFBroadcaster.reset();
         m_staticTFBroadcaster.reset();
         if (m_executor)
         {
-            if (m_ros2Node) {
+            if (m_ros2Node)
+            {
                 m_executor->remove_node(m_ros2Node);
             }
             m_executor.reset();
@@ -253,4 +282,58 @@ namespace ROS2
     {
         return m_simulationLoopTimeMedian;
     }
+
+    AZ::Outcome<AZ::Transform, AZStd::string> ROS2SystemComponent::GetTransform(
+        const AZStd::string& source, const AZStd::string& target, const builtin_interfaces::msg::Time& time)
+    {
+        AZ_Error("ROS2SystemComponent", m_tfBuffer, "This component was not activated, tf is not available");
+        if (!m_tfBuffer)
+        {
+            return AZ::Failure("Component was not activated, TFInterface is not available.");
+        }
+
+        AZ_Assert(m_tfBuffer, "ROS2 TF buffer is not initialized.");
+        try
+        {
+            const auto transform = m_tfBuffer->lookupTransform(source.c_str(), target.c_str(), time);
+            const auto q = ROS2Conversions::FromROS2Quaternion(transform.transform.rotation);
+            const auto t = ROS2Conversions::FromROS2Vector3(transform.transform.translation);
+            return AZ::Transform::CreateFromQuaternionAndTranslation(q, t);
+
+        } catch (const tf2::TransformException& ex)
+        {
+            return AZ::Failure(
+                AZStd::string::format("Failed to get transform from %s to %s: %s", source.c_str(), target.c_str(), ex.what()));
+        }
+    }
+
+    AZ::Transform ROS2SystemComponent::GetLatestTransform(const AZStd::string& source, const AZStd::string& target)
+    {
+        const auto result = GetTransform(source, target, builtin_interfaces::msg::Time());
+        if (result.IsSuccess())
+        {
+            return AZ::Transform(result.GetValue());
+        }
+        AZ_Warning(
+            "ROS2SystemComponent",
+            false,
+            "Failed to get latest transform from %s to %s: %s",
+            source.c_str(),
+            target.c_str(),
+            result.GetError().c_str());
+        return AZ::Transform::CreateIdentity();
+    }
+
+    void ROS2SystemComponent::PublishTransform(
+        const AZStd::string& source, const AZStd::string& target, const AZ::Transform& transform, bool isDynamic)
+    {
+        geometry_msgs::msg::TransformStamped t;
+        t.header.stamp = GetROSTimestamp();
+        t.header.frame_id = source.c_str();
+        t.child_frame_id = target.c_str();
+        t.transform.rotation = ROS2Conversions::ToROS2Quaternion(transform.GetRotation());
+        t.transform.translation = ROS2Conversions::ToROS2Vector3(transform.GetTranslation());
+        BroadcastTransform(t, isDynamic);
+    }
+
 } // namespace ROS2
