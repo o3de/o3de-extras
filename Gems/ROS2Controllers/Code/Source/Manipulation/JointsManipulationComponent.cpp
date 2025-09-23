@@ -52,9 +52,8 @@ namespace ROS2Controllers
                 return;
             }
 
-            PhysX::ArticulationJointAxis freeAxis;
-            const bool hasFreeAxis = Utils::TryGetFreeArticulationAxis(idPair.GetEntityId(), freeAxis);
-            if (!hasFreeAxis)
+            const auto freeAxis = Utils::TryGetFreeArticulationAxis(idPair.GetEntityId());
+            if (!freeAxis.has_value())
             { // Do not add a joint since it is a fixed one
                 return;
             }
@@ -68,7 +67,7 @@ namespace ROS2Controllers
 
             JointInfo jointInfo;
             jointInfo.m_isArticulation = true;
-            jointInfo.m_axis = freeAxis;
+            jointInfo.m_axis = freeAxis.value();
             jointInfo.m_entityComponentIdPair = idPair;
             joints[jointName] = jointInfo;
         }
