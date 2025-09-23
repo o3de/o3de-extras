@@ -116,7 +116,7 @@ namespace ROS2Controllers
             ROS2::ROS2FrameComponent* component = entity->FindComponent<ROS2::ROS2FrameComponent>();
             if (!component)
             {
-                break;
+                continue;
             }
 
             const auto jointName = component->GetNamespacedJointName();
