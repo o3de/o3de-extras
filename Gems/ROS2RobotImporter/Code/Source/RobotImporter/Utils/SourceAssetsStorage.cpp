@@ -325,26 +325,15 @@ namespace ROS2RobotImporter::Utils
     UrdfAssetMap FindReferencedAssets(
         const AssetFilenameReferences& assetFilenames, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
-        auto amentPrefixPath = Utils::GetAmentPrefixPath();
-
-        UrdfAssetMap urdfToAsset;
-        for (const auto& [assetPath, assetReferenceType] : assetFilenames)
-        {
-            Utils::UrdfAsset asset;
-            asset.m_urdfPath = assetPath;
-            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(asset.m_urdfPath, urdfFilepath, amentPrefixPath, sdfBuilderSettings);
-            asset.m_urdfFileCRC = Utils::GetFileCRC(asset.m_resolvedUrdfPath);
-            urdfToAsset.emplace(assetPath, AZStd::move(asset));
-        }
-
-        if (!urdfToAsset.empty())
+        auto urdfAssetMap = CreateAssetMap(assetFilenames, urdfFilepath, sdfBuilderSettings);
+        if (!urdfAssetMap.empty())
         {
             AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Utils::GetInterestingSourceAssetsCRC();
 
             // Search for suitable mappings by comparing checksum
-            for (auto it = urdfToAsset.begin(); it != urdfToAsset.end(); it++)
+            for (auto& [unresolvedFileName, asset] : urdfAssetMap)
             {
-                Utils::UrdfAsset& asset = it->second;
+                asset.m_urdfFileCRC = Utils::GetFileCRC(asset.m_resolvedUrdfPath);
                 auto found_source_asset = availableAssets.find(asset.m_urdfFileCRC);
                 if (found_source_asset != availableAssets.end())
                 {
@@ -353,7 +342,7 @@ namespace ROS2RobotImporter::Utils
             }
         }
 
-        return urdfToAsset;
+        return urdfAssetMap;
     }
 
     bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, const bool collider, const bool visual)
@@ -473,13 +462,9 @@ namespace ROS2RobotImporter::Utils
     UrdfAssetMap CreateAssetMap(
         const AssetFilenameReferences& assetFilenames, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
-        UrdfAssetMap urdfAssetMap;
-        if (assetFilenames.empty())
-        {
-            return urdfAssetMap;
-        }
-
         auto amentPrefixPath = Utils::GetAmentPrefixPath();
+
+        UrdfAssetMap urdfAssetMap;
         for (const auto& [unresolvedFileName, assetReferenceType] : assetFilenames)
         {
             Utils::UrdfAsset asset;
