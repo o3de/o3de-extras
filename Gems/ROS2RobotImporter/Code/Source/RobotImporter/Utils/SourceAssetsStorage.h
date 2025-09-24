@@ -117,13 +117,11 @@ namespace ROS2RobotImporter::Utils
     //! - Function scans all available O3DE assets by calling `GetInterestingSourceAssetsCRC`.
     //! - Suitable mapping to the O3DE asset is found by comparing the checksum of the file pointed by the URDF path and source asset.
     //! @param assetFilenames - list of the unresolved paths from the SDF/URDF file that are to be found as assets
-    //! @param urdfFilename - filename of URDF file, used for resolving paths
+    //! @param urdfFilepath - path of URDF file, used for resolving paths of referenced assets
     //! @param sdfBuilderSettings - the builder settings that should be used to resolve paths
     //! @returns a URDF Asset map where the key is unresolved URDF path to AvailableAsset
     UrdfAssetMap FindReferencedAssets(
-        const AssetFilenameReferences& assetFilenames,
-        const AZStd::string& urdfFilename,
-        const SdfAssetBuilderSettings& sdfBuilderSettings);
+        const AssetFilenameReferences& assetFilenames, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings);
 
     //! Helper function that gets all the potential primary product asset paths from the source asset GUID
     //! @param sourceAssetUUID is source asset GUID
@@ -172,27 +170,25 @@ namespace ROS2RobotImporter::Utils
     //! It resolves every asset, creates a directory in Project's Asset directory, copies files, and prepares assets info.
     //! Finally, it assembles its results into mapping that allows mapping the SDF/URDF mesh name to the source asset.
     //! @param assetFilenames - files to copy (as unresolved urdf paths)
-    //! @param urdfFilename - path to URDF file (as a global path)
+    //! @param urdfFilepath - path to URDF file (as a global path)
     //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
     //! @param outputDirSuffix - suffix to make output directory unique, if xacro file was used
     //! @param fileIO - instance to fileIO class
     //! @returns mapping from unresolved urdf paths to source asset info
     UrdfAssetMap CopyReferencedAssetsAndCreateAssetMap(
         const AssetFilenameReferences& assetFilenames,
-        const AZStd::string& urdfFilename,
+        const AZ::IO::Path& urdfFilepath,
         const SdfAssetBuilderSettings& sdfBuilderSettings,
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
     //! Creates a mapping from unresolved URDF paths to source asset info.
     //! @param assetFilenames - files to copy (as unresolved urdf paths)
-    //! @param urdfFilename - path to URDF file (as a global path)
+    //! @param urdfFilepath - path to URDF file (as a global path)
     //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
     //! @returns mapping from unresolved urdf paths to source asset info
     UrdfAssetMap CreateAssetMap(
-        const AssetFilenameReferences& assetFilenames,
-        const AZStd::string& urdfFilename,
-        const SdfAssetBuilderSettings& sdfBuilderSettings);
+        const AssetFilenameReferences& assetFilenames, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings);
 
     //! Copies and prepares asset that is referenced in SDF/URDF.
     //! Modifies urdfAsset in place.
@@ -210,12 +206,12 @@ namespace ROS2RobotImporter::Utils
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
     //! Prepares temporary and final directory for imported assets.
-    //! @param urdfFilename - path to URDF file (as a global path)
+    //! @param urdfFilepath - path to URDF file (as a global path)
     //! @param outputDirSuffix - name of the output directory
     //! @param fileIO - instance to fileIO class
     //! @returns structure containing paths to temporary and final directory for imported assets, or failure if failed to create.
     AZ::Outcome<ImportedAssetsDest> PrepareImportedAssetsDest(
-        const AZStd::string& urdfFilename,
+        const AZ::IO::Path& urdfFilepath,
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 

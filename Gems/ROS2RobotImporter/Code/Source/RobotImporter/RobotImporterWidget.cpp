@@ -341,12 +341,12 @@ namespace ROS2RobotImporter
             if (m_importAssetWithUrdf)
             {
                 m_urdfAssetsMapping =
-                    AZStd::make_shared<Utils::UrdfAssetMap>(Utils::CreateAssetMap(m_assetNames, m_urdfPath.String(), sdfBuilderSettings));
+                    AZStd::make_shared<Utils::UrdfAssetMap>(Utils::CreateAssetMap(m_assetNames, m_urdfPath, sdfBuilderSettings));
             }
             else
             {
-                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                    Utils::FindReferencedAssets(m_assetNames, m_urdfPath.String(), sdfBuilderSettings));
+                m_urdfAssetsMapping =
+                    AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindReferencedAssets(m_assetNames, m_urdfPath, sdfBuilderSettings));
                 for (const auto& [assetPath, assetReferenceType] : m_assetNames)
                 {
                     if (m_urdfAssetsMapping->contains(assetPath))
