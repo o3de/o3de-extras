@@ -286,19 +286,19 @@ namespace ROS2RobotImporter::Utils
 
     UrdfAssetMap CopyReferencedAssetsAndCreateAssetMap(
         const AssetFilenameReferences& assetFilenames,
-        const AZStd::string& urdfFilename,
+        const AZ::IO::Path& urdfFilepath,
         const SdfAssetBuilderSettings& sdfBuilderSettings,
         AZStd::string_view outputDirSuffix,
         AZ::IO::FileIOBase* fileIO)
     {
-        auto urdfAssetMap = CreateAssetMap(assetFilenames, urdfFilename, sdfBuilderSettings);
+        auto urdfAssetMap = CreateAssetMap(assetFilenames, urdfFilepath, sdfBuilderSettings);
         AZStd::mutex urdfAssetMapMutex;
         if (urdfAssetMap.empty())
         {
             return urdfAssetMap;
         }
 
-        auto destDirectory = PrepareImportedAssetsDest(urdfFilename, outputDirSuffix, fileIO);
+        auto destDirectory = PrepareImportedAssetsDest(urdfFilepath, outputDirSuffix, fileIO);
         if (!destDirectory.IsSuccess())
         {
             return urdfAssetMap;
@@ -323,7 +323,7 @@ namespace ROS2RobotImporter::Utils
     }
 
     UrdfAssetMap FindReferencedAssets(
-        const AssetFilenameReferences& assetFilenames, const AZStd::string& urdfFilename, const SdfAssetBuilderSettings& sdfBuilderSettings)
+        const AssetFilenameReferences& assetFilenames, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
         auto amentPrefixPath = Utils::GetAmentPrefixPath();
 
@@ -332,8 +332,7 @@ namespace ROS2RobotImporter::Utils
         {
             Utils::UrdfAsset asset;
             asset.m_urdfPath = assetPath;
-            asset.m_resolvedUrdfPath =
-                Utils::ResolveAssetPath(asset.m_urdfPath, AZ::IO::PathView(urdfFilename), amentPrefixPath, sdfBuilderSettings);
+            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(asset.m_urdfPath, urdfFilepath, amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = Utils::GetFileCRC(asset.m_resolvedUrdfPath);
             urdfToAsset.emplace(assetPath, AZStd::move(asset));
         }
@@ -472,7 +471,7 @@ namespace ROS2RobotImporter::Utils
     }
 
     UrdfAssetMap CreateAssetMap(
-        const AssetFilenameReferences& assetFilenames, const AZStd::string& urdfFilename, const SdfAssetBuilderSettings& sdfBuilderSettings)
+        const AssetFilenameReferences& assetFilenames, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
         UrdfAssetMap urdfAssetMap;
         if (assetFilenames.empty())
@@ -485,8 +484,7 @@ namespace ROS2RobotImporter::Utils
         {
             Utils::UrdfAsset asset;
             asset.m_urdfPath = unresolvedFileName;
-            asset.m_resolvedUrdfPath =
-                Utils::ResolveAssetPath(unresolvedFileName, AZ::IO::PathView(urdfFilename), amentPrefixPath, sdfBuilderSettings);
+            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(unresolvedFileName, urdfFilepath, amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = AZ::Crc32();
             asset.m_assetReferenceType = assetReferenceType;
             urdfAssetMap.emplace(unresolvedFileName, AZStd::move(asset));
@@ -496,18 +494,17 @@ namespace ROS2RobotImporter::Utils
     }
 
     AZ::Outcome<ImportedAssetsDest> PrepareImportedAssetsDest(
-        const AZStd::string& urdfFilename, AZStd::string_view outputDirSuffix, AZ::IO::FileIOBase* fileIO)
+        const AZ::IO::Path& urdfFilepath, AZStd::string_view outputDirSuffix, AZ::IO::FileIOBase* fileIO)
     {
         AZ_Assert(fileIO, "No FileIO instance");
         AZ::Crc32 urdfFileCrc;
-        urdfFileCrc.Add(urdfFilename);
-        const AZ::IO::Path urdfPath(urdfFilename);
+        urdfFileCrc.Add(urdfFilepath.c_str(), urdfFilepath.Native().size());
 
         // By naming the temp directory '$tmp_*', the default configuration in AssetProcessorPlatformConfig.setreg will
         // exclude these files from processing.
         const AZStd::string directoryNameTmp = AZStd::string::format("$tmp_%u.tmp", AZ::u32(urdfFileCrc));
         const auto directoryNameDst = AZ::IO::FixedMaxPathString::format(
-            "%u_%.*s%.*s", AZ::u32(urdfFileCrc), AZ_PATH_ARG(urdfPath.Stem()), AZ_STRING_ARG(outputDirSuffix));
+            "%u_%.*s%.*s", AZ::u32(urdfFileCrc), AZ_PATH_ARG(urdfFilepath.Stem()), AZ_STRING_ARG(outputDirSuffix));
 
         const AZ::IO::Path importDirectoryTmp = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "UrdfImporter" / directoryNameTmp;
         const AZ::IO::Path importDirectoryDst = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "UrdfImporter" / directoryNameDst;
