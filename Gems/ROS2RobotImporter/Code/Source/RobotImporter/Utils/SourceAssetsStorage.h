@@ -74,9 +74,6 @@ namespace ROS2RobotImporter::Utils
         //! Resolved URDF path, points to the valid mesh in the filesystem, eg `/home/user/ros_ws/src/foo_robot/meshes/bar_link.dae'
         AZ::IO::Path m_resolvedUrdfPath;
 
-        //! Unresolved file name, points to the valid mesh in the filesystem
-        AZStd::string m_unresolvedFileName;
-
         //! Checksum of the file located pointed by `m_resolvedUrdfPath`.
         AZ::Crc32 m_urdfFileCRC;
 
@@ -114,14 +111,13 @@ namespace ROS2RobotImporter::Utils
     AZStd::unordered_map<AZ::Crc32, AvailableAsset> GetInterestingSourceAssetsCRC();
 
     //! Discover an association between meshes in URDF and O3DE source and product assets.
-    //! The @param meshesFilenames contains the list of unresolved URDF filenames that are to be found as assets.
     //! Steps:
     //! - Functions resolves URDF filenames with `ResolveAssetPath`.
-    //! - Files pointed by resolved URDF patches have their checksum computed `GetFileCRC`.
+    //! - Files pointed by resolved URDF paths have their checksum computed `GetFileCRC`.
     //! - Function scans all available O3DE assets by calling `GetInterestingSourceAssetsCRC`.
     //! - Suitable mapping to the O3DE asset is found by comparing the checksum of the file pointed by the URDF path and source asset.
-    //! @param assetFilenames - list of the unresolved paths from the SDF/URDF file
-    //! @param urdfFilename - filename of URDF file, used for resolvement
+    //! @param assetFilenames - list of the unresolved paths from the SDF/URDF file that are to be found as assets
+    //! @param urdfFilename - filename of URDF file, used for resolving paths
     //! @param sdfBuilderSettings - the builder settings that should be used to resolve paths
     //! @returns a URDF Asset map where the key is unresolved URDF path to AvailableAsset
     UrdfAssetMap FindReferencedAssets(

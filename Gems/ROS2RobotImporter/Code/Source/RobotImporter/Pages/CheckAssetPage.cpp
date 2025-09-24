@@ -143,7 +143,6 @@ namespace ROS2RobotImporter
     void CheckAssetPage::ClearAssetsList()
     {
         m_assetsToColumnIndex.clear();
-        m_assetsPaths.clear();
         m_table->setRowCount(0);
         m_missingCount = 0;
         m_failedCount = 0;
