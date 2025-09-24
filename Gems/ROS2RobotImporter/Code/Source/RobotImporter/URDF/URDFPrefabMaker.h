@@ -34,13 +34,11 @@ namespace ROS2RobotImporter
     {
     public:
         //! Construct PrefabMaker from arguments.
-        //! @param modelFilePath path to the source URDF/SDF model or world.
         //! @param root parsed SDF root object.
         //! @param prefabPath path to the prefab which will be created as a result of import.
         //! @param urdfAssetsMapping prepared mapping of SDF meshes to Assets.
         //! @param useArticulations allows sdfImporter to create PhysXArticulations instead of multiple rigid bodies and joints.
         URDFPrefabMaker(
-            const AZStd::string& modelFilePath,
             const sdf::Root* root,
             AZStd::string prefabPath,
             const AZStd::shared_ptr<Utils::UrdfAssetMap> sdfAssetsMapping,
@@ -106,7 +104,6 @@ namespace ROS2RobotImporter
         AZStd::multimap<StatusMessageType, AZStd::string> m_status;
         unsigned int m_articulationsCounter{ 0u };
 
-        AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
         bool m_useArticulations{ false };
 
         const AZStd::optional<AZ::Transform> m_spawnPosition;
