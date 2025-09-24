@@ -489,7 +489,6 @@ namespace ROS2RobotImporter::Utils
                 Utils::ResolveAssetPath(unresolvedFileName, AZ::IO::PathView(urdfFilename), amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = AZ::Crc32();
             asset.m_assetReferenceType = assetReferenceType;
-            asset.m_unresolvedFileName = unresolvedFileName;
             urdfAssetMap.emplace(unresolvedFileName, AZStd::move(asset));
         }
 
