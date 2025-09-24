@@ -282,8 +282,7 @@ namespace ROS2RobotImporter
 
         // Given the parsed source file and asset mappings, generate an in-memory prefab.
         AZ_Info(SdfAssetBuilderName, "Creating prefab from source file.");
-        auto prefabMaker =
-            AZStd::make_unique<URDFPrefabMaker>(request.m_fullPath, &sdfRoot, tempAssetOutputPath.String(), assetMap, useArticulation);
+        auto prefabMaker = AZStd::make_unique<URDFPrefabMaker>(&sdfRoot, tempAssetOutputPath.String(), assetMap, useArticulation);
         auto prefabResult = prefabMaker->CreatePrefabTemplateFromUrdfOrSdf();
         if (!prefabResult.IsSuccess())
         {

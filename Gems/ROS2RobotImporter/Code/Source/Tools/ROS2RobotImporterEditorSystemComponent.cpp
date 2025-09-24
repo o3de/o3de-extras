@@ -234,7 +234,7 @@ namespace ROS2RobotImporter
         const AZ::IO::Path prefabPathRelative(AZ::IO::Path("Assets") / "Importer" / prefabName);
         const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRelative);
         AZStd::unique_ptr<URDFPrefabMaker> prefabMaker =
-            AZStd::make_unique<URDFPrefabMaker>(filePath, &parsedSdfRoot, prefabPath.String(), urdfAssetsMapping, useArticulation);
+            AZStd::make_unique<URDFPrefabMaker>(&parsedSdfRoot, prefabPath.String(), urdfAssetsMapping, useArticulation);
 
         auto prefabOutcome = prefabMaker->CreatePrefabFromUrdfOrSdf();
 

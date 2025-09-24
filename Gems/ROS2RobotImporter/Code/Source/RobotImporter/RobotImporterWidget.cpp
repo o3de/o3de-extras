@@ -623,12 +623,7 @@ namespace ROS2RobotImporter
         const auto& sdfAssetBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
         const bool useArticulation = sdfAssetBuilderSettings.m_useArticulations;
         m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
-            m_urdfPath.String(),
-            &m_parsedSdf,
-            prefabPath.String(),
-            m_urdfAssetsMapping,
-            useArticulation,
-            m_prefabMakerPage->getSelectedSpawnPoint());
+            &m_parsedSdf, prefabPath.String(), m_urdfAssetsMapping, useArticulation, m_prefabMakerPage->getSelectedSpawnPoint());
 
         auto prefabOutcome = m_prefabMaker->CreatePrefabFromUrdfOrSdf();
         if (prefabOutcome.IsSuccess())
