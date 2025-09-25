@@ -56,6 +56,8 @@ namespace ROS2Controllers
         //! @param deltaTimeNs frame time step, to advance trajectory by.
         void FollowTrajectory(const uint64_t deltaTimeNs);
         AZ::Outcome<void, TrajectoryResult> ValidateGoal(TrajectoryGoalPtr trajectoryGoal);
+        bool CheckIfPositionReachedTolerance(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint);
+        bool CheckIfVelocityReachedTolerance();
         void MoveToNextPoint(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint);
         void UpdateFeedback();
 
@@ -69,5 +71,13 @@ namespace ROS2Controllers
         rclcpp::Time m_trajectoryExecutionStartTime;
         ManipulationJoints m_manipulationJoints;
         builtin_interfaces::msg::Time m_lastTickTimestamp; //!< ROS 2 Timestamp during last OnTick call
+
+        bool m_checkForPositionErrors = false; //!< If true, check if joints reached the goal position before reporting success
+        float m_jointPositionTolerance = 0.04f; //!< The threshold for joint position errors to report the goal as reached
+        bool ShouldCheckForPositionErrors();
+
+        bool m_checkForVelocity = false; //!< If true, check if joints velocity is below threshold before reporting success
+        float m_jointVelocityTolerance = 0.01f; //!< The threshold for joint velocities under which to report the goal as reached
+        bool ShouldCheckForVelocity();
     };
 } // namespace ROS2Controllers
