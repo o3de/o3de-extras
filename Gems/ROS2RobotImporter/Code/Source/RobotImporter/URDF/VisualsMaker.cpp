@@ -177,7 +177,7 @@ namespace ROS2RobotImporter
                 const AZ::Vector3 scaleVector = URDF::TypeConversions::ConvertVector3(meshGeometry->Scale());
 
                 const auto asset =
-                    PrefabMakerUtils::GetAssetFromPath(*m_urdfAssetsMapping, modelUri, AZStd::string(meshGeometry->Uri().c_str()));
+                    PrefabMakerUtils::GetAssetFromUri(*m_urdfAssetsMapping, modelUri, AZStd::string(meshGeometry->Uri().c_str()));
                 AZ_Warning("AddVisual", asset, "There is no source asset for %s.", meshGeometry->Uri().c_str());
 
                 if (asset)
@@ -313,7 +313,7 @@ namespace ROS2RobotImporter
                 auto GetImageAssetIdFromPath = [&assetMapping, &modelUri](const std::string& uri) -> AZ::Data::AssetId
                 {
                     AZ::Data::AssetId assetId;
-                    const auto asset = PrefabMakerUtils::GetAssetFromPath(*assetMapping, modelUri, uri);
+                    const auto asset = PrefabMakerUtils::GetAssetFromUri(*assetMapping, modelUri, uri);
                     AZ_Warning("AddVisual", asset, "There is no source image asset for %s.", uri.c_str());
 
                     if (asset)

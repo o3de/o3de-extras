@@ -464,8 +464,8 @@ namespace ROS2RobotImporter::Utils
 
         for (auto& [unresolvedFileName, asset] : unresolvedAssetMap)
         {
-            asset.m_urdfPath = unresolvedFileName;
-            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(asset.m_urdfPath, urdfFilepath, amentPrefixPath, sdfBuilderSettings);
+            asset.m_assetUri = unresolvedFileName;
+            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(asset.m_assetUri, urdfFilepath, amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = AZ::Crc32();
         }
     }
@@ -567,10 +567,8 @@ namespace ROS2RobotImporter::Utils
                 // call FlushIOOfAsset to ensure the asset processor is aware of the new file
                 FlushIOOfAsset(targetPathAssetTmp);
 
-                const bool needsVisual =
-                    (urdfAsset.m_assetReferenceType & ReferencedAssetType::VisualMesh) == ReferencedAssetType::VisualMesh;
-                const bool needsCollider =
-                    (urdfAsset.m_assetReferenceType & ReferencedAssetType::ColliderMesh) == ReferencedAssetType::ColliderMesh;
+                const bool needsVisual = (urdfAsset.m_assetType & ReferencedAssetType::VisualMesh) == ReferencedAssetType::VisualMesh;
+                const bool needsCollider = (urdfAsset.m_assetType & ReferencedAssetType::ColliderMesh) == ReferencedAssetType::ColliderMesh;
                 const bool isMeshFile = (needsVisual || needsCollider);
 
                 // if the asset is a mesh, create asset info at destination location using the temporary mesh file
@@ -636,7 +634,7 @@ namespace ROS2RobotImporter::Utils
         {
             urdfAsset.m_availableAssetInfo = Utils::GetAvailableAssetInfo(targetPathAssetDst.String());
         }
-        urdfAsset.m_urdfPath = "";
+        urdfAsset.m_assetUri = "";
         urdfAsset.m_urdfFileCRC = AZ::Crc32();
 
         return urdfAsset.m_copyStatus;

@@ -137,7 +137,7 @@ namespace ROS2RobotImporter
             auto meshGeometry = geometry->MeshShape();
             AZ_Assert(meshGeometry, "geometry is not meshGeometry");
 
-            auto asset = PrefabMakerUtils::GetAssetFromPath(*m_urdfAssetsMapping, modelUri, meshGeometry->Uri());
+            auto asset = PrefabMakerUtils::GetAssetFromUri(*m_urdfAssetsMapping, modelUri, meshGeometry->Uri());
             if (!asset)
             {
                 return;

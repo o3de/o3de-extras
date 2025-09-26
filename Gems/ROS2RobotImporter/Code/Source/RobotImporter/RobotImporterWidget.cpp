@@ -338,19 +338,18 @@ namespace ROS2RobotImporter
             // Read the SDF Settings from PrefabMakerPage
             const SdfAssetBuilderSettings& sdfBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
 
-            if (m_importAssetWithUrdf)
+            if (m_copyReferencedAssets)
             {
                 Utils::CreateAssetMap(*m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
             }
             else
             {
                 Utils::FindReferencedAssets(*m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
-                for (const auto& [assetPath, asset] : *m_urdfAssetsMapping)
+                for (const auto& [_, asset] : *m_urdfAssetsMapping)
                 {
-                    bool visual =
-                        (asset.m_assetReferenceType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                    bool visual = (asset.m_assetType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
                     bool collider =
-                        (asset.m_assetReferenceType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
+                        (asset.m_assetType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
                     if (visual || collider)
                     {
                         Utils::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
@@ -358,16 +357,13 @@ namespace ROS2RobotImporter
                 }
             };
 
-            for (auto& [unresolvedFileName, urdfAsset] : *m_urdfAssetsMapping)
+            for (auto& [unresolvedFileName, asset] : *m_urdfAssetsMapping)
             {
                 QString type = tr("Unknown");
 
-                bool visual =
-                    (urdfAsset.m_assetReferenceType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
-                bool collider =
-                    (urdfAsset.m_assetReferenceType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
-                bool texture =
-                    (urdfAsset.m_assetReferenceType & Utils::ReferencedAssetType::Texture) == Utils::ReferencedAssetType::Texture;
+                bool visual = (asset.m_assetType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                bool collider = (asset.m_assetType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
+                bool texture = (asset.m_assetType & Utils::ReferencedAssetType::Texture) == Utils::ReferencedAssetType::Texture;
                 if (visual && collider)
                 {
                     type = tr("Visual and Collider Mesh");
@@ -385,10 +381,10 @@ namespace ROS2RobotImporter
                     type = tr("Texture");
                 }
 
-                m_assetPage->ReportAsset(unresolvedFileName.c_str(), urdfAsset, type);
+                m_assetPage->ReportAsset(unresolvedFileName.c_str(), asset, type);
             }
             m_refreshTimerCheckAssets->start();
-            if (m_importAssetWithUrdf)
+            if (m_copyReferencedAssets)
             {
                 m_copyReferencedAssetsThread = AZStd::make_shared<AZStd::thread>(
                     [this, dirSuffix]()
@@ -514,16 +510,16 @@ namespace ROS2RobotImporter
                 m_xacroParamsPage->SetXacroParameters(m_params);
             }
             // no need to wait for param page - parse urdf now, nextId will skip unnecessary pages
-            if (const bool isFileXacroUrdfOrSdf = Utils::IsFileXacroOrUrdfOrSdf(m_urdfPath); m_params.empty() && isFileXacroUrdfOrSdf)
+            if (m_params.empty() && Utils::IsFileXacroOrUrdfOrSdf(m_urdfPath))
             {
                 OpenUrdf();
             }
-            m_importAssetWithUrdf = m_fileSelectPage->GetSdfAssetBuilderSettings().m_importReferencedMeshFiles;
+            m_copyReferencedAssets = m_fileSelectPage->GetSdfAssetBuilderSettings().m_importReferencedMeshFiles;
         }
         if (currentPage() == m_xacroParamsPage)
         {
             m_params = m_xacroParamsPage->GetXacroParameters();
-            if (const bool isFileXacroUrdfOrSdf = Utils::IsFileXacroOrUrdfOrSdf(m_urdfPath); isFileXacroUrdfOrSdf)
+            if (Utils::IsFileXacroOrUrdfOrSdf(m_urdfPath))
             {
                 OpenUrdf();
             }
