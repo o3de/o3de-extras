@@ -68,6 +68,12 @@ namespace ROS2RobotImporter::Utils
     //! The structure contains a mapping between URDF's path to O3DE asset information.
     struct UrdfAsset
     {
+        UrdfAsset() = default;
+        UrdfAsset(ReferencedAssetType assetType)
+            : m_assetReferenceType(assetType)
+        {
+        }
+
         //! Unresolved URDF path to mesh, eg `package://meshes/bar_link.dae`.
         AZ::IO::Path m_urdfPath;
 
@@ -97,9 +103,6 @@ namespace ROS2RobotImporter::Utils
         AZ::IO::Path importDirectoryDst;
     };
 
-    //! Maps unresolved URI asset references to the type of reference(s) - mesh, texture, etc.
-    using AssetFilenameReferences = AZStd::unordered_map<AZStd::string, ReferencedAssetType>;
-
     /// Type that hold result of mapping from URDF path to asset info
     using UrdfAssetMap = AZStd::unordered_map<AZ::IO::Path, Utils::UrdfAsset>;
 
@@ -116,12 +119,12 @@ namespace ROS2RobotImporter::Utils
     //! - Files pointed by resolved URDF paths have their checksum computed `GetFileCRC`.
     //! - Function scans all available O3DE assets by calling `GetInterestingSourceAssetsCRC`.
     //! - Suitable mapping to the O3DE asset is found by comparing the checksum of the file pointed by the URDF path and source asset.
-    //! @param assetFilenames - list of the unresolved paths from the SDF/URDF file that are to be found as assets
+    //! @param unresolvedAssetMap - list of the unresolved paths from the SDF/URDF file that are to be found as assets
     //! @param urdfFilepath - path of URDF file, used for resolving paths of referenced assets
     //! @param sdfBuilderSettings - the builder settings that should be used to resolve paths
     //! @returns a URDF Asset map where the key is unresolved URDF path to AvailableAsset
-    UrdfAssetMap FindReferencedAssets(
-        const AssetFilenameReferences& assetFilenames, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings);
+    void FindReferencedAssets(
+        UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings);
 
     //! Helper function that gets all the potential primary product asset paths from the source asset GUID
     //! @param sourceAssetUUID is source asset GUID
@@ -169,26 +172,26 @@ namespace ROS2RobotImporter::Utils
     //! Copies and prepares assets that are referenced in SDF/URDF.
     //! It resolves every asset, creates a directory in Project's Asset directory, copies files, and prepares assets info.
     //! Finally, it assembles its results into mapping that allows mapping the SDF/URDF mesh name to the source asset.
-    //! @param assetFilenames - files to copy (as unresolved urdf paths)
+    //! @param urdfAssetMap - files to copy (as unresolved urdf paths)
     //! @param urdfFilepath - path to URDF file (as a global path)
     //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
     //! @param outputDirSuffix - suffix to make output directory unique, if xacro file was used
     //! @param fileIO - instance to fileIO class
     //! @returns mapping from unresolved urdf paths to source asset info
-    UrdfAssetMap CopyReferencedAssetsAndCreateAssetMap(
-        const AssetFilenameReferences& assetFilenames,
+    void CopyReferencedAssetsAndCreateAssetMap(
+        UrdfAssetMap& urdfAssetMap,
         const AZ::IO::Path& urdfFilepath,
         const SdfAssetBuilderSettings& sdfBuilderSettings,
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
     //! Creates a mapping from unresolved URDF paths to source asset info.
-    //! @param assetFilenames - files to copy (as unresolved urdf paths)
+    //! @param unresolvedAssetMap - files to copy (as unresolved urdf paths)
     //! @param urdfFilepath - path to URDF file (as a global path)
     //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
     //! @returns mapping from unresolved urdf paths to source asset info
-    UrdfAssetMap CreateAssetMap(
-        const AssetFilenameReferences& assetFilenames, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings);
+    void CreateAssetMap(
+        UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings);
 
     //! Copies and prepares asset that is referenced in SDF/URDF.
     //! Modifies urdfAsset in place.

@@ -86,7 +86,6 @@ namespace ROS2RobotImporter
         AZStd::shared_ptr<AZStd::thread> m_copyReferencedAssetsThread;
 
         AZStd::unique_ptr<URDFPrefabMaker> m_prefabMaker;
-        Utils::AssetFilenameReferences m_assetNames;
 
         /// Xacro params
         Utils::xacro::Params m_params;

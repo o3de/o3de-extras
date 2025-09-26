@@ -86,15 +86,15 @@ namespace ROS2RobotImporter
     Utils::UrdfAssetMap SdfAssetBuilder::FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const
     {
         AZ_Info(SdfAssetBuilderName, "Parsing mesh and collider names");
-        auto assetNames = Utils::GetReferencedAssetFilenames(root);
 
-        Utils::UrdfAssetMap assetMap;
+        Utils::UrdfAssetMap allReferencedAssets = Utils::GetReferencedAssetFilenames(root);
+        Utils::UrdfAssetMap existingReferencedAssets;
 
         using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
 
         auto amentPrefixPath = Utils::GetAmentPrefixPath();
 
-        for (const auto& [uri, assetReferenceType] : assetNames)
+        for (const auto& [uri, assetReferenceType] : allReferencedAssets)
         {
             Utils::UrdfAsset asset;
             asset.m_urdfPath = uri;
@@ -144,7 +144,7 @@ namespace ROS2RobotImporter
             if (crc == asset.m_urdfFileCRC)
             {
                 AZ_Info(SdfAssetBuilderName, "Resolved uri '%s' to source asset '%s'.", uri.c_str(), assetInfo.m_relativePath.c_str());
-                assetMap.emplace(uri, AZStd::move(asset));
+                existingReferencedAssets.emplace(uri, AZStd::move(asset));
             }
             else
             {
@@ -156,7 +156,7 @@ namespace ROS2RobotImporter
             }
         }
 
-        return assetMap;
+        return existingReferencedAssets;
     }
 
     AZStd::string SdfAssetBuilder::GetFingerprint() const
@@ -211,7 +211,7 @@ namespace ROS2RobotImporter
         const sdf::Root& sdfRoot = parsedSdfRootOutcome.GetRoot();
 
         AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
-        auto sourceAssetMap = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(sdfRoot, fullSourcePath.String()));
+        auto sourceAssetMap = FindAssets(sdfRoot, fullSourcePath.String());
 
         // Create an output job for each platform
         for (const AssetBuilderSDK::PlatformInfo& platformInfo : request.m_enabledPlatforms)
@@ -228,7 +228,7 @@ namespace ROS2RobotImporter
 
             // Add in all of the job dependencies for this file.
             // The SDF file won't get processed until every asset it relies on has been processed first.
-            for (const auto& asset : *sourceAssetMap)
+            for (const auto& asset : sourceAssetMap)
             {
                 AssetBuilderSDK::JobDependency jobDependency;
                 jobDependency.m_sourceFile.m_sourceFileDependencyUUID = asset.second.m_availableAssetInfo.m_sourceGuid;
