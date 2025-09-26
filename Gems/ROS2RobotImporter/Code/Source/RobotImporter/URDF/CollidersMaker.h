@@ -10,17 +10,9 @@
 
 #include "UrdfParser.h"
 #include <AzCore/Component/EntityId.h>
-#include <AzCore/IO/Path/Path.h>
-#include <AzCore/std/containers/unordered_map.h>
-#include <AzCore/std/containers/vector.h>
-#include <AzCore/std/parallel/atomic.h>
-#include <AzCore/std/parallel/mutex.h>
-#include <AzCore/std/parallel/thread.h>
-#include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
-#include <AzFramework/Physics/Material/PhysicsMaterialId.h>
+#include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/Material/PhysicsMaterialManager.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
 
 namespace ROS2RobotImporter
 {
