@@ -275,7 +275,7 @@ namespace ROS2Controllers
         builtin_interfaces::msg::Time timestamp;
         ROS2::ROS2ClockRequestBus::BroadcastResult(timestamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
 
-        rclcpp::Time timeNow = rclcpp::Time(timestamp); //!< Current simulation time.
+        const rclcpp::Time timeNow = rclcpp::Time(timestamp); //!< Current simulation time.
         rclcpp::Duration threshold = rclcpp::Duration::from_nanoseconds(1e7);
 
         // Jump to the next point if current simulation time is ahead of timeFromStart
@@ -308,17 +308,21 @@ namespace ROS2Controllers
 
     bool JointsTrajectoryComponent::CheckIfPositionReachedTolerance(const trajectory_msgs::msg::JointTrajectoryPoint trajectoryPoint)
     {
+        const auto& goalJointNames = m_trajectoryGoal.trajectory.joint_names;
         for (int jointIndex = 0; jointIndex < m_trajectoryGoal.trajectory.joint_names.size(); jointIndex++)
         { // Check if each joint reached its target position
-            AZStd::string jointName(m_trajectoryGoal.trajectory.joint_names[jointIndex].c_str());
-            AZ_Assert(m_manipulationJoints.find(jointName) != m_manipulationJoints.end(), "Invalid trajectory executing");
-
+            const AZStd::string_view jointName(goalJointNames[jointIndex].c_str());
             AZ::Outcome<float, AZStd::string> currentJointPosition;
             JointsManipulationRequestBus::EventResult(
                 currentJointPosition, GetEntityId(), &JointsManipulationRequests::GetJointPosition, jointName);
+            
+            if (!currentJointPosition.IsSuccess())
+            { // If position cannot be obtained, report failure
+                return false;
+            }
 
-            float targetPos = trajectoryPoint.positions[jointIndex];
-            if (AZ::IsClose(currentJointPosition.GetValue(), targetPos, m_jointPositionTolerance) == false)
+            const float targetPos = trajectoryPoint.positions[jointIndex];
+            if (!AZ::IsClose(currentJointPosition.GetValue(), targetPos, m_jointPositionTolerance))
             {
                 return false;
             }
@@ -328,14 +332,18 @@ namespace ROS2Controllers
 
     bool JointsTrajectoryComponent::CheckIfVelocityReachedTolerance()
     {
+        const auto& goalJointNames = m_trajectoryGoal.trajectory.joint_names;
         for (int jointIndex = 0; jointIndex < m_trajectoryGoal.trajectory.joint_names.size(); jointIndex++)
         { // Check if each joint velocity is below the threshold
-            AZStd::string jointName(m_trajectoryGoal.trajectory.joint_names[jointIndex].c_str());
-            AZ_Assert(m_manipulationJoints.find(jointName) != m_manipulationJoints.end(), "Invalid trajectory executing");
-
+            const AZStd::string_view jointName(goalJointNames[jointIndex].c_str());
             AZ::Outcome<float, AZStd::string> currentJointVelocity;
             JointsManipulationRequestBus::EventResult(
                 currentJointVelocity, GetEntityId(), &JointsManipulationRequests::GetJointVelocity, jointName);
+
+            if (!currentJointVelocity.IsSuccess())
+            { // If velocity cannot be obtained, report failure
+                return false;
+            }
 
             if (!AZ::IsClose(currentJointVelocity.GetValue(), 0.0f, m_jointVelocityTolerance))
             {
