@@ -657,12 +657,19 @@ namespace ROS2RobotImporter
 
         createdEntities.emplace_back(entityId);
 
-        ROS2::ROS2FrameConfiguration frameConfiguration;
-        frameConfiguration.m_frameName = AZStd::string(link.Name().c_str());
-        auto* ros2interface = ROS2::ROS2EditorInterface::Get();
-        AZ_Assert(ros2interface, "ROS2EditorInterface not available in URDFPrefabMaker::AddEntitiesForLink");
-        auto* ros2FrameComponent = ros2interface->CreateROS2FrameEditorComponent(*entity, frameConfiguration);
-        AZ_Assert(ros2FrameComponent, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
+        if (auto* ros2interface = ROS2::ROS2EditorInterface::Get())
+        {
+            ROS2::ROS2FrameConfiguration frameConfiguration;
+            frameConfiguration.m_frameName = AZStd::string(link.Name().c_str());
+            auto* ros2FrameComponent = ros2interface->CreateROS2FrameEditorComponent(*entity, frameConfiguration);
+            AZ_Error(
+                "URDF Prefab Maker", ros2FrameComponent, "Failed to created ROS2FrameComponent for link %s", entityId.ToString().c_str());
+        }
+        else
+        {
+            AZ_Warning(
+                "URDF Prefab Maker", false, "ROS2EditorInterface not available in AddEntitiesForLink; cannot add ROS2FrameComponent");
+        }
 
         auto createdVisualEntities = m_visualsMaker.AddVisuals(&link, entityId);
         createdEntities.insert(createdEntities.end(), createdVisualEntities.begin(), createdVisualEntities.end());
