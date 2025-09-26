@@ -618,6 +618,13 @@ namespace ROS2RobotImporter::Utils
                         }
                         else
                         {
+                            AZ_Error(
+                                "JHDEBUG",
+                                false,
+                                "Found new asset: %s %s adding %s",
+                                modelUri.c_str(),
+                                assetUri.String().c_str(),
+                                modelAssetUri.c_str());
                             UrdfAsset asset;
                             asset.m_assetType = assetType;
                             asset.m_modelUri = modelUri;
@@ -949,6 +956,7 @@ namespace ROS2RobotImporter::Utils
             AZ_PATH_ARG(relativePath));
         return {};
     }
+
     AmentPrefixString GetAmentPrefixPath()
     {
         // Support reading the AMENT_PREFIX_PATH environment variable on Unix/Windows platforms

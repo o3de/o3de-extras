@@ -399,13 +399,13 @@ namespace ROS2RobotImporter
                         AZStd::unordered_map<AZ::IO::Path, unsigned int> duplicatedFilenames;
                         for (auto& [unresolvedFileName, urdfAsset] : *m_urdfAssetsMapping)
                         {
-                            if (duplicatedFilenames.contains(unresolvedFileName))
+                            if (duplicatedFilenames.contains(urdfAsset.m_assetUri))
                             {
-                                duplicatedFilenames[unresolvedFileName]++;
+                                duplicatedFilenames[urdfAsset.m_assetUri]++;
                             }
                             else
                             {
-                                duplicatedFilenames[unresolvedFileName] = 0;
+                                duplicatedFilenames[urdfAsset.m_assetUri] = 0;
                             }
                             if (urdfAsset.m_copyStatus == Utils::CopyStatus::Waiting)
                             {
@@ -413,7 +413,14 @@ namespace ROS2RobotImporter
                                     Utils::CopyStatus::Copying, AZStd::string(unresolvedFileName.c_str()), "");
                             }
                             auto copyStatus = Utils::CopyReferencedAsset(
-                                unresolvedFileName, destStatus.GetValue(), urdfAsset, duplicatedFilenames[unresolvedFileName]);
+                                unresolvedFileName, destStatus.GetValue(), urdfAsset, duplicatedFilenames[urdfAsset.m_assetUri]);
+                            AZ_Error(
+                                "JHDEBUG",
+                                false,
+                                "Copy asset name %s, dup count %d, dup uri %s",
+                                unresolvedFileName.c_str(),
+                                duplicatedFilenames[urdfAsset.m_assetUri],
+                                urdfAsset.m_assetUri.c_str());
 
                             m_assetPage->OnAssetCopyStatusChanged(
                                 copyStatus,

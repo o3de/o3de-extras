@@ -307,15 +307,15 @@ namespace ROS2RobotImporter::Utils
         AZStd::unordered_map<AZ::IO::Path, unsigned int> duplicatedFilenames;
         for (auto& [unresolvedFileName, urdfAsset] : urdfAssetMap)
         {
-            if (duplicatedFilenames.contains(unresolvedFileName))
+            if (duplicatedFilenames.contains(urdfAsset.m_assetUri))
             {
-                duplicatedFilenames[unresolvedFileName]++;
+                duplicatedFilenames[urdfAsset.m_assetUri]++;
             }
             else
             {
-                duplicatedFilenames[unresolvedFileName] = 0;
+                duplicatedFilenames[urdfAsset.m_assetUri] = 0;
             }
-            CopyReferencedAsset(unresolvedFileName, destDirectory.GetValue(), urdfAsset, duplicatedFilenames[unresolvedFileName]);
+            CopyReferencedAsset(unresolvedFileName, destDirectory.GetValue(), urdfAsset, duplicatedFilenames[urdfAsset.m_assetUri]);
         }
         Utils::RemoveTmpDir(destDirectory.GetValue().importDirectoryTmp);
 
@@ -464,8 +464,8 @@ namespace ROS2RobotImporter::Utils
 
         for (auto& [unresolvedFileName, asset] : unresolvedAssetMap)
         {
-            asset.m_assetUri = unresolvedFileName;
-            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(asset.m_assetUri, urdfFilepath, amentPrefixPath, sdfBuilderSettings);
+            AZ_Error("JHDEBUG", false, "unresolvedFileName %s assetUri %s", unresolvedFileName.c_str(), asset.m_assetUri.c_str());
+            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(unresolvedFileName, urdfFilepath, amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = AZ::Crc32();
         }
     }
@@ -634,7 +634,7 @@ namespace ROS2RobotImporter::Utils
         {
             urdfAsset.m_availableAssetInfo = Utils::GetAvailableAssetInfo(targetPathAssetDst.String());
         }
-        urdfAsset.m_assetUri = "";
+        // urdfAsset.m_assetUri = "";
         urdfAsset.m_urdfFileCRC = AZ::Crc32();
 
         return urdfAsset.m_copyStatus;

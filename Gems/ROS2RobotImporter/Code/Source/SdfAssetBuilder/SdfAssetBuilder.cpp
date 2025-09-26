@@ -97,7 +97,6 @@ namespace ROS2RobotImporter
         for (const auto& [uri, assetReferenceType] : allReferencedAssets)
         {
             Utils::UrdfAsset asset;
-            asset.m_assetUri = uri;
 
             // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
             asset.m_resolvedUrdfPath =
