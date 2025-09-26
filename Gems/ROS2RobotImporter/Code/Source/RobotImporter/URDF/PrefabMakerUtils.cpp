@@ -144,23 +144,24 @@ namespace ROS2RobotImporter::PrefabMakerUtils
         return AZStd::string::format("%s_%s%s", rootName.c_str(), type.c_str(), suffix.c_str());
     }
 
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(
-        const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& sdfModelName, const AZStd::string& sdfMeshPath)
+    AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
+        const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& modelUri, const AZStd::string& assetUri)
     {
-        AZ_Error("JHDEBUG", false, "GetAssetFromPath called for model %s and mesh %s", sdfModelName.c_str(), sdfMeshPath.c_str());
-        if (!urdfAssetsMapping.contains(sdfMeshPath))
+        AZ_Error("JHDEBUG", false, "GetAssetFromUri called for model %s and mesh %s", modelUri.c_str(), assetUri.c_str());
+        const AZStd::string modelAssetUri = modelUri + "/" + assetUri;
+        if (!urdfAssetsMapping.contains(modelAssetUri))
         {
-            AZ_Warning("GetAssetFromPath", false, "there is no asset for mesh %s in model %s", sdfMeshPath.c_str(), sdfModelName.c_str());
-            return AZStd::optional<Utils::AvailableAsset>();
+            AZ_Warning("GetAssetFromUri", false, "there is no asset for mesh %s in model %s", assetUri.c_str(), modelUri.c_str());
+            return AZStd::nullopt;
         }
 
-        return urdfAssetsMapping.at(sdfMeshPath).m_availableAssetInfo;
+        return urdfAssetsMapping.at(modelAssetUri).m_availableAssetInfo;
     }
 
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(
-        const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& sdfModelName, const std::string& sdfMeshPath)
+    AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
+        const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& modelUri, const std::string& assetUri)
     {
-        return GetAssetFromPath(urdfAssetsMapping, sdfModelName, AZStd::string(sdfMeshPath.c_str(), sdfMeshPath.size()));
+        return GetAssetFromUri(urdfAssetsMapping, modelUri, AZStd::string(assetUri.c_str(), assetUri.size()));
     }
 
 } // namespace ROS2RobotImporter::PrefabMakerUtils

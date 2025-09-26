@@ -610,21 +610,25 @@ namespace ROS2RobotImporter::Utils
                 {
                     if (auto mesh = geometry->MeshShape(); mesh)
                     {
-                        AZStd::string uri(mesh->Uri().c_str(), mesh->Uri().size());
-                        AZ_Error("JHDEBUG", false, "Found reference in model %s to mesh URI: %s", modelUri.c_str(), uri.c_str());
-                        if (urdfAssetMap.contains(uri))
+                        const AZ::IO::Path assetUri(mesh->Uri().c_str(), mesh->Uri().size());
+                        const AZStd::string modelAssetUri = modelUri + "/" + assetUri.String();
+                        if (urdfAssetMap.contains(modelAssetUri))
                         {
-                            urdfAssetMap[uri].m_assetReferenceType |= assetType;
+                            urdfAssetMap[modelAssetUri].m_assetType |= assetType;
                         }
                         else
                         {
-                            urdfAssetMap.emplace(uri, UrdfAsset{ assetType });
+                            UrdfAsset asset;
+                            asset.m_assetType = assetType;
+                            asset.m_modelUri = modelUri;
+                            asset.m_assetUri = assetUri;
+                            urdfAssetMap.emplace(modelAssetUri, AZStd::move(asset));
                         }
                     }
                 }
             };
 
-            const auto addFilenamesFromMaterial = [&urdfAssetMap](const sdf::Material* material)
+            const auto addFilenamesFromMaterial = [&urdfAssetMap, &modelUri](const sdf::Material* material)
             {
                 // Only PBR entries on a material have filenames that need to be added.
                 if ((!material) || (!material->PbrMaterial()))
@@ -644,36 +648,47 @@ namespace ROS2RobotImporter::Utils
                         }
                     }
 
+                    const auto emplaceTexture = [&urdfAssetMap, &modelUri](const std::string& texturePath)
+                    {
+                        UrdfAsset asset;
+                        asset.m_assetType = ReferencedAssetType::Texture;
+                        asset.m_modelUri = modelUri;
+                        asset.m_assetUri = AZ::IO::Path(texturePath.data(), texturePath.size());
+
+                        const AZStd::string modelAssetUri = modelUri + "/" + asset.m_assetUri.String();
+                        urdfAssetMap.emplace(modelAssetUri, AZStd::move(asset));
+                    };
+
                     if (auto texture = pbrWorkflow->AlbedoMap(); !texture.empty())
                     {
-                        urdfAssetMap.emplace(AZStd::string(texture.c_str(), texture.size()), UrdfAsset{ ReferencedAssetType::Texture });
+                        emplaceTexture(texture);
                     }
 
                     if (auto texture = pbrWorkflow->NormalMap(); !texture.empty())
                     {
-                        urdfAssetMap.emplace(AZStd::string(texture.c_str(), texture.size()), UrdfAsset{ ReferencedAssetType::Texture });
+                        emplaceTexture(texture);
                     }
 
                     if (auto texture = pbrWorkflow->AmbientOcclusionMap(); !texture.empty())
                     {
-                        urdfAssetMap.emplace(AZStd::string(texture.c_str(), texture.size()), UrdfAsset{ ReferencedAssetType::Texture });
+                        emplaceTexture(texture);
                     }
 
                     if (auto texture = pbrWorkflow->EmissiveMap(); !texture.empty())
                     {
-                        urdfAssetMap.emplace(AZStd::string(texture.c_str(), texture.size()), UrdfAsset{ ReferencedAssetType::Texture });
+                        emplaceTexture(texture);
                     }
 
                     if (pbrWorkflow->Type() == sdf::PbrWorkflowType::METAL)
                     {
                         if (auto texture = pbrWorkflow->RoughnessMap(); !texture.empty())
                         {
-                            urdfAssetMap.emplace(AZStd::string(texture.c_str(), texture.size()), UrdfAsset{ ReferencedAssetType::Texture });
+                            emplaceTexture(texture);
                         }
 
                         if (auto texture = pbrWorkflow->MetalnessMap(); !texture.empty())
                         {
-                            urdfAssetMap.emplace(AZStd::string(texture.c_str(), texture.size()), UrdfAsset{ ReferencedAssetType::Texture });
+                            emplaceTexture(texture);
                         }
                     }
                 }

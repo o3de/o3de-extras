@@ -69,13 +69,12 @@ namespace ROS2RobotImporter::Utils
     struct UrdfAsset
     {
         UrdfAsset() = default;
-        UrdfAsset(ReferencedAssetType assetType)
-            : m_assetReferenceType(assetType)
-        {
-        }
 
-        //! Unresolved URDF path to mesh, eg `package://meshes/bar_link.dae`.
-        AZ::IO::Path m_urdfPath;
+        //! The model URI associated with the asset.
+        AZStd::string m_modelUri;
+
+        //! Unresolved path to asset, eg `package://meshes/bar_link.dae`.
+        AZ::IO::Path m_assetUri;
 
         //! Resolved URDF path, points to the valid mesh in the filesystem, eg `/home/user/ros_ws/src/foo_robot/meshes/bar_link.dae'
         AZ::IO::Path m_resolvedUrdfPath;
@@ -87,7 +86,7 @@ namespace ROS2RobotImporter::Utils
         CopyStatus m_copyStatus = Waiting;
 
         //! Type of asset reference(s) - mesh, texture, etc.
-        ReferencedAssetType m_assetReferenceType;
+        ReferencedAssetType m_assetType;
 
         //! Found O3DE asset.
         AvailableAsset m_availableAssetInfo;
@@ -103,7 +102,7 @@ namespace ROS2RobotImporter::Utils
         AZ::IO::Path importDirectoryDst;
     };
 
-    /// Type that hold result of mapping from URDF path to asset info
+    /// Type that hold result of mapping from asset name (model URI + asset URI) to asset info
     using UrdfAssetMap = AZStd::unordered_map<AZ::IO::Path, Utils::UrdfAsset>;
 
     //! Function computes CRC32 on first kilobyte of file.

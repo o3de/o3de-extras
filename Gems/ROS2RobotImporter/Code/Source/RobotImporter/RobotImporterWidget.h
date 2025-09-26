@@ -79,7 +79,7 @@ namespace ROS2RobotImporter
         sdf::Root m_parsedSdf{};
 
         //! User's choice to copy meshes during urdf import
-        bool m_importAssetWithUrdf{ false };
+        bool m_copyReferencedAssets{ false };
 
         /// mapping from urdf path to asset source
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;

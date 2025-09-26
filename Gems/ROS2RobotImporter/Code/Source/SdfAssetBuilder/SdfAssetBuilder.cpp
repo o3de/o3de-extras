@@ -97,11 +97,11 @@ namespace ROS2RobotImporter
         for (const auto& [uri, assetReferenceType] : allReferencedAssets)
         {
             Utils::UrdfAsset asset;
-            asset.m_urdfPath = uri;
+            asset.m_assetUri = uri;
 
             // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
             asset.m_resolvedUrdfPath =
-                Utils::ResolveAssetPath(asset.m_urdfPath, AZ::IO::PathView(sourceFilename), amentPrefixPath, m_globalSettings);
+                Utils::ResolveAssetPath(asset.m_assetUri, AZ::IO::PathView(sourceFilename), amentPrefixPath, m_globalSettings);
             if (asset.m_resolvedUrdfPath.empty())
             {
                 AZ_Warning(SdfAssetBuilderName, false, "Failed to resolve file reference '%s' to an absolute path, skipping.", uri.c_str());
