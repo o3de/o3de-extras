@@ -123,7 +123,7 @@ namespace ROS2::Controllers
 
         if (m_outputLimit > 0.0)
         {
-            output = AZStd::clamp<double>(output, 0.0, m_outputLimit);
+            output = AZStd::clamp<double>(output, -m_outputLimit, m_outputLimit);
         }
         return output;
     }
