@@ -144,20 +144,23 @@ namespace ROS2RobotImporter::PrefabMakerUtils
         return AZStd::string::format("%s_%s%s", rootName.c_str(), type.c_str(), suffix.c_str());
     }
 
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& urdfMeshPath)
+    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(
+        const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& sdfModelName, const AZStd::string& sdfMeshPath)
     {
-        if (!urdfAssetsMapping.contains(urdfMeshPath))
+        AZ_Error("JHDEBUG", false, "GetAssetFromPath called for model %s and mesh %s", sdfModelName.c_str(), sdfMeshPath.c_str());
+        if (!urdfAssetsMapping.contains(sdfMeshPath))
         {
-            AZ_Warning("GetAssetFromPath", false, "there is no asset for mesh %s ", urdfMeshPath.c_str());
+            AZ_Warning("GetAssetFromPath", false, "there is no asset for mesh %s in model %s", sdfMeshPath.c_str(), sdfModelName.c_str());
             return AZStd::optional<Utils::AvailableAsset>();
         }
 
-        return urdfAssetsMapping.at(urdfMeshPath).m_availableAssetInfo;
+        return urdfAssetsMapping.at(sdfMeshPath).m_availableAssetInfo;
     }
 
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(const Utils::UrdfAssetMap& urdfAssetsMapping, const std::string& urdfMeshPath)
+    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(
+        const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& sdfModelName, const std::string& sdfMeshPath)
     {
-        return GetAssetFromPath(urdfAssetsMapping, AZStd::string(urdfMeshPath.c_str(), urdfMeshPath.size()));
+        return GetAssetFromPath(urdfAssetsMapping, sdfModelName, AZStd::string(sdfMeshPath.c_str(), sdfMeshPath.size()));
     }
 
 } // namespace ROS2RobotImporter::PrefabMakerUtils

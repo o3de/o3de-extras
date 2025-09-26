@@ -42,19 +42,20 @@ namespace ROS2RobotImporter
         //! @param link A parsed SDF tree link node which could hold information about colliders.
         //! @param entityId A non-active entity which will be affected.
         void AddColliders(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId);
-        //! Sends meshes required for colliders to asset processor.
-        //! @param buildReadyCb Function to call when the processing finishes.
-        void ProcessMeshes(BuildReadyCallback notifyBuildReadyCb);
 
     private:
         void FindWheelMaterial();
         void AddCollider(
             const sdf::Collision* collision,
+            const AZStd::string& modelUri,
             AZ::EntityId entityId,
             const AZStd::string& generatedName,
             const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset);
         void AddColliderToEntity(
-            const sdf::Collision* collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const;
+            const sdf::Collision* collision,
+            const AZStd::string& modelUri,
+            AZ::EntityId entityId,
+            const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const;
 
         AZ::Data::Asset<Physics::MaterialAsset> m_wheelMaterial;
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;

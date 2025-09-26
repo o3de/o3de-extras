@@ -186,8 +186,8 @@ namespace ROS2RobotImporter
         for ([[maybe_unused]] const auto& [fullModelName, modelPtr, _] : modelMapper.m_models)
         {
             // Create entities for each model in the SDF
-            const std::string modelName = modelPtr->Name();
-            const AZStd::string azModelName(modelName.c_str(), modelName.size());
+            const std::string modelUri = modelPtr->Name();
+            const AZStd::string azModelName(modelUri.c_str(), modelUri.size());
             if (AzToolsFramework::Prefab::PrefabEntityResult createModelEntityResult = CreateEntityForModel(*modelPtr);
                 createModelEntityResult)
             {
@@ -671,7 +671,8 @@ namespace ROS2RobotImporter
                 "URDF Prefab Maker", false, "ROS2EditorInterface not available in AddEntitiesForLink; cannot add ROS2FrameComponent");
         }
 
-        auto createdVisualEntities = m_visualsMaker.AddVisuals(&link, entityId);
+        const AZStd::string modelUri(attachedModel->Uri().c_str(), attachedModel->Uri().size());
+        auto createdVisualEntities = m_visualsMaker.AddVisuals(&link, modelUri, entityId);
         createdEntities.insert(createdEntities.end(), createdVisualEntities.begin(), createdVisualEntities.end());
 
         if (!m_useArticulations)
