@@ -284,24 +284,24 @@ namespace ROS2RobotImporter::Utils
         return availableAssets;
     }
 
-    UrdfAssetMap CopyReferencedAssetsAndCreateAssetMap(
-        const AssetFilenameReferences& assetFilenames,
+    void CopyReferencedAssetsAndCreateAssetMap(
+        UrdfAssetMap& urdfAssetMap,
         const AZ::IO::Path& urdfFilepath,
         const SdfAssetBuilderSettings& sdfBuilderSettings,
         AZStd::string_view outputDirSuffix,
         AZ::IO::FileIOBase* fileIO)
     {
-        auto urdfAssetMap = CreateAssetMap(assetFilenames, urdfFilepath, sdfBuilderSettings);
+        CreateAssetMap(urdfAssetMap, urdfFilepath, sdfBuilderSettings);
         AZStd::mutex urdfAssetMapMutex;
         if (urdfAssetMap.empty())
         {
-            return urdfAssetMap;
+            return;
         }
 
         auto destDirectory = PrepareImportedAssetsDest(urdfFilepath, outputDirSuffix, fileIO);
         if (!destDirectory.IsSuccess())
         {
-            return urdfAssetMap;
+            return;
         }
 
         AZStd::unordered_map<AZ::IO::Path, unsigned int> duplicatedFilenames;
@@ -319,19 +319,19 @@ namespace ROS2RobotImporter::Utils
         }
         Utils::RemoveTmpDir(destDirectory.GetValue().importDirectoryTmp);
 
-        return urdfAssetMap;
+        return;
     }
 
-    UrdfAssetMap FindReferencedAssets(
-        const AssetFilenameReferences& assetFilenames, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings)
+    void FindReferencedAssets(
+        UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
-        auto urdfAssetMap = CreateAssetMap(assetFilenames, urdfFilepath, sdfBuilderSettings);
-        if (!urdfAssetMap.empty())
+        CreateAssetMap(unresolvedAssetMap, urdfFilepath, sdfBuilderSettings);
+        if (!unresolvedAssetMap.empty())
         {
             AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Utils::GetInterestingSourceAssetsCRC();
 
             // Search for suitable mappings by comparing checksum
-            for (auto& [unresolvedFileName, asset] : urdfAssetMap)
+            for (auto& [unresolvedFileName, asset] : unresolvedAssetMap)
             {
                 asset.m_urdfFileCRC = Utils::GetFileCRC(asset.m_resolvedUrdfPath);
                 auto found_source_asset = availableAssets.find(asset.m_urdfFileCRC);
@@ -341,8 +341,6 @@ namespace ROS2RobotImporter::Utils
                 }
             }
         }
-
-        return urdfAssetMap;
     }
 
     bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, const bool collider, const bool visual)
@@ -459,23 +457,17 @@ namespace ROS2RobotImporter::Utils
         return CreateSceneManifest(sourceAssetPath, sourceAssetPath.Native() + ".assetinfo", collider, visual);
     }
 
-    UrdfAssetMap CreateAssetMap(
-        const AssetFilenameReferences& assetFilenames, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings)
+    void CreateAssetMap(
+        UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
         auto amentPrefixPath = Utils::GetAmentPrefixPath();
 
-        UrdfAssetMap urdfAssetMap;
-        for (const auto& [unresolvedFileName, assetReferenceType] : assetFilenames)
+        for (auto& [unresolvedFileName, asset] : unresolvedAssetMap)
         {
-            Utils::UrdfAsset asset;
             asset.m_urdfPath = unresolvedFileName;
-            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(unresolvedFileName, urdfFilepath, amentPrefixPath, sdfBuilderSettings);
+            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(asset.m_urdfPath, urdfFilepath, amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = AZ::Crc32();
-            asset.m_assetReferenceType = assetReferenceType;
-            urdfAssetMap.emplace(unresolvedFileName, AZStd::move(asset));
         }
-
-        return urdfAssetMap;
     }
 
     AZ::Outcome<ImportedAssetsDest> PrepareImportedAssetsDest(

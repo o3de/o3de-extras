@@ -233,7 +233,7 @@ namespace ROS2RobotImporter
                 }
                 m_parsedSdf = AZStd::move(parsedSdfOutcome.GetRoot());
                 m_prefabMaker.reset();
-                m_assetNames = Utils::GetReferencedAssetFilenames(m_parsedSdf);
+                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::GetReferencedAssetFilenames(m_parsedSdf));
                 m_assetPage->ClearAssetsList();
             }
             else
@@ -340,26 +340,20 @@ namespace ROS2RobotImporter
 
             if (m_importAssetWithUrdf)
             {
-                m_urdfAssetsMapping =
-                    AZStd::make_shared<Utils::UrdfAssetMap>(Utils::CreateAssetMap(m_assetNames, m_urdfPath, sdfBuilderSettings));
+                Utils::CreateAssetMap(*m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
             }
             else
             {
-                m_urdfAssetsMapping =
-                    AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindReferencedAssets(m_assetNames, m_urdfPath, sdfBuilderSettings));
-                for (const auto& [assetPath, assetReferenceType] : m_assetNames)
+                Utils::FindReferencedAssets(*m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
+                for (const auto& [assetPath, asset] : *m_urdfAssetsMapping)
                 {
-                    if (m_urdfAssetsMapping->contains(assetPath))
+                    bool visual =
+                        (asset.m_assetReferenceType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                    bool collider =
+                        (asset.m_assetReferenceType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
+                    if (visual || collider)
                     {
-                        const auto& asset = m_urdfAssetsMapping->at(assetPath);
-                        bool visual =
-                            (assetReferenceType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
-                        bool collider =
-                            (assetReferenceType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
-                        if (visual || collider)
-                        {
-                            Utils::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
-                        }
+                        Utils::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
                     }
                 }
             };
@@ -573,7 +567,7 @@ namespace ROS2RobotImporter
                     // do not skip robot description page
                     return m_xacroParamsPage->nextId();
                 }
-                if (m_assetNames.empty())
+                if (m_urdfAssetsMapping->empty())
                 {
                     // skip two pages when urdf/sdf is parsed without problems, and it has no assets
                     return m_assetPage->nextId();

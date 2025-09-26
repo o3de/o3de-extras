@@ -145,12 +145,10 @@ namespace ROS2RobotImporter
         // Urdf Root has been parsed successfully retrieve it from the Outcome
         const sdf::Root& parsedSdfRoot = parsedSdfOutcome.GetRoot();
 
-        auto assetNames = Utils::GetReferencedAssetFilenames(parsedSdfRoot);
-        AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>();
+        auto urdfAssetsMapping = Utils::GetReferencedAssetFilenames(parsedSdfRoot);
         if (importAssetWithUrdf)
         {
-            urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                Utils::CopyReferencedAssetsAndCreateAssetMap(assetNames, filePath, sdfBuilderSettings));
+            Utils::CopyReferencedAssetsAndCreateAssetMap(urdfAssetsMapping, filePath, sdfBuilderSettings);
         }
         bool allAssetProcessed = false;
         bool assetProcessorFailed = false;
@@ -174,7 +172,7 @@ namespace ROS2RobotImporter
             }
 
             allAssetProcessed = true;
-            for (const auto& [name, asset] : *urdfAssetsMapping)
+            for (const auto& [name, asset] : urdfAssetsMapping)
             {
                 auto sourceAssetFullPath = asset.m_availableAssetInfo.m_sourceAssetGlobalPath;
                 if (sourceAssetFullPath.empty())
@@ -233,8 +231,8 @@ namespace ROS2RobotImporter
 
         const AZ::IO::Path prefabPathRelative(AZ::IO::Path("Assets") / "Importer" / prefabName);
         const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRelative);
-        AZStd::unique_ptr<URDFPrefabMaker> prefabMaker =
-            AZStd::make_unique<URDFPrefabMaker>(&parsedSdfRoot, prefabPath.String(), urdfAssetsMapping, useArticulation);
+        AZStd::unique_ptr<URDFPrefabMaker> prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
+            &parsedSdfRoot, prefabPath.String(), AZStd::make_shared<Utils::UrdfAssetMap>(urdfAssetsMapping), useArticulation);
 
         auto prefabOutcome = prefabMaker->CreatePrefabFromUrdfOrSdf();
 
