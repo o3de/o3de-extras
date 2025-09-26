@@ -603,13 +603,15 @@ namespace ROS2RobotImporter::Utils
         UrdfAssetMap urdfAssetMap;
         auto GetAssetsFromModel = [&urdfAssetMap](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
         {
-            const auto addFilenameFromGeometry = [&urdfAssetMap](const sdf::Geometry* geometry, ReferencedAssetType assetType)
+            AZStd::string modelUri(model.Uri().c_str(), model.Uri().size());
+            const auto addFilenameFromGeometry = [&urdfAssetMap, &modelUri](const sdf::Geometry* geometry, ReferencedAssetType assetType)
             {
                 if (geometry->Type() == sdf::GeometryType::MESH)
                 {
                     if (auto mesh = geometry->MeshShape(); mesh)
                     {
                         AZStd::string uri(mesh->Uri().c_str(), mesh->Uri().size());
+                        AZ_Error("JHDEBUG", false, "Found reference in model %s to mesh URI: %s", modelUri.c_str(), uri.c_str());
                         if (urdfAssetMap.contains(uri))
                         {
                             urdfAssetMap[uri].m_assetReferenceType |= assetType;
