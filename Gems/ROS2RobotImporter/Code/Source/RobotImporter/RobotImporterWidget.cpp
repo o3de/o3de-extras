@@ -233,7 +233,7 @@ namespace ROS2RobotImporter
                 }
                 m_parsedSdf = AZStd::move(parsedSdfOutcome.GetRoot());
                 m_prefabMaker.reset();
-                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::GetReferencedAssetFilenames(m_parsedSdf));
+                m_urdfAssetsMapping = Utils::GetReferencedAssetFilenames(m_parsedSdf);
                 m_assetPage->ClearAssetsList();
             }
             else
@@ -340,13 +340,13 @@ namespace ROS2RobotImporter
 
             if (m_copyReferencedAssets)
             {
-                Utils::ResolveAssetMap(*m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
+                Utils::ResolveAssetMap(m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
             }
             else
             {
-                Utils::ResolveAssetMap(*m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
-                Utils::FindReferencedAssets(*m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
-                for (const auto& [_, asset] : *m_urdfAssetsMapping)
+                Utils::ResolveAssetMap(m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
+                Utils::FindReferencedAssets(m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
+                for (const auto& [_, asset] : m_urdfAssetsMapping)
                 {
                     bool visual = (asset.m_assetType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
                     bool collider =
@@ -358,7 +358,7 @@ namespace ROS2RobotImporter
                 }
             };
 
-            for (auto& [unresolvedFileName, asset] : *m_urdfAssetsMapping)
+            for (auto& [unresolvedFileName, asset] : m_urdfAssetsMapping)
             {
                 QString type = tr("Unknown");
 
@@ -398,7 +398,7 @@ namespace ROS2RobotImporter
                             return;
                         }
                         AZStd::unordered_map<AZ::IO::Path, unsigned int> duplicatedFilenames;
-                        for (auto& [unresolvedFileName, urdfAsset] : *m_urdfAssetsMapping)
+                        for (auto& [unresolvedFileName, urdfAsset] : m_urdfAssetsMapping)
                         {
                             if (duplicatedFilenames.contains(urdfAsset.m_assetUri))
                             {
@@ -464,7 +464,7 @@ namespace ROS2RobotImporter
         AZStd::set<AZ::IO::Path> processedAssets;
         for (auto& assetToProcessPath : m_toProcessAssets)
         {
-            auto urdfAsset = m_urdfAssetsMapping->find(assetToProcessPath)->second;
+            auto urdfAsset = m_urdfAssetsMapping.find(assetToProcessPath)->second;
             auto assetFinishedOutcome = CheckIfAssetFinished(urdfAsset.m_availableAssetInfo.m_sourceAssetGlobalPath.c_str());
 
             if (assetFinishedOutcome.IsSuccess())
@@ -564,7 +564,7 @@ namespace ROS2RobotImporter
                     // do not skip robot description page
                     return m_xacroParamsPage->nextId();
                 }
-                if (m_urdfAssetsMapping->empty())
+                if (m_urdfAssetsMapping.empty())
                 {
                     // skip two pages when urdf/sdf is parsed without problems, and it has no assets
                     return m_assetPage->nextId();
@@ -614,7 +614,11 @@ namespace ROS2RobotImporter
         const auto& sdfAssetBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
         const bool useArticulation = sdfAssetBuilderSettings.m_useArticulations;
         m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
-            &m_parsedSdf, prefabPath.String(), m_urdfAssetsMapping, useArticulation, m_prefabMakerPage->getSelectedSpawnPoint());
+            &m_parsedSdf,
+            prefabPath.String(),
+            AZStd::make_shared<Utils::UrdfAssetMap>(m_urdfAssetsMapping),
+            useArticulation,
+            m_prefabMakerPage->getSelectedSpawnPoint());
 
         auto prefabOutcome = m_prefabMaker->CreatePrefabFromUrdfOrSdf();
         if (prefabOutcome.IsSuccess())
