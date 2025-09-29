@@ -414,13 +414,6 @@ namespace ROS2RobotImporter
                             }
                             auto copyStatus = Utils::CopyReferencedAsset(
                                 unresolvedFileName, destStatus.GetValue(), urdfAsset, duplicatedFilenames[urdfAsset.m_assetUri]);
-                            AZ_Error(
-                                "JHDEBUG",
-                                false,
-                                "Copy asset name %s, dup count %d, dup uri %s",
-                                unresolvedFileName.c_str(),
-                                duplicatedFilenames[urdfAsset.m_assetUri],
-                                urdfAsset.m_assetUri.c_str());
 
                             m_assetPage->OnAssetCopyStatusChanged(
                                 copyStatus,

@@ -464,7 +464,6 @@ namespace ROS2RobotImporter::Utils
 
         for (auto& [unresolvedFileName, asset] : unresolvedAssetMap)
         {
-            AZ_Error("JHDEBUG", false, "unresolvedFileName %s assetUri %s", unresolvedFileName.c_str(), asset.m_assetUri.c_str());
             asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(unresolvedFileName, urdfFilepath, amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = AZ::Crc32();
         }

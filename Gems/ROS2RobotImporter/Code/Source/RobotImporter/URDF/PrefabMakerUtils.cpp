@@ -147,7 +147,6 @@ namespace ROS2RobotImporter::PrefabMakerUtils
     AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
         const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& modelUri, const AZStd::string& assetUri)
     {
-        AZ_Error("JHDEBUG", false, "GetAssetFromUri called for model %s and mesh %s", modelUri.c_str(), assetUri.c_str());
         const AZStd::string modelAssetUri = modelUri + "/" + assetUri;
         if (!urdfAssetsMapping.contains(modelAssetUri))
         {
