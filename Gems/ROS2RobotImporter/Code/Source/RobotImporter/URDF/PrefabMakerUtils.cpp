@@ -147,7 +147,7 @@ namespace ROS2RobotImporter::PrefabMakerUtils
     AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
         const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& modelUri, const AZStd::string& assetUri)
     {
-        const AZStd::string modelAssetUri = modelUri + "/" + assetUri;
+        const AZStd::string modelAssetUri = (modelUri.empty()) ? assetUri : modelUri + "/" + assetUri;
         if (!urdfAssetsMapping.contains(modelAssetUri))
         {
             AZ_Warning("GetAssetFromUri", false, "there is no asset for mesh %s in model %s", assetUri.c_str(), modelUri.c_str());

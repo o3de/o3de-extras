@@ -291,7 +291,7 @@ namespace ROS2RobotImporter::Utils
         AZStd::string_view outputDirSuffix,
         AZ::IO::FileIOBase* fileIO)
     {
-        CreateAssetMap(urdfAssetMap, urdfFilepath, sdfBuilderSettings);
+        ResolveAssetMap(urdfAssetMap, urdfFilepath, sdfBuilderSettings);
         AZStd::mutex urdfAssetMapMutex;
         if (urdfAssetMap.empty())
         {
@@ -325,7 +325,6 @@ namespace ROS2RobotImporter::Utils
     void FindReferencedAssets(
         UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
-        CreateAssetMap(unresolvedAssetMap, urdfFilepath, sdfBuilderSettings);
         if (!unresolvedAssetMap.empty())
         {
             AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Utils::GetInterestingSourceAssetsCRC();
@@ -457,7 +456,7 @@ namespace ROS2RobotImporter::Utils
         return CreateSceneManifest(sourceAssetPath, sourceAssetPath.Native() + ".assetinfo", collider, visual);
     }
 
-    void CreateAssetMap(
+    void ResolveAssetMap(
         UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
         auto amentPrefixPath = Utils::GetAmentPrefixPath();

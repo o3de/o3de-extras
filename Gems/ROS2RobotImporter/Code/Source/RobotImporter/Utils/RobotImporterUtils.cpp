@@ -611,7 +611,7 @@ namespace ROS2RobotImporter::Utils
                     if (auto mesh = geometry->MeshShape(); mesh)
                     {
                         const AZ::IO::Path assetUri(mesh->Uri().c_str(), mesh->Uri().size());
-                        const AZStd::string modelAssetUri = modelUri + "/" + assetUri.String();
+                        const AZStd::string modelAssetUri = (modelUri.empty()) ? assetUri.String() : modelUri + "/" + assetUri.String();
                         if (urdfAssetMap.contains(modelAssetUri))
                         {
                             urdfAssetMap[modelAssetUri].m_assetType |= assetType;
@@ -655,7 +655,8 @@ namespace ROS2RobotImporter::Utils
                         asset.m_modelUri = modelUri;
                         asset.m_assetUri = AZ::IO::Path(texturePath.data(), texturePath.size());
 
-                        const AZStd::string modelAssetUri = modelUri + "/" + asset.m_assetUri.String();
+                        const AZStd::string modelAssetUri =
+                            (modelUri.empty()) ? asset.m_assetUri.String() : modelUri + "/" + asset.m_assetUri.String();
                         urdfAssetMap.emplace(modelAssetUri, AZStd::move(asset));
                     };
 

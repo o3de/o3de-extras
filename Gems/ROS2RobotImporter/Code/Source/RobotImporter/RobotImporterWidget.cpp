@@ -340,10 +340,11 @@ namespace ROS2RobotImporter
 
             if (m_copyReferencedAssets)
             {
-                Utils::CreateAssetMap(*m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
+                Utils::ResolveAssetMap(*m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
             }
             else
             {
+                Utils::ResolveAssetMap(*m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
                 Utils::FindReferencedAssets(*m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
                 for (const auto& [_, asset] : *m_urdfAssetsMapping)
                 {
