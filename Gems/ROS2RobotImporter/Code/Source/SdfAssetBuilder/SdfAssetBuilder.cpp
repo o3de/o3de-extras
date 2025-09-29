@@ -94,16 +94,20 @@ namespace ROS2RobotImporter
 
         auto amentPrefixPath = Utils::GetAmentPrefixPath();
 
-        for (const auto& [uri, assetReferenceType] : allReferencedAssets)
+        for (const auto& [unresolvedUri, assetReferenceType] : allReferencedAssets)
         {
             Utils::UrdfAsset asset;
 
             // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
             asset.m_resolvedUrdfPath =
-                Utils::ResolveAssetPath(asset.m_assetUri, AZ::IO::PathView(sourceFilename), amentPrefixPath, m_globalSettings);
+                Utils::ResolveAssetPath(unresolvedUri, AZ::IO::PathView(sourceFilename), amentPrefixPath, m_globalSettings);
             if (asset.m_resolvedUrdfPath.empty())
             {
-                AZ_Warning(SdfAssetBuilderName, false, "Failed to resolve file reference '%s' to an absolute path, skipping.", uri.c_str());
+                AZ_Warning(
+                    SdfAssetBuilderName,
+                    false,
+                    "Failed to resolve file reference '%s' to an absolute path, skipping.",
+                    unresolvedUri.c_str());
                 continue;
             }
 
@@ -142,8 +146,12 @@ namespace ROS2RobotImporter
             AZ::Crc32 crc = Utils::GetFileCRC(asset.m_availableAssetInfo.m_sourceAssetGlobalPath);
             if (crc == asset.m_urdfFileCRC)
             {
-                AZ_Info(SdfAssetBuilderName, "Resolved uri '%s' to source asset '%s'.", uri.c_str(), assetInfo.m_relativePath.c_str());
-                existingReferencedAssets.emplace(uri, AZStd::move(asset));
+                AZ_Info(
+                    SdfAssetBuilderName,
+                    "Resolved uri '%s' to source asset '%s'.",
+                    unresolvedUri.c_str(),
+                    assetInfo.m_relativePath.c_str());
+                existingReferencedAssets.emplace(unresolvedUri, AZStd::move(asset));
             }
             else
             {
