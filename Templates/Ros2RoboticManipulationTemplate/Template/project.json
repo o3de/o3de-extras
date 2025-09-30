@@ -34,7 +34,9 @@
         "TextureAtlas",
         "DiffuseProbeGrid",
         "ROS2>=3.1.0",
+        "ROS2Controllers",
         "ROS2SampleRobots",
+        "ROS2Sensors",
         "${Name}"
     ]
 }
