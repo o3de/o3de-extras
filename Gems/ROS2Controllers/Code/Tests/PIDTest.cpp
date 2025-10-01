@@ -31,7 +31,7 @@ namespace UnitTest
         double output = 0.0;
 
         output = pid.ComputeCommand(-10.0, 1 * secToNanosec);
-        EXPECT_EQ(0.0, output);
+        EXPECT_EQ(-1.0, output);
 
         output = pid.ComputeCommand(30.0, 1 * secToNanosec);
         EXPECT_EQ(1.0, output);
