@@ -7,6 +7,11 @@
 #
 
 set(FILES
+    ../Assets/Passes/PipelineRenderToTextureROSColor.pass
+    ../Assets/Passes/PipelineRenderToTextureROSDepth.pass
+    ../Assets/Passes/PipelineROSColor.pass
+    ../Assets/Passes/PipelineROSDepth.pass
+    ../Assets/Passes/ROSPassTemplates.azasset
     Source/ROS2SensorsModuleInterface.cpp
     Source/ROS2SensorsModuleInterface.h
     Source/Clients/ROS2SensorsSystemComponent.cpp
