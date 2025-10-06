@@ -131,10 +131,9 @@ namespace ROS2Controllers::VehicleDynamics::Utilities
                 if (articulation)
                 {
                     steeringData.m_steeringJoint = articulation->GetId();
-                    [[maybe_unused]] const bool hasFreeAxis =
-                        Utils::TryGetFreeArticulationAxis(steeringData.m_steeringEntity, steeringData.m_axis);
-
-                    AZ_Error("VehicleDynamics::Utilities", hasFreeAxis, "Articulation steering has no free axis somehow");
+                    const auto freeAxis = Utils::TryGetFreeArticulationAxis(steeringData.m_steeringEntity);
+                    AZ_Assert(freeAxis.has_value(), "Articulation steering has no free axis somehow");
+                    steeringData.m_axis = freeAxis.value();
                 }
                 else
                 {
@@ -215,7 +214,9 @@ namespace ROS2Controllers::VehicleDynamics::Utilities
         if (articulationComponent)
         {
             wheelData.m_isArticulation = true;
-            Utils::TryGetFreeArticulationAxis(wheelEntityId, wheelData.m_axis);
+            const auto freeAxis = Utils::TryGetFreeArticulationAxis(wheelEntityId);
+            AZ_Assert(freeAxis.has_value(), "Articulation wheel has no free axis somehow");
+            wheelData.m_axis = freeAxis.value();
             wheelData.m_wheelJoint = articulationComponent->GetId();
             return wheelData;
         }
