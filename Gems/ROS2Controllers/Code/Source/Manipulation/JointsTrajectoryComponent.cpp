@@ -7,6 +7,7 @@
  */
 
 #include "JointsTrajectoryComponent.h"
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <PhysX/ArticulationJointBus.h>
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
@@ -61,8 +62,12 @@ namespace ROS2Controllers
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<JointsTrajectoryComponent, AZ::Component>()->Version(0)->Field(
-                "Action name", &JointsTrajectoryComponent::m_followTrajectoryActionName);
+            serialize->Class<JointsTrajectoryComponent, AZ::Component>()->Version(1)
+                ->Field("Action name", &JointsTrajectoryComponent::m_followTrajectoryActionName)
+                ->Field("Check for position errors", &JointsTrajectoryComponent::m_checkForPositionErrors)
+                ->Field("Joint goal tolerance", &JointsTrajectoryComponent::m_jointPositionTolerance)
+                ->Field("Check for velocity", &JointsTrajectoryComponent::m_checkForVelocity)
+                ->Field("Joint velocity tolerance", &JointsTrajectoryComponent::m_jointVelocityTolerance);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -76,7 +81,32 @@ namespace ROS2Controllers
                         AZ::Edit::UIHandlers::Default,
                         &JointsTrajectoryComponent::m_followTrajectoryActionName,
                         "Action Name",
-                        "Name the follow trajectory action server to accept movement commands");
+                        "Name the follow trajectory action server to accept movement commands")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &JointsTrajectoryComponent::m_checkForPositionErrors,
+                        "Check for Position Errors",
+                        "If true, check if joints reached the goal position before reporting success")
+                        ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &JointsTrajectoryComponent::m_jointPositionTolerance,
+                        "Joint Position Tolerance",
+                        "The threshold for joint position errors to report the goal as reached (one value for all joints, units depend on joint type)")
+                        ->Attribute(AZ::Edit::Attributes::Visibility, &JointsTrajectoryComponent::ShouldCheckForPositionErrors)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &JointsTrajectoryComponent::m_checkForVelocity,
+                        "Check for Velocity",
+                        "If true, check if joints velocity is below threshold before reporting success")
+                        ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &JointsTrajectoryComponent::m_jointVelocityTolerance,
+                        "Joint Velocity Tolerance",
+                        "The threshold for joint velocities under which to report the goal as reached (one value for all joints, units depend on joint type)"
+                    )
+                        ->Attribute(AZ::Edit::Attributes::Visibility, &JointsTrajectoryComponent::ShouldCheckForVelocity);
             }
         }
     }
@@ -95,6 +125,16 @@ namespace ROS2Controllers
     void JointsTrajectoryComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
     {
         incompatible.push_back(AZ_CRC_CE("ManipulatorJointTrajectoryService"));
+    }
+
+    bool JointsTrajectoryComponent::ShouldCheckForPositionErrors()
+    {
+        return m_checkForPositionErrors;
+    }
+
+    bool JointsTrajectoryComponent::ShouldCheckForVelocity()
+    {
+        return m_checkForVelocity;
     }
 
     AZ::Outcome<void, JointsTrajectoryComponent::TrajectoryResult> JointsTrajectoryComponent::StartTrajectoryGoal(
@@ -235,17 +275,82 @@ namespace ROS2Controllers
         builtin_interfaces::msg::Time timestamp;
         ROS2::ROS2ClockRequestBus::BroadcastResult(timestamp, &ROS2::ROS2ClockRequestBus::Events::GetROSTimestamp);
 
-        rclcpp::Time timeNow = rclcpp::Time(timestamp); //!< Current simulation time.
+        const rclcpp::Time timeNow = rclcpp::Time(timestamp); //!< Current simulation time.
         rclcpp::Duration threshold = rclcpp::Duration::from_nanoseconds(1e7);
 
-        if (m_trajectoryExecutionStartTime + targetGoalTime <= timeNow + threshold)
-        { // Jump to the next point if current simulation time is ahead of timeFromStart
+        // Jump to the next point if current simulation time is ahead of timeFromStart
+        bool canJumpToNextPoint = m_trajectoryExecutionStartTime + targetGoalTime <= timeNow + threshold;
+
+        // But if it's the last point, wait until the manipulator reaches it
+        bool lastTrajectoryPoint = m_trajectoryGoal.trajectory.points.size() == 1;
+        if (lastTrajectoryPoint)
+        {
+            if (m_checkForPositionErrors)
+            {
+                canJumpToNextPoint &= CheckIfPositionReachedTolerance(desiredGoal);
+            }
+
+            if (m_checkForVelocity)
+            {
+                canJumpToNextPoint &= CheckIfVelocityReachedTolerance();
+            }
+        }
+
+        if (canJumpToNextPoint)
+        { // Jump to the next point in the trajectory
             m_trajectoryGoal.trajectory.points.erase(m_trajectoryGoal.trajectory.points.begin());
             FollowTrajectory(deltaTimeNs);
             return;
         }
 
         MoveToNextPoint(desiredGoal);
+    }
+
+    bool JointsTrajectoryComponent::CheckIfPositionReachedTolerance(const trajectory_msgs::msg::JointTrajectoryPoint trajectoryPoint)
+    {
+        const auto& goalJointNames = m_trajectoryGoal.trajectory.joint_names;
+        for (int jointIndex = 0; jointIndex < m_trajectoryGoal.trajectory.joint_names.size(); jointIndex++)
+        { // Check if each joint reached its target position
+            const AZStd::string_view jointName(goalJointNames[jointIndex].c_str());
+            AZ::Outcome<float, AZStd::string> currentJointPosition;
+            JointsManipulationRequestBus::EventResult(
+                currentJointPosition, GetEntityId(), &JointsManipulationRequests::GetJointPosition, jointName);
+            
+            if (!currentJointPosition.IsSuccess())
+            { // If position cannot be obtained, report failure
+                return false;
+            }
+
+            const float targetPos = trajectoryPoint.positions[jointIndex];
+            if (!AZ::IsClose(currentJointPosition.GetValue(), targetPos, m_jointPositionTolerance))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool JointsTrajectoryComponent::CheckIfVelocityReachedTolerance()
+    {
+        const auto& goalJointNames = m_trajectoryGoal.trajectory.joint_names;
+        for (int jointIndex = 0; jointIndex < m_trajectoryGoal.trajectory.joint_names.size(); jointIndex++)
+        { // Check if each joint velocity is below the threshold
+            const AZStd::string_view jointName(goalJointNames[jointIndex].c_str());
+            AZ::Outcome<float, AZStd::string> currentJointVelocity;
+            JointsManipulationRequestBus::EventResult(
+                currentJointVelocity, GetEntityId(), &JointsManipulationRequests::GetJointVelocity, jointName);
+
+            if (!currentJointVelocity.IsSuccess())
+            { // If velocity cannot be obtained, report failure
+                return false;
+            }
+
+            if (!AZ::IsClose(currentJointVelocity.GetValue(), 0.0f, m_jointVelocityTolerance))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     void JointsTrajectoryComponent::MoveToNextPoint(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint)
