@@ -8,6 +8,7 @@
 
 #pragma once
 #include <AzCore/Component/Entity.h>
+#include <AzCore/std/optional.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
 #include <PhysX/ArticulationTypes.h>
 
@@ -27,7 +28,6 @@ namespace ROS2Controllers::Utils
 
     //! Try to get a free articulation axis of an articulation link.
     //! @param entityId The entity with the articulation link.
-    //! @param axis Is set to a free axis, if one exists.
-    //! @return Whether we found a free articulation axis or not.
-    bool TryGetFreeArticulationAxis(const AZ::EntityId& entityId, PhysX::ArticulationJointAxis& axis);
+    //! @return a free articulation axis if found and nullopt if not.
+    AZStd::optional<PhysX::ArticulationJointAxis> TryGetFreeArticulationAxis(const AZ::EntityId& entityId);
 } // namespace ROS2Controllers::Utils
