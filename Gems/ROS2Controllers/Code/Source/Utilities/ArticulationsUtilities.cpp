@@ -75,7 +75,7 @@ namespace ROS2Controllers::Utils
         return result;
     }
 
-    bool TryGetFreeArticulationAxis(const AZ::EntityId& entityId, PhysX::ArticulationJointAxis& axis)
+    AZStd::optional<PhysX::ArticulationJointAxis> TryGetFreeArticulationAxis(const AZ::EntityId& entityId)
     {
         PhysX::ArticulationJointAxis tempAxis;
         for (AZ::u8 i = 0; i <= static_cast<AZ::u8>(PhysX::ArticulationJointAxis::Z); i++)
@@ -86,10 +86,9 @@ namespace ROS2Controllers::Utils
             PhysX::ArticulationJointRequestBus::EventResult(type, entityId, &PhysX::ArticulationJointRequests::GetMotion, tempAxis);
             if (type != PhysX::ArticulationJointMotionType::Locked)
             {
-                axis = tempAxis;
-                return true;
+                return tempAxis;
             }
         }
-        return false;
+        return AZStd::nullopt;
     }
 } // namespace ROS2Controllers::Utils

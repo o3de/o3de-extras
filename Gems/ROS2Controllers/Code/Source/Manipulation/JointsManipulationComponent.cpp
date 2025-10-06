@@ -35,7 +35,6 @@ namespace ROS2Controllers
                 AZ_Assert(false, "Joint names in hierarchy need to be unique (%s is not)!", jointName.c_str());
                 return;
             }
-            AZ_Printf("JointsManipulationComponent", "Adding joint info for hinge joint %s\n", jointName.c_str());
             JointInfo jointInfo;
             jointInfo.m_isArticulation = false;
             jointInfo.m_axis = static_cast<PhysX::ArticulationJointAxis>(0);
@@ -45,24 +44,30 @@ namespace ROS2Controllers
 
         void AddArticulationJointInfo(const AZ::EntityComponentIdPair& idPair, const AZStd::string& jointName, ManipulationJoints& joints)
         {
-            PhysX::ArticulationJointAxis freeAxis;
-            bool hasFreeAxis = Utils::TryGetFreeArticulationAxis(idPair.GetEntityId(), freeAxis);
-            if (!hasFreeAxis)
+            bool isRoot = false;
+            PhysX::ArticulationJointRequestBus::EventResult(
+                isRoot, idPair.GetEntityId(), &PhysX::ArticulationJointRequests::IsRootArticulation);
+            if (isRoot)
+            { // Root articulation does not have a joint
+                return;
+            }
+
+            const auto freeAxis = Utils::TryGetFreeArticulationAxis(idPair.GetEntityId());
+            if (!freeAxis.has_value())
             { // Do not add a joint since it is a fixed one
-                AZ_Printf("JointsManipulationComponent", "Articulation joint %s is fixed, skipping\n", jointName.c_str());
                 return;
             }
 
             if (joints.find(jointName) != joints.end())
             {
-                AZ_Assert(false, "Joint names in hierarchy need to be unique (%s is not)!", jointName.c_str());
+                AZ_Error(
+                    "JointsManipulationComponent", false, "Joint names in hierarchy need to be unique (%s is not)!", jointName.c_str());
                 return;
             }
 
-            AZ_Printf("JointsManipulationComponent", "Adding joint info for articulation link %s\n", jointName.c_str());
             JointInfo jointInfo;
             jointInfo.m_isArticulation = true;
-            jointInfo.m_axis = freeAxis;
+            jointInfo.m_axis = freeAxis.value();
             jointInfo.m_entityComponentIdPair = idPair;
             joints[jointName] = jointInfo;
         }
