@@ -4,11 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
-    ../Assets/Passes/PipelineRenderToTextureROSColor.pass
-    ../Assets/Passes/PipelineRenderToTextureROSDepth.pass
-    ../Assets/Passes/PipelineROSColor.pass
-    ../Assets/Passes/PipelineROSDepth.pass
-    ../Assets/Passes/ROSPassTemplates.azasset
     Source/Clock/ITimeSource.h
     Source/Clock/ROS2ClockSystemComponent.h
     Source/Clock/ROS2ClockSystemComponent.cpp
