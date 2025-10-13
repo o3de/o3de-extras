@@ -20,5 +20,6 @@
     "documentation_url": "https://github.com/wolfpld/tracy",
     "dependencies": [],
     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/tracyprofiler-1.0.0-gem.zip",
-    "provided_unique_service": "Profiler"
+    "provided_unique_service": "Profiler",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development"
 }

@@ -955,6 +955,83 @@
             "engine_api_dependencies": [],
             "restricted": "ROS2Sensors",
             "sha256": "ee3a5ed1c4913ca5be2bb756983f08192afd8aaca0f3ad8ce9beaa94f679468b"
+        },
+        {
+            "gem_name": "OptickProfiler",
+            "version": "1.0.0",
+            "display_name": "Optick Profiler",
+            "license": "Apache-2.0 Or MIT",
+            "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
+            "origin": "O3DE Extras",
+            "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/ExternalProfilers/OptickProfiler",
+            "type": "Code",
+            "summary": "Implements the O3DE profiler tags to be used by the Optick third party profiler",
+            "canonical_tags": [
+                "Gem",
+                "Tools"
+            ],
+            "user_tags": [
+                "Profiler"
+            ],
+            "icon_path": "preview.png",
+            "requirements": "Users will need to download Optick GUI from the <a href='https://github.com/bombomby/optick/releases'>Github release</a>.",
+            "dependencies": [],
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/optickprofiler-1.0.0-gem.zip",
+            "provided_unique_service": "Profiler",
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "sha256": "6667773aeff03319cfe20cd382b8af7280f5d2f5263ff344f37d1073c7da88c0"
+        },
+        {
+            "gem_name": "SuperluminalProfiler",
+            "version": "1.0.0",
+            "display_name": "Superluminal Profiler",
+            "license": "Apache-2.0 Or MIT",
+            "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
+            "origin": "O3DE Extras",
+            "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/ExternalProfilers/SuperluminalProfiler",
+            "type": "Code",
+            "summary": "Implements the O3DE profiler tags to be used by the superluminal third party profiler",
+            "canonical_tags": [
+                "Gem",
+                "Tools"
+            ],
+            "user_tags": [
+                "Profiler"
+            ],
+            "icon_path": "preview.png",
+            "requirements": "Users will need to download Superluminal from the <a href='https://superluminal.eu/'>Superluminal Web Site</a>.",
+            "documentation_url": "https://www.superluminal.eu/docs/documentation.html",
+            "dependencies": [],
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/superluminalprofiler-1.0.0-gem.zip",
+            "provided_unique_service": "Profiler",
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "sha256": "533fd5d1bab4c68538e53d39f8d4cc4f939a49c917dc5d43428494c354ac4815"
+        },
+        {
+            "gem_name": "TracyProfiler",
+            "version": "1.0.0",
+            "display_name": "Tracy Profiler",
+            "license": "Apache-2.0 Or MIT",
+            "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
+            "origin": "O3DE Extras",
+            "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/ExternalProfilers/TracyProfiler",
+            "type": "Code",
+            "summary": "Implements the O3DE profiler tags to be used by the Tracy third party profiler",
+            "canonical_tags": [
+                "Gem",
+                "Tools"
+            ],
+            "user_tags": [
+                "Profiler"
+            ],
+            "icon_path": "preview.png",
+            "requirements": "Users will need to download Tracy from the <a href='https://github.com/wolfpld/tracy/releases'>Github release</a>.",
+            "documentation_url": "https://github.com/wolfpld/tracy",
+            "dependencies": [],
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/tracyprofiler-1.0.0-gem.zip",
+            "provided_unique_service": "Profiler",
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "sha256": "fdf610b96ad8c008b5cc05dd0adbefb281d44162a644ec036c265458ef224e07"
         }
     ],
     "templates": [
