@@ -1,6 +1,6 @@
 {
     "gem_name": "SuperluminalProfiler",
-    "version": "0.0.0",
+    "version": "1.0.0",
     "display_name": "Superluminal Profiler",
     "license": "Apache-2.0 Or MIT",
     "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
@@ -18,7 +18,7 @@
     "icon_path": "preview.png",
     "requirements": "Users will need to download Superluminal from the <a href='https://superluminal.eu/'>Superluminal Web Site</a>.",
     "documentation_url": "https://www.superluminal.eu/docs/documentation.html",
-    "dependencies": [
-    ],
+    "dependencies": [],
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/superluminalprofiler-1.0.0-gem.zip",
     "provided_unique_service": "Profiler"
 }
