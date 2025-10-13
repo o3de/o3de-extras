@@ -781,7 +781,14 @@
             "restricted": "SimulationInterfaces",
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
             "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-1.0.0-gem.zip",
-            "sha256": "d13ecb0e22aa50b74abb241a615d9026cad739c1522fe94e456ea5b94d9bbd06"
+            "sha256": "d13ecb0e22aa50b74abb241a615d9026cad739c1522fe94e456ea5b94d9bbd06",
+            "versions_data": [
+                {
+                    "version": "2.0.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.0.0-gem.zip",
+                    "sha256": "bca9402d455062ae3d715d14cfcbad35ff6a558f246d127cd9d7cb5a272d6bd4"
+                }
+            ]
         }
     ],
     "templates": [
