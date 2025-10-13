@@ -92,7 +92,6 @@ namespace ROS2
                 return;
             }
             auto* transformInterface = entity->GetTransform();
-            AZ_Assert(transformInterface, "No transform for id : %s", id.ToString().c_str());
             if (!transformInterface)
             {
                 return;
