@@ -25,7 +25,7 @@
         "PhysX5",
         "ROS2>=4.0.0"
     ],
-    "repo_uri": "https://github.com/o3de/o3de-extras/",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Sensors",
     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2sensors-1.0.0-gem.zip",
     "compatible_engines": [],

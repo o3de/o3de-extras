@@ -25,7 +25,7 @@
         "ROS2Controllers",
         "ROS2Sensors"
     ],
-    "repo_uri": "https://github.com/o3de/o3de-extras/",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2RobotImporter",
     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2robotimporter-1.0.0-gem.zip",
     "compatible_engines": [],
