@@ -75,6 +75,12 @@
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrvk-1.1.0-gem.zip",
                     "version": "1.1.0",
                     "sha256": "2a49fae6b3b3452cb52315d2131b67ec2a66afe9b031a2c025f678530e4ac673"
+                },
+                {
+                    "summary": "OpenXR Vulkan for Atom",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrvk-1.2.0-gem.zip",
+                    "version": "1.2.0",
+                    "sha256": "874cf758b6d3b101a8fff9a0648414a75d951ff45012c2130f18e898b2519e14"
                 }
             ]
         },
@@ -349,6 +355,23 @@
                     "engine_api_dependencies": [],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.4.0-gem.zip",
                     "sha256": "2682a18e88b88134d2bb32bc9dfc53cbaf6126a8c32e96a18e84108ca7f21f9e"
+                },
+                {
+                    "version": "4.0.0",
+                    "origin_url": "https://robotec.ai",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
+                    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem.",
+                    "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+                    "dependencies": [
+                        "LevelGeoreferencing"
+                    ],
+                    "compatible_engines": [
+                        "o3de-sdk>=2.4.0",
+                        "o3de>=2.4.0"
+                    ],
+                    "engine_api_dependencies": [],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-4.0.0-gem.zip",
+                    "sha256": "5567e47ddc1cbb3f76073201d80b463ad5fba8cdfeb36e9ba6fbd479e492681d"
                 }
             ]
         },
@@ -492,6 +515,17 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.1-gem.zip",
                     "sha256": "940963d056a9d10ed15788503ff5b7cddc69a3585ad4265da9ed149e699ea98a"
+                },
+                {
+                    "version": "2.0.2",
+                    "origin": "RobotecAI",
+                    "origin_url": "https://robotec.ai",
+                    "compatible_engines": [
+                        "o3de-sdk>=2.3.0",
+                        "o3de>=2.3.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.2-gem.zip",
+                    "sha256": "6e9b80a1babb6427e8dd29b30ef48bf3edf362d13ed7525a07104438a6f21445"
                 }
             ]
         },
@@ -566,6 +600,15 @@
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/xr-1.1.0-gem.zip",
                     "version": "1.1.0",
                     "sha256": "fdef00fd5a9aeb4d98a3664d134358d9645f2c75034bf043284644fc158bc904"
+                },
+                {
+                    "compatible_engines": [
+                        "o3de-sdk>=2.4.0",
+                        "o3de>=2.4.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/xr-1.2.0-gem.zip",
+                    "version": "1.2.0",
+                    "sha256": "1b614b498d71343659ac9adcb3099f3926ed6901df30c6c8dd8f6de2fef1f8b7"
                 }
             ]
         },
@@ -745,6 +788,16 @@
                     "version": "1.0.1",
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2samplerobots-1.0.1-gem.zip",
                     "sha256": "4f157579587958c335d8435e1f2e36458b29fd88104663fdf05519e62f68aaaa"
+                },
+                {
+                    "version": "1.1.0",
+                    "dependencies": [
+                        "ROS2>=4.0.0",
+                        "ROS2Controllers>=1.0.0",
+                        "ROS2Sensors>=1.0.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2samplerobots-1.1.0-gem.zip",
+                    "sha256": "f9ffbde2621479c463797b7a785717ec1356dc4dc7ccfeffcdac8780c4dac770"
                 }
             ]
         },
@@ -787,8 +840,121 @@
                     "version": "2.0.0",
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.0.0-gem.zip",
                     "sha256": "bca9402d455062ae3d715d14cfcbad35ff6a558f246d127cd9d7cb5a272d6bd4"
+                },
+                {
+                    "version": "2.1.0",
+                    "dependencies": [
+                        "ROS2>=4.0.0",
+                        "DebugDraw"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.1.0-gem.zip",
+                    "sha256": "570a1f83372441b93f7201a72df3fb76a8a430338ff303c010db2c4fa644dbcf"
                 }
             ]
+        },
+        {
+            "gem_name": "ROS2Controllers",
+            "version": "1.0.0",
+            "display_name": "ROS2Controllers",
+            "license": "Apache-2.0",
+            "license_url": "https://opensource.org/licenses/Apache-2.0",
+            "origin": "RobotecAI",
+            "origin_url": "https://robotec.ai",
+            "type": "Code",
+            "summary": "Tools and components enabling robot control with ROS 2 communication interfaces",
+            "canonical_tags": [
+                "Gem"
+            ],
+            "user_tags": [
+                "ROS2Controllers"
+            ],
+            "platforms": [
+                "Linux"
+            ],
+            "icon_path": "preview.png",
+            "requirements": "Requires ROS 2 Gem and PhysX5 Gem",
+            "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+            "dependencies": [
+                "PhysX5",
+                "ROS2>=4.0.0"
+            ],
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Controllers",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2controllers-1.0.0-gem.zip",
+            "compatible_engines": [],
+            "engine_api_dependencies": [],
+            "restricted": "ROS2Controllers",
+            "sha256": "b6029ff58c0da1561d9a8585147516fe9dcf0330783630df013d5f712e61574b"
+        },
+        {
+            "gem_name": "ROS2RobotImporter",
+            "version": "1.0.0",
+            "display_name": "ROS2RobotImporter",
+            "license": "Apache-2.0",
+            "license_url": "https://opensource.org/licenses/Apache-2.0",
+            "origin": "RobotecAI",
+            "origin_url": "https://robotec.ai",
+            "type": "Code",
+            "summary": "Tool for importing URDF and SDF robot models.",
+            "canonical_tags": [
+                "Gem"
+            ],
+            "user_tags": [
+                "ROS2RobotImporter"
+            ],
+            "platforms": [
+                "Linux"
+            ],
+            "icon_path": "preview.png",
+            "requirements": "Requires ROS 2 Gem, ROS2Sensors Gem and ROS2Controllers Gem.",
+            "documentation_url": "Link to any documentation of your Gem",
+            "dependencies": [
+                "ROS2>=4.0.0",
+                "ROS2Controllers",
+                "ROS2Sensors"
+            ],
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2RobotImporter",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2robotimporter-1.0.0-gem.zip",
+            "compatible_engines": [],
+            "engine_api_dependencies": [],
+            "restricted": "ROS2RobotImporter",
+            "sha256": "8b668fe7a0f88c9cca2a02a77827de1c68131a75b559323ce29714ad116fc1ae"
+        },
+        {
+            "gem_name": "ROS2Sensors",
+            "version": "1.0.0",
+            "display_name": "ROS2Sensors",
+            "license": "Apache-2.0",
+            "license_url": "https://opensource.org/licenses/Apache-2.0",
+            "origin": "RobotecAI",
+            "origin_url": "https://robotec.ai",
+            "type": "Code",
+            "summary": "Tools and components for simulating sensors with ROS 2 communication interfaces",
+            "canonical_tags": [
+                "Gem"
+            ],
+            "user_tags": [
+                "ROS2Sensors"
+            ],
+            "platforms": [
+                "Linux"
+            ],
+            "icon_path": "preview.png",
+            "requirements": "Requires ROS 2 Gem, LevelGeoreferencing Gem, and PhysX5 Gem",
+            "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+            "dependencies": [
+                "LevelGeoreferencing",
+                "PhysX5",
+                "ROS2>=4.0.0"
+            ],
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Sensors",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2sensors-1.0.0-gem.zip",
+            "compatible_engines": [],
+            "engine_api_dependencies": [],
+            "restricted": "ROS2Sensors",
+            "sha256": "ee3a5ed1c4913ca5be2bb756983f08192afd8aaca0f3ad8ce9beaa94f679468b"
         }
     ],
     "templates": [
