@@ -10,7 +10,9 @@
         "Project"
     ],
     "user_tags": [
-        "${Name}", "ROS2", "ROS"
+        "${Name}",
+        "ROS2",
+        "ROS"
     ],
     "icon_path": "preview.png",
     "engine": "o3de",
@@ -35,7 +37,9 @@
         "PrimitiveAssets",
         "PrefabBuilder",
         "ROS2>=3.1.0",
+        "ROS2Controllers",
         "ROS2SampleRobots",
+        "ROS2Sensors",
         "SaveData",
         "ScriptCanvasPhysics",
         "ScriptEvents",
@@ -44,5 +48,5 @@
         "WhiteBox",
         "WarehouseAssets",
         "${Name}"
-    ]    
+    ]
 }

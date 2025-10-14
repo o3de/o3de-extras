@@ -9,6 +9,7 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
+#include <Atom/RPI.Public/Pass/PassSystemInterface.h>
 
 namespace XR
 {

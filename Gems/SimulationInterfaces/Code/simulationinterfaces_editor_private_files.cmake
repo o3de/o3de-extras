@@ -5,12 +5,18 @@
 #
 
 set(FILES
+        Source/Tools/NamedPoseManagerEditor.cpp
+        Source/Tools/NamedPoseManagerEditor.h
         Source/Tools/SimulationManagerEditor.cpp
         Source/Tools/SimulationManagerEditor.h
         Source/Tools/SimulationEntitiesManagerEditor.cpp
         Source/Tools/SimulationEntitiesManagerEditor.h
         Source/Tools/SimulationFeaturesAggregatorEditor.cpp
         Source/Tools/SimulationFeaturesAggregatorEditor.h
+        Source/Tools/LevelManagerEditor.cpp
+        Source/Tools/LevelManagerEditor.h
         Source/Tools/ROS2SimulationInterfacesEditorSystemComponent.cpp
         Source/Tools/ROS2SimulationInterfacesEditorSystemComponent.h
+        Source/Components/NamedPoseEditorComponent.cpp
+        Source/Components/NamedPoseEditorComponent.h
 )

@@ -9,103 +9,21 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <ROS2/Frame/NamespaceConfiguration.h>
-#include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2NamesBus.h>
 
 namespace ROS2
 {
-    void NamespaceConfiguration::PopulateNamespace(bool isRoot, const AZStd::string& entityName)
+
+    AZ::Outcome<void, AZStd::string> NamespaceConfiguration::ValidateNamespaceField(void* newValue, const AZ::Uuid& valueType)
     {
-        m_isRoot = isRoot;
-        m_entityName = entityName;
-        OnNamespaceStrategySelected();
-    }
-
-    void NamespaceConfiguration::UpdateNamespace()
-    {
-        switch (m_namespaceStrategy)
-        {
-        case NamespaceStrategy::Empty:
-            m_namespace = "";
-            break;
-        case NamespaceStrategy::Default:
-            m_namespace = m_isRoot ? ROS2Names::RosifyName(m_entityName) : "";
-            break;
-        case NamespaceStrategy::FromEntityName:
-            m_namespace = ROS2Names::RosifyName(m_entityName);
-            break;
-        case NamespaceStrategy::Custom:
-            m_namespace = m_customNamespace;
-            break;
-        default:
-            AZ_Assert(false, "Unhandled namespace strategy");
-            break;
-        }
-    }
-
-    AZ::Crc32 NamespaceConfiguration::OnNamespaceStrategySelected()
-    {
-        UpdateNamespace();
-        return AZ::Edit::PropertyRefreshLevels::EntireTree;
-    }
-
-    AZStd::string NamespaceConfiguration::GetNamespace() const
-    {
-        if (m_parentNamespace.empty())
-        {
-            return m_namespace;
-        }
-
-        if (m_namespace.empty())
-        {
-            return m_parentNamespace;
-        }
-
-        return ROS2Names::GetNamespacedName(m_parentNamespace, m_namespace);
-    }
-
-    AZStd::string NamespaceConfiguration::GetNamespace(const AZStd::string& parentNamespace) const
-    {
-        if (parentNamespace.empty())
-        {
-            return m_namespace;
-        }
-
-        if (m_namespace.empty())
-        {
-            return parentNamespace;
-        }
-
-        return ROS2Names::GetNamespacedName(parentNamespace, m_namespace);
-    }
-
-    void NamespaceConfiguration::SetNamespace(const AZStd::string& ros2Namespace, NamespaceStrategy strategy)
-    {
-        m_namespace = ros2Namespace;
-        m_namespaceStrategy = strategy;
-
-        if (strategy == NamespaceStrategy::Custom)
-        {
-            m_customNamespace = ros2Namespace;
-        }
-
-        UpdateNamespace();
-    }
-
-    void NamespaceConfiguration::SetParentNamespace(const AZStd::string& parentNamespace)
-    {
-        m_parentNamespace = parentNamespace;
-        UpdateNamespace();
+        AZ::Outcome<void, AZStd::string> outcome;
+        ROS2NamesRequestBus::BroadcastResult(outcome, &ROS2NamesRequests::ValidateNamespaceField, newValue, valueType);
+        return outcome;
     }
 
     bool NamespaceConfiguration::IsNamespaceCustom() const
     {
         return m_namespaceStrategy == NamespaceConfiguration::NamespaceStrategy::Custom;
-    }
-
-    void NamespaceConfiguration::Init()
-    {
-        // Make sure that the namespace is up to date.
-        OnNamespaceStrategySelected();
     }
 
     void NamespaceConfiguration::Reflect(AZ::ReflectContext* context)
@@ -131,8 +49,7 @@ namespace ROS2
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Custom, "Custom")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &NamespaceConfiguration::m_customNamespace, "Namespace", "Namespace")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &NamespaceConfiguration::IsNamespaceCustom)
-                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateNamespaceField)
-                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &NamespaceConfiguration::UpdateNamespace);
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &NamespaceConfiguration::ValidateNamespaceField);
             }
         }
     }

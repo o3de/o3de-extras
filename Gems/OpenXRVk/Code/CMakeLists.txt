@@ -48,6 +48,7 @@ ly_add_target(
         ${pal_include_dir}/platform_private_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
     PLATFORM_INCLUDE_FILES
         ${pal_source_dir}/platform_private_static_${PAL_PLATFORM_NAME_LOWERCASE}.cmake
+        ${pal_include_dir}/platform_${PAL_PLATFORM_NAME_LOWERCASE}.cmake
     INCLUDE_DIRECTORIES
         PRIVATE
             Source
@@ -64,6 +65,11 @@ ly_add_target(
             Gem::Atom_RHI_Vulkan.Reflect
             Gem::Atom_RHI_Vulkan.Glad.Static
             Gem::XR.Static
+            Gem::PhysX.Static			
+            Gem::Atom_Feature_Common.Public			
+            Gem::CommonFeaturesAtom.Static
+            Gem::EMotionFXStaticLib
+            Gem::EMotionFX
 )
 
 ly_add_target(
@@ -114,10 +120,11 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         BUILD_DEPENDENCIES
             PUBLIC
                 AZ::AzCore
-                AZ::AzFramework
                 AZ::AssetBuilderSDK
                 ${openxr_dependency}
                 Gem::${gem_name}.Static
+                Gem::EMotionFXStaticLib
+                Gem::EMotionFX
     )
 
     ly_add_target(

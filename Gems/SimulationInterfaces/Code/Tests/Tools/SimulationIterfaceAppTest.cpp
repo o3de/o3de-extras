@@ -9,7 +9,7 @@
 
 #include "TestFixture.h"
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-
+#include <ROS2/Frame/ROS2FrameComponentBus.h>
 namespace UnitTest
 {
     class SimulationInterfaceTestEnvironmentWithAssets : public SimulationInterfaceTestEnvironment
@@ -68,12 +68,15 @@ namespace UnitTest
         constexpr AZStd::string_view entityName = "MySuperDuperEntity";
         const AZ::Transform initialPose = AZ::Transform::CreateTranslation(AZ::Vector3(0.0f, 0.0f, 0.0f));
         constexpr AZStd::string_view uri = "product_asset:///sampleasset/testsimulationentity.spawnable";
-        constexpr AZStd::string_view entityNamespace = "";
+        constexpr AZStd::string_view entityNamespace = "FooNamespace";
         AZStd::atomic_bool completed = false;
         SpawnCompletedCb completedCb = [&](const AZ::Outcome<AZStd::string, FailedResult>& result)
         {
             EXPECT_TRUE(result.IsSuccess());
             completed = true;
+        };
+        PreInsertionCb preinsertionCB = [](const AZ::Outcome<AzFramework::SpawnableEntityContainerView, FailedResult>& outcome)
+        {
         };
 
         constexpr bool allowRename = false;
@@ -84,6 +87,7 @@ namespace UnitTest
             entityNamespace,
             initialPose,
             allowRename,
+            preinsertionCB,
             completedCb);
 
         // entities are spawned asynchronously, so we need to tick the app to let the entity be spawned
@@ -104,6 +108,7 @@ namespace UnitTest
             entityNamespace,
             initialPose,
             allowRename,
+            preinsertionCB,
             failedSpawnCompletedCb);
         EXPECT_TRUE(completed2);
 
@@ -118,6 +123,18 @@ namespace UnitTest
         ASSERT_FALSE(entities.empty()) << "Simulated Entities Empty";
         const AZStd::string spawnedEntityName = entities.front();
         printf("Spawned entity name %s\n", spawnedEntityName.c_str());
+
+        // get entity id by name
+        AZ::Outcome<AZ::EntityId, FailedResult> entityIdResult;
+        SimulationEntityManagerRequestBus::BroadcastResult(
+            entityIdResult, &SimulationEntityManagerRequestBus::Events::GetEntityId, spawnedEntityName);
+
+        ASSERT_TRUE(entityIdResult.IsSuccess()) <<  "Failed to get entity id";
+        const AZ::EntityId entityId = entityIdResult.GetValue();
+        // check namespace
+        AZStd::string entityNamespaceOut;
+        ROS2::ROS2FrameComponentBus::EventResult(entityNamespaceOut, entityId, &ROS2::ROS2FrameComponentBus::Events::GetNamespace);
+        EXPECT_EQ(entityNamespaceOut, entityNamespace);
 
         // run physics simulation
         StepPhysics(100);
@@ -173,11 +190,32 @@ namespace UnitTest
         {
         };
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity1", uri, entityNamespace, initialPose, false, cb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity,
+            "entity1",
+            uri,
+            entityNamespace,
+            initialPose,
+            false,
+            preinsertionCB,
+            cb);
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity2", uri, entityNamespace, initialPose, false, cb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity,
+            "entity2",
+            uri,
+            entityNamespace,
+            initialPose,
+            false,
+            preinsertionCB,
+            cb);
         SimulationEntityManagerRequestBus::Broadcast(
-            &SimulationEntityManagerRequestBus::Events::SpawnEntity, "entity3", uri, entityNamespace, initialPose, false, cb);
+            &SimulationEntityManagerRequestBus::Events::SpawnEntity,
+            "entity3",
+            uri,
+            entityNamespace,
+            initialPose,
+            false,
+            preinsertionCB,
+            cb);
         TickApp(100);
         EXPECT_EQ(getNumberOfEntities(), 3);
 
@@ -189,7 +227,6 @@ namespace UnitTest
             EXPECT_TRUE(result.IsSuccess());
         };
         SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::DeleteAllEntities, deleteAllCompletion);
-
         TickApp(100);
         EXPECT_TRUE(deletionWasCompleted);
         EXPECT_EQ(getNumberOfEntities(), 0);

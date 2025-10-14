@@ -8,29 +8,33 @@
  */
 
 #include "TestFixture.h"
-#include "Clients/SimulationEntitiesManager.h"
+#include <AzCore/Component/EntityId.h>
+#include <Clients/SimulationEntitiesManager.h>
+#include <Clients/SimulationManager.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
+#include <gtest/gtest.h>
 namespace UnitTest
 {
     void SimulationInterfaceTestEnvironment::AddGemsAndComponents()
     {
-        constexpr AZStd::array<AZStd::string_view, 3> requiredGems = { "PhysX5", // required for PhysX Dynamic
+        constexpr AZStd::array<AZStd::string_view, 4> requiredGems = { "PhysX5", // required for PhysX Dynamic
                                                                        "LmbrCentral", // for shapes
+                                                                       "ROS2", // For frame component
                                                                        "SimulationInterfaces" };
         AddActiveGems(requiredGems);
         AddDynamicModulePaths({ "PhysX5.Gem" });
         AddDynamicModulePaths({ "LmbrCentral" });
-        AddComponentDescriptors({
-            SimulationInterfaces::SimulationEntitiesManager::CreateDescriptor(),
-        });
-        AddRequiredComponents({ SimulationInterfaces::SimulationEntitiesManager::TYPEINFO_Uuid() });
+        AddDynamicModulePaths({ "ROS2" });
+        AddComponentDescriptors(
+            AZStd::initializer_list<AZ::ComponentDescriptor*>{ SimulationInterfaces::SimulationEntitiesManager::CreateDescriptor(),
+                                                               SimulationInterfaces::SimulationManager::CreateDescriptor() });
+        AddRequiredComponents(
+            { SimulationInterfaces::SimulationEntitiesManager::TYPEINFO_Uuid(), SimulationInterfaces::SimulationManager::TYPEINFO_Uuid() });
     }
 
     void SimulationInterfaceTestEnvironment::PostSystemEntityActivate()
     {
         AZ::UserSettingsComponentRequestBus::Broadcast(&AZ::UserSettingsComponentRequests::DisableSaveOnFinalize);
-
-        // load asset catalog
     }
 
     AZ::ComponentApplication* SimulationInterfaceTestEnvironment::CreateApplicationInstance()
@@ -70,6 +74,21 @@ namespace UnitTest
         entity->Activate();
         AZ_Assert(entity->GetState() == AZ::Entity::State::Active, "Entity is not active");
 
+        // register entity
+        AZ::Outcome<AZStd::string, SimulationInterfaces::FailedResult> output;
+        SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
+            output, &SimulationInterfaces::SimulationEntityManagerRequests::RegisterNewSimulatedBody, entityName, entity->GetId());
+        // function return type is different than void, so ASSERT_TRUE cannot be used. Expect_true and early return is added to mimic assert
+        // behaviour
+        EXPECT_TRUE(output.IsSuccess()) << "Failed to register entity to simulation_interfaces, "
+                                        << output.GetError().m_errorString.c_str();
+        if (!output.IsSuccess())
+        {
+            return AZ::EntityId{ AZ::EntityId::InvalidEntityId };
+        }
+        entity->SetName(output.GetValue()); // name in simulation_interfaces registry could be change to ensure uniqueness. Apply new name
+                                            // to the created entity
+
         auto id = entity->GetId();
         m_entities.emplace(AZStd::make_pair(id, AZStd::move(entity)));
 
@@ -80,6 +99,11 @@ namespace UnitTest
     {
         for (auto& entity : m_entities)
         {
+            AZ::Outcome<void, SimulationInterfaces::FailedResult> output;
+            SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
+                output, &SimulationInterfaces::SimulationEntityManagerRequests::UnregisterSimulatedBody, entity.second->GetName());
+            AZ_Assert(
+                output.IsSuccess(), "Failed to unregister entity from simulation_interfaces, %s", output.GetError().m_errorString.c_str());
             entity.second->Deactivate();
         }
         m_entities.clear();
@@ -89,6 +113,11 @@ namespace UnitTest
         auto findIt = m_entities.find(entityId);
         if (findIt != m_entities.end())
         {
+            AZ::Outcome<void, SimulationInterfaces::FailedResult> output;
+            SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
+                output, &SimulationInterfaces::SimulationEntityManagerRequests::UnregisterSimulatedBody, findIt->second->GetName());
+            AZ_Assert(
+                output.IsSuccess(), "Failed to unregister entity from simulation_interfaces, %s", output.GetError().m_errorString.c_str());
             findIt->second->Deactivate();
             m_entities.erase(findIt);
         }

@@ -10,20 +10,20 @@
 
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/API/ApplicationAPI.h>
-
-#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
-
 #include <Interfaces/IROS2HandlerBase.h>
+#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
 
 namespace ROS2SimulationInterfaces
 {
     class ROS2SimulationInterfacesSystemComponent
         : public AZ::Component
         , public ROS2SimulationInterfacesRequestBus::Handler
+
     {
     public:
         AZ_COMPONENT_DECL(ROS2SimulationInterfacesSystemComponent);
@@ -45,16 +45,20 @@ namespace ROS2SimulationInterfaces
 
         // ROS2SimulationInterfacesRequestBus override
         AZStd::unordered_set<SimulationFeatureType> GetSimulationFeatures() override;
+        void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatureType>& features) override;
 
     private:
         AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<IROS2HandlerBase>> m_availableRos2Interface;
-
+        AZStd::unordered_set<SimulationFeatureType> m_externallyRegisteredFeatures;
         template<typename T>
         void RegisterInterface(rclcpp::Node::SharedPtr ros2Node)
         {
             AZStd::shared_ptr handler = AZStd::make_shared<T>();
             handler->Initialize(ros2Node);
-            m_availableRos2Interface[handler->GetTypeName()] = AZStd::move(handler);
+            if (handler->IsValid())
+            {
+                m_availableRos2Interface[handler->GetTypeName()] = AZStd::move(handler);
+            }
             handler.reset();
         };
     };

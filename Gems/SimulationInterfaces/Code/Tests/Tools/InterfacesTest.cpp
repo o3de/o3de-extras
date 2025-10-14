@@ -29,7 +29,7 @@
 #include <Services/GetEntitiesServiceHandler.h>
 #include <Services/GetEntitiesStatesServiceHandler.h>
 #include <Services/GetEntityStateServiceHandler.h>
-#include <Services/GetSimulationFeaturesServiceHandler.h>
+#include <Services/GetSimulatorFeaturesServiceHandler.h>
 #include <Services/GetSimulationStateServiceHandler.h>
 #include <Services/GetSpawnablesServiceHandler.h>
 #include <Services/ROS2ServiceBase.h>
@@ -178,7 +178,7 @@ namespace UnitTest
         EXPECT_NE(services.find("/get_spawnables"), services.end());
         EXPECT_NE(services.find("/set_entity_state"), services.end());
         EXPECT_NE(services.find("/spawn_entity"), services.end());
-        EXPECT_NE(services.find("/get_simulation_features"), services.end());
+        EXPECT_NE(services.find("/get_simulator_features"), services.end());
         EXPECT_NE(services.find("/step_simulation"), services.end());
     }
 
@@ -321,12 +321,14 @@ namespace UnitTest
         const AZ::Vector3 dims(4.0f, 5.0f, 6.0f);
         const AZ::Vector3 point2 = point1 + dims;
 
-        request->filters.bounds.points[0].x = point1.GetX();
-        request->filters.bounds.points[0].y = point1.GetY();
-        request->filters.bounds.points[0].z = point1.GetZ();
-        request->filters.bounds.points[1].x = point2.GetX();
-        request->filters.bounds.points[1].y = point2.GetY();
-        request->filters.bounds.points[1].z = point2.GetZ();
+        // order of defined box is upper right, bottom left 
+        // https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/Bounds.msg
+        request->filters.bounds.points[0].x = point2.GetX();
+        request->filters.bounds.points[0].y = point2.GetY();
+        request->filters.bounds.points[0].z = point2.GetZ();
+        request->filters.bounds.points[1].x = point1.GetX();
+        request->filters.bounds.points[1].y = point1.GetY();
+        request->filters.bounds.points[1].z = point1.GetZ();
         request->filters.bounds.type = simulation_interfaces::msg::Bounds::TYPE_BOX;
 
         EXPECT_CALL(mock, GetEntities(_))
@@ -391,7 +393,7 @@ namespace UnitTest
         using ::testing::_;
         auto node = GetRos2Node();
 
-        auto client = node->create_client<simulation_interfaces::srv::GetSimulatorFeatures>("/get_simulation_features");
+        auto client = node->create_client<simulation_interfaces::srv::GetSimulatorFeatures>("/get_simulator_features");
         auto request = std::make_shared<simulation_interfaces::srv::GetSimulatorFeatures::Request>();
         auto future = client->async_send_request(request);
         SpinAppUntilFuture(future);
@@ -419,7 +421,7 @@ namespace UnitTest
                     return features;
                 }));
 
-        auto client = node->create_client<simulation_interfaces::srv::GetSimulatorFeatures>("/get_simulation_features");
+        auto client = node->create_client<simulation_interfaces::srv::GetSimulatorFeatures>("/get_simulator_features");
         auto request = std::make_shared<simulation_interfaces::srv::GetSimulatorFeatures::Request>();
         auto future = client->async_send_request(request);
         SpinAppUntilFuture(future);
@@ -445,13 +447,14 @@ namespace UnitTest
         request->allow_renaming = true;
 
         auto future = client->async_send_request(request);
-        EXPECT_CALL(mock, SpawnEntity(_, _, _, _, _, _))
+        EXPECT_CALL(mock, SpawnEntity(_, _, _, _, _, _, _))
             .WillOnce(::testing::Invoke(
                 [](const AZStd::string& name,
                    const AZStd::string& uri,
                    const AZStd::string& entityNamespace,
                    const AZ::Transform& initialPose,
                    const bool allowRename,
+                   PreInsertionCb preinsertionCb,
                    SpawnCompletedCb completedCb)
                 {
                     EXPECT_EQ(name, "valid_name");

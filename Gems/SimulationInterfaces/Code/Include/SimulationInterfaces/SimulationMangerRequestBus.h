@@ -9,6 +9,7 @@
 #pragma once
 
 #include "SimulationInterfacesTypeIds.h"
+#include <AzCore/Outcome/Outcome.h>
 
 #include "Result.h"
 #include <AzCore/EBus/EBus.h>
@@ -30,7 +31,7 @@ namespace SimulationInterfaces
         using ReloadLevelCallback = AZStd::function<void(void)>;
 
         //! Reload level and remove all spawned simulation entities.
-        virtual void ReloadLevel(ReloadLevelCallback completionCallback) = 0;
+        virtual AZ::Outcome<void, FailedResult> ResetSimulation(ReloadLevelCallback completionCallback) = 0;
 
         //! Set the simulation to paused or unpaused,
         //! expect always to succeed
@@ -61,6 +62,9 @@ namespace SimulationInterfaces
         //! https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulationState.msg
         //! @return outcome indicating if setting state succeed. In case of failure error message with error code is returned
         virtual AZ::Outcome<void, FailedResult> SetSimulationState(SimulationState stateToSet) = 0;
+        //! Check if it possible to work with entities. These operations should be possible only if world is loaded
+        //! @return bool indicating if simulator is ready for taking requests related to spawning/despawning setting entity state etc
+        virtual bool EntitiesOperationsPossible() = 0;
     };
 
     class SimulationMangerRequestBusTraits : public AZ::EBusTraits

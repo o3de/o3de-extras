@@ -10,10 +10,10 @@
 #include <AzCore/Math/Quaternion.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Math/Vector3.h>
+#include <builtin_interfaces/msg/time.hpp>
 #include <geometry_msgs/msg/point.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
-#include <builtin_interfaces/msg/time.hpp>
 
 namespace ROS2
 {
@@ -32,3 +32,5 @@ namespace ROS2
         float GetTimeDifference(const builtin_interfaces::msg::Time& start, const builtin_interfaces::msg::Time& end);
     }; // namespace ROS2Conversions
 } // namespace ROS2
+
+#include <ROS2/Utilities/ROS2Conversions.inl>

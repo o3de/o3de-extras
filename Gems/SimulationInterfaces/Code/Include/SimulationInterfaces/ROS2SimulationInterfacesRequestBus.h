@@ -27,6 +27,9 @@ namespace ROS2SimulationInterfaces
         //! SimulationFeatureType follows definition available at:
         //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
         virtual AZStd::unordered_set<SimulationFeatureType> GetSimulationFeatures() = 0;
+
+        //! Registers simulation features. Used to define features from handlers other than those existing in the Gem
+        virtual void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatureType>& features) = 0;
     };
 
     class ROS2SimulationInterfacesRequestBusTraits : public AZ::EBusTraits

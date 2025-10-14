@@ -6,22 +6,25 @@
  *
  */
 
+#include "ROS2FrameEditorComponent.h"
+#include "NamespaceComputation.h"
 #include "ROS2FrameSystemBus.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Component/EntityUtils.h>
+#include <AzCore/Component/TransformBus.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 #include <AzToolsFramework/UI/PropertyEditor/PropertyEditorAPI.h>
-#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/Frame/ROS2FrameComponentBus.h>
+#include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/ROS2GemUtilities.h>
-#include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2NamesBus.h>
 
 namespace ROS2
 {
@@ -32,76 +35,64 @@ namespace ROS2
 
     void ROS2FrameEditorComponent::Init()
     {
-        m_configuration.m_namespaceConfiguration.Init();
     }
 
     void ROS2FrameEditorComponent::Activate()
     {
-        ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
+        ROS2FrameEditorComponentBus::Handler::BusConnect(GetEntityId());
         AZ::EntityBus::Handler::BusConnect(GetEntityId());
         if (auto* frameSystemInterface = ROS2FrameSystemInterface::Get())
         {
             frameSystemInterface->RegisterFrame(GetEntityId());
         }
+        UpdateNamespace();
+
+        ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2FrameEditorComponent::Deactivate()
     {
+        ROS2FrameComponentBus::Handler::BusDisconnect();
+
         if (auto* frameSystemInterface = ROS2FrameSystemInterface::Get())
         {
             frameSystemInterface->UnregisterFrame(GetEntityId());
         }
         AZ::EntityBus::Handler::BusDisconnect();
-        ROS2FrameComponentBus::Handler::BusDisconnect();
+        ROS2FrameEditorComponentBus::Handler::BusDisconnect();
     }
 
-    AZStd::string ROS2FrameEditorComponent::GetGlobalFrameName() const
+    AZStd::string ROS2FrameEditorComponent::GetGlobalFrameID() const
     {
-        return ROS2Names::GetNamespacedName(GetNamespace(), AZStd::string("odom"));
+        const AZStd::string odometryFrame = GetGlobalFrameIDFromRegistry();
+        const auto computedNamespace = ComputeNamespace(GetEntityId());
+        return GetNamespacedName(computedNamespace, odometryFrame);
     }
 
-    bool ROS2FrameEditorComponent::IsTopLevel() const
+    AZStd::string ROS2FrameEditorComponent::GetNamespacedFrameID() const
     {
-        return ROS2FrameSystemInterface::Get()->IsTopLevel(GetEntityId());
-    }
-
-    AZStd::string ROS2FrameEditorComponent::GetFrameID() const
-    {
-        return ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_frameName);
-    }
-
-    void ROS2FrameEditorComponent::SetFrameID(const AZStd::string& frameId)
-    {
-        m_configuration.m_frameName = frameId;
+        auto computedNamespace = ComputeNamespace(GetEntityId());
+        return GetNamespacedName(computedNamespace, m_configuration.m_frameName);
     }
 
     AZStd::string ROS2FrameEditorComponent::GetNamespace() const
     {
-        return m_configuration.m_namespaceConfiguration.GetNamespace();
+        return ComputeNamespace(GetEntityId());
     }
 
-    void ROS2FrameEditorComponent::UpdateNamespace(const AZStd::string& parentNamespace)
+    void ROS2FrameEditorComponent::UpdateNamespace()
     {
-        m_configuration.m_namespaceConfiguration.SetParentNamespace(parentNamespace);
-        m_configuration.m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
-        m_configuration.SetEffectiveNamespace(GetNamespace());
+        m_effectiveNamespace = ComputeNamespace(GetEntityId());
+        m_fullName = GetNamespacedName(m_effectiveNamespace, m_configuration.m_frameName);
+
         AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Event(
-            GetEntityId(),
-            &AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Events::OnEntityComponentPropertyChanged,
-            GetEntity()->FindComponent<ROS2FrameEditorComponent>()->GetId());
-
-        ROS2FrameComponentNotificationBus::Event(GetEntityId(), &ROS2FrameComponentNotificationBus::Events::OnConfigurationChange);
+            GetEntityId(), &AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Events::OnEntityComponentPropertyChanged, GetId());
     }
 
-    void ROS2FrameEditorComponent::UpdateNamespaceConfiguration(
-        const AZStd::string& ros2Namespace, const NamespaceConfiguration::NamespaceStrategy& strategy)
+    AZStd::string ROS2FrameEditorComponent::GetNamespacedJointName() const
     {
-        m_configuration.m_namespaceConfiguration.SetNamespace(ros2Namespace, strategy);
-    }
-
-    AZ::Name ROS2FrameEditorComponent::GetJointName() const
-    {
-        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_jointName).c_str());
+        auto computedNamespace = ComputeNamespace(GetEntityId());
+        return GetNamespacedName(computedNamespace, m_configuration.m_jointName);
     }
 
     void ROS2FrameEditorComponent::SetJointName(const AZStd::string& jointName)
@@ -132,24 +123,37 @@ namespace ROS2
                         "Configuration of ROS 2 reference frame")
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2FrameEditorComponent::OnFrameConfigurationChange)
-                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues);
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues)
+                    ->ClassElement(AZ::Edit::ClassElements::Group, "Info")
+                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+                    ->UIElement(AZ::Edit::UIHandlers::Label, "Effective namespace", "")
+                    ->Attribute(AZ::Edit::Attributes::ValueText, &ROS2FrameEditorComponent::m_effectiveNamespace)
+                    ->UIElement(AZ::Edit::UIHandlers::Label, "Full name", "")
+                    ->Attribute(AZ::Edit::Attributes::ValueText, &ROS2FrameEditorComponent::m_fullName);
             }
         }
     }
 
     AZ::EntityId ROS2FrameEditorComponent::GetFrameParent() const
     {
-        return ROS2FrameSystemInterface::Get()->GetParentEntityId(GetEntityId());
+        const auto ancestors = GetAllAncestorTransformBus(GetEntityId());
+        return GetFirstEntityWithROS2FrameComponent(ancestors);
     }
 
-    AZStd::set<AZ::EntityId> ROS2FrameEditorComponent::GetFrameChildren() const
+    AZStd::set<AZ::EntityId> ROS2FrameEditorComponent::GetFrameDescendants() const
     {
-        return ROS2FrameSystemInterface::Get()->GetChildrenEntityId(GetEntityId());
+        // get all descendants
+        AZStd::vector<AZ::EntityId> children;
+        AZ::TransformBus::EventResult(children, GetEntityId(), &AZ::TransformBus::Events::GetAllDescendants);
+        // filter only those with ROS2FrameComponent
+        const auto ros2Children = GetEntitiesWithROS2FrameComponent(children);
+        return AZStd::set<AZ::EntityId>(ros2Children.begin(), ros2Children.end());
     }
 
     AZ::Crc32 ROS2FrameEditorComponent::OnFrameConfigurationChange()
     {
-        ROS2FrameSystemInterface::Get()->NotifyChange(GetEntityId());
+        m_effectiveNamespace = ComputeNamespace(GetEntityId());
+        m_fullName = GetNamespacedName(m_effectiveNamespace, m_configuration.m_frameName);
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 
@@ -173,11 +177,6 @@ namespace ROS2
         required.push_back(AZ_CRC_CE("TransformService"));
     }
 
-    ROS2FrameEditorComponent::ROS2FrameEditorComponent(const AZStd::string& frameId)
-    {
-        SetFrameID(frameId);
-    }
-
     void ROS2FrameEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
         gameEntity->CreateComponent<ROS2FrameComponent>(m_configuration);
@@ -186,6 +185,22 @@ namespace ROS2
     ROS2FrameConfiguration ROS2FrameEditorComponent::GetConfiguration() const
     {
         return m_configuration;
+    }
+
+    void ROS2FrameEditorComponent::SetConfiguration(const ROS2FrameConfiguration& config)
+    {
+        AZ_Assert(GetEntity()->GetState() != AZ::Entity::State::Active, "API can be called only for disabled components");
+        m_configuration = config;
+    }
+
+    AZStd::string ROS2FrameEditorComponent::GetJointName() const
+    {
+        return m_configuration.m_jointName;
+    }
+
+    AZStd::string ROS2FrameEditorComponent::GetFrameName() const
+    {
+        return m_configuration.m_frameName;
     }
 
 } // namespace ROS2

@@ -126,6 +126,14 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 6275443825220336439
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 9232262149871286756,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "test_entity_frame",
+                        "Joint Name": "test_entity_joint"
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 14994870681931426785,

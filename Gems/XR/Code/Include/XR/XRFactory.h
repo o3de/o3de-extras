@@ -34,7 +34,7 @@ namespace XR
         AZ_DISABLE_COPY_MOVE(Factory);
 
         //! Returns the component service name CRC used by the platform RHI system component.
-        static AZ::u32 GetPlatformService();
+        static AZ::Crc32 GetPlatformService();
 
         //! Registers the global factory instance.
         static void Register(XR::Factory* instance);
