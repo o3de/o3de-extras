@@ -1,0 +1,94 @@
+#
+# Copyright (c) Contributors to the Open 3D Engine Project.
+# For complete copyright and license terms please see the LICENSE at the root of this distribution.
+#
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+#
+#
+
+set(FILES
+    Source/ROS2ControllersModuleInterface.cpp
+    Source/ROS2ControllersModuleInterface.h
+    Source/Clients/ROS2ControllersSystemComponent.cpp
+    Source/Clients/ROS2ControllersSystemComponent.h
+    Source/Gripper/GripperActionServer.cpp
+    Source/Gripper/GripperActionServer.h
+    Source/Gripper/GripperActionServerComponent.cpp
+    Source/Gripper/GripperActionServerComponent.h
+    Source/Gripper/VacuumGripperComponent.h
+    Source/Gripper/VacuumGripperComponent.cpp
+    Source/Gripper/FingerGripperComponent.h
+    Source/Gripper/FingerGripperComponent.cpp
+    Source/Manipulation/Controllers/JointsArticulationControllerComponent.cpp
+    Source/Manipulation/Controllers/JointsArticulationControllerComponent.h
+    Source/Manipulation/Controllers/JointsPIDControllerComponent.cpp
+    Source/Manipulation/Controllers/JointsPIDControllerComponent.h
+    Source/Manipulation/JointInfo.cpp
+    Source/Manipulation/JointStatePublisher.cpp
+    Source/Manipulation/JointStatePublisher.h
+    Source/Manipulation/JointPositionsSubscriptionHandler.cpp
+    Source/Manipulation/JointPositionsSubscriptionHandler.h
+    Source/Manipulation/JointsPositionsComponent.cpp
+    Source/Manipulation/JointsPositionsComponent.h
+    Source/Manipulation/JointsManipulationComponent.cpp
+    Source/Manipulation/JointsManipulationComponent.h
+    Source/Manipulation/JointsTrajectoryComponent.cpp
+    Source/Manipulation/JointsTrajectoryComponent.h
+    Source/Manipulation/FollowJointTrajectoryActionServer.cpp
+    Source/Manipulation/FollowJointTrajectoryActionServer.h
+    Source/Manipulation/ManipulationUtils.h
+    Source/Manipulation/ManipulationUtils.cpp
+    Source/Manipulation/MotorizedJoints/JointMotorControllerComponent.cpp
+    Source/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.cpp
+    Source/Manipulation/MotorizedJoints/ManualMotorControllerComponent.cpp
+    Source/Manipulation/MotorizedJoints/PidMotorControllerComponent.cpp
+    Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
+    Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
+    Source/RobotControl/ControlConfiguration.cpp
+    Source/RobotControl/Controllers/AckermannController/AckermannControlComponent.cpp
+    Source/RobotControl/Controllers/AckermannController/AckermannControlComponent.h
+    Source/RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.cpp
+    Source/RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.h
+    Source/RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.cpp
+    Source/RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h
+    Source/RobotControl/ROS2RobotControlComponent.cpp
+    Source/RobotControl/ROS2RobotControlComponent.h
+    Source/RobotControl/Twist/TwistSubscriptionHandler.cpp
+    Source/Sensors/ROS2OdometryCovariance.cpp
+    Source/Sensors/ROS2WheelOdometrySensorComponent.cpp
+    Source/Sensors/ROS2WheelOdometrySensorComponent.h
+    Source/Sensors/WheelOdometrySensorConfiguration.cpp
+    Source/Utilities/ArticulationsUtilities.cpp
+    Source/Utilities/ArticulationsUtilities.h
+    Source/Utilities/Controllers/PidConfiguration.cpp
+    Source/VehicleDynamics/AxleConfiguration.cpp
+    Source/VehicleDynamics/DriveModel.cpp
+    Source/VehicleDynamics/DriveModel.h
+    Source/VehicleDynamics/DriveModels/AckermannDriveModel.cpp
+    Source/VehicleDynamics/DriveModels/AckermannDriveModel.h
+    Source/VehicleDynamics/DriveModels/SkidSteeringDriveModel.cpp
+    Source/VehicleDynamics/DriveModels/SkidSteeringDriveModel.h
+    Source/VehicleDynamics/ManualControlEventHandler.h
+    Source/VehicleDynamics/Utilities.cpp
+    Source/VehicleDynamics/Utilities.h
+    Source/VehicleDynamics/VehicleConfiguration.cpp
+    Source/VehicleDynamics/VehicleInputs.cpp
+    Source/VehicleDynamics/VehicleInputs.h
+    Source/VehicleDynamics/VehicleModelComponent.cpp
+    Source/VehicleDynamics/VehicleModelComponent.h
+    Source/VehicleDynamics/ModelComponents/AckermannModelComponent.cpp
+    Source/VehicleDynamics/ModelComponents/AckermannModelComponent.h
+    Source/VehicleDynamics/ModelComponents/SkidSteeringModelComponent.cpp
+    Source/VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h
+    Source/VehicleDynamics/VehicleModelLimits.cpp
+    Source/VehicleDynamics/VehicleModelLimits.h
+    Source/VehicleDynamics/ModelLimits/AckermannModelLimits.cpp
+    Source/VehicleDynamics/ModelLimits/AckermannModelLimits.h
+    Source/VehicleDynamics/ModelLimits/SkidSteeringModelLimits.cpp
+    Source/VehicleDynamics/ModelLimits/SkidSteeringModelLimits.h
+    Source/VehicleDynamics/WheelControllerComponent.cpp
+    Source/VehicleDynamics/WheelControllerComponent.h
+    Source/VehicleDynamics/WheelDynamicsData.h
+    Source/RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponentConfig.cpp
+    Source/RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponentConfig.h
+)

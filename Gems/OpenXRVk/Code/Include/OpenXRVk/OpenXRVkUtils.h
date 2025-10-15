@@ -11,6 +11,7 @@
 #include <AzCore/Math/Transform.h>
 #include <OpenXRVk_Platform.h>
 #include <XR/XRBase.h>
+#include "OpenXRVkActionsInterface.h"
 
 
 // Macro to generate stringify functions for OpenXR enumerations based data provided in openxr_reflection.h
@@ -73,4 +74,6 @@ namespace OpenXRVk
     AZ::Vector3 AzPositionFromXrPose(const XrPosef& pose, bool convertCoordinates = true);
     AZ::Transform AzTransformFromXrPose(const XrPosef& pose, bool convertCoordinates = true);
     XrPosef XrPoseFromAzTransform(const AZ::Transform& tm, bool convertCoordinates = true);
+
+    float ReadActionHandleFloat(IOpenXRActions* iface, IOpenXRActions::ActionHandle actionHandle, float deadZone = 0.05f);
 }

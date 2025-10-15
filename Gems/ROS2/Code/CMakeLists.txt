@@ -3,11 +3,22 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
+# Currently we are in the Code folder: ${CMAKE_CURRENT_LIST_DIR}
+# Get the platform specific folder ${pal_dir} for the current folder: ${CMAKE_CURRENT_LIST_DIR}/Platform/${PAL_PLATFORM_NAME}
+# Note: o3de_pal_dir will take care of the details for us, as this may be a restricted platform
+#       in which case it will see if that platform is present here or in the restricted folder.
+#       i.e. It could here in our gem : Gems/ROS2/Code/Platform/<platorm_name>  or
+#            <restricted_folder>/<platform_name>/Gems/ROS2/Code
+o3de_pal_dir(pal_dir ${CMAKE_CURRENT_LIST_DIR}/Platform/${PAL_PLATFORM_NAME} "${gem_restricted_path}" "${gem_path}" "${gem_parent_relative_path}")
 
-# Only allow this gem to be configured on platforms that are currently supported
-include(${CMAKE_CURRENT_SOURCE_DIR}/Platform/${PAL_PLATFORM_NAME}/PAL_${PAL_PLATFORM_NAME_LOWERCASE}.cmake)
-if(NOT PAL_TRAIT_BUILD_ROS2_GEM_SUPPORTED)
-    message(FATAL_ERROR "The ROS2 Gem is not currently supported on ${PAL_PLATFORM_NAME}")
+# Now that we have the platform abstraction layer (PAL) folder for this folder, thats where we will find the
+# traits for this platform. Traits for a platform are defines for things like whether or not something in this gem
+# is supported by this platform.
+include(${pal_dir}/PAL_${PAL_PLATFORM_NAME_LOWERCASE}.cmake)
+
+# Check to see if building the Gem Modules are supported for the current platform
+if(NOT PAL_TRAIT_ROS2_SUPPORTED)
+    message(FATAL_ERROR "The ROS2 Gem is not supported on ${PAL_PLATFORM_NAME}")
     return()
 endif()
 
@@ -49,131 +60,172 @@ find_package(gazebo_msgs QUIET)
 if (gazebo_msgs_FOUND)
     message(STATUS "Found gazebo_msgs package, enabling legacy features like ContactSensor Component and ROS2 Spawner Component")
     SET (WITH_GAZEBO_MSGS TRUE)
-    if(NOT (ROS_DISTRO STREQUAL "humble" OR ROS_DISTRO STREQUAL "jazzy"))
-        message(WARNING
-                "The support for deprecated gazebo_msgs package is not supported in ROS 2 Kilted or newer. "
-                "Please consider migration to Simulation Interfaces. "
-                "If you do not intend to use Gazebo messages, please make sure that this package is not sourced in your environment." )
-
-    endif()
 else()
     message(STATUS "Could not find gazebo_msgs package, disabling legacy features like ContactSensor Component and ROS2 Spawner Component")
     SET(WITH_GAZEBO_MSGS FALSE)
 endif()
 
-# Add the ROS2.Static target
-# Note: We include the common files and the platform specific files which are set in ros2_common_files.cmake
-# and in ${pal_dir}/ros2_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
+# Add the static target with the API Interface and the code
 ly_add_target(
     NAME ${gem_name}.Static STATIC
     NAMESPACE Gem
+    PLATFORM_INCLUDE_FILES
+        ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/ros2_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
     FILES_CMAKE
-        ros2_header_files.cmake
-        ros2_files.cmake
+        ros2_api_files.cmake
+        ros2_shared_api_files.cmake
     INCLUDE_DIRECTORIES
         PUBLIC
             Include
         PRIVATE
             Source
-            Source/VehicleDynamics
+    BUILD_DEPENDENCIES
+        PUBLIC
+            AZ::AzCore
+            Gem::${gem_name}.Private.Object
+)
+
+# The ${gem_name}.API target declares the common interface that users of this gem should depend on in their targets
+ly_add_target(
+    NAME ${gem_name}.API INTERFACE
+    NAMESPACE Gem
+    FILES_CMAKE
+        ros2_api_files.cmake
+        ${pal_dir}/ros2_api_files.cmake
+    INCLUDE_DIRECTORIES
+        INTERFACE
+            Include
+    BUILD_DEPENDENCIES
+        INTERFACE
+            AZ::AzCore
+)
+
+target_interface_depends_on_ros2_packages(${gem_name}.API rclcpp builtin_interfaces control_msgs geometry_msgs)
+
+# The ${gem_name}.Private.Object target is an internal target
+# It should not be used outside of this Gems CMakeLists.txt
+ly_add_target(
+    NAME ${gem_name}.Private.Object STATIC
+    NAMESPACE Gem
+    FILES_CMAKE
+        ros2_private_files.cmake
+        ${pal_dir}/ros2_private_files.cmake
+    TARGET_PROPERTIES
+        O3DE_PRIVATE_TARGET TRUE
+    INCLUDE_DIRECTORIES
+        PRIVATE
+            Include
+            Source
     BUILD_DEPENDENCIES
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
-            Gem::Atom_RPI.Public
-            Gem::Atom_Feature_Common.Public
-            Gem::Atom_Component_DebugCamera.Static
-            Gem::Atom_AtomBridge.Static
-            Gem::StartingPointInput
-            Gem::PhysX5.Static
-            Gem::LmbrCentral.API
-            Gem::LevelGeoreferencing.API
+            Gem::Atom_AtomBridge.Static # FollowingCameraComponent
+            Gem::LevelGeoreferencing.API # ROS2SpawnerComponent
 )
 
-target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs vision_msgs control_msgs)
+target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs vision_msgs control_msgs)
 
 if (WITH_GAZEBO_MSGS)
-    target_depends_on_ros2_package(${gem_name}.Static gazebo_msgs REQUIRED)
-    target_compile_definitions(${gem_name}.Static PUBLIC "WITH_GAZEBO_MSGS")
+    target_depends_on_ros2_package(${gem_name}.Private.Object gazebo_msgs REQUIRED)
+    target_compile_definitions(${gem_name}.Private.Object PUBLIC "WITH_GAZEBO_MSGS")
 endif()
 
-ly_add_target(
-    NAME ${gem_name}.API HEADERONLY
-    NAMESPACE Gem
-    FILES_CMAKE
-        ros2_header_files.cmake
-    INCLUDE_DIRECTORIES
-        INTERFACE
-            Include
-)
-
-# Here add ROS2 target, it depends on the ROS2.Static
+# Here add ${gem_name} target, it depends on the Private Object library and Public API interface
 ly_add_target(
     NAME ${gem_name} ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
     NAMESPACE Gem
     FILES_CMAKE
         ros2_shared_files.cmake
+        ${pal_dir}/ros2_shared_files.cmake
     INCLUDE_DIRECTORIES
         PUBLIC
             Include
         PRIVATE
             Source
     BUILD_DEPENDENCIES
+        PUBLIC
+            Gem::${gem_name}.API
         PRIVATE
             Gem::${gem_name}.Static
-            Gem::Atom_Feature_Common.Public
+            Gem::${gem_name}.Private.Object
 )
 
-# By default, we will specify that the above target ROS2 would be used by
-# Client, Server and Unified type targets when this gem is enabled.  If you don't want it
-# active in Clients, Servers or Unified by default, delete one or more of the following lines:
+# Include the gem name into the Client Module source file
+# for use with the AZ_DECLARE_MODULE_CLASS macro
+# This is to allow renaming of the gem to also cause
+# the CreateModuleClass_Gem_<gem-name> function which
+# is used to bootstrap the gem in monolithic builds to link to the new gem name
+ly_add_source_properties(
+SOURCES
+    Source/Clients/ROS2Module.cpp
+PROPERTY COMPILE_DEFINITIONS
+    VALUES
+        O3DE_GEM_NAME=${gem_name}
+        O3DE_GEM_VERSION=${gem_version})
+
+# By default, we will specify that the above target ${gem_name} would be used by
+# Client and Server type targets when this gem is enabled.  If you don't want it
+# active in Clients or Servers by default, delete one of both of the following lines:
 ly_create_alias(NAME ${gem_name}.Clients NAMESPACE Gem TARGETS Gem::${gem_name})
 ly_create_alias(NAME ${gem_name}.Servers NAMESPACE Gem TARGETS Gem::${gem_name})
 ly_create_alias(NAME ${gem_name}.Unified NAMESPACE Gem TARGETS Gem::${gem_name})
 
-# If we are on a host platform, we want to add the host tools targets like the ${gem_name}.Editor target which
-# will also depend on ${gem_name}.Static
+# For the Client and Server variants of ${gem_name} Gem, an alias to the ${gem_name}.API target will be made
+ly_create_alias(NAME ${gem_name}.Clients.API NAMESPACE Gem TARGETS Gem::${gem_name}.API)
+ly_create_alias(NAME ${gem_name}.Servers.API NAMESPACE Gem TARGETS Gem::${gem_name}.API)
+ly_create_alias(NAME ${gem_name}.Unified.API NAMESPACE Gem TARGETS Gem::${gem_name}.API)
+
+# Add in CMake dependencies for each gem dependency listed in this gem's gem.json file
+# for the Clients, Servers, Unified gem variants
+o3de_add_variant_dependencies_for_gem_dependencies(GEM_NAME ${gem_name} VARIANTS Clients Servers Unified)
+
+# If we are on a host platform, we want to add the host tools targets like the ${gem_name}.Editor MODULE target
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
+    # The ${gem_name}.Editor.API target can be used by other gems that want to interact with the ${gem_name}.Editor module
     ly_add_target(
-        NAME ${gem_name}.Editor.Static STATIC
+        NAME ${gem_name}.Editor.API INTERFACE
         NAMESPACE Gem
-        AUTOMOC
-        AUTORCC
         FILES_CMAKE
-            ros2_editor_files.cmake
-        PLATFORM_INCLUDE_FILES
-            ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_editor_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
+            ros2_editor_api_files.cmake
+            ${pal_dir}/ros2_editor_api_files.cmake
+        INCLUDE_DIRECTORIES
+            INTERFACE
+                Include
+        BUILD_DEPENDENCIES
+            INTERFACE
+                AZ::AzToolsFramework
+    )
+
+    # The ${gem_name}.Editor.Private.Object target is an internal target
+    # which is only to be used by this gems CMakeLists.txt and any subdirectories
+    # Other gems should not use this target
+    ly_add_target(
+        NAME ${gem_name}.Editor.Private.Object STATIC
+        NAMESPACE Gem
+        FILES_CMAKE
+            ros2_editor_private_files.cmake
+        TARGET_PROPERTIES
+            O3DE_PRIVATE_TARGET TRUE
         INCLUDE_DIRECTORIES
             PRIVATE
-                Source
-                Source/RobotImporter
-            PUBLIC
                 Include
+                Source
         COMPILE_DEFINITIONS
             PRIVATE
                 ROS2_EDITOR
         BUILD_DEPENDENCIES
             PUBLIC
                 AZ::AzToolsFramework
-                Gem::CommonFeaturesAtom.Editor.Static
-                Gem::LmbrCentral.API
-                Gem::PhysX5.Editor.Static
                 Gem::${gem_name}.Static
-            PRIVATE
-                AZ::AssetBuilderSDK
-                3rdParty::sdformat
     )
 
     ly_add_target(
         NAME ${gem_name}.Editor GEM_MODULE
         NAMESPACE Gem
+        AUTOMOC
         FILES_CMAKE
             ros2_editor_shared_files.cmake
-        PLATFORM_INCLUDE_FILES
-            ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_editor_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
-        COMPILE_DEFINITIONS
-            PRIVATE
-                ROS2_EDITOR
         INCLUDE_DIRECTORIES
             PRIVATE
                 Source
@@ -181,15 +233,37 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Include
         BUILD_DEPENDENCIES
             PUBLIC
-                Gem::${gem_name}.Editor.Static
-                Gem::Atom_Feature_Common.Public
+                Gem::${gem_name}.Editor.API
+            PRIVATE
+                Gem::${gem_name}.Editor.Private.Object
     )
 
-    # By default, we will specify that the above target ROS2 would be used by
-    # Tool and Builder type targets when this gem is enabled. If you don't want it
-    # active in Tools or Builders by default, delete one or both of the following lines:
+    # Include the gem name into the Editor Module source file
+    # for use with the AZ_DECLARE_MODULE_CLASS macro
+    # This is to allow renaming of the gem to also cause
+    # the CreateModuleClass_Gem_<gem-name> function which
+    # is used to bootstrap the gem in monolithic builds to link to the new gem name
+    ly_add_source_properties(
+    SOURCES
+        Source/Tools/ROS2EditorModule.cpp
+    PROPERTY COMPILE_DEFINITIONS
+        VALUES
+            O3DE_GEM_NAME=${gem_name}
+            O3DE_GEM_VERSION=${gem_version})
+
+    # By default, we will specify that the above target ${gem_name} would be used by
+    # Tool and Builder type targets when this gem is enabled.  If you don't want it
+    # active in Tools or Builders by default, delete one of both of the following lines:
     ly_create_alias(NAME ${gem_name}.Tools    NAMESPACE Gem TARGETS Gem::${gem_name}.Editor)
     ly_create_alias(NAME ${gem_name}.Builders NAMESPACE Gem TARGETS Gem::${gem_name}.Editor)
+
+    # For the Tools and Builders variants of ${gem_name} Gem, an alias to the ${gem_name}.Editor API target will be made
+    ly_create_alias(NAME ${gem_name}.Tools.API NAMESPACE Gem TARGETS Gem::${gem_name}.Editor.API)
+    ly_create_alias(NAME ${gem_name}.Builders.API NAMESPACE Gem TARGETS Gem::${gem_name}.Editor.API)
+
+    # Add in CMake dependencies for each gem dependency listed in this gem's gem.json file
+    # for the Tools and Builders gem variants
+    o3de_add_variant_dependencies_for_gem_dependencies(GEM_NAME ${gem_name} VARIANTS Tools Builders)
 endif()
 
 ################################################################################
@@ -197,8 +271,9 @@ endif()
 ################################################################################
 # See if globally, tests are supported
 if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
-    if(PAL_TRAIT_TEST_GOOGLE_TEST_SUPPORTED)
-        # We support ROS2.Tests on this platform, add ROS2.Tests target which depends on ROS2.Static
+    # We globally support tests, see if we support tests on this platform for ${gem_name}.Tests
+    if(PAL_TRAIT_ROS2_TEST_SUPPORTED)
+        # We support ${gem_name}.Tests on this platform, add dependency on the Private Object target
         ly_add_target(
             NAME ${gem_name}.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
             NAMESPACE Gem
@@ -208,75 +283,47 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 PRIVATE
                     Tests
                     Source
+                    Include
             BUILD_DEPENDENCIES
                 PRIVATE
                     AZ::AzTest
-                    Gem::${gem_name}.Static
+                    AZ::AzFramework
+                    Gem::${gem_name}.Private.Object
         )
 
-        # Add ROS2.Tests to googletest
+        # Add ${gem_name}.Tests to googletest
         ly_add_googletest(
             NAME Gem::${gem_name}.Tests
         )
-        
-        # integration test for URDF importer
-        ly_add_target(
-            NAME ROS2.Frame.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
-                NAMESPACE Gem
-            FILES_CMAKE
-                frame_test_files.cmake
-            INCLUDE_DIRECTORIES
-                PRIVATE
-                    Source
-                    Tests
-            BUILD_DEPENDENCIES
-                PRIVATE
-                    AZ::AzTestShared
-                    AZ::AzToolsFramework
-                    Legacy::CryCommon
-                    Legacy::EditorCommon
-                    Legacy::Editor.Headers
-                    AZ::AzManipulatorTestFramework.Static
-                    Gem::ROS2.Static
-                RUNTIME_DEPENDENCIES
-                    Gem::PhysX5.Editor
-        )
-
-        ly_add_googletest(
-                NAME Gem::ROS2.Frame.Tests
-        )
-
     endif()
 
     # If we are a host platform we want to add tools test like editor tests here
     if(PAL_TRAIT_BUILD_HOST_TOOLS)
-        if(PAL_TRAIT_TEST_GOOGLE_TEST_SUPPORTED)
-            # We support ROS2.Editor.Tests on this platform, add ROS2.Editor.Tests target which depends on ROS2.Editor
+        # We are a host platform, see if Editor tests are supported on this platform
+        if(PAL_TRAIT_ROS2_EDITOR_TEST_SUPPORTED)
+            # We support ${gem_name}.Editor.Tests on this platform, add ${gem_name}.Editor.Tests target which depends on
+            # private ${gem_name}.Editor.Private.Object target
             ly_add_target(
                 NAME ${gem_name}.Editor.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
                 NAMESPACE Gem
                 FILES_CMAKE
                     ros2_editor_tests_files.cmake
-                PLATFORM_INCLUDE_FILES
-                    ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_editor_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
                 INCLUDE_DIRECTORIES
                     PRIVATE
                         Tests
                         Source
+                        Include
                 BUILD_DEPENDENCIES
                     PRIVATE
                         AZ::AzTest
-                        AZ::AzTestShared
-                        AZ::AzToolsFramework
-                        Gem::${gem_name}.Editor.Static
-                        3rdParty::sdformat
+                        AZ::AzManipulatorTestFramework.Static
+                        Gem::${gem_name}.Editor.Private.Object
             )
 
-            # Add ROS2.Editor.Tests to googletest
+            # Add ${gem_name}.Editor.Tests to googletest
             ly_add_googletest(
                 NAME Gem::${gem_name}.Editor.Tests
             )
         endif()
     endif()
 endif()
-

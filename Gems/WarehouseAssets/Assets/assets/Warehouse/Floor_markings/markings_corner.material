@@ -3,6 +3,7 @@
     "materialTypeVersion": 5,
     "propertyValues": {
         "baseColor.textureMap": "markings_corner.png",
+        "normal.textureMap": "markings_corner.png",
         "normal.useTexture": false,
         "opacity.mode": "Cutout"
     }

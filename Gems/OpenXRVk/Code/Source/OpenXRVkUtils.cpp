@@ -152,4 +152,20 @@ namespace OpenXRVk
         return AZStd::string(pathAsChars);
     }
 
+
+    float ReadActionHandleFloat(IOpenXRActions* iface, IOpenXRActions::ActionHandle actionHandle, float deadZone)
+    {
+        auto outcome = iface->GetActionStateFloat(actionHandle);
+        if (!outcome.IsSuccess())
+        {
+            // Most likely the controller went to sleep.
+            return 0.0f;
+        }
+        float value = outcome.GetValue();
+        if (fabsf(value) < deadZone)
+        {
+            return 0.0f;
+        }
+        return value;
+    }
 }

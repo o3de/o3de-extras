@@ -7,32 +7,76 @@
  */
 
 #include "SimulationManager.h"
-#include "SimulationInterfaces/SimulationMangerRequestBus.h"
-
 #include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/Component/TickBus.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Settings/SettingsRegistry.h>
 #include <AzFramework/Components/ConsoleBus.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <DebugDraw/DebugDrawBus.h>
+#include <SimulationInterfaces/LevelManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
+#include <SimulationInterfaces/SimulationMangerRequestBus.h>
+#include <SimulationInterfaces/WorldResource.h>
+#include <simulation_interfaces/msg/result.hpp>
+#include <simulation_interfaces/msg/simulation_state.hpp>
 #include <simulation_interfaces/msg/simulator_features.hpp>
+#include <simulation_interfaces/srv/get_current_world.hpp>
 
 namespace SimulationInterfaces
 {
     namespace
     {
 
+        //! Convert string like : keyboard_key_alphanumeric_O to a pretty name like "Key 'O'"
+        AZStd::string MakePrettyKeyboardName(const AzFramework::InputChannelId& inputChannelId)
+        {
+            // Convert the input channel name to a pretty format for display
+
+            // split the name by underscores
+            AZStd::vector<AZStd::string> parts;
+            AZ::StringFunc::Tokenize(inputChannelId.GetName(), parts, "_");
+            if (parts.size() < 4)
+            {
+                return inputChannelId.GetName(); // return original if no parts found
+            }
+
+            const AZStd::string& deviceType = parts[0];
+            const AZStd::string& keyType = parts[1];
+            const AZStd::string& keyRegion = parts[2];
+            const AZStd::string& keyName = parts[3];
+
+            if (deviceType != "keyboard" || keyType != "key")
+            {
+                return inputChannelId.GetName(); // return original if not a keyboard alphanumeric key
+            }
+
+            // Create a pretty name based on the key region and key name
+            if (keyRegion == "alphanumeric" || keyRegion == "function")
+            {
+                // For alphanumeric keys, we can return the key name directly
+                return AZStd::string::format("Key '%s'", keyName.c_str());
+            }
+
+            return AZStd::string::format("Key '%s_%s'", keyRegion.c_str(), keyName.c_str());
+        }
+
         const AZStd::unordered_map<SimulationState, AZStd::string> SimulationStateToString = {
             { simulation_interfaces::msg::SimulationState::STATE_PAUSED, "STATE_PAUSED" },
             { simulation_interfaces::msg::SimulationState::STATE_PLAYING, "STATE_PLAYING" },
             { simulation_interfaces::msg::SimulationState::STATE_QUITTING, "STATE_QUITTING" },
-            { simulation_interfaces::msg::SimulationState::STATE_STOPPED, "STATE_STOPPED" }
+            { simulation_interfaces::msg::SimulationState::STATE_STOPPED, "STATE_STOPPED" },
+            { simulation_interfaces::msg::SimulationState::STATE_NO_WORLD, "STATE_NO_WORLD" },
+            { simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD, "STATE_LOADING_WORLD" }
         };
 
         constexpr AZStd::string_view PrintStateName = "/SimulationInterfaces/PrintStateNameInGui";
         constexpr AZStd::string_view StartInStoppedStateKey = "/SimulationInterfaces/StartInStoppedState";
+        constexpr AZStd::string_view KeyboardTransitionStoppedToPlaying = "/SimulationInterfaces/KeyboardTransitions/StoppedToPlaying";
+        constexpr AZStd::string_view KeyboardTransitionPausedToPlaying = "/SimulationInterfaces/KeyboardTransitions/PausedToPlaying";
+        constexpr AZStd::string_view KeyboardTransitionPlayingToPaused = "/SimulationInterfaces/KeyboardTransitions/PlayingToPaused";
 
         AZStd::string GetStateName(SimulationState state)
         {
@@ -61,6 +105,32 @@ namespace SimulationInterfaces
             settingsRegistry->Get(output, PrintStateName);
             return output;
         }
+
+        AZStd::optional<AzFramework::InputChannelId> GetKeyboardTransitionKey(const AZStd::string& registryKeyName)
+        {
+            AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get();
+            AZ_Assert(settingsRegistry, "Settings Registry is not available");
+            AZStd::string channelIdName;
+            settingsRegistry->Get(channelIdName, registryKeyName);
+
+            if (channelIdName.empty())
+            {
+                AZ_Error("SimulationManager", false, "Failed to get keyboard transition key from registry: %s", registryKeyName.c_str());
+                return AZStd::nullopt;
+            }
+            AZ::Crc32 channelIdCrc32 = AZ::Crc32(channelIdName.c_str());
+
+            for (const auto& inputChannel : AzFramework::InputDeviceKeyboard::Key::All)
+            {
+                if (inputChannel.GetNameCrc32() == channelIdCrc32)
+                {
+                    return inputChannel;
+                }
+            }
+            AZ_Error("SimulationManager", false, "Failed to find input channel with name: %s", channelIdName.c_str());
+            return AZStd::nullopt;
+        }
+
     } // namespace
 
     AZ_COMPONENT_IMPL(SimulationManager, "SimulationManager", SimulationManagerTypeId);
@@ -87,11 +157,13 @@ namespace SimulationInterfaces
     {
         required.push_back(AZ_CRC_CE("PhysicsService"));
         required.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
+        required.push_back(AZ_CRC_CE("LevelManagerService"));
     }
 
     void SimulationManager::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
         dependent.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
+        dependent.push_back(AZ_CRC_CE("LevelManagerService"));
         dependent.push_back(AZ_CRC_CE("DebugDrawTextService"));
     }
 
@@ -128,7 +200,6 @@ namespace SimulationInterfaces
 
     void SimulationManager::Activate()
     {
-        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
         SimulationManagerRequestBus::Handler::BusConnect();
         SimulationFeaturesAggregatorRequestBus::Broadcast(
             &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
@@ -142,21 +213,82 @@ namespace SimulationInterfaces
                                                          simulation_interfaces::msg::SimulatorFeatures::STEP_SIMULATION_ACTION,
                                                          simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_SETTING,
                                                          simulation_interfaces::msg::SimulatorFeatures::SIMULATION_STATE_GETTING });
+
         if (PrintStateNameInGui())
         {
             AZ::TickBus::Handler::BusConnect();
         }
-        AZ::SystemTickBus::QueueFunction(
-            [this]()
-            {
-                InitializeSimulationState();
-            });
+
+        // Query registry for keyboard transition keys
+        if (const auto stoppedToPlayingKey = GetKeyboardTransitionKey(KeyboardTransitionStoppedToPlaying))
+        {
+            RegisterTransitionsKey(
+                *stoppedToPlayingKey,
+                simulation_interfaces::msg::SimulationState::STATE_STOPPED,
+                simulation_interfaces::msg::SimulationState::STATE_PLAYING);
+        }
+
+        if (const auto pausedToPlayingKey = GetKeyboardTransitionKey(KeyboardTransitionPausedToPlaying))
+        {
+            RegisterTransitionsKey(
+                *pausedToPlayingKey,
+                simulation_interfaces::msg::SimulationState::STATE_PAUSED,
+                simulation_interfaces::msg::SimulationState::STATE_PLAYING);
+        }
+
+        if (const auto playingToPausedKey = GetKeyboardTransitionKey(KeyboardTransitionPlayingToPaused))
+        {
+            RegisterTransitionsKey(
+                *playingToPausedKey,
+                simulation_interfaces::msg::SimulationState::STATE_PLAYING,
+                simulation_interfaces::msg::SimulationState::STATE_PAUSED);
+        }
+        InputChannelEventListener::BusConnect();
+
+        AZ::ApplicationTypeQuery appType;
+        AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
+
+        // wait one tick to allow all system to start to ensure correct bus calls related to setting simulation state
+        if (appType.IsEditor())
+        {
+            // if app is editor, buses for getting current world are inactive and return fail. In editor we need to simply initialize state
+            AZ::SystemTickBus::QueueFunction(
+                [this]()
+                {
+                    InitializeSimulationState();
+                });
+        }
+        else if (appType.IsGame())
+        {
+            AZ::SystemTickBus::QueueFunction(
+                [this]()
+                {
+                    // check if level is loaded
+                    AZ::Outcome<WorldResource, FailedResult> getCurrentWorldOutcome;
+                    LevelManagerRequestBus::BroadcastResult(getCurrentWorldOutcome, &LevelManagerRequestBus::Events::GetCurrentWorld);
+
+                    if (!getCurrentWorldOutcome.IsSuccess() &&
+                        getCurrentWorldOutcome.GetError().m_errorCode ==
+                            simulation_interfaces::srv::GetCurrentWorld::Response::NO_WORLD_LOADED)
+                    {
+                        SetSimulationState(simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
+                    }
+                    else if (getCurrentWorldOutcome.IsSuccess())
+                    {
+                        m_levelLoadedAtStartup = getCurrentWorldOutcome.GetValue().m_worldResource.m_uri;
+                        InitializeSimulationState();
+                    }
+                });
+        }
     }
 
     void SimulationManager::Deactivate()
     {
+        InputChannelEventListener::BusDisconnect();
+        UnregisterAllTransitionKeys();
         AZ::TickBus::Handler::BusDisconnect();
         SimulationManagerRequestBus::Handler::BusDisconnect();
+        m_levelLoadedAtStartup.reset();
     }
 
     bool SimulationManager::IsSimulationPaused() const
@@ -234,36 +366,51 @@ namespace SimulationInterfaces
         SetSimulationPaused(false);
     }
 
-    void SimulationManager::ReloadLevel(SimulationManagerRequests::ReloadLevelCallback completionCallback)
+    AZ::Outcome<void, FailedResult> SimulationManager::ResetSimulation(ReloadLevelCallback completionCallback)
     {
-        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusConnect();
-        m_reloadLevelCallback = completionCallback;
-
-        // We need to delete all entities before reloading the level
-        DeletionCompletedCb deleteAllCompletion = [](const AZ::Outcome<void, FailedResult>& result)
+        // reset is possible only if simulation is already started - world is loaded, or simulation interfaces has in cache level loaded
+        // during startup. Only in this case reseting makes sense. If there is no info about level loaded at startup and there is no world
+        // loaded -> simulation is in the exactly same state as right after startup
+        if ((m_simulationState == simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD ||
+             m_simulationState == simulation_interfaces::msg::SimulationState::STATE_NO_WORLD) &&
+            !m_levelLoadedAtStartup.has_value())
         {
-            AZ_Trace("SimulationManager", "Delete all entities completed: %s, reload level", result.IsSuccess() ? "true" : "false");
-            const char* levelName = AZ::Interface<AzFramework::ILevelSystemLifecycle>::Get()->GetCurrentLevelName();
-            AzFramework::ConsoleRequestBus::Broadcast(&AzFramework::ConsoleRequests::ExecuteConsoleCommand, "UnloadLevel");
-            AZStd::string command = AZStd::string::format("LoadLevel %s", levelName);
-            AzFramework::ConsoleRequestBus::Broadcast(&AzFramework::ConsoleRequests::ExecuteConsoleCommand, command.c_str());
+            return AZ::Failure(FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                "Cannot reset simulation without loaded level and without knowledge about level loaded during startup. Simulator is "
+                "already in the same state as after start up"));
+        }
+        m_reloadLevelCallback = completionCallback;
+        // We need to delete all entities before reloading the level
+        DeletionCompletedCb deleteAllCompletion =
+            [levelLoadedAtStartup = m_levelLoadedAtStartup, completionCallback](const AZ::Outcome<void, FailedResult>& result)
+        {
+            AZ_Info("SimulationManager", "Delete all entities completed: %s, reload level", result.IsSuccess() ? "true" : "false");
+            // queue required to allow all resources related to removed spawnables to be released, especially those related to level.pak
+            AZ::SystemTickBus::QueueFunction(
+                [levelLoadedAtStartup, completionCallback]()
+                {
+                    // call level manager to reload the level
+                    if (levelLoadedAtStartup.has_value())
+                    {
+                        LoadWorldRequest request;
+                        request.levelResource.m_uri = levelLoadedAtStartup.value();
+                        LevelManagerRequestBus::Broadcast(&LevelManagerRequests::LoadWorld, request);
+                    }
+                    else
+                    {
+                        LevelManagerRequestBus::Broadcast(&LevelManagerRequests::UnloadWorld);
+                        if (completionCallback)
+                        {
+                            completionCallback();
+                        }
+                    }
+                });
         };
 
         // delete spawned entities
         SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequests::DeleteAllEntities, deleteAllCompletion);
-    }
-
-    void SimulationManager::OnLoadingComplete(const char* levelName)
-    {
-        AZ_Printf("SimulationManager", "Level loading started: %s", levelName);
-        if (m_reloadLevelCallback)
-        {
-            m_reloadLevelCallback();
-            m_reloadLevelCallback = nullptr;
-        }
-        // reset of the simulation, assign the same state as at the beginning
-        InitializeSimulationState();
-        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
+        return AZ::Success();
     }
 
     SimulationState SimulationManager::GetSimulationState() const
@@ -305,12 +452,27 @@ namespace SimulationInterfaces
         {
         case simulation_interfaces::msg::SimulationState::STATE_STOPPED:
             {
-                SimulationManagerRequests::ReloadLevelCallback cb = []()
+                if (m_reloadLevelCallback)
                 {
-                    SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
-                        &SimulationInterfaces::SimulationManagerRequests::SetSimulationPaused, true);
-                };
-                ReloadLevel(cb);
+                    m_reloadLevelCallback();
+                    m_reloadLevelCallback = nullptr;
+                }
+                if (m_levelLoaded)
+                {
+                    InitializeSimulationState();
+                    m_levelLoaded = false;
+                }
+                else // transition from other state than load world
+                {
+                    DeletionCompletedCb deleteAllCompletion = [this](const AZ::Outcome<void, FailedResult>& result)
+                    {
+                        AZ_Info("SimulationManager", "Delete all entities completed: %s", result.IsSuccess() ? "true" : "false");
+                        InitializeSimulationState();
+                    };
+                    // delete spawned entities
+                    SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequests::DeleteAllEntities, deleteAllCompletion);
+                }
+
                 break;
             }
         case simulation_interfaces::msg::SimulationState::STATE_PLAYING:
@@ -336,6 +498,19 @@ namespace SimulationInterfaces
                     });
                 break;
             }
+        case simulation_interfaces::msg::SimulationState::STATE_NO_WORLD:
+            {
+                // restore initial state for variables
+                m_isSimulationPaused = false;
+                m_levelLoaded = false;
+                m_numberOfPhysicsSteps = 0;
+                break;
+            }
+        case simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD:
+            {
+                m_levelLoaded = true;
+                break;
+            }
         default:
             {
                 return AZ::Failure(FailedResult(
@@ -345,6 +520,13 @@ namespace SimulationInterfaces
         }
         m_simulationState = stateToSet;
         return AZ::Success();
+    }
+
+    bool SimulationManager::EntitiesOperationsPossible()
+    {
+        return (
+            m_simulationState != simulation_interfaces::msg::SimulationState::STATE_LOADING_WORLD &&
+            m_simulationState != simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
     }
 
     bool SimulationManager::IsTransitionForbiddenInEditor(SimulationState requestedState)
@@ -373,11 +555,64 @@ namespace SimulationInterfaces
 
     void SimulationManager::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
+        // get if we have available keyboard transition
+
+        AZStd::string keyboardHint;
+        const auto maybeKeyboardTransition = m_keyboardTransitions.find(m_simulationState);
+
+        if (maybeKeyboardTransition != m_keyboardTransitions.end())
+        {
+            keyboardHint = maybeKeyboardTransition->second.m_uiDescription;
+        }
+
         DebugDraw::DebugDrawRequestBus::Broadcast(
             &DebugDraw::DebugDrawRequests::DrawTextOnScreen,
-            AZStd::string::format("Simulation state: %s", GetStateName(m_simulationState).c_str()),
+            AZStd::string::format("Simulation state: %s \n %s", GetStateName(m_simulationState).c_str(), keyboardHint.c_str()),
             AZ::Color(1.0f, 1.0f, 1.0f, 1.0f),
             0.f);
+    }
+
+    void SimulationManager::RegisterTransitionsKey(
+        const AzFramework::InputChannelId& key, SimulationState sourceState, SimulationState desiredState)
+    {
+        const auto uiKeyName = MakePrettyKeyboardName(key);
+        const auto uiHint =
+            AZStd::string::format("Press %s to change simulation state to %s", uiKeyName.c_str(), GetStateName(desiredState).c_str());
+        m_keyboardTransitions[sourceState] = { key, desiredState, uiHint };
+    }
+
+    void SimulationManager::UnregisterAllTransitionKeys()
+    {
+        m_keyboardTransitions.clear();
+    }
+
+    bool SimulationManager::OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel)
+    {
+        const AzFramework::InputDeviceId& deviceId = inputChannel.GetInputDevice().GetInputDeviceId();
+
+        if (AzFramework::InputDeviceKeyboard::IsKeyboardDevice(deviceId) && inputChannel.IsStateBegan())
+        {
+            const auto maybeKeyboardTransition = m_keyboardTransitions.find(m_simulationState);
+            if (maybeKeyboardTransition == m_keyboardTransitions.end())
+            {
+                return false;
+            }
+            if (maybeKeyboardTransition->second.m_inputChannelId == inputChannel.GetInputChannelId())
+            {
+                // if we have transition, set the state
+                auto result = SetSimulationState(maybeKeyboardTransition->second.m_desiredState);
+
+                AZ_Error(
+                    "SimulationManager",
+                    result.IsSuccess(),
+                    "Failed to change simulation state: %d %s",
+                    result.GetError().m_errorCode,
+                    result.GetError().m_errorString.c_str());
+
+                return true;
+            }
+        }
+        return false;
     }
 
 } // namespace SimulationInterfaces

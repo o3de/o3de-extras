@@ -8,18 +8,21 @@
 
 #include "ResetSimulationServiceHandler.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/optional.h>
-#include <ROS2/Clock/ROS2Clock.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/ROS2Bus.h>
+#include <Services/ROS2ServiceBase.h>
+#include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
+#include <SimulationInterfaces/Result.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
 #include <builtin_interfaces/msg/time.hpp>
-#include <simulation_interfaces/msg/detail/result__struct.hpp>
+#include <simulation_interfaces/msg/result.hpp>
 
 namespace ROS2SimulationInterfaces
 {
-
     AZStd::unordered_set<SimulationFeatureType> ResetSimulationServiceHandler::GetProvidedFeatures()
     {
         return AZStd::unordered_set<SimulationFeatureType>{ SimulationFeatures::SIMULATION_RESET,
@@ -34,9 +37,18 @@ namespace ROS2SimulationInterfaces
         if (request.scope == Request::SCOPE_STATE)
         {
             Response response;
-            SimulationInterfaces::SimulationEntityManagerRequestBus::Broadcast(
-                &SimulationInterfaces::SimulationEntityManagerRequests::ResetAllEntitiesToInitialState);
-            response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
+            AZ::Outcome<void, SimulationInterfaces::FailedResult> resetingOutcome;
+            SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
+                resetingOutcome, &SimulationInterfaces::SimulationEntityManagerRequests::ResetAllEntitiesToInitialState);
+            if (resetingOutcome.IsSuccess())
+            {
+                response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
+            }
+            else
+            {
+                response.result.result = resetingOutcome.GetError().m_errorCode;
+                response.result.error_message = resetingOutcome.GetError().m_errorString.c_str();
+            }
             return response;
         }
 
@@ -64,14 +76,13 @@ namespace ROS2SimulationInterfaces
 
         if (request.scope == Request::SCOPE_TIME)
         {
-            auto* interface = ROS2::ROS2Interface::Get();
-            AZ_Assert(interface, "ROS2Interface is not available");
-            auto& clock = interface->GetSimulationClock();
+            auto* interface = ROS2::ROS2ClockInterface::Get();
+            AZ_Assert(interface, "ROS2ClockInterface is not available");
 
             builtin_interfaces::msg::Time time;
             time.sec = 0;
             time.nanosec = 0;
-            auto results = clock.AdjustTime(time);
+            auto results = interface->AdjustTime(time);
 
             if (results.IsSuccess())
             {
@@ -108,8 +119,16 @@ namespace ROS2SimulationInterfaces
                 response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
                 SendResponse(response);
             };
-            SimulationInterfaces::SimulationManagerRequestBus::Broadcast(
-                &SimulationInterfaces::SimulationManagerRequests::ReloadLevel, levelReloadCompletion);
+            AZ::Outcome<void, SimulationInterfaces::FailedResult> restartOutcome;
+            SimulationInterfaces::SimulationManagerRequestBus::BroadcastResult(
+                restartOutcome, &SimulationInterfaces::SimulationManagerRequests::ResetSimulation, levelReloadCompletion);
+            if (!restartOutcome.IsSuccess())
+            {
+                Response invalidResponse;
+                invalidResponse.result.result = restartOutcome.GetError().m_errorCode;
+                invalidResponse.result.error_message = restartOutcome.GetError().m_errorString.c_str();
+                return invalidResponse;
+            }
 
             return AZStd::nullopt;
         }

@@ -7,10 +7,11 @@
  */
 #pragma once
 
+#include <ROS2/ROS2TypeIds.h>
+
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/EBus/Event.h>
 #include <AzCore/Interface/Interface.h>
-#include <ROS2/Clock/ROS2Clock.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <rclcpp/node.hpp>
@@ -27,7 +28,7 @@ namespace ROS2
     public:
         using NodeChangedEvent = AZ::Event<std::shared_ptr<rclcpp::Node>>;
 
-        AZ_RTTI(ROS2Requests, "{a9bdbff6-e644-430d-8096-cdb53c88e8fc}");
+        AZ_RTTI(ROS2Requests, ROS2RequestsTypeId);
         virtual ~ROS2Requests() = default;
 
         //! Get a central ROS2 node of the Gem.
@@ -42,16 +43,6 @@ namespace ROS2
         //! @note callback is active as long as handler is not destroyed.
         virtual void ConnectOnNodeChanged(NodeChangedEvent::Handler& handler) = 0;
 
-        //! Acquire current time as ROS2 timestamp.
-        //! Timestamps provide temporal context for messages such as sensor data.
-        //! @code
-        //! auto message = sensor_msgs::msg::PointCloud2();
-        //! message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
-        //! @endcode
-        //! @return Simulation time in ROS2 format. Time source is also valid with non-real time settings.
-        //! @note Make sure to set the use_sim_time parameter for ROS2 nodes which will use the simulation data.
-        virtual builtin_interfaces::msg::Time GetROSTimestamp() const = 0;
-
         //! Send transformation between ROS2 frames.
         //! @param t is a <a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/TransformStamped.html">ROS2 TransformStamped
         //! message</a>.
@@ -60,13 +51,6 @@ namespace ROS2
         //! @note Transforms are already published by each ROS2FrameComponent.
         //! Use this function directly only when default behavior of ROS2FrameComponent is not sufficient.
         virtual void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) = 0;
-
-        //! Obtains a simulation clock that is used across simulation.
-        //! @returns constant reference to currently running clock.
-        virtual const ROS2Clock& GetSimulationClock() const = 0;
-
-        //! Returns an expected loop time of simulation. It is an estimation from past frames.
-        virtual float GetExpectedSimulationLoopTime() const = 0;
     };
 
     class ROS2BusTraits : public AZ::EBusTraits

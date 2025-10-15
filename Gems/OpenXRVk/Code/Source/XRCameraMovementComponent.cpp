@@ -22,6 +22,8 @@
 #include <Atom/RPI.Public/ViewportContext.h>
 #include <Atom/RPI.Public/ViewportContextBus.h>
 
+#include "OpenXRVk/OpenXRVkUtils.h"
+
 
 namespace OpenXRVk
 {
@@ -39,7 +41,7 @@ namespace OpenXRVk
             {
                 editContext->Class<XRCameraMovementComponent>("XR Camera Movement", "Provides XR controller input to control the camera")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->Attribute(AZ::Edit::Attributes::Category, "Gameplay")
+                    ->Attribute(AZ::Edit::Attributes::Category, "XR")
                     ->Attribute(AZ::Edit::Attributes::Icon, "Icons/Components/Component_Placeholder.svg")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->DataElement(AZ::Edit::UIHandlers::Default, &XRCameraMovementComponent::m_moveSpeed, "Move Speed", "Speed of camera movement")
@@ -115,23 +117,6 @@ namespace OpenXRVk
         cameraTransform.SetTranslation(newPosition);
 
         AZ::TransformBus::Event(GetEntityId(), &AZ::TransformBus::Events::SetWorldTM, cameraTransform);
-    }
-
-
-    static float ReadActionHandleFloat(IOpenXRActions* iface, IOpenXRActions::ActionHandle actionHandle, float deadZone = 0.05f)
-    {
-        auto outcome = iface->GetActionStateFloat(actionHandle);
-        if (!outcome.IsSuccess())
-        {
-            // Most likely the controller went to sleep.
-            return 0.0f;
-        }
-        float value = outcome.GetValue();
-        if (fabsf(value) < deadZone)
-        {
-            return 0.0f;
-        }
-        return value;
     }
 
     void XRCameraMovementComponent::ProcessOpenXRActions()

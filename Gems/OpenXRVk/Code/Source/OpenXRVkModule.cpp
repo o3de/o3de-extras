@@ -10,6 +10,10 @@
 #include <AzCore/Module/Module.h>
 #include <OpenXRVk/OpenXRVkSystemComponent.h>
 #include <XRCameraMovementComponent.h>
+#include "Devices/Common/XRControllerComponent.h"
+#include "Devices/Common/XRControllerAnimationsComponent.h"
+#include <XRRayInteractorComponent.h>
+#include <XRInteractableComponent.h>
 
 #if defined (OPENXRVK_BUILDERS)
 #include "Builders/OpenXRVkAssetsBuilderSystemComponent.h"
@@ -31,6 +35,10 @@ namespace OpenXRVk
             m_descriptors.insert(m_descriptors.end(), {
                 SystemComponent::CreateDescriptor(),
                 XRCameraMovementComponent::CreateDescriptor(),
+                XRControllerComponent::CreateDescriptor(),
+				XRRayInteractorComponent::CreateDescriptor(),
+				XRInteractableComponent::CreateDescriptor(),
+                XRControllerAnimationsComponent::CreateDescriptor(),
                 #if defined (OPENXRVK_BUILDERS)
                 OpenXRVkBuilders::OpenXRAssetsBuilderSystemComponent::CreateDescriptor(),
                 #endif
