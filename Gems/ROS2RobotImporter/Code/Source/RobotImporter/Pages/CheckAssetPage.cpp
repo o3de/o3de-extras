@@ -101,7 +101,7 @@ namespace ROS2RobotImporter
         const AZStd::string crcStr = AZStd::to_string(urdfAsset.m_urdfFileCRC);
 
         QTableWidgetItem* p =
-            createCell(true, QString::fromUtf8(urdfAsset.m_urdfPath.String().data(), urdfAsset.m_urdfPath.String().size()));
+            createCell(true, QString::fromUtf8(urdfAsset.m_assetUri.String().data(), urdfAsset.m_assetUri.String().size()));
         if (urdfAsset.m_urdfFileCRC != AZ::Crc32())
         {
             p->setToolTip(tr("CRC for file : ") + QString::fromUtf8(crcStr.data(), crcStr.size()));
@@ -143,7 +143,6 @@ namespace ROS2RobotImporter
     void CheckAssetPage::ClearAssetsList()
     {
         m_assetsToColumnIndex.clear();
-        m_assetsPaths.clear();
         m_table->setRowCount(0);
         m_missingCount = 0;
         m_failedCount = 0;

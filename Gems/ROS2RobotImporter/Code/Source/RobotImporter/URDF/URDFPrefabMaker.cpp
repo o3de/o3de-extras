@@ -32,7 +32,6 @@
 namespace ROS2RobotImporter
 {
     URDFPrefabMaker::URDFPrefabMaker(
-        const AZStd::string& modelFilePath,
         const sdf::Root* root,
         AZStd::string prefabPath,
         const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping,
@@ -42,7 +41,6 @@ namespace ROS2RobotImporter
         , m_visualsMaker(urdfAssetsMapping)
         , m_collidersMaker(urdfAssetsMapping)
         , m_prefabPath(AZStd::move(prefabPath))
-        , m_urdfAssetsMapping(urdfAssetsMapping)
         , m_spawnPosition(spawnPosition)
         , m_useArticulations(useArticulations)
     {
@@ -188,8 +186,8 @@ namespace ROS2RobotImporter
         for ([[maybe_unused]] const auto& [fullModelName, modelPtr, _] : modelMapper.m_models)
         {
             // Create entities for each model in the SDF
-            const std::string modelName = modelPtr->Name();
-            const AZStd::string azModelName(modelName.c_str(), modelName.size());
+            const std::string modelUri = modelPtr->Name();
+            const AZStd::string azModelName(modelUri.c_str(), modelUri.size());
             if (AzToolsFramework::Prefab::PrefabEntityResult createModelEntityResult = CreateEntityForModel(*modelPtr);
                 createModelEntityResult)
             {
@@ -666,7 +664,8 @@ namespace ROS2RobotImporter
         auto* ros2FrameComponent = ros2interface->CreateROS2FrameEditorComponent(*entity, frameConfiguration);
         AZ_Assert(ros2FrameComponent, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
 
-        auto createdVisualEntities = m_visualsMaker.AddVisuals(&link, entityId);
+        const AZStd::string modelUri(attachedModel->Uri().c_str(), attachedModel->Uri().size());
+        auto createdVisualEntities = m_visualsMaker.AddVisuals(&link, modelUri, entityId);
         createdEntities.insert(createdEntities.end(), createdVisualEntities.begin(), createdVisualEntities.end());
 
         if (!m_useArticulations)

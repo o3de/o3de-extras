@@ -598,31 +598,37 @@ namespace ROS2RobotImporter::Utils
         return resultModel;
     }
 
-    AssetFilenameReferences GetReferencedAssetFilenames(const sdf::Root& root)
+    UrdfAssetMap GetReferencedAssetFilenames(const sdf::Root& root)
     {
-        AssetFilenameReferences filenames;
-        auto GetAssetsFromModel = [&filenames](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
+        UrdfAssetMap urdfAssetMap;
+        auto GetAssetsFromModel = [&urdfAssetMap](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
         {
-            const auto addFilenameFromGeometry = [&filenames](const sdf::Geometry* geometry, ReferencedAssetType assetType)
+            AZStd::string modelUri(model.Uri().c_str(), model.Uri().size());
+            const auto addFilenameFromGeometry = [&urdfAssetMap, &modelUri](const sdf::Geometry* geometry, ReferencedAssetType assetType)
             {
                 if (geometry->Type() == sdf::GeometryType::MESH)
                 {
                     if (auto mesh = geometry->MeshShape(); mesh)
                     {
-                        AZStd::string uri(mesh->Uri().c_str(), mesh->Uri().size());
-                        if (filenames.contains(uri))
+                        const AZ::IO::Path assetUri(mesh->Uri().c_str(), mesh->Uri().size());
+                        const AZStd::string modelAssetUri = (modelUri.empty()) ? assetUri.String() : modelUri + "/" + assetUri.String();
+                        if (urdfAssetMap.contains(modelAssetUri))
                         {
-                            filenames[uri] = filenames[uri] | assetType;
+                            urdfAssetMap[modelAssetUri].m_assetType |= assetType;
                         }
                         else
                         {
-                            filenames.emplace(uri, assetType);
+                            UrdfAsset asset;
+                            asset.m_assetType = assetType;
+                            asset.m_modelUri = modelUri;
+                            asset.m_assetUri = assetUri;
+                            urdfAssetMap.emplace(modelAssetUri, AZStd::move(asset));
                         }
                     }
                 }
             };
 
-            const auto addFilenamesFromMaterial = [&filenames](const sdf::Material* material)
+            const auto addFilenamesFromMaterial = [&urdfAssetMap, &modelUri](const sdf::Material* material)
             {
                 // Only PBR entries on a material have filenames that need to be added.
                 if ((!material) || (!material->PbrMaterial()))
@@ -642,36 +648,48 @@ namespace ROS2RobotImporter::Utils
                         }
                     }
 
+                    const auto emplaceTexture = [&urdfAssetMap, &modelUri](const std::string& texturePath)
+                    {
+                        UrdfAsset asset;
+                        asset.m_assetType = ReferencedAssetType::Texture;
+                        asset.m_modelUri = modelUri;
+                        asset.m_assetUri = AZ::IO::Path(texturePath.data(), texturePath.size());
+
+                        const AZStd::string modelAssetUri =
+                            (modelUri.empty()) ? asset.m_assetUri.String() : modelUri + "/" + asset.m_assetUri.String();
+                        urdfAssetMap.emplace(modelAssetUri, AZStd::move(asset));
+                    };
+
                     if (auto texture = pbrWorkflow->AlbedoMap(); !texture.empty())
                     {
-                        filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                        emplaceTexture(texture);
                     }
 
                     if (auto texture = pbrWorkflow->NormalMap(); !texture.empty())
                     {
-                        filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                        emplaceTexture(texture);
                     }
 
                     if (auto texture = pbrWorkflow->AmbientOcclusionMap(); !texture.empty())
                     {
-                        filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                        emplaceTexture(texture);
                     }
 
                     if (auto texture = pbrWorkflow->EmissiveMap(); !texture.empty())
                     {
-                        filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                        emplaceTexture(texture);
                     }
 
                     if (pbrWorkflow->Type() == sdf::PbrWorkflowType::METAL)
                     {
                         if (auto texture = pbrWorkflow->RoughnessMap(); !texture.empty())
                         {
-                            filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                            emplaceTexture(texture);
                         }
 
                         if (auto texture = pbrWorkflow->MetalnessMap(); !texture.empty())
                         {
-                            filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                            emplaceTexture(texture);
                         }
                     }
                 }
@@ -701,7 +719,7 @@ namespace ROS2RobotImporter::Utils
 
         VisitModels(root, GetAssetsFromModel);
 
-        return filenames;
+        return urdfAssetMap;
     }
 
     AZ::IO::Path ResolveAmentPrefixPath(AZ::IO::Path unresolvedPath, AZStd::string_view amentPrefixPath, const FileExistsCB& fileExistsCB)
@@ -932,6 +950,7 @@ namespace ROS2RobotImporter::Utils
             AZ_PATH_ARG(relativePath));
         return {};
     }
+
     AmentPrefixString GetAmentPrefixPath()
     {
         // Support reading the AMENT_PREFIX_PATH environment variable on Unix/Windows platforms

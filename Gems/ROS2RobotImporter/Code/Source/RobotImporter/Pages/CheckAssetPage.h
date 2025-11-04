@@ -52,7 +52,6 @@ namespace ROS2RobotImporter
         unsigned int m_failedCount{ 0 };
         void SetTitle();
         AZStd::unordered_map<AZStd::string, int> m_assetsToColumnIndex; //!< Map of unresolved asset to column index in the table.
-        AZStd::unordered_map<AZ::Uuid, AZStd::string> m_assetsPaths; //! Map of asset UUIDs to asset source paths.
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetMap;
 
         void DoubleClickRow(int row, int col);

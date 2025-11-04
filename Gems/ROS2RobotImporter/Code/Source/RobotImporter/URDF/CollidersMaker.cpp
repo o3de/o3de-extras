@@ -78,11 +78,13 @@ namespace ROS2RobotImporter
         }
         const AZ::Data::Asset<Physics::MaterialAsset> materialAsset =
             isWheelEntity ? m_wheelMaterial : AZ::Data::Asset<Physics::MaterialAsset>();
+        const AZStd::string modelUri(model.Uri().c_str(), model.Uri().size());
         size_t nameSuffixIndex = 0; // For disambiguation when multiple unnamed colliders are present. The order does not matter here
         for (uint64_t index = 0; index < link->CollisionCount(); index++)
         { // Add colliders (if any) from the collision array
             AddCollider(
                 link->CollisionByIndex(index),
+                modelUri,
                 entityId,
                 PrefabMakerUtils::MakeEntityName(link->Name().c_str(), typeString, nameSuffixIndex),
                 materialAsset);
@@ -92,6 +94,7 @@ namespace ROS2RobotImporter
 
     void CollidersMaker::AddCollider(
         const sdf::Collision* collision,
+        const AZStd::string& modelUri,
         AZ::EntityId entityId,
         const AZStd::string& generatedName,
         const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset)
@@ -109,11 +112,14 @@ namespace ROS2RobotImporter
             return;
         }
 
-        AddColliderToEntity(collision, entityId, materialAsset);
+        AddColliderToEntity(collision, modelUri, entityId, materialAsset);
     }
 
     void CollidersMaker::AddColliderToEntity(
-        const sdf::Collision* collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const
+        const sdf::Collision* collision,
+        const AZStd::string& modelUri,
+        AZ::EntityId entityId,
+        const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const
     {
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         AZ_Assert(entity, "AddColliderToEntity called with invalid entityId");
@@ -131,7 +137,7 @@ namespace ROS2RobotImporter
             auto meshGeometry = geometry->MeshShape();
             AZ_Assert(meshGeometry, "geometry is not meshGeometry");
 
-            auto asset = PrefabMakerUtils::GetAssetFromPath(*m_urdfAssetsMapping, meshGeometry->Uri());
+            auto asset = PrefabMakerUtils::GetAssetFromUri(*m_urdfAssetsMapping, modelUri, meshGeometry->Uri());
             if (!asset)
             {
                 return;
@@ -163,7 +169,6 @@ namespace ROS2RobotImporter
             return;
         }
 
-        AZ_Printf(Internal::CollidersMakerLoggingTag, "URDF/SDF geometry type: %d\n", (int)geometry->Type());
         switch (geometry->Type())
         {
         case sdf::GeometryType::SPHERE:

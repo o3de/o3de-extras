@@ -32,7 +32,7 @@ namespace ROS2RobotImporter
     {
     }
 
-    AZStd::vector<AZ::EntityId> VisualsMaker::AddVisuals(const sdf::Link* link, AZ::EntityId entityId) const
+    AZStd::vector<AZ::EntityId> VisualsMaker::AddVisuals(const sdf::Link* link, const AZStd::string& modelUri, AZ::EntityId entityId) const
     {
         AZStd::vector<AZ::EntityId> createdEntities;
 
@@ -40,7 +40,7 @@ namespace ROS2RobotImporter
         if (link->VisualCount() < 1)
         {
             // For zero visuals, element is used
-            auto createdEntity = AddVisual(nullptr, entityId, PrefabMakerUtils::MakeEntityName(link->Name().c_str(), typeString));
+            auto createdEntity = AddVisual(nullptr, modelUri, entityId, PrefabMakerUtils::MakeEntityName(link->Name().c_str(), typeString));
             if (createdEntity.IsValid())
             {
                 createdEntities.emplace_back(createdEntity);
@@ -55,6 +55,7 @@ namespace ROS2RobotImporter
             {
                 auto createdEntity = AddVisual(
                     link->VisualByIndex(index),
+                    modelUri,
                     entityId,
                     PrefabMakerUtils::MakeEntityName(link->Name().c_str(), typeString, nameSuffixIndex));
                 if (createdEntity.IsValid())
@@ -67,7 +68,8 @@ namespace ROS2RobotImporter
         return createdEntities;
     }
 
-    AZ::EntityId VisualsMaker::AddVisual(const sdf::Visual* visual, AZ::EntityId entityId, const AZStd::string& generatedName) const
+    AZ::EntityId VisualsMaker::AddVisual(
+        const sdf::Visual* visual, const AZStd::string& modelUri, AZ::EntityId entityId, const AZStd::string& generatedName) const
     {
         if (!visual)
         { // It is ok not to have a visual in a link
@@ -92,12 +94,12 @@ namespace ROS2RobotImporter
             return AZ::EntityId();
         }
         auto visualEntityId = createEntityResult.GetValue();
-        auto visualAssetId = AddVisualToEntity(visual, visualEntityId);
-        AddMaterialForVisual(visual, visualEntityId, visualAssetId);
+        auto visualAssetId = AddVisualToEntity(visual, modelUri, visualEntityId);
+        AddMaterialForVisual(visual, modelUri, visualEntityId, visualAssetId);
         return visualEntityId;
     }
 
-    AZ::Data::AssetId VisualsMaker::AddVisualToEntity(const sdf::Visual* visual, AZ::EntityId entityId) const
+    AZ::Data::AssetId VisualsMaker::AddVisualToEntity(const sdf::Visual* visual, const AZStd::string& modelUri, AZ::EntityId entityId) const
     {
         // Asset ID for the asset added to the visual entity, if any.
         AZ::Data::AssetId assetId;
@@ -174,7 +176,8 @@ namespace ROS2RobotImporter
                 AZ_Assert(meshGeometry, "geometry is not Mesh");
                 const AZ::Vector3 scaleVector = URDF::TypeConversions::ConvertVector3(meshGeometry->Scale());
 
-                const auto asset = PrefabMakerUtils::GetAssetFromPath(*m_urdfAssetsMapping, AZStd::string(meshGeometry->Uri().c_str()));
+                const auto asset =
+                    PrefabMakerUtils::GetAssetFromUri(*m_urdfAssetsMapping, modelUri, AZStd::string(meshGeometry->Uri().c_str()));
                 AZ_Warning("AddVisual", asset, "There is no source asset for %s.", meshGeometry->Uri().c_str());
 
                 if (asset)
@@ -281,6 +284,7 @@ namespace ROS2RobotImporter
     static void OverrideMaterialPbrSettings(
         const sdf::Material* material,
         const AZStd::shared_ptr<Utils::UrdfAssetMap>& assetMapping,
+        const AZStd::string& modelUri,
         AZ::Render::MaterialAssignmentMap& overrides)
     {
         if (auto pbr = material->PbrMaterial(); pbr)
@@ -306,10 +310,10 @@ namespace ROS2RobotImporter
 
             for (auto& [id, materialAssignment] : overrides)
             {
-                auto GetImageAssetIdFromPath = [&assetMapping](const std::string& uri) -> AZ::Data::AssetId
+                auto GetImageAssetIdFromPath = [&assetMapping, &modelUri](const std::string& uri) -> AZ::Data::AssetId
                 {
                     AZ::Data::AssetId assetId;
-                    const auto asset = PrefabMakerUtils::GetAssetFromPath(*assetMapping, uri);
+                    const auto asset = PrefabMakerUtils::GetAssetFromUri(*assetMapping, modelUri, uri);
                     AZ_Warning("AddVisual", asset, "There is no source image asset for %s.", uri.c_str());
 
                     if (asset)
@@ -524,7 +528,8 @@ namespace ROS2RobotImporter
         }
     }
 
-    void VisualsMaker::AddMaterialForVisual(const sdf::Visual* visual, AZ::EntityId entityId, const AZ::Data::AssetId& assetId) const
+    void VisualsMaker::AddMaterialForVisual(
+        const sdf::Visual* visual, const AZStd::string& modelUri, AZ::EntityId entityId, const AZ::Data::AssetId& assetId) const
     {
         auto material = visual->Material();
 
@@ -560,7 +565,7 @@ namespace ROS2RobotImporter
         // Try to override all of the various material settings based on what's contained in the <material> and <visual> elements in the
         // source file.
         OverrideScriptMaterial(material, config.m_materials);
-        OverrideMaterialPbrSettings(material, m_urdfAssetsMapping, config.m_materials);
+        OverrideMaterialPbrSettings(material, m_urdfAssetsMapping, modelUri, config.m_materials);
         OverrideMaterialBaseColor(material, config.m_materials);
         OverrideMaterialTransparency(visual, config.m_materials);
         OverrideMaterialEmissiveSettings(material, config.m_materials);

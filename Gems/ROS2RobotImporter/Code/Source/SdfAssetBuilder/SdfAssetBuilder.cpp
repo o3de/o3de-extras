@@ -86,25 +86,28 @@ namespace ROS2RobotImporter
     Utils::UrdfAssetMap SdfAssetBuilder::FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const
     {
         AZ_Info(SdfAssetBuilderName, "Parsing mesh and collider names");
-        auto assetNames = Utils::GetReferencedAssetFilenames(root);
 
-        Utils::UrdfAssetMap assetMap;
+        Utils::UrdfAssetMap allReferencedAssets = Utils::GetReferencedAssetFilenames(root);
+        Utils::UrdfAssetMap existingReferencedAssets;
 
         using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
 
         auto amentPrefixPath = Utils::GetAmentPrefixPath();
 
-        for (const auto& [uri, assetReferenceType] : assetNames)
+        for (const auto& [unresolvedUri, assetReferenceType] : allReferencedAssets)
         {
             Utils::UrdfAsset asset;
-            asset.m_urdfPath = uri;
 
             // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
             asset.m_resolvedUrdfPath =
-                Utils::ResolveAssetPath(asset.m_urdfPath, AZ::IO::PathView(sourceFilename), amentPrefixPath, m_globalSettings);
+                Utils::ResolveAssetPath(unresolvedUri, AZ::IO::PathView(sourceFilename), amentPrefixPath, m_globalSettings);
             if (asset.m_resolvedUrdfPath.empty())
             {
-                AZ_Warning(SdfAssetBuilderName, false, "Failed to resolve file reference '%s' to an absolute path, skipping.", uri.c_str());
+                AZ_Warning(
+                    SdfAssetBuilderName,
+                    false,
+                    "Failed to resolve file reference '%s' to an absolute path, skipping.",
+                    unresolvedUri.c_str());
                 continue;
             }
 
@@ -143,8 +146,12 @@ namespace ROS2RobotImporter
             AZ::Crc32 crc = Utils::GetFileCRC(asset.m_availableAssetInfo.m_sourceAssetGlobalPath);
             if (crc == asset.m_urdfFileCRC)
             {
-                AZ_Info(SdfAssetBuilderName, "Resolved uri '%s' to source asset '%s'.", uri.c_str(), assetInfo.m_relativePath.c_str());
-                assetMap.emplace(uri, AZStd::move(asset));
+                AZ_Info(
+                    SdfAssetBuilderName,
+                    "Resolved uri '%s' to source asset '%s'.",
+                    unresolvedUri.c_str(),
+                    assetInfo.m_relativePath.c_str());
+                existingReferencedAssets.emplace(unresolvedUri, AZStd::move(asset));
             }
             else
             {
@@ -156,7 +163,7 @@ namespace ROS2RobotImporter
             }
         }
 
-        return assetMap;
+        return existingReferencedAssets;
     }
 
     AZStd::string SdfAssetBuilder::GetFingerprint() const
@@ -211,7 +218,7 @@ namespace ROS2RobotImporter
         const sdf::Root& sdfRoot = parsedSdfRootOutcome.GetRoot();
 
         AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
-        auto sourceAssetMap = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(sdfRoot, fullSourcePath.String()));
+        auto sourceAssetMap = FindAssets(sdfRoot, fullSourcePath.String());
 
         // Create an output job for each platform
         for (const AssetBuilderSDK::PlatformInfo& platformInfo : request.m_enabledPlatforms)
@@ -228,7 +235,7 @@ namespace ROS2RobotImporter
 
             // Add in all of the job dependencies for this file.
             // The SDF file won't get processed until every asset it relies on has been processed first.
-            for (const auto& asset : *sourceAssetMap)
+            for (const auto& asset : sourceAssetMap)
             {
                 AssetBuilderSDK::JobDependency jobDependency;
                 jobDependency.m_sourceFile.m_sourceFileDependencyUUID = asset.second.m_availableAssetInfo.m_sourceGuid;
@@ -282,8 +289,7 @@ namespace ROS2RobotImporter
 
         // Given the parsed source file and asset mappings, generate an in-memory prefab.
         AZ_Info(SdfAssetBuilderName, "Creating prefab from source file.");
-        auto prefabMaker =
-            AZStd::make_unique<URDFPrefabMaker>(request.m_fullPath, &sdfRoot, tempAssetOutputPath.String(), assetMap, useArticulation);
+        auto prefabMaker = AZStd::make_unique<URDFPrefabMaker>(&sdfRoot, tempAssetOutputPath.String(), assetMap, useArticulation);
         auto prefabResult = prefabMaker->CreatePrefabTemplateFromUrdfOrSdf();
         if (!prefabResult.IsSuccess())
         {
