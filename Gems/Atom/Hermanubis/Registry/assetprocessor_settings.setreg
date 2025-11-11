@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder Hermanubis/Assets": {
+                    "watch": "@GEMROOT:Hermanubis@/Assets",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder Hermanubis/Registry": {
+                    "watch": "@GEMROOT:Hermanubis@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}
