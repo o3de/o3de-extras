@@ -277,7 +277,7 @@
                                     "guid": "{F798AA36-343C-5002-95DB-4D0469A164F9}",
                                     "subId": 3542805391
                                 },
-                                "assetHint": "factory/conveyorelements/models/conveyorsegments_straight_barriers.pxmesh"
+                                "assetHint": "factory/conveyorelements/models/conveyorsegments_straight_barriers.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -286,7 +286,7 @@
                                         "subId": 3542805391
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "factory/conveyorelements/models/conveyorsegments_straight_barriers.pxmesh"
+                                    "assetHint": "factory/conveyorelements/models/conveyorsegments_straight_barriers.fbx.pxmesh"
                                 }
                             }
                         }

@@ -337,7 +337,7 @@
                                     "guid": "{F9EC6CB2-FEB0-5B30-BB27-D2B8EA13BD93}",
                                     "subId": 1541213172
                                 },
-                                "assetHint": "factory/conveyorelements/models/conveyorsegments_turn_90_barriers.pxmesh"
+                                "assetHint": "factory/conveyorelements/models/conveyorsegments_turn_90_barriers.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -346,7 +346,7 @@
                                         "subId": 1541213172
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "factory/conveyorelements/models/conveyorsegments_turn_90_barriers.pxmesh"
+                                    "assetHint": "factory/conveyorelements/models/conveyorsegments_turn_90_barriers.fbx.pxmesh"
                                 }
                             }
                         }
@@ -539,7 +539,6 @@
                     "$type": "EditorSplineComponent",
                     "Id": 3124584778936230197,
                     "Configuration": {
-                        "Spline Type": 2612576363626472641,
                         "Spline": {
                             "$type": "BezierSpline",
                             "Vertices": {

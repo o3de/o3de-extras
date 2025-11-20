@@ -162,14 +162,7 @@
                         "MaterialSlots": {
                             "Slots": [
                                 {
-                                    "Name": "MWarehouseProps",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{2453EA64-38EF-546F-83F8-45EE0A0B6195}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "assets/materials/defaultstorage.physicsmaterial"
-                                    }
+                                    "Name": "MWarehouseProps"
                                 }
                             ]
                         }

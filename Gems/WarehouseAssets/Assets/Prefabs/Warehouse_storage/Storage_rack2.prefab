@@ -498,6 +498,21 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[6674651583343491819]/Transform Data/UniformScale",
                     "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/0",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/1",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/2",
+                    "value": 1.2999999523162842
                 }
             ]
         },
@@ -528,6 +543,21 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[6674651583343491819]/Transform Data/UniformScale",
                     "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/0",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/1",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/2",
+                    "value": 1.2999999523162842
                 }
             ]
         },
@@ -557,6 +587,21 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[6674651583343491819]/Transform Data/UniformScale",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/0",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/1",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/2",
                     "value": 1.2999999523162842
                 }
             ]
