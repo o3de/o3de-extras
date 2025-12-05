@@ -33,7 +33,6 @@
 #include <Services/GetSimulatorFeaturesServiceHandler.h>
 #include <Services/GetSpawnablesServiceHandler.h>
 #include <Services/LoadWorldServiceHandler.h>
-#include <Services/ROS2ServiceBase.h>
 #include <Services/ResetSimulationServiceHandler.h>
 #include <Services/SetEntityInfoServiceHandler.h>
 #include <Services/SetEntityStateServiceHandler.h>

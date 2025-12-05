@@ -8,14 +8,15 @@
 
 #pragma once
 
-#include "ROS2ServiceBase.h"
+#include <ROS2/Handlers/ROS2ServiceBase.h>
 #include <AzCore/std/string/string_view.h>
 #include <simulation_interfaces/srv/get_named_pose_bounds.hpp>
+#include <Interfaces/ISimulationFeaturesBase.h>
 
 namespace ROS2SimulationInterfaces
 {
 
-    class GetNamedPoseBoundsServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::GetNamedPoseBounds>
+    class GetNamedPoseBoundsServiceHandler : public ROS2::ROS2ServiceBase<simulation_interfaces::srv::GetNamedPoseBounds>        , public ISimulationFeaturesBase
     {
     public:
         AZStd::string_view GetTypeName() const override

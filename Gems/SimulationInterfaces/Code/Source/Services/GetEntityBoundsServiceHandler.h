@@ -8,14 +8,15 @@
 
 #pragma once
 
-#include "ROS2ServiceBase.h"
+#include <ROS2/Handlers/ROS2ServiceBase.h>
 #include <AzCore/std/string/string_view.h>
 #include <simulation_interfaces/srv/get_entity_bounds.hpp>
+#include <Interfaces/ISimulationFeaturesBase.h>
 
 namespace ROS2SimulationInterfaces
 {
 
-    class GetEntityBoundsServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::GetEntityBounds>
+    class GetEntityBoundsServiceHandler : public ROS2::ROS2ServiceBase<simulation_interfaces::srv::GetEntityBounds>        , public ISimulationFeaturesBase
     {
     public:
         AZStd::string_view GetTypeName() const override

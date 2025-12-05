@@ -8,19 +8,15 @@
 
 #pragma once
 
+#include "HandlersRegistryUtils.h"
+#include "IROS2HandlerBase.h"
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/optional.h>
-#include <Interfaces/IROS2HandlerBase.h>
-#include <SimulationInterfaces/RegistryUtils.h>
 #include <rclcpp/service.hpp>
-#include <simulation_interfaces/msg/simulator_features.hpp>
 
-namespace ROS2SimulationInterfaces
+namespace ROS2
 {
-    //! Base for each ROS 2 service handler, forces declaration of features provided by the handler
-    //! combined information along all ROS 2 handlers gives information about simulation features
-    //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
-    using SimulationFeatures = simulation_interfaces::msg::SimulatorFeatures;
+    //! Base for each ROS 2 service handler
     template<typename RosServiceType>
     class ROS2ServiceBase : public virtual IROS2HandlerBase
     {
@@ -42,7 +38,7 @@ namespace ROS2SimulationInterfaces
             m_serviceHandle->send_response(*m_lastRequestHeader, response);
         }
 
-        bool IsValid() override
+        bool IsValid() const override
         {
             return m_serviceHandle != nullptr;
         }
@@ -51,27 +47,17 @@ namespace ROS2SimulationInterfaces
         //! This function is called when a service request is received.
         virtual AZStd::optional<Response> HandleServiceRequest(const std::shared_ptr<rmw_request_id_t> header, const Request& request) = 0;
 
-        //! return features id defined by the handler, ids must follow the definition inside standard:
-        //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
-        AZStd::unordered_set<SimulationFeatureType> GetProvidedFeatures() override
-        {
-            return {};
-        };
-
     private:
         void CreateService(rclcpp::Node::SharedPtr& node)
         {
             // get the service name from the type name
             // passing an empty string to settings registry disables ROS 2 action
-            AZStd::optional<AZStd::string> serviceName = RegistryUtilities::GetName(GetTypeName());
+            AZStd::optional<AZStd::string> serviceName = HandlersRegistryUtils::GetName(GetTypeName());
 
             // do not create a ROS 2 action if the value is empty
             if (serviceName.has_value() && serviceName.value().empty())
             {
-                AZ_Trace(
-                    "SimulationInterfaces",
-                    "Service name for type %s is set to empty string, service won't be created",
-                    GetTypeName().data());
+                AZ_Trace("ROS2 Gem", "Service name for type %s is set to empty string, service won't be created", GetTypeName().data());
                 return;
             }
 
@@ -104,4 +90,4 @@ namespace ROS2SimulationInterfaces
         ServiceHandle m_serviceHandle;
     };
 
-} // namespace ROS2SimulationInterfaces
+} // namespace ROS2
