@@ -28,4 +28,9 @@ set(FILES
     Include/ROS2/TF/TransformInterface.h
     Include/ROS2/Utilities/ROS2Conversions.h
     Include/ROS2/Utilities/ROS2Conversions.inl
+    Include/ROS2/Handlers/HandlersRegistryUtils.h
+    Include/ROS2/Handlers/IROS2HandlerBase.h
+    Include/ROS2/Handlers/ROS2ActionBase.h
+    Include/ROS2/Handlers/ROS2ServiceBase.h
+    Include/ROS2/Handlers/ROS2TopicSubscriptionBase.h
 )

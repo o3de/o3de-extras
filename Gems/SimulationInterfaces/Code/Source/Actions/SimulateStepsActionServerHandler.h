@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include "ROS2ActionBase.h"
 #include <AzCore/Component/TickBus.h>
+#include <Interfaces/ISimulationFeaturesBase.h>
+#include <ROS2/Handlers/ROS2ActionBase.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
 #include <simulation_interfaces/action/simulate_steps.hpp>
 
@@ -17,9 +18,10 @@ namespace ROS2SimulationInterfaces
 {
 
     class SimulateStepsActionServerHandler
-        : public ROS2ActionBase<simulation_interfaces::action::SimulateSteps>
+        : public ROS2::ROS2ActionBase<simulation_interfaces::action::SimulateSteps>
         , public AZ::TickBus::Handler
         , public SimulationInterfaces::SimulationManagerNotificationsBus::Handler
+        , public ISimulationFeaturesBase
     {
     public:
         ~SimulateStepsActionServerHandler();

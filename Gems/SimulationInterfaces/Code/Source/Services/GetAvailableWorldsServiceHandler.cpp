@@ -61,7 +61,8 @@ namespace ROS2SimulationInterfaces
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
             const auto& worldsList = availableWorlds.GetValue();
-            AZStd::ranges::transform(worldsList, AZStd::back_inserter(response.worlds), &SimulationInterfaces::Utils::ConvertToRos2WorldResource);
+            AZStd::ranges::transform(
+                worldsList, AZStd::back_inserter(response.worlds), &SimulationInterfaces::Utils::ConvertToRos2WorldResource);
         }
         return response;
     }
