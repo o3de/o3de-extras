@@ -52,7 +52,86 @@
     "Entities": {
         "Entity_[5722642839998]": {
             "Id": "Entity_[5722642839998]",
-            "Name": "Box2",
+            "Name": "WarehouseBox2",
+            "Components": {
+                "Component_[13574867754902005040]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 13574867754902005040,
+                    "ComponentOrderEntryArray": []
+                },
+                "Component_[13890549230067286886]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 13890549230067286886
+                },
+                "Component_[14299065573721311548]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 14299065573721311548
+                },
+                "Component_[16246303725359178974]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 16246303725359178974,
+                    "Parent Entity": "ContainerEntity"
+                },
+                "Component_[17438889026096965443]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 17438889026096965443
+                },
+                "Component_[2635600976954600347]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 2635600976954600347,
+                    "Child Entity Order": [
+                        "Entity_[734137106614]"
+                    ]
+                },
+                "Component_[7619205353932880281]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7619205353932880281
+                },
+                "Component_[8458290980975423191]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 8458290980975423191
+                },
+                "Component_[9483887954899180333]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 9483887954899180333
+                },
+                "EditorColliderComponent": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 4645632734890039540,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.3149999976158142
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object"
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Configuration": [
+                                0.3799999952316284,
+                                0.7699999809265137,
+                                0.6299999952316284
+                            ]
+                        }
+                    }
+                },
+                "EditorStaticRigidBodyComponent": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 12865458759216510293
+                }
+            }
+        },
+        "Entity_[734137106614]": {
+            "Id": "Entity_[734137106614]",
+            "Name": "Visual",
             "Components": {
                 "Component_[13574867754902005040]": {
                     "$type": "EditorInspectorComponent",
@@ -82,7 +161,7 @@
                 "Component_[16246303725359178974]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 16246303725359178974,
-                    "Parent Entity": "ContainerEntity"
+                    "Parent Entity": "Entity_[5722642839998]"
                 },
                 "Component_[17438889026096965443]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -143,44 +222,6 @@
                 "Component_[9483887954899180333]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 9483887954899180333
-                },
-                "EditorMeshColliderComponent": {
-                    "$type": "EditorMeshColliderComponent",
-                    "Id": 785209467024958258,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "MWarehouseBoxes_001"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{198A15B4-31E6-5693-BCF6-6C3D49884F59}",
-                                    "subId": 3227237471
-                                },
-                                "assetHint": "assets/warehouse/models/box2.fbx.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{198A15B4-31E6-5693-BCF6-6C3D49884F59}",
-                                        "subId": 3227237471
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/box2.fbx.pxmesh"
-                                }
-                            }
-                        }
-                    }
-                },
-                "EditorStaticRigidBodyComponent": {
-                    "$type": "EditorStaticRigidBodyComponent",
-                    "Id": 12865458759216510293
                 }
             }
         }
