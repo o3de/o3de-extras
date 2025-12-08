@@ -23,4 +23,4 @@ namespace ROS2
         virtual void Initialize(rclcpp::Node::SharedPtr& node) = 0;
         virtual bool IsValid() const = 0;
     };
-} // namespace ROS2SimulationInterfaces
+} // namespace ROS2

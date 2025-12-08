@@ -20,7 +20,7 @@ namespace ROS2::HandlersRegistryUtils
         inline constexpr const char* ServiceNameRegistryPrefix = "/ROS2/HandlersNames";
     } // namespace
 
-    //! Gets name of the service with defined type form settings registry
+    //! Gets name of the service with defined type from settings registry
     //! @return optional string with service name. If setting registry entry exists, its value is returned.
     //!         Otherwise AZStd::nullopt is returned
     [[nodiscard]] inline AZStd::optional<AZStd::string> GetName(const AZStd::string& serviceType)
@@ -34,10 +34,8 @@ namespace ROS2::HandlersRegistryUtils
         {
             return output;
         }
-        else
-        {
-            return AZStd::nullopt;
-        }
+
+        return AZStd::nullopt;
     }
 
 } // namespace ROS2::HandlersRegistryUtils

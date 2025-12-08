@@ -19,7 +19,6 @@ namespace ROS2
 {
     //! Base for each ROS 2 topic subscription handler with default QoS set to (RELIABLE/VOLATILE)
     template<typename RosMessageType>
-
     class ROS2TopicSubscriptionBase : public virtual IROS2HandlerBase
     {
     public:
@@ -70,10 +69,8 @@ namespace ROS2
                         GetTypeName().data());
                     return;
                 }
-                else
-                {
-                    m_topicConfig.m_topic = topicName.value();
-                }
+
+                m_topicConfig.m_topic = topicName.value();
             }
 
             m_subscriber = node->create_subscription<RosMessageType>(
