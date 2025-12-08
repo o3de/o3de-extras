@@ -501,17 +501,17 @@
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/AssetScale/0",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/0",
                     "value": 1.2999999523162842
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/AssetScale/1",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/1",
                     "value": 1.2999999523162842
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/AssetScale/2",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/2",
                     "value": 1.2999999523162842
                 }
             ]
@@ -546,17 +546,17 @@
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/AssetScale/0",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/0",
                     "value": 1.2999999523162842
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/AssetScale/1",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/1",
                     "value": 1.2999999523162842
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/AssetScale/2",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/2",
                     "value": 1.2999999523162842
                 }
             ]
@@ -591,17 +591,17 @@
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/AssetScale/0",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/0",
                     "value": 1.2999999523162842
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/AssetScale/1",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/1",
                     "value": 1.2999999523162842
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[5722642839998]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/AssetScale/2",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/2",
                     "value": 1.2999999523162842
                 }
             ]
