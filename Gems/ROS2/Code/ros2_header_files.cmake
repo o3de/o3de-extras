@@ -20,6 +20,11 @@ set(FILES
         Include/ROS2/Frame/ROS2Transform.h
         Include/ROS2/GNSS/GNSSPostProcessingRequestBus.h
         Include/ROS2/Gripper/GripperRequestBus.h
+        Include/ROS2/Handlers/HandlersRegistryUtils.h
+        Include/ROS2/Handlers/IROS2HandlerBase.h
+        Include/ROS2/Handlers/ROS2ActionBase.h
+        Include/ROS2/Handlers/ROS2ServiceBase.h
+        Include/ROS2/Handlers/ROS2TopicSubscriptionBase.h
         Include/ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h
         Include/ROS2/Manipulation/JointInfo.h
         Include/ROS2/Manipulation/JointsManipulationRequests.h

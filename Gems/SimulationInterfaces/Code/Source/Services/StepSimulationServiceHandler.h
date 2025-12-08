@@ -8,15 +8,18 @@
 
 #pragma once
 
-#include "ROS2ServiceBase.h"
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/string/string_view.h>
+#include <Interfaces/ISimulationFeaturesBase.h>
+#include <ROS2/Handlers/ROS2ServiceBase.h>
 #include <simulation_interfaces/srv/step_simulation.hpp>
+
 namespace ROS2SimulationInterfaces
 {
 
     class StepSimulationServiceHandler
-        : public ROS2ServiceBase<simulation_interfaces::srv::StepSimulation>
+        : public ROS2::ROS2ServiceBase<simulation_interfaces::srv::StepSimulation>
+        , public ISimulationFeaturesBase
         , private AZ::TickBus::Handler
     {
     public:
