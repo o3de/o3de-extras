@@ -50,9 +50,9 @@
         }
     },
     "Entities": {
-        "Entity_[5804247218622]": {
-            "Id": "Entity_[5804247218622]",
-            "Name": "Box3",
+        "Entity_[1155043901622]": {
+            "Id": "Entity_[1155043901622]",
+            "Name": "Visual",
             "Components": {
                 "Component_[13574867754902005040]": {
                     "$type": "EditorInspectorComponent",
@@ -82,7 +82,7 @@
                 "Component_[16246303725359178974]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 16246303725359178974,
-                    "Parent Entity": "ContainerEntity"
+                    "Parent Entity": "Entity_[5804247218622]"
                 },
                 "Component_[17438889026096965443]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -143,38 +143,79 @@
                 "Component_[9483887954899180333]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 9483887954899180333
+                }
+            }
+        },
+        "Entity_[5804247218622]": {
+            "Id": "Entity_[5804247218622]",
+            "Name": "WarehouseBox3",
+            "Components": {
+                "Component_[13574867754902005040]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 13574867754902005040,
+                    "ComponentOrderEntryArray": []
                 },
-                "EditorMeshColliderComponent": {
-                    "$type": "EditorMeshColliderComponent",
-                    "Id": 8978121544097958921,
+                "Component_[13890549230067286886]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 13890549230067286886
+                },
+                "Component_[14299065573721311548]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 14299065573721311548
+                },
+                "Component_[16246303725359178974]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 16246303725359178974,
+                    "Parent Entity": "ContainerEntity"
+                },
+                "Component_[17438889026096965443]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 17438889026096965443
+                },
+                "Component_[2635600976954600347]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 2635600976954600347,
+                    "Child Entity Order": [
+                        "Entity_[1155043901622]"
+                    ]
+                },
+                "Component_[7619205353932880281]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7619205353932880281
+                },
+                "Component_[8458290980975423191]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 8458290980975423191
+                },
+                "Component_[9483887954899180333]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 9483887954899180333
+                },
+                "EditorColliderComponent": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 16997471331647313824,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.13099999725818634
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
-                                    "Name": "MWarehouseBoxes_003"
+                                    "Name": "Entire object"
                                 }
                             ]
                         }
                     },
                     "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{6B552C1C-B7A0-5029-AEF6-C0FE06A69877}",
-                                    "subId": 3067473921
-                                },
-                                "assetHint": "assets/warehouse/models/box4.fbx.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{6B552C1C-B7A0-5029-AEF6-C0FE06A69877}",
-                                        "subId": 3067473921
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/box4.fbx.pxmesh"
-                                }
-                            }
+                        "ShapeType": 1,
+                        "Box": {
+                            "Configuration": [
+                                0.3499999940395355,
+                                0.8999999761581421,
+                                0.2619999945163727
+                            ]
                         }
                     }
                 },
