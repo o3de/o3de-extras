@@ -412,6 +412,21 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[6674651583343491819]/Transform Data/UniformScale",
                     "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/0",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/1",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/2",
+                    "value": 1.2999999523162842
                 }
             ]
         },
@@ -442,6 +457,21 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[6674651583343491819]/Transform Data/UniformScale",
                     "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/0",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/1",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/2",
+                    "value": 1.2999999523162842
                 }
             ]
         },
@@ -471,6 +501,21 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[6674651583343491819]/Transform Data/UniformScale",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/0",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/1",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/2",
                     "value": 1.2999999523162842
                 }
             ]
@@ -691,7 +736,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[6674651583343491819]/Transform Data/Translate/1",
-                    "value": -0.3969192504882813
+                    "value": -0.39691925048828125
                 },
                 {
                     "op": "replace",
@@ -701,6 +746,21 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[6674651583343491819]/Transform Data/UniformScale",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/0",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/1",
+                    "value": 1.2999999523162842
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[5722642839998]/Components/EditorColliderComponent/ShapeConfiguration/Box/Scale/2",
                     "value": 1.2999999523162842
                 }
             ]
