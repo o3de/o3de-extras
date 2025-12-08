@@ -12,6 +12,7 @@
 
 #include <Georeferencing/GeoreferenceBus.h>
 #include <ROS2Sensors/GNSS/GNSSPostProcessingRequestBus.h>
+#include <ROS2/Clock/ROS2ClockRequestBus.h>
 
 namespace ROS2Sensors
 {
@@ -65,7 +66,9 @@ namespace ROS2Sensors
             fullTopic, &ROS2::ROS2NamesRequestBus::Events::GetNamespacedName, GetNamespace(), publisherConfig.m_topic);
         m_gnssPublisher = ros2Node->create_publisher<sensor_msgs::msg::NavSatFix>(fullTopic.data(), publisherConfig.GetQoS());
 
-        m_gnssMsg.header.frame_id = "gnss_frame_id";
+        const auto* ros2Frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>();
+        AZ_Assert(ros2Frame, "Invalid component pointer value");
+        m_gnssMsg.header.frame_id = ros2Frame->GetNamespacedFrameID().data();
 
         StartSensor(
             m_sensorConfiguration.m_frequency,
@@ -108,6 +111,7 @@ namespace ROS2Sensors
         m_gnssMsg.status.service = sensor_msgs::msg::NavSatStatus::SERVICE_GPS;
         GNSSPostProcessingRequestBus::Event(GetEntityId(), &GNSSPostProcessingRequests::ApplyPostProcessing, m_gnssMsg);
 
+        m_gnssMsg.header.stamp = ROS2::ROS2ClockInterface::Get()->GetROSTimestamp();
         m_gnssPublisher->publish(m_gnssMsg);
     }
 
