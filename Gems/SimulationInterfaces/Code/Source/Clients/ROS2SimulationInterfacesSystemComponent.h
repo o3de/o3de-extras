@@ -15,7 +15,7 @@
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/API/ApplicationAPI.h>
-#include <Interfaces/IROS2HandlerBase.h>
+#include <Interfaces/ISimulationFeaturesBase.h>
 #include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
 
 namespace ROS2SimulationInterfaces
@@ -48,7 +48,7 @@ namespace ROS2SimulationInterfaces
         void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatureType>& features) override;
 
     private:
-        AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<IROS2HandlerBase>> m_availableRos2Interface;
+        AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<ISimulationFeaturesBase>> m_availableRos2Interface;
         AZStd::unordered_set<SimulationFeatureType> m_externallyRegisteredFeatures;
         template<typename T>
         void RegisterInterface(rclcpp::Node::SharedPtr ros2Node)

@@ -8,14 +8,17 @@
 
 #pragma once
 
-#include "Services/ROS2ServiceBase.h"
 #include <AzCore/std/string/string_view.h>
+#include <Interfaces/ISimulationFeaturesBase.h>
+#include <ROS2/Handlers/ROS2ServiceBase.h>
 #include <simulation_interfaces/srv/set_simulation_state.hpp>
 
 namespace ROS2SimulationInterfaces
 {
 
-    class SetSimulationStateServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::SetSimulationState>
+    class SetSimulationStateServiceHandler
+        : public ROS2::ROS2ServiceBase<simulation_interfaces::srv::SetSimulationState>
+        , public ISimulationFeaturesBase
     {
     public:
         AZStd::string_view GetTypeName() const override
