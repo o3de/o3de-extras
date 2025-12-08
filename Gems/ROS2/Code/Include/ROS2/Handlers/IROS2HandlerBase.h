@@ -13,7 +13,7 @@
 
 namespace ROS2
 {
-    // common interface to store ros2  handlers in common container
+    // common interface to store ROS 2 handlers in common container
     class IROS2HandlerBase
     {
     public:

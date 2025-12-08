@@ -16,7 +16,7 @@ namespace ROS2::HandlersRegistryUtils
 {
     namespace
     {
-        // prefix for settings registry related to ros2 handlers names
+        // prefix for settings registry related to ROS 2 handlers names
         inline constexpr const char* ServiceNameRegistryPrefix = "/ROS2/HandlersNames";
     } // namespace
 
