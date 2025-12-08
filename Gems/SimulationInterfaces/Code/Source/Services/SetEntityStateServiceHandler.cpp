@@ -9,6 +9,7 @@
 #include "SetEntityStateServiceHandler.h"
 #include <ROS2/TF/TransformInterface.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
+#include <SimulationInterfaces/RegistryUtils.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
 namespace ROS2SimulationInterfaces

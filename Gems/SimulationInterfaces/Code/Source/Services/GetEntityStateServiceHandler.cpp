@@ -9,8 +9,8 @@
 #include "GetEntityStateServiceHandler.h"
 #include <ROS2/Clock/ROS2ClockRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
-#include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/RegistryUtils.h>
+#include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
 namespace ROS2SimulationInterfaces
 {
