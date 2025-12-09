@@ -1,6 +1,6 @@
 {
     "gem_name": "ROS2Sensors",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "display_name": "ROS2Sensors",
     "license": "Apache-2.0",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
@@ -27,7 +27,7 @@
     ],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Sensors",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2sensors-1.0.0-gem.zip",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2sensors-1.0.1-gem.zip",
     "compatible_engines": [],
     "engine_api_dependencies": [],
     "restricted": "ROS2Sensors"

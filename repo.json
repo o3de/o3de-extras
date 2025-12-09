@@ -4,7 +4,7 @@
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "summary": "A repository to hold various gems, projects, and templates for the O3DE engine.",
     "additional_info": "Extras gems, projects, and templates for O3DE. See the README.md at the root of this repository for more information",
-    "last_updated": "2025-07-22",
+    "last_updated": "2025-12-09",
     "$schemaVersion": "1.0.0",
     "gems_data": [
         {
@@ -357,6 +357,30 @@
                     "sha256": "2682a18e88b88134d2bb32bc9dfc53cbaf6126a8c32e96a18e84108ca7f21f9e"
                 },
                 {
+                    "version": "3.5.0",
+                    "origin_url": "https://robotec.ai",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
+                    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem",
+                    "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+                    "dependencies": [
+                        "Atom_RPI",
+                        "Atom_Feature_Common",
+                        "Atom_Component_DebugCamera",
+                        "CommonFeaturesAtom",
+                        "PhysX5",
+                        "PrimitiveAssets",
+                        "StartingPointInput",
+                        "LevelGeoreferencing"
+                    ],
+                    "compatible_engines": [
+                        "o3de-sdk>=2.4.0",
+                        "o3de>=2.4.0"
+                    ],
+                    "engine_api_dependencies": [],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.5.0-gem.zip",
+                    "sha256": "1142a78256af12bbc1b49de0ff1aab7b9251b99ee913ea47fa2c23ae6a476512"
+                },
+                {
                     "version": "4.0.0",
                     "origin_url": "https://robotec.ai",
                     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
@@ -372,6 +396,23 @@
                     "engine_api_dependencies": [],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-4.0.0-gem.zip",
                     "sha256": "5567e47ddc1cbb3f76073201d80b463ad5fba8cdfeb36e9ba6fbd479e492681d"
+                },
+                {
+                    "version": "4.1.0",
+                    "origin_url": "https://robotec.ai",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
+                    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem.",
+                    "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+                    "dependencies": [
+                        "LevelGeoreferencing"
+                    ],
+                    "compatible_engines": [
+                        "o3de-sdk>=2.4.0",
+                        "o3de>=2.4.0"
+                    ],
+                    "engine_api_dependencies": [],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-4.1.0-gem.zip",
+                    "sha256": "cec6909ab111828023e0907e174ea7a1f5dcb9458c6fe8c7d759902842651c42"
                 }
             ]
         },
@@ -526,6 +567,17 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.2-gem.zip",
                     "sha256": "6e9b80a1babb6427e8dd29b30ef48bf3edf362d13ed7525a07104438a6f21445"
+                },
+                {
+                    "version": "2.0.3",
+                    "origin": "RobotecAI",
+                    "origin_url": "https://robotec.ai",
+                    "compatible_engines": [
+                        "o3de-sdk>=2.3.0",
+                        "o3de>=2.3.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.3-gem.zip",
+                    "sha256": "74615e5be45fbacf6b278dabfdc42551ae9d52283f5539a975fb05b38ede57c4"
                 }
             ]
         },
@@ -842,6 +894,15 @@
                     "sha256": "bca9402d455062ae3d715d14cfcbad35ff6a558f246d127cd9d7cb5a272d6bd4"
                 },
                 {
+                    "version": "2.0.1",
+                    "dependencies": [
+                        "ROS2>=3.5.0",
+                        "DebugDraw"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.0.1-gem.zip",
+                    "sha256": "e1c6a8b0d34b50886b2cb0a11523941d879ec0ed7582785bd7ec229ceba4a17d"
+                },
+                {
                     "version": "2.1.0",
                     "dependencies": [
                         "ROS2>=4.0.0",
@@ -849,6 +910,15 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.1.0-gem.zip",
                     "sha256": "570a1f83372441b93f7201a72df3fb76a8a430338ff303c010db2c4fa644dbcf"
+                },
+                {
+                    "version": "2.1.1",
+                    "dependencies": [
+                        "ROS2>=4.1.0",
+                        "DebugDraw"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.1.1-gem.zip",
+                    "sha256": "b0f130d21acc7d8a9785f62b128c8743280418112fe5883090f86205853d8805"
                 }
             ]
         },
@@ -884,7 +954,15 @@
             "compatible_engines": [],
             "engine_api_dependencies": [],
             "restricted": "ROS2Controllers",
-            "sha256": "b6029ff58c0da1561d9a8585147516fe9dcf0330783630df013d5f712e61574b"
+            "sha256": "b6029ff58c0da1561d9a8585147516fe9dcf0330783630df013d5f712e61574b",
+            "versions_data": [
+                {
+                    "version": "1.0.1",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2controllers-1.0.1-gem.zip",
+                    "sha256": "f8feb52d7dc31c2dd2e4a7dc8b0f0129b5f571594e788c9d954dcad3f66a0010",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Controllers"
+                }
+            ]
         },
         {
             "gem_name": "ROS2RobotImporter",
@@ -954,7 +1032,15 @@
             "compatible_engines": [],
             "engine_api_dependencies": [],
             "restricted": "ROS2Sensors",
-            "sha256": "ee3a5ed1c4913ca5be2bb756983f08192afd8aaca0f3ad8ce9beaa94f679468b"
+            "sha256": "ee3a5ed1c4913ca5be2bb756983f08192afd8aaca0f3ad8ce9beaa94f679468b",
+            "versions_data": [
+                {
+                    "version": "1.0.1",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2sensors-1.0.1-gem.zip",
+                    "sha256": "478d03c12fbfc765c202cc7ff5d91510ebe1c4c871b915cde08982d67cfc1b66",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Sensors"
+                }
+            ]
         },
         {
             "gem_name": "OptickProfiler",
