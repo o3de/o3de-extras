@@ -7,6 +7,7 @@
  */
 
 #include "GetEntityStateServiceHandler.h"
+#include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/RegistryUtils.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
