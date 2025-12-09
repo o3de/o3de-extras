@@ -8,14 +8,17 @@
 
 #pragma once
 
-#include "ROS2ServiceBase.h"
 #include <AzCore/std/string/string_view.h>
+#include <Interfaces/ISimulationFeaturesBase.h>
+#include <ROS2/Handlers/ROS2ServiceBase.h>
 #include <simulation_interfaces/srv/get_current_world.hpp>
 
 namespace ROS2SimulationInterfaces
 {
 
-    class GetCurrentWorldServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::GetCurrentWorld>
+    class GetCurrentWorldServiceHandler
+        : public ROS2::ROS2ServiceBase<simulation_interfaces::srv::GetCurrentWorld>
+        , public ISimulationFeaturesBase
     {
     public:
         AZStd::string_view GetTypeName() const override

@@ -40,10 +40,6 @@
                     ]
                 },
                 {
-                    "Name": "RayTracingAccelerationStructurePass",
-                    "TemplateName": "RayTracingAccelerationStructurePassTemplate"
-                },
-                {
                     "Name": "DepthPrePass",
                     "TemplateName": "DepthParentTemplate",
                     "Connections": [

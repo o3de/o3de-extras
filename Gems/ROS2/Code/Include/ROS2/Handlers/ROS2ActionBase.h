@@ -8,18 +8,14 @@
 
 #pragma once
 
+#include "HandlersRegistryUtils.h"
+#include "IROS2HandlerBase.h"
 #include <AzCore/std/functional.h>
-#include <Interfaces/IROS2HandlerBase.h>
-#include <SimulationInterfaces/RegistryUtils.h>
 #include <rclcpp_action/rclcpp_action.hpp>
-#include <simulation_interfaces/msg/simulator_features.hpp>
 
-namespace ROS2SimulationInterfaces
+namespace ROS2
 {
-    //! Base for each ROS 2 action server handler, forces declaration of features provided by the server
-    //! combined information along all ROS 2 handlers gives information about simulation features
-    //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
-    using SimulationFeatures = simulation_interfaces::msg::SimulatorFeatures;
+    //! Base for each ROS 2 action server handler
     template<typename RosActionType>
     class ROS2ActionBase : public virtual IROS2HandlerBase
     {
@@ -37,7 +33,7 @@ namespace ROS2SimulationInterfaces
             CreateAction(node);
         }
 
-        bool IsValid() override
+        bool IsValid() const override
         {
             return m_actionHandle != nullptr;
         }
@@ -96,13 +92,6 @@ namespace ROS2SimulationInterfaces
         //! This function is called when the newly received goal is accepted
         virtual void GoalAcceptedCallback(const std::shared_ptr<GoalHandle> goal_handle) = 0;
 
-        //! return features id defined by the handler, ids must follow the definition inside standard:
-        //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
-        AZStd::unordered_set<SimulationFeatureType> GetProvidedFeatures() override
-        {
-            return {};
-        };
-
         std::shared_ptr<GoalHandle> m_goalHandle;
 
     private:
@@ -110,15 +99,13 @@ namespace ROS2SimulationInterfaces
         {
             // Get the action name from the type name
             // passing an empty string to settings registry disables ROS 2 action
-            AZStd::optional<AZStd::string> actionName = RegistryUtilities::GetName(GetTypeName());
-            
+            AZStd::optional<AZStd::string> actionName = HandlersRegistryUtils::GetName(GetTypeName());
+
             // do not create a ROS 2 action if the value is empty
             if (actionName.has_value() && actionName.value().empty())
             {
                 AZ_Trace(
-                    "SimulationInterfaces",
-                    "Action name for type %s is set to empty string, action server won't be created",
-                    GetTypeName().data());
+                    "ROS2 Gem", "Action name for type %s is set to empty string, action server won't be created", GetTypeName().data());
                 return;
             }
 
@@ -139,4 +126,4 @@ namespace ROS2SimulationInterfaces
 
         ActionHandle m_actionHandle;
     };
-} // namespace ROS2SimulationInterfaces
+} // namespace ROS2
