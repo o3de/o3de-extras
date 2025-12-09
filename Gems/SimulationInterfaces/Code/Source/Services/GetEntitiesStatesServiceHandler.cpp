@@ -10,6 +10,7 @@
 #include "ROS2/ROS2Bus.h"
 #include <Clients/CommonUtilities.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
+#include <SimulationInterfaces/RegistryUtils.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
 namespace ROS2SimulationInterfaces

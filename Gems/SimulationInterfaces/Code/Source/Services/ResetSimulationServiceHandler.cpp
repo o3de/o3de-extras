@@ -11,7 +11,6 @@
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/optional.h>
 #include <ROS2/ROS2Bus.h>
-#include <Services/ROS2ServiceBase.h>
 #include <SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h>
 #include <SimulationInterfaces/Result.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
