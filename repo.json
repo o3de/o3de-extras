@@ -396,6 +396,23 @@
                     "engine_api_dependencies": [],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-4.0.0-gem.zip",
                     "sha256": "5567e47ddc1cbb3f76073201d80b463ad5fba8cdfeb36e9ba6fbd479e492681d"
+                },
+                {
+                    "version": "4.1.0",
+                    "origin_url": "https://robotec.ai",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
+                    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem.",
+                    "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+                    "dependencies": [
+                        "LevelGeoreferencing"
+                    ],
+                    "compatible_engines": [
+                        "o3de-sdk>=2.4.0",
+                        "o3de>=2.4.0"
+                    ],
+                    "engine_api_dependencies": [],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-4.1.0-gem.zip",
+                    "sha256": "cec6909ab111828023e0907e174ea7a1f5dcb9458c6fe8c7d759902842651c42"
                 }
             ]
         },
@@ -550,6 +567,17 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.2-gem.zip",
                     "sha256": "6e9b80a1babb6427e8dd29b30ef48bf3edf362d13ed7525a07104438a6f21445"
+                },
+                {
+                    "version": "2.0.3",
+                    "origin": "RobotecAI",
+                    "origin_url": "https://robotec.ai",
+                    "compatible_engines": [
+                        "o3de-sdk>=2.3.0",
+                        "o3de>=2.3.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.3-gem.zip",
+                    "sha256": "74615e5be45fbacf6b278dabfdc42551ae9d52283f5539a975fb05b38ede57c4"
                 }
             ]
         },
@@ -882,6 +910,15 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.1.0-gem.zip",
                     "sha256": "570a1f83372441b93f7201a72df3fb76a8a430338ff303c010db2c4fa644dbcf"
+                },
+                {
+                    "version": "2.1.1",
+                    "dependencies": [
+                        "ROS2>=4.1.0",
+                        "DebugDraw"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.1.1-gem.zip",
+                    "sha256": "b0f130d21acc7d8a9785f62b128c8743280418112fe5883090f86205853d8805"
                 }
             ]
         },
