@@ -954,7 +954,15 @@
             "compatible_engines": [],
             "engine_api_dependencies": [],
             "restricted": "ROS2Controllers",
-            "sha256": "b6029ff58c0da1561d9a8585147516fe9dcf0330783630df013d5f712e61574b"
+            "sha256": "b6029ff58c0da1561d9a8585147516fe9dcf0330783630df013d5f712e61574b",
+            "versions_data": [
+                {
+                    "version": "1.0.1",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2controllers-1.0.1-gem.zip",
+                    "sha256": "f8feb52d7dc31c2dd2e4a7dc8b0f0129b5f571594e788c9d954dcad3f66a0010",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Controllers"
+                }
+            ]
         },
         {
             "gem_name": "ROS2RobotImporter",
@@ -1024,7 +1032,15 @@
             "compatible_engines": [],
             "engine_api_dependencies": [],
             "restricted": "ROS2Sensors",
-            "sha256": "ee3a5ed1c4913ca5be2bb756983f08192afd8aaca0f3ad8ce9beaa94f679468b"
+            "sha256": "ee3a5ed1c4913ca5be2bb756983f08192afd8aaca0f3ad8ce9beaa94f679468b",
+            "versions_data": [
+                {
+                    "version": "1.0.1",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2sensors-1.0.1-gem.zip",
+                    "sha256": "478d03c12fbfc765c202cc7ff5d91510ebe1c4c871b915cde08982d67cfc1b66",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Sensors"
+                }
+            ]
         },
         {
             "gem_name": "OptickProfiler",
