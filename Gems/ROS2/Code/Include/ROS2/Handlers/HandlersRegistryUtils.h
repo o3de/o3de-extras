@@ -17,7 +17,7 @@ namespace ROS2::HandlersRegistryUtils
     namespace
     {
         // prefix for settings registry related to ROS 2 handlers names
-        inline constexpr const char* ServiceNameRegistryPrefix = "/ROS2/HandlersNames";
+        inline constexpr const char* ServiceNameRegistryPrefix = "/O3DE/ROS2/HandlersNames";
     } // namespace
 
     //! Gets name of the service with defined type from settings registry
