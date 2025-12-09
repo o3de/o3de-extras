@@ -357,6 +357,30 @@
                     "sha256": "2682a18e88b88134d2bb32bc9dfc53cbaf6126a8c32e96a18e84108ca7f21f9e"
                 },
                 {
+                    "version": "3.5.0",
+                    "origin_url": "https://robotec.ai",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
+                    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem",
+                    "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+                    "dependencies": [
+                        "Atom_RPI",
+                        "Atom_Feature_Common",
+                        "Atom_Component_DebugCamera",
+                        "CommonFeaturesAtom",
+                        "PhysX5",
+                        "PrimitiveAssets",
+                        "StartingPointInput",
+                        "LevelGeoreferencing"
+                    ],
+                    "compatible_engines": [
+                        "o3de-sdk>=2.4.0",
+                        "o3de>=2.4.0"
+                    ],
+                    "engine_api_dependencies": [],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.5.0-gem.zip",
+                    "sha256": "1142a78256af12bbc1b49de0ff1aab7b9251b99ee913ea47fa2c23ae6a476512"
+                },
+                {
                     "version": "4.0.0",
                     "origin_url": "https://robotec.ai",
                     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
@@ -840,6 +864,15 @@
                     "version": "2.0.0",
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.0.0-gem.zip",
                     "sha256": "bca9402d455062ae3d715d14cfcbad35ff6a558f246d127cd9d7cb5a272d6bd4"
+                },
+                {
+                    "version": "2.0.1",
+                    "dependencies": [
+                        "ROS2>=3.5.0",
+                        "DebugDraw"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.0.1-gem.zip",
+                    "sha256": "e1c6a8b0d34b50886b2cb0a11523941d879ec0ed7582785bd7ec229ceba4a17d"
                 },
                 {
                     "version": "2.1.0",
