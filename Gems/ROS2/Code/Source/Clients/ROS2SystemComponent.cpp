@@ -17,8 +17,8 @@
 #include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 
-#include <AzCore/RTTI/RTTI.h>
 #include <AzCore/RTTI/BehaviorContext.h>
+#include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -34,6 +34,10 @@
 
 namespace ROS2
 {
+    namespace
+    {
+        constexpr AZStd::string_view ROS2NodeArgumentsSetReg = "/O3DE/ROS2/NodeArguments";
+    }
 
     AZ_COMPONENT_IMPL(ROS2SystemComponent, "ROS2SystemComponent", ROS2SystemComponentTypeId);
 
@@ -136,7 +140,22 @@ namespace ROS2
 
     void ROS2SystemComponent::Activate()
     {
-        m_ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node");
+        std::vector<std::string> nodeArgs;
+        if (auto* settingsRegistry = AZ::SettingsRegistry::Get(); settingsRegistry != nullptr)
+        {
+            AZStd::string nodeArgsStr;
+            settingsRegistry->Get(nodeArgsStr, ROS2NodeArgumentsSetReg);
+
+            std::istringstream iss(nodeArgsStr.c_str());
+            std::string arg;
+            while (iss >> arg)
+            {
+                nodeArgs.push_back(arg);
+            }
+        }
+        rclcpp::NodeOptions nodeOptions;
+        nodeOptions.arguments(nodeArgs);
+        m_ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node", nodeOptions);
         m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
         m_executor->add_node(m_ros2Node);
 
