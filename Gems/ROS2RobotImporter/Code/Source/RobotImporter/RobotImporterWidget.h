@@ -82,9 +82,9 @@ namespace ROS2RobotImporter
         bool m_copyReferencedAssets{ false };
 
         /// mapping from urdf path to asset source
-        AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
-        AZStd::shared_ptr<AZStd::thread> m_copyReferencedAssetsThread;
+        Utils::UrdfAssetMap m_urdfAssetsMapping;
 
+        AZStd::shared_ptr<AZStd::thread> m_copyReferencedAssetsThread;
         AZStd::unique_ptr<URDFPrefabMaker> m_prefabMaker;
 
         /// Xacro params

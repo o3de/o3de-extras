@@ -112,11 +112,10 @@ namespace ROS2RobotImporter::Utils
     //! @returns map where key is crc of source file and value is AvailableAsset.
     AZStd::unordered_map<AZ::Crc32, AvailableAsset> GetInterestingSourceAssetsCRC();
 
-    //! Discover an association between meshes in URDF and O3DE source and product assets.
+    //! Discover an association between meshes in input SDF/URDF and O3DE source and product assets.
     //! Steps:
-    //! - Functions resolves URDF filenames with `ResolveAssetPath`.
-    //! - Files pointed by resolved URDF paths have their checksum computed `GetFileCRC`.
     //! - Function scans all available O3DE assets by calling `GetInterestingSourceAssetsCRC`.
+    //! - Files pointed by resolved URDF paths have their checksum computed `GetFileCRC`.
     //! - Suitable mapping to the O3DE asset is found by comparing the checksum of the file pointed by the URDF path and source asset.
     //! @param unresolvedAssetMap - list of the unresolved paths from the SDF/URDF file that are to be found as assets
     //! @param urdfFilepath - path of URDF file, used for resolving paths of referenced assets
@@ -185,11 +184,11 @@ namespace ROS2RobotImporter::Utils
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
     //! Creates a mapping from unresolved URDF paths to source asset info.
-    //! @param unresolvedAssetMap - files to copy (as unresolved urdf paths)
+    //! @param unresolvedAssetMap - list of assets discovered in the input SDF/URDF file
     //! @param urdfFilepath - path to URDF file (as a global path)
     //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
     //! @returns mapping from unresolved urdf paths to source asset info
-    void CreateAssetMap(
+    void ResolveAssetMap(
         UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings);
 
     //! Copies and prepares asset that is referenced in SDF/URDF.
