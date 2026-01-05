@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) Contributors to the Open 3D Engine Project.
+    For complete copyright and license terms please see the LICENSE at the root of this distribution.
+
+    SPDX-License-Identifier: Apache-2.0 OR MIT
+    
+    Example O3DEReflect Component - Player Movement
+    
+    This demonstrates how to define a component using O3DEReflect XML.
+    Compare this to the traditional verbose approach!
+-->
+<Component
+    Name="PlayerMovementComponent"
+    Namespace="Example"
+    Category="Gameplay/Movement"
+    Description="Handles player character movement with configurable speed, jumping, and physics"
+    Icon="Icons/Components/Movement.svg"
+    AppearsInAddComponentMenu="Game">
+
+    <!-- Required includes -->
+    <Include File="AzCore/Math/Vector3.h"/>
+    <Include File="AzFramework/Physics/RigidBodyBus.h"/>
+
+    <!-- Base classes -->
+    <BaseClass Name="Component" Namespace="AZ" Include="AzCore/Component/Component.h"/>
+
+    <!-- Services -->
+    <Service Name="PlayerMovementService" Type="Provides"/>
+    <Service Name="TransformService" Type="Requires"/>
+    <Service Name="PhysicsService" Type="Dependent"/>
+
+    <!-- Properties (like UPROPERTY) -->
+    <Property Name="moveSpeed" Type="float" Default="5.0f"
+        Category="Movement"
+        Tooltip="Base movement speed in meters per second"
+        Min="0.0" Max="100.0"
+        Suffix="m/s"
+        EditAnywhere="true"
+        BlueprintReadWrite="true"/>
+
+    <Property Name="sprintMultiplier" Type="float" Default="2.0f"
+        Category="Movement"
+        Tooltip="Speed multiplier when sprinting"
+        Min="1.0" Max="5.0"
+        EditAnywhere="true"
+        BlueprintReadWrite="true"/>
+
+    <Property Name="jumpForce" Type="float" Default="400.0f"
+        Category="Jumping"
+        Tooltip="Upward force applied when jumping"
+        Min="0.0" Max="2000.0"
+        Suffix="N"
+        EditAnywhere="true"
+        BlueprintReadWrite="true"/>
+
+    <Property Name="maxJumps" Type="int" Default="2"
+        Category="Jumping"
+        Tooltip="Maximum number of jumps (1 = no double jump)"
+        Min="1" Max="5"
+        EditAnywhere="true"
+        BlueprintReadWrite="true"/>
+
+    <Property Name="gravityMultiplier" Type="float" Default="1.0f"
+        Category="Physics"
+        Tooltip="Multiplier for gravity effect on this character"
+        Min="0.0" Max="5.0"
+        EditAnywhere="true"
+        BlueprintReadWrite="true"/>
+
+    <Property Name="isGrounded" Type="bool" Default="false"
+        Category="State"
+        Tooltip="Whether the character is currently on the ground"
+        VisibleAnywhere="true"
+        BlueprintReadOnly="true"/>
+
+    <Property Name="currentVelocity" Type="AZ::Vector3" Default="AZ::Vector3::CreateZero()"
+        Category="State"
+        Tooltip="Current velocity of the character"
+        VisibleAnywhere="true"
+        BlueprintReadOnly="true"/>
+
+    <!-- Functions (like UFUNCTION) -->
+    <Function Name="Jump" 
+        Category="Movement" 
+        Tooltip="Makes the character jump if able"
+        BlueprintCallable="true">
+    </Function>
+
+    <Function Name="Move"
+        Category="Movement"
+        Tooltip="Moves the character in the given direction"
+        BlueprintCallable="true">
+        <Param Name="direction" Type="const AZ::Vector3&amp;" Tooltip="Movement direction (normalized)"/>
+        <Param Name="deltaTime" Type="float" Tooltip="Frame delta time"/>
+    </Function>
+
+    <Function Name="SetSprinting"
+        Category="Movement"
+        Tooltip="Enable or disable sprinting"
+        BlueprintCallable="true">
+        <Param Name="sprinting" Type="bool"/>
+    </Function>
+
+    <Function Name="GetCurrentSpeed"
+        Category="Movement"
+        Tooltip="Returns the current movement speed including modifiers"
+        BlueprintCallable="true"
+        BlueprintPure="true">
+        <Return Type="float"/>
+    </Function>
+
+    <Function Name="Teleport"
+        Category="Utility"
+        Tooltip="Instantly teleport to a position"
+        BlueprintCallable="true"
+        CallInEditor="true">
+        <Param Name="position" Type="const AZ::Vector3&amp;"/>
+    </Function>
+
+</Component>
