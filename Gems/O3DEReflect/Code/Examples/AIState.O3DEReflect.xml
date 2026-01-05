@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) Contributors to the Open 3D Engine Project.
+    For complete copyright and license terms please see the LICENSE at the root of this distribution.
+
+    SPDX-License-Identifier: Apache-2.0 OR MIT
+    
+    Example O3DEReflect Enum - AI State
+    
+    This demonstrates how to define an enum using O3DEReflect XML.
+    Like Unreal's UENUM, this creates a scriptable, editor-visible enumeration.
+-->
+<Enum
+    Name="AIState"
+    Namespace="Example"
+    Category="AI"
+    Description="Possible states for an AI character"
+    BlueprintType="true"
+    UnderlyingType="uint8_t">
+
+    <EnumValue Name="Idle" Value="0"
+        DisplayName="Standing Idle"
+        Tooltip="AI is idle and not doing anything"/>
+
+    <EnumValue Name="Patrol" Value="1"
+        DisplayName="Patrolling"
+        Tooltip="AI is following a patrol route"/>
+
+    <EnumValue Name="Alert" Value="2"
+        DisplayName="On Alert"
+        Tooltip="AI has detected something suspicious"/>
+
+    <EnumValue Name="Chase" Value="3"
+        DisplayName="Chasing Target"
+        Tooltip="AI is actively pursuing a target"/>
+
+    <EnumValue Name="Combat" Value="4"
+        DisplayName="In Combat"
+        Tooltip="AI is engaged in combat"/>
+
+    <EnumValue Name="Flee" Value="5"
+        DisplayName="Fleeing"
+        Tooltip="AI is running away from danger"/>
+
+    <EnumValue Name="Dead" Value="6"
+        DisplayName="Dead"
+        Tooltip="AI has been killed"/>
+
+</Enum>
