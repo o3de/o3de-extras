@@ -9,7 +9,7 @@ O3DE Reflect supports two ways to define your reflected types:
 | Approach | Best For | Style |
 |----------|----------|-------|
 |  XML Definitions | New projects, clean separation | XML files (`.O3DEReflect.xml`) |
-|  Header Macros | Existing code, Unreal-familiar devs | C++ macros in headers |
+|  Header Macros | Existing code, C++ developers | C++ macros in headers |
 
 ## Benefits
 
@@ -19,9 +19,9 @@ O3DE Reflect supports two ways to define your reflected types:
 - Multiplayer Binding Support
 ---
 
-Header Macros (Unreal-Style)
+Header Macros
 
-The standard approach lets you write clean C++ with Unreal-style macros:
+The standard approach lets you write clean C++ with simple macros:
 
 ### Quick Example
 
@@ -35,34 +35,34 @@ class PlayerMovementComponent : public AZ::Component
     O3DE_COMPONENT(PlayerMovementComponent, "{12345678-...}")
 
 public:
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Movement", Tooltip = "Max speed in m/s",
         Min = 0.0f, Max = 100.0f, Suffix = "m/s")
     float m_maxSpeed = 10.0f;
 
-    O3DE_PROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+    O3DE_PROPERTY(VisibleAnywhere, ScriptReadOnly, Category = "State")
     bool m_isGrounded = false;
 
-    O3DE_FUNCTION(BlueprintCallable, Category = "Movement")
+    O3DE_FUNCTION(ScriptCallable, Category = "Movement")
     void Move(const AZ::Vector3& direction);
 
-    O3DE_FUNCTION(BlueprintPure, Category = "State")
+    O3DE_FUNCTION(ScriptPure, Category = "State")
     float GetCurrentSpeed() const;
 };
 ```
 
 ### Macros Reference
 
-| Macro | Purpose | Like Unreal's |
-|-------|---------|---------------|
-| `O3DE_CLASS(...)` | Mark class for reflection | `UCLASS()` |
-| `O3DE_COMPONENT(Name, UUID, ...)` | Declare component with services | `UCLASS()` |
-| `O3DE_PROPERTY(...)` | Mark member for serialization | `UPROPERTY()` |
-| `O3DE_FUNCTION(...)` | Expose function to scripts | `UFUNCTION()` |
-| `O3DE_STRUCT(...)` | Mark struct for reflection | `USTRUCT()` |
-| `O3DE_ENUM(...)` | Mark enum for reflection | `UENUM()` |
-| `O3DE_ENUM_VALUE(...)` | Add enum value metadata | - |
-| `O3DE_GENERATED_BODY()` | Include generated code | `GENERATED_BODY()` |
+| Macro | Purpose |
+|-------|---------|
+| `O3DE_CLASS(...)` | Mark class for reflection |
+| `O3DE_COMPONENT(Name, UUID, ...)` | Declare component with services |
+| `O3DE_PROPERTY(...)` | Mark member for serialization |
+| `O3DE_FUNCTION(...)` | Expose function to scripting |
+| `O3DE_STRUCT(...)` | Mark struct for reflection |
+| `O3DE_ENUM(...)` | Mark enum for reflection |
+| `O3DE_ENUM_VALUE(...)` | Add enum value metadata |
+| `O3DE_GENERATED_BODY()` | Include generated code |
 
 ### Property Specifiers
 
@@ -73,8 +73,8 @@ public:
 - `VisibleAnywhere` - Visible but not editable
 
 **Scripting:**
-- `BlueprintReadWrite` - Read+write from Lua/ScriptCanvas
-- `BlueprintReadOnly` - Read-only from Lua/ScriptCanvas
+- `ScriptReadWrite` - Read+write from Lua/ScriptCanvas
+- `ScriptReadOnly` - Read-only from Lua/ScriptCanvas
 
 **Metadata:**
 - `Category = "Group|SubGroup"` - Property grouping
@@ -87,8 +87,8 @@ public:
 
 ### Function Specifiers
 
-- `BlueprintCallable` - Can be called from script canvas
-- `BlueprintPure` - Pure function (can be cached, shown differently in graph)
+- `ScriptCallable` - Can be called from script canvas
+- `ScriptPure` - Pure function (can be cached, shown differently in graph)
 - `CallInEditor` - Can be invoked from editor UI
 - `Server` / `Client` / `NetMulticast` - Network replication (future)
 
@@ -134,19 +134,19 @@ Create a file named `MyComponent.O3DEReflect.xml`:
         Min="0.0" Max="100.0"
         Suffix="m/s"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Property Name="health" Type="int" Default="100"
         Category="Combat"
         Tooltip="Current health points"
         Min="0" Max="1000"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Function Name="TakeDamage"
         Category="Combat"
         Tooltip="Apply damage to this component"
-        BlueprintCallable="true">
+        ScriptCallable="true">
         <Param Name="amount" Type="float"/>
         <Return Type="bool"/>
     </Function>
@@ -223,8 +223,8 @@ The generator creates:
 | `EditAnywhere` | bool | Editable in editor (default: true) |
 | `VisibleAnywhere` | bool | Visible but read-only in editor |
 | `ReadOnly` | bool | Read-only property |
-| `BlueprintReadWrite` | bool | Exposed to scripts read+write |
-| `BlueprintReadOnly` | bool | Exposed to scripts read-only |
+| `ScriptReadWrite` | bool | Exposed to scripts read+write |
+| `ScriptReadOnly` | bool | Exposed to scripts read-only |
 | `Min` / `Max` | float | Value constraints |
 | `ChangeNotify` | string | Function to call on value change |
 
@@ -236,11 +236,11 @@ The generator creates:
 | `DisplayName` | string | Override display name |
 | `Category` | string | Script node category |
 | `Tooltip` | string | Function description |
-| `BlueprintCallable` | bool | Callable from scripts (default: true) |
-| `BlueprintPure` | bool | Pure function (no side effects) |
+| `ScriptCallable` | bool | Callable from scripts (default: true) |
+| `ScriptPure` | bool | Pure function (no side effects) |
 | `CallInEditor` | bool | Can be called from editor buttons |
 
-### Struct Definition (like USTRUCT)
+### Struct Definition
 
 ```xml
 <Struct
@@ -248,7 +248,7 @@ The generator creates:
     Namespace="MyGame"
     Category="Combat"
     Description="Damage event data"
-    BlueprintType="true">
+    ScriptType="true">
 
     <Property Name="damage" Type="float" Default="0.0f" .../>
     <Property Name="source" Type="AZ::EntityId" .../>
@@ -256,7 +256,7 @@ The generator creates:
 </Struct>
 ```
 
-### Enum Definition (like UENUM)
+### Enum Definition
 
 ```xml
 <Enum
@@ -264,7 +264,7 @@ The generator creates:
     Namespace="MyGame"
     Category="AI"
     Description="AI behavior states"
-    BlueprintType="true"
+    ScriptType="true"
     UnderlyingType="uint8_t">
 
     <EnumValue Name="Idle" Value="0" DisplayName="Standing Idle"/>

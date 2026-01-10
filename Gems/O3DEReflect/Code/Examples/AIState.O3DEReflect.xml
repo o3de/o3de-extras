@@ -15,7 +15,7 @@
     Namespace="Example"
     Category="AI"
     Description="Possible states for an AI character"
-    BlueprintType="true"
+    ScriptType="true"
     UnderlyingType="uint8_t">
 
     <EnumValue Name="Idle" Value="0"

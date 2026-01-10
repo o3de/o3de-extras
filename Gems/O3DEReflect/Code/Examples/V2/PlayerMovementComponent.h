@@ -6,7 +6,7 @@
  *
  * V2 Example: PlayerMovementComponent using header-macro parsing
  * 
- * This file demonstrates the Unreal-style reflection syntax.
+ * This file demonstrates the simplified reflection syntax.
  * The O3DEReflect generator will parse these macros and generate:
  *   - PlayerMovementComponent.generated.h (included via O3DE_GENERATED_BODY)
  *   - PlayerMovementComponent.generated.cpp (reflection implementation)
@@ -22,8 +22,7 @@
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/Component/EntityId.h>
 
-// ============================================================================
-// V2 Header-Macro Style - Clean, Unreal-like syntax!
+
 // ============================================================================
 
 O3DE_CLASS(
@@ -47,7 +46,7 @@ public:
     // Movement Properties
     // ========================================================================
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Movement|Speed",
         Tooltip = "Maximum movement speed in meters per second",
         DisplayName = "Max Speed",
@@ -56,14 +55,14 @@ public:
     )
     float m_maxSpeed = 10.0f;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Movement|Speed",
         Tooltip = "Acceleration rate",
         Min = 0.0f, Max = 500.0f
     )
     float m_acceleration = 50.0f;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Movement|Speed",
         Tooltip = "Deceleration rate when not moving",
         Min = 0.0f, Max = 500.0f
@@ -74,21 +73,21 @@ public:
     // Jump Properties
     // ========================================================================
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Movement|Jump",
         Tooltip = "Initial velocity when jumping",
         Min = 0.0f, Max = 50.0f
     )
     float m_jumpVelocity = 8.0f;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Movement|Jump",
         Tooltip = "Number of jumps allowed before landing",
         Min = 1, Max = 5
     )
     int m_maxJumps = 2;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadOnly,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadOnly,
         Category = "Movement|Jump",
         Tooltip = "Custom gravity multiplier"
     )
@@ -98,19 +97,19 @@ public:
     // State Properties (runtime, visible but not editable)
     // ========================================================================
 
-    O3DE_PROPERTY(VisibleAnywhere, BlueprintReadOnly,
+    O3DE_PROPERTY(VisibleAnywhere, ScriptReadOnly,
         Category = "State",
         Tooltip = "Current velocity vector"
     )
     AZ::Vector3 m_currentVelocity = AZ::Vector3::CreateZero();
 
-    O3DE_PROPERTY(VisibleAnywhere, BlueprintReadOnly,
+    O3DE_PROPERTY(VisibleAnywhere, ScriptReadOnly,
         Category = "State",
         Tooltip = "Is the player currently on the ground?"
     )
     bool m_isGrounded = false;
 
-    O3DE_PROPERTY(VisibleAnywhere, BlueprintReadOnly,
+    O3DE_PROPERTY(VisibleAnywhere, ScriptReadOnly,
         Category = "State",
         Tooltip = "Remaining jumps available"
     )
@@ -120,32 +119,32 @@ public:
     // Exposed Functions
     // ========================================================================
 
-    O3DE_FUNCTION(BlueprintCallable,
+    O3DE_FUNCTION(ScriptCallable,
         Category = "Movement",
         Tooltip = "Apply movement input direction",
         DisplayName = "Move"
     )
     void Move(const AZ::Vector3& direction);
 
-    O3DE_FUNCTION(BlueprintCallable,
+    O3DE_FUNCTION(ScriptCallable,
         Category = "Movement",
         Tooltip = "Attempt to jump, returns true if successful"
     )
     bool Jump();
 
-    O3DE_FUNCTION(BlueprintCallable,
+    O3DE_FUNCTION(ScriptCallable,
         Category = "Movement",
         Tooltip = "Stop all movement immediately"
     )
     void StopMovement();
 
-    O3DE_FUNCTION(BlueprintPure, BlueprintCallable,
+    O3DE_FUNCTION(ScriptPure, ScriptCallable,
         Category = "State",
         Tooltip = "Get current speed (magnitude of velocity)"
     )
     float GetCurrentSpeed() const;
 
-    O3DE_FUNCTION(BlueprintPure, BlueprintCallable,
+    O3DE_FUNCTION(ScriptPure, ScriptCallable,
         Category = "State",
         Tooltip = "Check if player is moving"
     )

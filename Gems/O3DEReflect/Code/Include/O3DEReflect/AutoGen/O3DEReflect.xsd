@@ -57,7 +57,7 @@
             <xs:attribute name="Uuid" type="xs:string"/>
             <xs:attribute name="Category" type="xs:string"/>
             <xs:attribute name="Description" type="xs:string"/>
-            <xs:attribute name="BlueprintType" type="xs:boolean" default="true"/>
+            <xs:attribute name="ScriptType" type="xs:boolean" default="true"/>
             <xs:attribute name="Atomic" type="xs:boolean" default="false"/>
         </xs:complexType>
     </xs:element>
@@ -73,7 +73,7 @@
             <xs:attribute name="Uuid" type="xs:string"/>
             <xs:attribute name="Category" type="xs:string"/>
             <xs:attribute name="Description" type="xs:string"/>
-            <xs:attribute name="BlueprintType" type="xs:boolean" default="true"/>
+            <xs:attribute name="ScriptType" type="xs:boolean" default="true"/>
             <xs:attribute name="Flags" type="xs:boolean" default="false"/>
             <xs:attribute name="UnderlyingType" type="xs:string" default="int32_t"/>
         </xs:complexType>
@@ -131,8 +131,8 @@
             <xs:attribute name="ReadOnly" type="xs:boolean" default="false"/>
             
             <!-- Script visibility -->
-            <xs:attribute name="BlueprintReadWrite" type="xs:boolean" default="true"/>
-            <xs:attribute name="BlueprintReadOnly" type="xs:boolean" default="false"/>
+            <xs:attribute name="ScriptReadWrite" type="xs:boolean" default="true"/>
+            <xs:attribute name="ScriptReadOnly" type="xs:boolean" default="false"/>
             <xs:attribute name="ExposeToScript" type="xs:boolean" default="true"/>
             
             <!-- Numeric constraints -->
@@ -162,8 +162,8 @@
             <xs:attribute name="Tooltip" type="xs:string"/>
             
             <!-- Script visibility -->
-            <xs:attribute name="BlueprintCallable" type="xs:boolean" default="true"/>
-            <xs:attribute name="BlueprintPure" type="xs:boolean" default="false"/>
+            <xs:attribute name="ScriptCallable" type="xs:boolean" default="true"/>
+            <xs:attribute name="ScriptPure" type="xs:boolean" default="false"/>
             <xs:attribute name="CallInEditor" type="xs:boolean" default="false"/>
             
             <!-- Network -->

@@ -15,7 +15,7 @@
     Namespace="Example"
     Category="Combat"
     Description="Flags that modify damage behavior"
-    BlueprintType="true"
+    ScriptType="true"
     Flags="true"
     UnderlyingType="uint32_t">
 

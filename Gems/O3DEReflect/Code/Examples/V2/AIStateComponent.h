@@ -21,7 +21,7 @@
 // AI State Enum
 // ============================================================================
 
-O3DE_ENUM(BlueprintType,
+O3DE_ENUM(ScriptType,
     Category = "AI",
     Description = "Possible states for AI behavior"
 )
@@ -53,7 +53,7 @@ enum class AIState : uint8_t
 // AI Behavior Flags
 // ============================================================================
 
-O3DE_ENUM(BlueprintType, Flags,
+O3DE_ENUM(ScriptType, Flags,
     Category = "AI",
     Description = "Behavior modifiers for AI"
 )
@@ -85,26 +85,26 @@ enum class AIBehaviorFlags : uint32_t
 // Patrol Point Struct
 // ============================================================================
 
-O3DE_STRUCT(BlueprintType,
+O3DE_STRUCT(ScriptType,
     Category = "AI",
     Description = "A waypoint in a patrol route"
 )
 struct PatrolPoint
 {
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Patrol",
         Tooltip = "World position of this patrol point"
     )
     AZ::Vector3 position = AZ::Vector3::CreateZero();
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Patrol",
         Tooltip = "How long to wait at this point (seconds)",
         Min = 0.0f, Max = 60.0f
     )
     float waitTime = 2.0f;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Patrol",
         Tooltip = "Should the AI look around at this point?"
     )
@@ -135,25 +135,25 @@ public:
     // State Properties
     // ========================================================================
 
-    O3DE_PROPERTY(VisibleAnywhere, BlueprintReadOnly,
+    O3DE_PROPERTY(VisibleAnywhere, ScriptReadOnly,
         Category = "State",
         Tooltip = "Current AI state"
     )
     AIState m_currentState = AIState::Idle;
 
-    O3DE_PROPERTY(VisibleAnywhere, BlueprintReadOnly,
+    O3DE_PROPERTY(VisibleAnywhere, ScriptReadOnly,
         Category = "State",
         Tooltip = "Previous AI state (for transition logic)"
     )
     AIState m_previousState = AIState::Idle;
 
-    O3DE_PROPERTY(VisibleAnywhere, BlueprintReadOnly,
+    O3DE_PROPERTY(VisibleAnywhere, ScriptReadOnly,
         Category = "State",
         Tooltip = "Time spent in current state (seconds)"
     )
     float m_timeInState = 0.0f;
 
-    O3DE_PROPERTY(VisibleAnywhere, BlueprintReadOnly,
+    O3DE_PROPERTY(VisibleAnywhere, ScriptReadOnly,
         Category = "State",
         Tooltip = "Current target entity (if any)"
     )
@@ -163,41 +163,41 @@ public:
     // Configuration Properties
     // ========================================================================
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Detection",
         Tooltip = "How far the AI can see",
         Min = 1.0f, Max = 100.0f, Suffix = "m"
     )
     float m_sightRange = 20.0f;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Detection",
         Tooltip = "Field of view angle (degrees)",
         Min = 30.0f, Max = 360.0f, Suffix = "°"
     )
     float m_fieldOfView = 120.0f;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Detection",
         Tooltip = "How far the AI can hear",
         Min = 1.0f, Max = 50.0f, Suffix = "m"
     )
     float m_hearingRange = 15.0f;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Behavior",
         Tooltip = "Behavior flags controlling AI capabilities"
     )
     AIBehaviorFlags m_behaviorFlags = AIBehaviorFlags::CanPatrol;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Combat",
         Tooltip = "Preferred combat distance",
         Min = 1.0f, Max = 30.0f, Suffix = "m"
     )
     float m_preferredCombatRange = 5.0f;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Combat",
         Tooltip = "Health threshold to trigger flee (0-1)",
         Min = 0.0f, Max = 1.0f
@@ -208,19 +208,19 @@ public:
     // Patrol Properties
     // ========================================================================
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Patrol",
         Tooltip = "Patrol waypoints"
     )
     AZStd::vector<PatrolPoint> m_patrolPoints;
 
-    O3DE_PROPERTY(VisibleAnywhere, BlueprintReadOnly,
+    O3DE_PROPERTY(VisibleAnywhere, ScriptReadOnly,
         Category = "Patrol",
         Tooltip = "Current patrol point index"
     )
     int m_currentPatrolIndex = 0;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Patrol",
         Tooltip = "Should patrol loop back to start?"
     )
@@ -230,25 +230,25 @@ public:
     // State Control Functions
     // ========================================================================
 
-    O3DE_FUNCTION(BlueprintCallable,
+    O3DE_FUNCTION(ScriptCallable,
         Category = "State",
         Tooltip = "Force transition to a new state"
     )
     void SetState(AIState newState);
 
-    O3DE_FUNCTION(BlueprintPure, BlueprintCallable,
+    O3DE_FUNCTION(ScriptPure, ScriptCallable,
         Category = "State",
         Tooltip = "Check if AI is in a specific state"
     )
     bool IsInState(AIState state) const;
 
-    O3DE_FUNCTION(BlueprintCallable,
+    O3DE_FUNCTION(ScriptCallable,
         Category = "State",
         Tooltip = "Set the current target entity"
     )
     void SetTarget(AZ::EntityId target);
 
-    O3DE_FUNCTION(BlueprintCallable,
+    O3DE_FUNCTION(ScriptCallable,
         Category = "State",
         Tooltip = "Clear the current target"
     )
@@ -258,19 +258,19 @@ public:
     // Detection Functions
     // ========================================================================
 
-    O3DE_FUNCTION(BlueprintPure, BlueprintCallable,
+    O3DE_FUNCTION(ScriptPure, ScriptCallable,
         Category = "Detection",
         Tooltip = "Check if AI can see a specific entity"
     )
     bool CanSeeEntity(AZ::EntityId entity) const;
 
-    O3DE_FUNCTION(BlueprintPure, BlueprintCallable,
+    O3DE_FUNCTION(ScriptPure, ScriptCallable,
         Category = "Detection",
         Tooltip = "Check if AI can hear a position"
     )
     bool CanHearPosition(const AZ::Vector3& position, float noiseLevel) const;
 
-    O3DE_FUNCTION(BlueprintCallable,
+    O3DE_FUNCTION(ScriptCallable,
         Category = "Detection",
         Tooltip = "Scan for nearby threats, returns closest threat"
     )
@@ -280,19 +280,19 @@ public:
     // Patrol Functions
     // ========================================================================
 
-    O3DE_FUNCTION(BlueprintCallable,
+    O3DE_FUNCTION(ScriptCallable,
         Category = "Patrol",
         Tooltip = "Add a patrol point at runtime"
     )
     void AddPatrolPoint(const PatrolPoint& point);
 
-    O3DE_FUNCTION(BlueprintCallable,
+    O3DE_FUNCTION(ScriptCallable,
         Category = "Patrol",
         Tooltip = "Clear all patrol points"
     )
     void ClearPatrolPoints();
 
-    O3DE_FUNCTION(BlueprintPure, BlueprintCallable,
+    O3DE_FUNCTION(ScriptPure, ScriptCallable,
         Category = "Patrol",
         Tooltip = "Get the next patrol point position"
     )

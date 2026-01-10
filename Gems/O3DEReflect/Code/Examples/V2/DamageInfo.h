@@ -23,76 +23,76 @@ enum class DamageType : uint8_t;
 // DamageInfo Struct - Data container for damage events
 // ============================================================================
 
-O3DE_STRUCT(BlueprintType,
+O3DE_STRUCT(ScriptType,
     Category = "Combat",
     Description = "Contains all information about a damage event"
 )
 struct DamageInfo
 {
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Damage",
         Tooltip = "Base damage amount before modifiers",
         Min = 0.0f
     )
     float baseDamage = 0.0f;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Damage",
         Tooltip = "Damage multiplier (crits, weaknesses, etc.)",
         Min = 0.0f, Max = 10.0f
     )
     float damageMultiplier = 1.0f;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Source",
         Tooltip = "Entity that caused the damage"
     )
     AZ::EntityId instigator;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Source",
         Tooltip = "Entity that directly dealt the damage (e.g., projectile)"
     )
     AZ::EntityId damageCauser;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Location",
         Tooltip = "World position where damage was applied"
     )
     AZ::Vector3 hitLocation = AZ::Vector3::CreateZero();
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Location",
         Tooltip = "Direction the damage came from"
     )
     AZ::Vector3 hitDirection = AZ::Vector3::CreateZero();
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Location",
         Tooltip = "Name of the bone/hitbox that was hit"
     )
     AZStd::string hitBoneName;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Damage",
         Tooltip = "Type of damage (for resistance calculations)"
     )
     DamageType damageType;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Flags",
         Tooltip = "Was this a critical hit?"
     )
     bool isCriticalHit = false;
 
-    O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite,
+    O3DE_PROPERTY(EditAnywhere, ScriptReadWrite,
         Category = "Flags",
         Tooltip = "Should this damage be displayed in UI?"
     )
     bool showDamageNumbers = true;
 
     // Helper methods (exposed to scripting)
-    O3DE_FUNCTION(BlueprintPure, BlueprintCallable,
+    O3DE_FUNCTION(ScriptPure, ScriptCallable,
         Category = "Damage",
         Tooltip = "Calculate final damage after multipliers"
     )
@@ -101,7 +101,7 @@ struct DamageInfo
         return baseDamage * damageMultiplier;
     }
 
-    O3DE_FUNCTION(BlueprintPure, BlueprintCallable,
+    O3DE_FUNCTION(ScriptPure, ScriptCallable,
         Category = "Damage",
         Tooltip = "Check if damage is lethal (would reduce health to 0)"
     )
@@ -115,7 +115,7 @@ struct DamageInfo
 // DamageType Enum
 // ============================================================================
 
-O3DE_ENUM(BlueprintType,
+O3DE_ENUM(ScriptType,
     Category = "Combat",
     Description = "Types of damage for resistance calculations"
 )
@@ -147,7 +147,7 @@ enum class DamageType : uint8_t
 // DamageFlags Enum (bitmask)
 // ============================================================================
 
-O3DE_ENUM(BlueprintType, Flags,
+O3DE_ENUM(ScriptType, Flags,
     Category = "Combat",
     Description = "Flags that modify damage behavior"
 )

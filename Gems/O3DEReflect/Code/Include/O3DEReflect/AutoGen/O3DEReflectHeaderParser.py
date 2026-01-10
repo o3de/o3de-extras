@@ -9,8 +9,7 @@
 """
 O3DEReflect Header Parser (V2)
 
-This module parses C++ header files for O3DE_* macros (similar to Unreal's
-UPROPERTY/UCLASS/UFUNCTION system) and generates reflection code automatically.
+This module parses C++ header files for O3DE_* macros and generates reflection code automatically.
 
 Supports:
     O3DE_CLASS(...)     - Mark a class for reflection
@@ -641,7 +640,7 @@ class O3DEHeaderParser:
             'category': cls.attributes.get('Category', 'Data'),
             'description': cls.attributes.get('Description', f'{cls.name} data structure'),
             'display_name': cls.attributes.get('DisplayName', camel_to_human(cls.name)),
-            'blueprint_type': cls.attributes.get('BlueprintType', True),
+            'script_type': cls.attributes.get('ScriptType', True),
             'atomic': cls.attributes.get('Atomic', False),
             'includes': cls.includes,
             'properties': [self._property_to_dict(p) for p in cls.properties],
@@ -659,7 +658,7 @@ class O3DEHeaderParser:
             'category': cls.attributes.get('Category', 'Enums'),
             'description': cls.attributes.get('Description', f'{cls.name} enumeration'),
             'display_name': cls.attributes.get('DisplayName', camel_to_human(cls.name)),
-            'blueprint_type': cls.attributes.get('BlueprintType', True),
+            'script_type': cls.attributes.get('ScriptType', True),
             'is_flags': cls.attributes.get('Flags', False),
             'underlying_type': cls.attributes.get('UnderlyingType', 'int32_t'),
             'values': [self._enum_value_to_dict(v) for v in cls.enum_values],
@@ -682,8 +681,8 @@ class O3DEHeaderParser:
             'edit_instance_only': prop.attributes.get('EditInstanceOnly', False),
             'visible_anywhere': prop.attributes.get('VisibleAnywhere', False),
             'read_only': prop.attributes.get('ReadOnly', False),
-            'blueprint_read_write': prop.attributes.get('BlueprintReadWrite', False),
-            'blueprint_read_only': prop.attributes.get('BlueprintReadOnly', False),
+            'script_read_write': prop.attributes.get('ScriptReadWrite', False),
+            'script_read_only': prop.attributes.get('ScriptReadOnly', False),
             'expose_to_script': prop.attributes.get('ExposeToScript', True),
             'min': prop.attributes.get('Min'),
             'max': prop.attributes.get('Max'),
@@ -704,8 +703,8 @@ class O3DEHeaderParser:
             'tooltip': func.attributes.get('Tooltip', ''),
             'return_type': func.return_type,
             'parameters': func.parameters,
-            'blueprint_callable': func.attributes.get('BlueprintCallable', True),
-            'blueprint_pure': func.attributes.get('BlueprintPure', False),
+            'script_callable': func.attributes.get('ScriptCallable', True),
+            'script_pure': func.attributes.get('ScriptPure', False),
             'call_in_editor': func.attributes.get('CallInEditor', False),
             'server': func.attributes.get('Server', False),
             'client': func.attributes.get('Client', False),

@@ -15,7 +15,7 @@
     Namespace="Example"
     Category="Combat"
     Description="Information about damage dealt to an entity"
-    BlueprintType="true">
+    ScriptType="true">
 
     <Include File="AzCore/Component/EntityId.h"/>
     <Include File="AzCore/Math/Vector3.h"/>
@@ -24,37 +24,37 @@
         Tooltip="Amount of damage dealt"
         Min="0.0"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Property Name="damageType" Type="AZ::Crc32" Default="AZ_CRC_CE(&quot;Physical&quot;)"
         Tooltip="Type of damage (Physical, Fire, Ice, etc.)"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Property Name="instigator" Type="AZ::EntityId" Default="AZ::EntityId()"
         Tooltip="Entity that caused the damage"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Property Name="hitLocation" Type="AZ::Vector3" Default="AZ::Vector3::CreateZero()"
         Tooltip="World position where damage was applied"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Property Name="hitNormal" Type="AZ::Vector3" Default="AZ::Vector3::CreateAxisZ()"
         Tooltip="Surface normal at hit point"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Property Name="isCritical" Type="bool" Default="false"
         Tooltip="Whether this was a critical hit"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Property Name="criticalMultiplier" Type="float" Default="2.0f"
         Tooltip="Damage multiplier for critical hits"
         Min="1.0" Max="10.0"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
 </Struct>

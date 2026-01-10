@@ -4,7 +4,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
- * O3DE Reflect System - Unreal-style reflection macros for simplified component/struct/enum creation
+ * O3DE Reflect System - Reflection macros for simplified component/struct/enum creation
  * 
  *  Header-Macro Parsing
  * ========================
@@ -20,7 +20,7 @@
  *       O3DE_PROPERTY(EditAnywhere, Category="Movement", Tooltip="Speed in m/s", Min=0.0f, Max=100.0f)
  *       float m_speed = 10.0f;
  *
- *       O3DE_FUNCTION(BlueprintCallable, Category="Actions")
+ *       O3DE_FUNCTION(ScriptCallable, Category="Actions")
  *       void DoSomething();
  *   };
  */
@@ -46,7 +46,7 @@
 // ============================================================================
 
 // ============================================================================
-// Property Visibility Specifiers (like Unreal's UPROPERTY specifiers)
+// Property Visibility Specifiers
 // ============================================================================
 // These are used as bare tokens within O3DE_PROPERTY()
 //
@@ -59,8 +59,8 @@
 //   VisibleInstanceOnly - Visible only on instances
 //
 // Script visibility - controls script access:
-//   BlueprintReadWrite - Readable and writable from Lua/ScriptCanvas
-//   BlueprintReadOnly  - Readable only from Lua/ScriptCanvas
+//   ScriptReadWrite    - Readable and writable from Lua/ScriptCanvas
+//   ScriptReadOnly     - Readable only from Lua/ScriptCanvas
 //
 // Note: These are parsed as string tokens, not as macro values
 
@@ -117,8 +117,8 @@
 //   EditDefaultsOnly   - Editable only on prefabs/archetypes
 //   EditInstanceOnly   - Editable only on instances
 //   VisibleAnywhere    - Visible but read-only in editor
-//   BlueprintReadWrite - Exposed to Lua/ScriptCanvas read+write
-//   BlueprintReadOnly  - Exposed to Lua/ScriptCanvas read-only
+//   ScriptReadWrite    - Exposed to Lua/ScriptCanvas read+write
+//   ScriptReadOnly     - Exposed to Lua/ScriptCanvas read-only
 //
 // Metadata Attributes:
 //   Category    - Property category in inspector (e.g., "Movement|Speed")
@@ -132,13 +132,13 @@
 //   ChangeNotify - Function to call when value changes
 //
 // Examples:
-//   O3DE_PROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", Tooltip="Speed in m/s")
+//   O3DE_PROPERTY(EditAnywhere, ScriptReadWrite, Category="Movement", Tooltip="Speed in m/s")
 //   float m_speed = 10.0f;
 //
 //   O3DE_PROPERTY(EditAnywhere, Category="Combat", Min=0, Max=100)
 //   int m_health = 100;
 //
-//   O3DE_PROPERTY(VisibleAnywhere, BlueprintReadOnly)
+//   O3DE_PROPERTY(VisibleAnywhere, ScriptReadOnly)
 //   AZ::EntityId m_target;
 //
 #define O3DE_PROPERTY(...) \
@@ -150,8 +150,8 @@
 // ============================================================================
 //
 // Specifiers:
-//   BlueprintCallable   - Can be called from Lua/ScriptCanvas
-//   BlueprintPure       - Pure function (no side effects, can be cached)
+//   ScriptCallable      - Can be called from Lua/ScriptCanvas
+//   ScriptPure          - Pure function (no side effects, can be cached)
 //   CallInEditor        - Can be invoked from editor buttons
 //   Server              - Only runs on server (multiplayer)
 //   Client              - Only runs on client (multiplayer)
@@ -163,7 +163,7 @@
 //   Tooltip     - Hover tooltip text
 //
 // Example:
-//   O3DE_FUNCTION(BlueprintCallable, Category="Combat", Tooltip="Deals damage to target")
+//   O3DE_FUNCTION(ScriptCallable, Category="Combat", Tooltip="Deals damage to target")
 //   void DealDamage(float amount, AZ::EntityId target);
 //
 #define O3DE_FUNCTION(...) \
@@ -171,17 +171,17 @@
     /* Attributes: __VA_ARGS__ */
 
 // ============================================================================
-// O3DE_STRUCT - Mark a standalone struct for reflection (like USTRUCT)
+// O3DE_STRUCT - Mark a standalone struct for reflection
 // ============================================================================
 //
 // Attributes:
-//   BlueprintType - Expose to Lua/ScriptCanvas
+//   ScriptType    - Expose to Lua/ScriptCanvas
 //   Atomic        - Always serialized as a whole unit
 //   Category      - Category for organization
 //   Description   - Tooltip description
 //
 // Example:
-//   O3DE_STRUCT(BlueprintType, Category="Data")
+//   O3DE_STRUCT(ScriptType, Category="Data")
 //   struct DamageInfo
 //   {
 //       O3DE_PROPERTY(EditAnywhere)
@@ -196,11 +196,11 @@
     /* Attributes: __VA_ARGS__ */
 
 // ============================================================================
-// O3DE_ENUM - Mark an enum for reflection (like UENUM)
+// O3DE_ENUM - Mark an enum for reflection
 // ============================================================================
 //
 // Attributes:
-//   BlueprintType - Expose to Lua/ScriptCanvas
+//   ScriptType    - Expose to Lua/ScriptCanvas
 //   Flags         - Treat as bitmask/flags enum
 //   Category      - Category for organization
 //   Description   - Tooltip description
@@ -208,7 +208,7 @@
 // Use O3DE_ENUM_VALUE to provide display names for values:
 //
 // Example:
-//   O3DE_ENUM(BlueprintType, Category="AI")
+//   O3DE_ENUM(ScriptType, Category="AI")
 //   enum class AIState
 //   {
 //       O3DE_ENUM_VALUE(Idle, DisplayName="Standing Idle")

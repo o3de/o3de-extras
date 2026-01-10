@@ -37,14 +37,14 @@
         Min="0.0" Max="100.0"
         Suffix="m/s"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Property Name="sprintMultiplier" Type="float" Default="2.0f"
         Category="Movement"
         Tooltip="Speed multiplier when sprinting"
         Min="1.0" Max="5.0"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Property Name="jumpForce" Type="float" Default="400.0f"
         Category="Jumping"
@@ -52,45 +52,45 @@
         Min="0.0" Max="2000.0"
         Suffix="N"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Property Name="maxJumps" Type="int" Default="2"
         Category="Jumping"
         Tooltip="Maximum number of jumps (1 = no double jump)"
         Min="1" Max="5"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Property Name="gravityMultiplier" Type="float" Default="1.0f"
         Category="Physics"
         Tooltip="Multiplier for gravity effect on this character"
         Min="0.0" Max="5.0"
         EditAnywhere="true"
-        BlueprintReadWrite="true"/>
+        ScriptReadWrite="true"/>
 
     <Property Name="isGrounded" Type="bool" Default="false"
         Category="State"
         Tooltip="Whether the character is currently on the ground"
         VisibleAnywhere="true"
-        BlueprintReadOnly="true"/>
+        ScriptReadOnly="true"/>
 
     <Property Name="currentVelocity" Type="AZ::Vector3" Default="AZ::Vector3::CreateZero()"
         Category="State"
         Tooltip="Current velocity of the character"
         VisibleAnywhere="true"
-        BlueprintReadOnly="true"/>
+        ScriptReadOnly="true"/>
 
     <!-- Functions (like UFUNCTION) -->
     <Function Name="Jump" 
         Category="Movement" 
         Tooltip="Makes the character jump if able"
-        BlueprintCallable="true">
+        ScriptCallable="true">
     </Function>
 
     <Function Name="Move"
         Category="Movement"
         Tooltip="Moves the character in the given direction"
-        BlueprintCallable="true">
+        ScriptCallable="true">
         <Param Name="direction" Type="const AZ::Vector3&amp;" Tooltip="Movement direction (normalized)"/>
         <Param Name="deltaTime" Type="float" Tooltip="Frame delta time"/>
     </Function>
@@ -98,22 +98,22 @@
     <Function Name="SetSprinting"
         Category="Movement"
         Tooltip="Enable or disable sprinting"
-        BlueprintCallable="true">
+        ScriptCallable="true">
         <Param Name="sprinting" Type="bool"/>
     </Function>
 
     <Function Name="GetCurrentSpeed"
         Category="Movement"
         Tooltip="Returns the current movement speed including modifiers"
-        BlueprintCallable="true"
-        BlueprintPure="true">
+        ScriptCallable="true"
+        ScriptPure="true">
         <Return Type="float"/>
     </Function>
 
     <Function Name="Teleport"
         Category="Utility"
         Tooltip="Instantly teleport to a position"
-        BlueprintCallable="true"
+        ScriptCallable="true"
         CallInEditor="true">
         <Param Name="position" Type="const AZ::Vector3&amp;"/>
     </Function>

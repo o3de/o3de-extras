@@ -9,7 +9,7 @@
 """
 O3DEReflect Code Generator
 
-This module extends the AzAutoGen system to provide Unreal-style reflection
+This module extends the AzAutoGen system to provide simplified reflection
 code generation for O3DE components, structs, and enums.
 
 Usage:
@@ -185,7 +185,7 @@ class O3DEReflectParser:
             'category': elem.attrib.get('Category', 'Data'),
             'description': elem.attrib.get('Description', f'{name} data structure'),
             'display_name': elem.attrib.get('DisplayName', camel_to_human(name)),
-            'blueprint_type': boolean_true(elem.attrib.get('BlueprintType', 'true')),
+            'script_type': boolean_true(elem.attrib.get('ScriptType', 'true')),
             'atomic': boolean_true(elem.attrib.get('Atomic', 'false')),
             'includes': self._parse_includes(elem),
             'properties': self._parse_properties(elem),
@@ -205,7 +205,7 @@ class O3DEReflectParser:
             'category': elem.attrib.get('Category', 'Enums'),
             'description': elem.attrib.get('Description', f'{name} enumeration'),
             'display_name': elem.attrib.get('DisplayName', camel_to_human(name)),
-            'blueprint_type': boolean_true(elem.attrib.get('BlueprintType', 'true')),
+            'script_type': boolean_true(elem.attrib.get('ScriptType', 'true')),
             'is_flags': boolean_true(elem.attrib.get('Flags', 'false')),
             'underlying_type': elem.attrib.get('UnderlyingType', 'int32_t'),
             'values': self._parse_enum_values(elem),
@@ -262,8 +262,8 @@ class O3DEReflectParser:
                 'visible_anywhere': boolean_true(prop.attrib.get('VisibleAnywhere', 'false')),
                 'read_only': boolean_true(prop.attrib.get('ReadOnly', 'false')),
                 # Script visibility
-                'blueprint_read_write': boolean_true(prop.attrib.get('BlueprintReadWrite', 'true')),
-                'blueprint_read_only': boolean_true(prop.attrib.get('BlueprintReadOnly', 'false')),
+                'script_read_write': boolean_true(prop.attrib.get('ScriptReadWrite', 'true')),
+                'script_read_only': boolean_true(prop.attrib.get('ScriptReadOnly', 'false')),
                 'expose_to_script': boolean_true(prop.attrib.get('ExposeToScript', 'true')),
                 # Numeric constraints
                 'min': prop.attrib.get('Min'),
@@ -302,8 +302,8 @@ class O3DEReflectParser:
                 'return_type': return_elem.attrib.get('Type', 'void') if return_elem is not None else 'void',
                 'parameters': params,
                 # Flags
-                'blueprint_callable': boolean_true(func.attrib.get('BlueprintCallable', 'true')),
-                'blueprint_pure': boolean_true(func.attrib.get('BlueprintPure', 'false')),
+                'script_callable': boolean_true(func.attrib.get('ScriptCallable', 'true')),
+                'script_pure': boolean_true(func.attrib.get('ScriptPure', 'false')),
                 'call_in_editor': boolean_true(func.attrib.get('CallInEditor', 'false')),
                 'server': boolean_true(func.attrib.get('Server', 'false')),
                 'client': boolean_true(func.attrib.get('Client', 'false')),
@@ -719,11 +719,11 @@ class O3DEReflectGenerator:
 
     # Helper methods for rendering
     def _render_includes(self, includes: list) -> str:
-        return '\n'.join([f'#include <{inc}>' for inc in includes])
+        return 'n'.join([f'#include <{inc}>' for inc in includes])
     
     def _render_base_class_includes(self, base_classes: list) -> str:
         includes = [b['include'] for b in base_classes if b.get('include')]
-        return '\n'.join([f'#include <{inc}>' for inc in includes])
+        return '\\n'.join([f'#include <{inc}>' for inc in includes])
     
     def _render_base_class_inheritance(self, base_classes: list) -> str:
         if not base_classes:
@@ -758,7 +758,7 @@ class O3DEReflectGenerator:
     def _render_namespace_begin(self, namespace: str) -> str:
         if not namespace:
             return ''
-        return f'namespace {namespace}\n{{'
+        return f'namespace {namespace}\\n{{'
     
     def _render_namespace_end(self, namespace: str) -> str:
         if not namespace:
@@ -781,7 +781,7 @@ class O3DEReflectGenerator:
                 lines.append(f'        //! Set {camel_to_human(clean_name)}')
                 lines.append(f'        void {setter_name}(const {prop_type}& value) {{ {member_name} = value; }}')
             lines.append('')
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_property_members(self, properties: list) -> str:
         lines = []
@@ -793,7 +793,7 @@ class O3DEReflectGenerator:
                 lines.append(f'        {prop_type} {member_name} = {default};')
             else:
                 lines.append(f'        {prop_type} {member_name}{{}};')
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_struct_members(self, properties: list) -> str:
         lines = []
@@ -805,7 +805,7 @@ class O3DEReflectGenerator:
                 lines.append(f'        {prop_type} {member_name} = {default};')
             else:
                 lines.append(f'        {prop_type} {member_name}{{}};')
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_function_declarations(self, functions: list) -> str:
         lines = []
@@ -820,7 +820,7 @@ class O3DEReflectGenerator:
             lines.append(f'        //! {tooltip}')
             lines.append(f'        {return_type} {func_name}({params});')
             lines.append('')
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_serialize_fields(self, class_name: str, properties: list) -> str:
         lines = []
@@ -828,7 +828,7 @@ class O3DEReflectGenerator:
             prop_name = prop['name']
             member_name = prop['member_name']
             lines.append(f'                ->Field("{prop_name}", &{class_name}::{member_name})')
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_edit_class_attributes(self, component: dict) -> str:
         lines = []
@@ -838,7 +838,7 @@ class O3DEReflectGenerator:
             menu_cat = component.get('menu_category', 'Game')
             lines.append(f'                        ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("{menu_cat}"))')
         lines.append('                        ->Attribute(AZ::Edit::Attributes::AutoExpand, true)')
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_edit_data_elements(self, class_name: str, properties: list) -> str:
         lines = []
@@ -868,12 +868,12 @@ class O3DEReflectGenerator:
             if prop.get('read_only'):
                 lines.append('                        ->Attribute(AZ::Edit::Attributes::ReadOnly, true)')
         
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_behavior_properties(self, class_name: str, properties: list) -> str:
         lines = []
         for prop in properties:
-            if not prop.get('expose_to_script', True) and not prop.get('blueprint_read_write', False):
+            if not prop.get('expose_to_script', True) and not prop.get('script_read_write', False):
                 continue
             
             prop_name = prop['name']
@@ -883,7 +883,7 @@ class O3DEReflectGenerator:
             getter_name = f'Get{clean_name[0].upper()}{clean_name[1:]}'
             setter_name = f'Set{clean_name[0].upper()}{clean_name[1:]}'
             
-            if prop.get('blueprint_read_only', False):
+            if prop.get('script_read_only', False):
                 lines.append(f'                ->Property("{clean_name}",')
                 lines.append(f'                    []({class_name}* self) {{ return self->{getter_name}(); }},')
                 lines.append('                    nullptr)')
@@ -892,12 +892,12 @@ class O3DEReflectGenerator:
                 lines.append(f'                    []({class_name}* self) {{ return self->{getter_name}(); }},')
                 lines.append(f'                    []({class_name}* self, const {prop_type}& value) {{ self->{setter_name}(value); }})')
         
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_behavior_methods(self, class_name: str, functions: list) -> str:
         lines = []
         for func in functions:
-            if not func.get('blueprint_callable', True):
+            if not func.get('script_callable', True):
                 continue
             
             func_name = func['name']
@@ -906,7 +906,7 @@ class O3DEReflectGenerator:
             if category:
                 lines.append(f'                    ->Attribute(AZ::Script::Attributes::Category, "{category}")')
         
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_service_functions(self, class_name: str, services: dict) -> str:
         provides = services.get('provides', [])
@@ -942,7 +942,7 @@ class O3DEReflectGenerator:
         lines = []
         for service in services:
             lines.append(f'        {var_name}.push_back(AZ_CRC_CE("{service}"));')
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_function_implementations(self, class_name: str, functions: list) -> str:
         lines = []
@@ -959,7 +959,7 @@ class O3DEReflectGenerator:
             lines.append('    }')
             lines.append('')
         
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_default_function_implementations(self, class_name: str, functions: list) -> str:
         """Render default empty implementations for functions (used when no _Impl.inl exists)."""
@@ -975,7 +975,7 @@ class O3DEReflectGenerator:
                 lines.append('        return {};')
             lines.append('    }')
         
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_user_implementations(self, class_name: str, full_class_name: str, 
                                       user_functions: dict, declared_functions: list) -> str:
@@ -1010,7 +1010,7 @@ class O3DEReflectGenerator:
                 lines.append(f"    void {class_name}::{func_name}()")
                 lines.append('    {')
                 # Indent the user's body
-                for line in user_impl['body'].split('\n'):
+                for line in user_impl['body'].split('\\n'):
                     lines.append(f"        {line}" if line.strip() else '')
                 lines.append('    }')
             else:
@@ -1046,7 +1046,7 @@ class O3DEReflectGenerator:
                     # Use user's implementation
                     lines.append(f"    {return_type} {class_name}::{func_name}({params}){const_suffix}")
                     lines.append('    {')
-                    for line in user_impl['body'].split('\n'):
+                    for line in user_impl['body'].split('\\n'):
                         lines.append(f"        {line}" if line.strip() else '')
                     lines.append('    }')
                 else:
@@ -1059,10 +1059,10 @@ class O3DEReflectGenerator:
                     lines.append('    }')
                 lines.append('')
         
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_struct_behavior_context(self, struct: dict) -> str:
-        if not struct.get('blueprint_type', True):
+        if not struct.get('script_type', True):
             return ''
         
         struct_name = struct['name']
@@ -1087,7 +1087,7 @@ class O3DEReflectGenerator:
         lines.append('                ;')
         lines.append('        }')
         
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_struct_equality(self, properties: list) -> str:
         if not properties:
@@ -1102,7 +1102,7 @@ class O3DEReflectGenerator:
                 lines.append(f'            && {member_name} == rhs.{member_name}')
         lines.append('            ;')
         
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_enum_values(self, enum: dict) -> str:
         lines = []
@@ -1121,12 +1121,12 @@ class O3DEReflectGenerator:
             else:
                 lines.append(f'        {val_name},')
         
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _render_enum_bitwise_operators(self, enum: dict) -> str:
         if not enum.get('is_flags', False):
             return ''
-        return f'    AZ_DEFINE_ENUM_BITWISE_OPERATORS({enum["name"]});\n'
+        return f'    AZ_DEFINE_ENUM_BITWISE_OPERATORS({enum["name"]});\\n'
     
     def _render_enum_behavior_values(self, enum: dict) -> str:
         enum_name = enum['name']
@@ -1137,7 +1137,7 @@ class O3DEReflectGenerator:
             return '            // No enum values defined'
         
         # Build the Enum template arguments
-        value_casts = ',\n'.join([
+        value_casts = ',\\n'.join([
             f'                static_cast<int>({enum_name}::{v["name"]})'
             for v in values
         ])
@@ -1155,12 +1155,12 @@ class O3DEReflectGenerator:
         lines.append(f'                ->Attribute(AZ::Script::Attributes::Category, "{category}")')
         lines.append('                ;')
         
-        return '\n'.join(lines)
+        return '\\n'.join(lines)
     
     def _write_file(self, path: str, content: str):
         """Write content to file, creating directories as needed."""
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, 'w', encoding='utf-8', newline='\n') as f:
+        with open(path, 'w', encoding='utf-8', newline='\\n') as f:
             f.write(content)
         logger.info(f"Generated: {path}")
 
