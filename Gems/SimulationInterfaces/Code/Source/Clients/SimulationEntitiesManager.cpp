@@ -12,6 +12,7 @@
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/Component/NonUniformScaleBus.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Console/IConsole.h>
 #include <AzCore/Math/Obb.h>
@@ -26,6 +27,8 @@
 #include <AzCore/std/string/regex.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Components/TransformComponent.h>
+#include <AzFramework/Entity/EntityContextBus.h>
+#include <AzFramework/Entity/GameEntityContextBus.h>
 #include <AzFramework/Physics/Common/PhysicsSceneQueries.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
@@ -33,8 +36,7 @@
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
-#include <AzFramework/Entity/EntityContextBus.h>
-#include <AzFramework/Entity/GameEntityContextBus.h>
+#include <AzFramework/Visibility/BoundsBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <SimulationInterfaces/Bounds.h>
 #include <SimulationInterfaces/Result.h>
@@ -1002,33 +1004,47 @@ namespace SimulationInterfaces
                 simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
                 AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
         }
-        auto simulatedBodyOutcome = Utils::GetSimulatedBody(m_simulatedEntityToEntityIdMap.at(name));
-        if (!simulatedBodyOutcome.IsSuccess())
+        auto entityId = m_simulatedEntityToEntityIdMap.at(name);
+        AZ::Aabb entityAabb{ AZ::Aabb::CreateNull() };
+
+        AZStd::vector<AZ::EntityId> descendants;
+        AZ::TransformBus::EventResult(descendants, entityId, &AZ::TransformBus::Events::GetEntityAndAllDescendants);
+
+        AZ::Transform entityWorldTransform;
+        AZ::TransformBus::EventResult(entityWorldTransform, entityId, &AZ::TransformBus::Events::GetWorldTM);
+        for (const auto& descEntityId : descendants)
         {
+            AZ::EBusReduceResult<AZ::Aabb, AzFramework::AabbUnionAggregator> aabbResult(AZ::Aabb::CreateNull());
+            AzFramework::BoundsRequestBus::EventResult(aabbResult, descEntityId, &AzFramework::BoundsRequestBus::Events::GetLocalBounds);
+
+            if (!aabbResult.value.IsValid())
+            {
+                continue;
+            }
+            AZ::Vector3 nonUniformScale = AZ::Vector3::CreateOne();
+            AZ::NonUniformScaleRequestBus::EventResult(nonUniformScale, descEntityId, &AZ::NonUniformScaleRequests::GetScale);
+            aabbResult.value.MultiplyByScale(nonUniformScale);
+
+            AZ::Transform descEntityWorldTransform;
+            AZ::TransformBus::EventResult(descEntityWorldTransform, descEntityId, &AZ::TransformBus::Events::GetWorldTM);
+            AZ::Transform relativeTransform = entityWorldTransform.GetInverse() * descEntityWorldTransform;
+
+            aabbResult.value.ApplyTransform(relativeTransform);
+
+            entityAabb.AddAabb(aabbResult.value);
+        }
+        if (!entityAabb.IsValid())
+        {
+            // Entity has no valid bounds
             return AZ::Success(Bounds{ 0, {} });
-        }
-        auto rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(simulatedBodyOutcome.GetValue());
-        if (!rigidBody)
-        {
-            return AZ::Success(Bounds{ 0, {} });
-        }
-        if (rigidBody->GetShapeCount() == 0)
-        {
-            return AZ::Failure(FailedResult(
-                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Entity doesn't have colliders/boundss to return"));
-        }
-        AZ_Warning(
-            "Simulation Interfaces",
-            rigidBody->GetShapeCount() == 1,
-            "Entity Bounds in simulation interfaces doesn't support multiple shapes, only first one will be taken ");
-        auto shape = rigidBody->GetShape(0);
-        auto boundsOutput = Utils::ConvertPhysicalShapeToBounds(shape, m_simulatedEntityToEntityIdMap.at(name));
-        if (boundsOutput.IsSuccess())
-        {
-            return AZ::Success(boundsOutput.GetValue());
         }
 
-        return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, boundsOutput.GetError()));
+        Bounds bounds;
+        bounds.m_boundsType = simulation_interfaces::msg::Bounds::TYPE_BOX;
+        bounds.m_points.emplace_back(entityAabb.GetMin());
+        bounds.m_points.emplace_back(entityAabb.GetMax());
+
+        return AZ::Success(bounds);
     }
 
     AZ::Outcome<AZ::EntityId, FailedResult> SimulationEntitiesManager::GetEntityId(const AZStd::string& name)
