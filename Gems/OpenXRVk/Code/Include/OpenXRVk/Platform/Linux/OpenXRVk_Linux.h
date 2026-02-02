@@ -17,10 +17,10 @@
  // Tell OpenXR what platform code we'll be using
 #if defined(PAL_TRAIT_LINUX_WINDOW_MANAGER_XCB)
     #define XR_USE_PLATFORM_XCB
-#elif defined(PAL_TRAIT_LINUX_WINDOW_MANAGER_WAYLAND)
+#endif
+
+#if defined(PAL_TRAIT_LINUX_WINDOW_MANAGER_WAYLAND)
     #define XR_USE_PLATFORM_WAYLAND
-#else
-    #error "Linux Window Manager not recognized."
 #endif
 #define XR_USE_GRAPHICS_API_VULKAN
 
