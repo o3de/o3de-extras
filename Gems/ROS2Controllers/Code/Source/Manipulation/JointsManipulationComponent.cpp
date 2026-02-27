@@ -160,7 +160,7 @@ namespace ROS2Controllers
                 }
                 else
                 {
-                    AZ_Warning("JointsManipulationComponent", false, "No joint %s to set initial position", jointName.c_str());
+                    AZ_Warning("JointsManipulationComponent", false, "No set initial position for joint %s", jointName.c_str());
                 }
             }
         }
@@ -389,26 +389,35 @@ namespace ROS2Controllers
         for (const auto& [jointName, jointInfo] : m_manipulationJoints)
         {
             float currentPosition = GetJointPosition(jointName).GetValue();
-            float desiredPosition = jointInfo.m_restPosition;
+            auto desiredPosition = jointInfo.m_restPosition;
 
-            AZ::Outcome<void, AZStd::string> positionControlOutcome;
-            JointsPositionControllerRequestBus::EventResult(
-                positionControlOutcome,
-                GetEntityId(),
-                &JointsPositionControllerRequests::PositionControl,
-                jointName,
-                jointInfo,
-                currentPosition,
-                desiredPosition,
-                deltaTime);
+            if (desiredPosition.has_value())
+            {
+                AZ::Outcome<void, AZStd::string> positionControlOutcome;
+                JointsPositionControllerRequestBus::EventResult(
+                    positionControlOutcome,
+                    GetEntityId(),
+                    &JointsPositionControllerRequests::PositionControl,
+                    jointName,
+                    jointInfo,
+                    currentPosition,
+                    *desiredPosition,
+                    deltaTime);
+                if (positionControlOutcome.IsSuccess())
+                {
+                    // no need to update desired position, it will be updated on the next MoveJointToPosition call.
+                    // If the position is reached and there is no new desired position, the controller should keep the joint in place.
+                    desiredPosition = AZStd::nullopt; // If control failed, do not update desired position, try again in the next tick.
+                }
+                AZ_Warning(
+                    "JointsManipulationComponent",
+                    positionControlOutcome,
+                    "Position control failed for joint %s (%s): %s",
+                    jointName.c_str(),
+                    jointInfo.m_entityComponentIdPair.GetEntityId().ToString().c_str(),
+                    positionControlOutcome.GetError().c_str());
 
-            AZ_Warning(
-                "JointsManipulationComponent",
-                positionControlOutcome,
-                "Position control failed for joint %s (%s): %s",
-                jointName.c_str(),
-                jointInfo.m_entityComponentIdPair.GetEntityId().ToString().c_str(),
-                positionControlOutcome.GetError().c_str());
+            }
         }
     }
 

@@ -27,7 +27,7 @@ namespace ROS2Controllers
         bool m_isArticulation = false;
         PhysX::ArticulationJointAxis m_axis = PhysX::ArticulationJointAxis::Twist;
         AZ::EntityComponentIdPair m_entityComponentIdPair;
-        JointPosition m_restPosition = 0.0f; //!< Keeps this position if no commands are given (for example, opposing gravity).
+        AZStd::optional<JointPosition> m_restPosition ; //!< Keeps this position if no commands are given (for example, opposing gravity).
     };
     using ManipulationJoints = AZStd::unordered_map<AZStd::string, JointInfo>;
 } // namespace ROS2Controllers
