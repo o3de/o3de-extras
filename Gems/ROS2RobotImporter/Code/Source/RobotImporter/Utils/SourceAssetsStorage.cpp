@@ -632,7 +632,6 @@ namespace ROS2RobotImporter::Utils
         {
             urdfAsset.m_availableAssetInfo = Utils::GetAvailableAssetInfo(targetPathAssetDst.String());
         }
-        // urdfAsset.m_assetUri = "";
         urdfAsset.m_urdfFileCRC = AZ::Crc32();
 
         return urdfAsset.m_copyStatus;

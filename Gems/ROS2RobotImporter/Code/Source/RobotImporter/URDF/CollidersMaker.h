@@ -13,6 +13,7 @@
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/Material/PhysicsMaterialManager.h>
+#include <RobotImporter/Utils/SourceAssetsStorage.h>
 
 namespace ROS2RobotImporter
 {
