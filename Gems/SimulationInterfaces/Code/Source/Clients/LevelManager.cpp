@@ -116,14 +116,12 @@ namespace SimulationInterfaces
 
     AZ::Outcome<WorldResourcesList, FailedResult> LevelManager::GetAvailableWorlds(const GetWorldsRequest& request)
     {
-        m_actionRequestedFromSimInterfaces = true;
         WorldResourcesList availableWorlds;
         // request validation
         if (!request.additionalSources.empty())
         {
             constexpr const char* errorMsg = "Additional Sources are not implemented yet";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
-            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
 
@@ -131,7 +129,6 @@ namespace SimulationInterfaces
         {
             constexpr const char* errorMsg = "Tags filter is not implemented yet";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
-            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
 
@@ -139,14 +136,12 @@ namespace SimulationInterfaces
         {
             constexpr const char* errorMsg = "Online search is not implemented yet, only pure offline search is supported";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
-            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
 
         const auto allLevels = GetAllAvailableLevels();
         if (!allLevels.IsSuccess())
         {
-            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(allLevels.GetError());
         }
         for (const auto& levelPath : allLevels.GetValue())
@@ -154,7 +149,6 @@ namespace SimulationInterfaces
             availableWorlds.emplace_back(
                 GetLevelNameFromAssetPath(levelPath), Resource{ levelPath, "" }, "", AZStd::vector<AZStd::string>{});
         }
-        m_actionRequestedFromSimInterfaces = false;
         return AZ::Success(availableWorlds);
     }
 
@@ -166,14 +160,12 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
-        m_actionRequestedFromSimInterfaces = true;
         WorldResource currentWorld;
         auto* levelInterface = AzFramework::LevelSystemLifecycleInterface::Get();
         if (levelInterface == nullptr)
         {
             constexpr const char* errorMsg = "Failed to get level interface";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
-            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::srv::GetAvailableWorlds::Response::DEFAULT_SOURCES_FAILED, errorMsg));
         }
 
@@ -181,7 +173,6 @@ namespace SimulationInterfaces
         {
             constexpr const char* errorMsg = "No level loaded";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
-            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::srv::GetCurrentWorld::Response::NO_WORLD_LOADED, errorMsg));
         }
 
@@ -190,7 +181,6 @@ namespace SimulationInterfaces
         {
             constexpr const char* errorMsg = "Failed to get current level path";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
-            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, errorMsg));
         }
         AZStd::string levelPathStr{ levelPath };
@@ -198,7 +188,6 @@ namespace SimulationInterfaces
         auto levelName = GetLevelNameFromAssetPath(levelPathStr);
         currentWorld.m_worldResource.m_uri = levelPathStr;
         currentWorld.m_name = levelName;
-        m_actionRequestedFromSimInterfaces = false;
         return AZ::Success(currentWorld);
     }
 
@@ -210,35 +199,30 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
-        m_actionRequestedFromSimInterfaces = true;
         WorldResource loadedWorld;
 
         if (request.levelResource.m_resourceString.empty() && request.levelResource.m_uri.empty())
         {
             constexpr const char* errorMsg = "uri and resource string in levelResource cannot be both empty";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
-            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::srv::LoadWorld::Response::NO_RESOURCE, errorMsg));
         }
         if (!request.levelResource.m_resourceString.empty() && !request.levelResource.m_uri.empty())
         {
             constexpr const char* errorMsg = "uri and resource string in levelResource cannot be both non-empty";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
-            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, errorMsg));
         }
         if (!request.levelResource.m_resourceString.empty())
         {
             constexpr const char* errorMsg = "Loading world from resource string is not implemented yet";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
-            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
 
         const auto levelNamesResult = GetAllAvailableLevels();
         if (!levelNamesResult.IsSuccess())
         {
-            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(levelNamesResult.GetError());
         }
         const auto& levelsPaths = levelNamesResult.GetValue();
@@ -247,10 +231,10 @@ namespace SimulationInterfaces
         {
             const AZStd::string errorMsg = AZStd::string::format("Requested world/level %s not found", request.levelResource.m_uri.c_str());
             AZ_Warning("SimulationInterfaces", false, errorMsg.c_str());
-            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::srv::LoadWorld::Response::MISSING_ASSETS, errorMsg));
         }
 
+        m_actionRequestedFromSimInterfaces = true;
         ILevelSystem* levelSystem = GetLevelSystem();
         if (levelSystem == nullptr)
         {
