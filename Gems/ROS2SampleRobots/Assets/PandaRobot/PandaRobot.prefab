@@ -179,7 +179,8 @@
                             "ForceLimit": 1000.0,
                             "Stiffness": 5000.0,
                             "Damping": 200.0
-                        }
+                        },
+                        "Offset": 90.0
                     }
                 },
                 "EditorDisabledCompositionComponent": {
@@ -595,7 +596,8 @@
                             "ForceLimit": 1000.0,
                             "Stiffness": 5000.0,
                             "Damping": 200.0
-                        }
+                        },
+                        "Offset": -135.0
                     }
                 },
                 "EditorDisabledCompositionComponent": {
@@ -839,7 +841,8 @@
                             "ForceLimit": 1000.0,
                             "Stiffness": 5000.0,
                             "Damping": 200.0
-                        }
+                        },
+                        "Offset": 45.0
                     }
                 },
                 "EditorDisabledCompositionComponent": {
@@ -1306,7 +1309,8 @@
                             "ForceLimit": 1000.0,
                             "Stiffness": 5000.0,
                             "Damping": 100.0
-                        }
+                        },
+                        "Offset": -44.0
                     }
                 },
                 "EditorDisabledCompositionComponent": {
@@ -1906,45 +1910,7 @@
                                 "Reliability": 1
                             }
                         }
-                    },
-                    "Initial positions": [
-                        [
-                            "panda_joint1",
-                            {}
-                        ],
-                        [
-                            "panda_joint2",
-                            -0.7850000262260437
-                        ],
-                        [
-                            "panda_joint3",
-                            {}
-                        ],
-                        [
-                            "panda_joint4",
-                            -2.3559999465942383
-                        ],
-                        [
-                            "panda_joint5",
-                            {}
-                        ],
-                        [
-                            "panda_joint6",
-                            1.5709999799728394
-                        ],
-                        [
-                            "panda_joint7",
-                            0.7850000262260437
-                        ],
-                        [
-                            "panda_finger_joint1",
-                            0.03999999910593033
-                        ],
-                        [
-                            "panda_finger_joint2",
-                            0.03999999910593033
-                        ]
-                    ]
+                    }
                 },
                 "JointsTrajectoryComponent": {
                     "$type": "GenericComponentWrapper",
@@ -2342,7 +2308,8 @@
                             "ForceLimit": 1000.0,
                             "Stiffness": 1000.0,
                             "Damping": 10.0
-                        }
+                        },
+                        "Offset": 0.03999999910593033
                     }
                 },
                 "EditorDisabledCompositionComponent": {
@@ -2466,7 +2433,8 @@
                             "ForceLimit": 1000.0,
                             "Stiffness": 1000.0,
                             "Damping": 10.0
-                        }
+                        },
+                        "Offset": 0.03999999910593033
                     }
                 },
                 "EditorDisabledCompositionComponent": {
