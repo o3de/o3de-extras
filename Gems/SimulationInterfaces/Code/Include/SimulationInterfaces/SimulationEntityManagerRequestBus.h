@@ -70,8 +70,7 @@ namespace SimulationInterfaces
     using SpawnableList = AZStd::vector<Spawnable>;
     using DeletionCompletedCb = AZStd::function<void(const AZ::Outcome<void, FailedResult>&)>;
     using SpawnCompletedCb = AZStd::function<void(const AZ::Outcome<AZStd::string, FailedResult>&)>;
-    using PreInsertionCb =
-        AZStd::function<void(const AZ::Outcome<AzFramework::SpawnableEntityContainerView, FailedResult>&)>;
+    using PreInsertionCb = AZStd::function<void(const AZ::Outcome<AzFramework::SpawnableEntityContainerView, FailedResult>&)>;
 
     class SimulationEntityManagerRequests
     {
@@ -121,6 +120,16 @@ namespace SimulationInterfaces
             const bool allowRename,
             PreInsertionCb preinsertionCb,
             SpawnCompletedCb completedCb) = 0;
+
+        //! Callback for when an entities have been spawned and registered.
+        virtual void SpawnEntities(
+            const AZStd::vector<AZStd::string>& names,
+            const AZStd::vector<AZStd::string>& uris,
+            const AZStd::vector<AZStd::string>& entityNamespaces,
+            const AZStd::vector<AZ::Transform>& initialPoses,
+            const AZStd::vector<bool>& allowRename,
+            AZStd::vector<PreInsertionCb>& preinsertionCb,
+            AZStd::vector<SpawnCompletedCb>& completedCb) = 0;
 
         //! Reset the simulation to begin.
         //! This will revert the entire simulation to the initial state.

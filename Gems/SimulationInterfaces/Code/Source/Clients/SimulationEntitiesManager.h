@@ -58,6 +58,14 @@ namespace SimulationInterfaces
             const bool allowRename,
             PreInsertionCb preinsertionCb,
             SpawnCompletedCb completedCb) override;
+        void SpawnEntities(
+            const AZStd::vector<AZStd::string>& names,
+            const AZStd::vector<AZStd::string>& uris,
+            const AZStd::vector<AZStd::string>& entityNamespaces,
+            const AZStd::vector<AZ::Transform>& initialPoses,
+            const AZStd::vector<bool>& allowRename,
+            AZStd::vector<PreInsertionCb>& preinsertionCb,
+            AZStd::vector<SpawnCompletedCb>& completedCb) override;
         AZ::Outcome<void, FailedResult> ResetAllEntitiesToInitialState() override;
         AZ::Outcome<AZStd::string, FailedResult> RegisterNewSimulatedBody(
             const AZStd::string& proposedName, const AZ::EntityId& entityId) override;

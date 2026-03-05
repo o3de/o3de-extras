@@ -887,6 +887,38 @@ namespace SimulationInterfaces
         AZ_Info("SimulationInterfaces", "Spawning uri %s with ticket id %d\n", uri.c_str(), ticketId);
     }
 
+    void SimulationEntitiesManager::SpawnEntities(
+        const AZStd::vector<AZStd::string>& names,
+        const AZStd::vector<AZStd::string>& uris,
+        const AZStd::vector<AZStd::string>& entityNamespaces,
+        const AZStd::vector<AZ::Transform>& initialPoses,
+        const AZStd::vector<bool>& allowRename,
+        AZStd::vector<PreInsertionCb>& preinsertionCb,
+        AZStd::vector<SpawnCompletedCb>& completedCb)
+    {
+        // Get the common array size (minimum length across all arrays)
+        size_t arraySize = names.size();
+        arraySize = AZStd::min(arraySize, uris.size());
+        arraySize = AZStd::min(arraySize, entityNamespaces.size());
+        arraySize = AZStd::min(arraySize, initialPoses.size());
+        arraySize = AZStd::min(arraySize, allowRename.size());
+        arraySize = AZStd::min(arraySize, preinsertionCb.size());
+        arraySize = AZStd::min(arraySize, completedCb.size());
+
+        // Spawn each entity using the existing SpawnEntity method
+        for (size_t i = 0; i < arraySize; ++i)
+        {
+            SpawnEntity(
+                names[i],
+                uris[i],
+                entityNamespaces[i],
+                initialPoses[i],
+                allowRename[i],
+                preinsertionCb[i],
+                completedCb[i]);
+        }
+    }
+
     AZStd::string SimulationEntitiesManager::GetSimulatedEntityName(AZ::EntityId entityId, const AZStd::string& proposedName) const
     {
         // Get O3DE entity name
