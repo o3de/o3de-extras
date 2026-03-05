@@ -32,6 +32,7 @@ namespace ROS2Controllers
     {
         required.push_back(AZ_CRC_CE("ROS2Frame"));
         required.push_back(AZ_CRC_CE("JointsControllerService"));
+        required.push_back(AZ_CRC_CE("JointsManipulationService"));
     }
 
     void JointsPositionsEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)

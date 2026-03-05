@@ -29,6 +29,7 @@ namespace ROS2Controllers
     {
         required.push_back(AZ_CRC_CE("ROS2Frame"));
         required.push_back(AZ_CRC_CE("JointsControllerService"));
+        required.push_back(AZ_CRC_CE("JointsManipulationService"));
     }
 
     void JointsPositionsComponent::Activate()
@@ -103,7 +104,7 @@ namespace ROS2Controllers
                 AZ_Error(
                     "JointsPositionsComponent",
                     result,
-                    "PositionController: failed for joint %s and command %d: ",
+                    "PositionController: failed for joint %s and command %f: %s",
                     m_jointNames[i].c_str(),
                     message.data[i],
                     result.GetError().c_str());
