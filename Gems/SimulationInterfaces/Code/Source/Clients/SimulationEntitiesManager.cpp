@@ -1053,4 +1053,20 @@ namespace SimulationInterfaces
         return AZ::Success(m_simulatedEntityToPrefabRoot.at(name));
     }
 
+    AZ::Outcome<AZStd::string, FailedResult> SimulationEntitiesManager::GetSimulatedBodyNameById(const AZ::EntityId& entityId)
+    {
+        const auto it = m_entityIdToSimulatedEntityMap.find(entityId);
+
+        if (it == m_entityIdToSimulatedEntityMap.end())
+        {
+            return AZ::Failure(SimulationInterfaces::FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                AZStd::string::format(
+                    "Entity with given ID \"%s\" doesn't exists in available cache of simulated entities names",
+                    entityId.ToString().c_str())));
+        }
+
+        return AZ::Success(it->second);
+    }
+
 } // namespace SimulationInterfaces

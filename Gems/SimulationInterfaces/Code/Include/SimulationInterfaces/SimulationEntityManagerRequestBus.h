@@ -163,6 +163,11 @@ namespace SimulationInterfaces
         //! @param name Name of entity to get
         //! @return Returns entityId of the entity or fail if entity doesn't exist
         virtual AZ::Outcome<AZ::EntityId, FailedResult> GetEntityRoot(const AZStd::string& name) = 0;
+        //! Get simulation interfaces name of the entity with given id.
+        //! Mapping id to name is the same as in method @ref GetEntityId
+        //! @param entityId id of requested entity
+        //! @return name of the simulation entity if exists, Failure otherwise.
+        virtual AZ::Outcome<AZStd::string, FailedResult> GetSimulatedBodyNameById(const AZ::EntityId& entityId) = 0;
     };
 
     class SimulationInterfacesBusTraits : public AZ::EBusTraits
