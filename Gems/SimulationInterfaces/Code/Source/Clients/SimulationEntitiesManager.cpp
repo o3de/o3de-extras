@@ -772,7 +772,7 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, "Initial pose is not orthogonal");
             completedCb(
                 AZ::Failure(FailedResult(
-                simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
+                    simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
             return;
         }
 
