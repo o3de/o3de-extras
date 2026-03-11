@@ -14,6 +14,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Console/IConsole.h>
+#include <AzCore/Math/Capsule.h>
 #include <AzCore/Math/Obb.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/RTTI/RTTIMacros.h>
@@ -361,6 +362,8 @@ namespace SimulationInterfaces
                 }
             }
 
+            // allow check for all supported shaped. Simulation interfaces standard constraints are checked in ROS 2 layer of the node
+
             // for non physical or no-colliding entities check if World TM is inside the control shape
             AZ::Vector3 worldTranslation;
             AZ::TransformBus::EventResult(worldTranslation, entityId, &AZ::TransformBus::Events::GetWorldTranslation);
@@ -381,9 +384,21 @@ namespace SimulationInterfaces
                     entities.push_back(name);
                 }
             }
-            else
+            else if (auto capsuleShape = dynamic_cast<Physics::CapsuleShapeConfiguration*>(shape.get()))
             {
-                AZ_Warning("SimulationInterfaces", false, "Unsupported bounds type, skipped");
+                const auto capsule = capsuleShape->ToCapsule(shapePose);
+                if (capsule.Contains(worldTranslation))
+                {
+                    entities.push_back(name);
+                }
+            }
+            else if (auto capsuleShape = dynamic_cast<Physics::CapsuleShapeConfiguration*>(shape.get()))
+            {
+                const auto capsule = capsuleShape->ToCapsule(shapePose);
+                if (capsule.Contains(worldTranslation))
+                {
+                    entities.push_back(name);
+                }
             }
         }
         return entities;
@@ -757,7 +772,7 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, "Initial pose is not orthogonal");
             completedCb(
                 AZ::Failure(FailedResult(
-                    simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
+                simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
             return;
         }
 
