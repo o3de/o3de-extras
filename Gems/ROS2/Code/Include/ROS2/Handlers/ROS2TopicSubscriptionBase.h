@@ -74,7 +74,7 @@ namespace ROS2
             }
 
             m_subscriber = node->create_subscription<RosMessageType>(
-                m_topicConfig.m_topic,
+                m_topicConfig.m_topic.c_str(),
                 m_topicConfig.GetQoS(),
                 [this](const typename RosMessageType::SharedPtr message_ptr)
                 {
