@@ -362,7 +362,7 @@ namespace SimulationInterfaces
                 }
             }
 
-            // allow check for all supported shaped. Simulation interfaces standard constraints are checked in ROS 2 layer of the node
+            // Allow check for all supported shapes. Simulation interfaces standard constraints are checked in ROS 2 layer of the node.
 
             // for non physical or no-colliding entities check if World TM is inside the control shape
             AZ::Vector3 worldTranslation;
