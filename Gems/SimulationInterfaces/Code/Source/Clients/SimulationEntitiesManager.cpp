@@ -392,14 +392,6 @@ namespace SimulationInterfaces
                     entities.push_back(name);
                 }
             }
-            else if (auto capsuleShape = dynamic_cast<Physics::CapsuleShapeConfiguration*>(shape.get()))
-            {
-                const auto capsule = capsuleShape->ToCapsule(shapePose);
-                if (capsule.Contains(worldTranslation))
-                {
-                    entities.push_back(name);
-                }
-            }
             else
             {
                 AZ_WarningOnce("SimulationInterfaces", false, "");
