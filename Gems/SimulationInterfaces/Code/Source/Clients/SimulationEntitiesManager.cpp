@@ -394,7 +394,7 @@ namespace SimulationInterfaces
             }
             else
             {
-                AZ_WarningOnce("SimulationInterfaces", false, "");
+                AZ_WarningOnce("SimulationInterfaces", false, "Non-physical entities support only primitive shapes for bounds check");
             }
         }
         return entities;
