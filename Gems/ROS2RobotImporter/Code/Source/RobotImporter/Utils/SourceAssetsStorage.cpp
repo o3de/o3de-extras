@@ -481,8 +481,8 @@ namespace ROS2RobotImporter::Utils
         const auto directoryNameDst = AZ::IO::FixedMaxPathString::format(
             "%u_%.*s%.*s", AZ::u32(urdfFileCrc), AZ_PATH_ARG(urdfFilepath.Stem()), AZ_STRING_ARG(outputDirSuffix));
 
-        const AZ::IO::Path importDirectoryTmp = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "UrdfImporter" / directoryNameTmp;
-        const AZ::IO::Path importDirectoryDst = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "UrdfImporter" / directoryNameDst;
+        const AZ::IO::Path importDirectoryTmp = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "Importer" / directoryNameTmp;
+        const AZ::IO::Path importDirectoryDst = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "Importer" / directoryNameDst;
 
         fileIO->DestroyPath(importDirectoryTmp.c_str());
         const auto outcomeCreateDstDir = fileIO->CreatePath(importDirectoryDst.c_str());
@@ -531,7 +531,7 @@ namespace ROS2RobotImporter::Utils
         {
             AZStd::string stem = urdfAsset.m_resolvedUrdfPath.Stem().String();
             AZStd::string extension = urdfAsset.m_resolvedUrdfPath.Extension().String();
-            filename = AZStd::string::format("%s_dup_%u%s", stem.c_str(), duplicationCounter, extension.c_str());
+            filename = AZStd::string::format("%s_%u%s", stem.c_str(), duplicationCounter, extension.c_str());
         }
 
         AZ::IO::Path targetPathAssetDst(importedAssetsDest.importDirectoryDst / filename);
