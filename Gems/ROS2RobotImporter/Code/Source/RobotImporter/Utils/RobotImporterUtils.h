@@ -193,7 +193,7 @@ namespace ROS2RobotImporter::Utils
     //! Retrieve all assets referenced in SDF/URDF as unresolved URIs.
     //! The URIs will still need to get resolved via ResolveAssetPath() to point to a valid file location.
     //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
-    //! @returns set of meshes' filenames.
+    //! @returns mapping from asset name (model URI + asset URI) to asset info.
     UrdfAssetMap GetReferencedAssetFilenames(const sdf::Root& root);
 
     //! Callback used to check for file exist of a path referenced within a URDF/SDF file

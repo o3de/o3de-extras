@@ -120,7 +120,6 @@ namespace ROS2RobotImporter::Utils
     //! @param unresolvedAssetMap - list of the unresolved paths from the SDF/URDF file that are to be found as assets
     //! @param urdfFilepath - path of URDF file, used for resolving paths of referenced assets
     //! @param sdfBuilderSettings - the builder settings that should be used to resolve paths
-    //! @returns a URDF Asset map where the key is unresolved URDF path to AvailableAsset
     void FindReferencedAssets(
         UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings);
 
@@ -175,7 +174,6 @@ namespace ROS2RobotImporter::Utils
     //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
     //! @param outputDirSuffix - suffix to make output directory unique, if xacro file was used
     //! @param fileIO - instance to fileIO class
-    //! @returns mapping from unresolved urdf paths to source asset info
     void CopyReferencedAssetsAndCreateAssetMap(
         UrdfAssetMap& urdfAssetMap,
         const AZ::IO::Path& urdfFilepath,
@@ -187,7 +185,6 @@ namespace ROS2RobotImporter::Utils
     //! @param unresolvedAssetMap - list of assets discovered in the input SDF/URDF file
     //! @param urdfFilepath - path to URDF file (as a global path)
     //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
-    //! @returns mapping from unresolved urdf paths to source asset info
     void ResolveAssetMap(
         UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings);
 

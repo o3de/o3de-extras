@@ -62,9 +62,10 @@ namespace ROS2RobotImporter::PrefabMakerUtils
     //! @return entity name, for example "robotBumper_visual_1".
     AZStd::string MakeEntityName(const AZStd::string& rootName, const AZStd::string& type, size_t index = 0);
 
-    //! Get an Asset for a specified mesh given its path and mapping.
+    //! Get an Asset for a specified Uri given its path and mapping.
     //! @param sdfAssetsMapping mapping of SDF assets.
-    //! @param assetUri a path to the mesh for which the Asset is requested.
+    //! @param modelUri a path to the Model (e.g. robot) in URDF/SDF file for which the Asset is requested.
+    //! @param assetUri a path to the Asset within the model (e.g. mesh, texture) for which the Asset is requested.
     //! @return Asset for the mesh, if found in the mapping.
     AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
         const Utils::UrdfAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const AZStd::string& assetUri);

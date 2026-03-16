@@ -338,18 +338,15 @@ namespace ROS2RobotImporter
             // Read the SDF Settings from PrefabMakerPage
             const SdfAssetBuilderSettings& sdfBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
 
-            if (m_copyReferencedAssets)
+            Utils::ResolveAssetMap(m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
+            if (!m_copyReferencedAssets)
             {
-                Utils::ResolveAssetMap(m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
-            }
-            else
-            {
-                Utils::ResolveAssetMap(m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
                 Utils::FindReferencedAssets(m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
                 for (const auto& [_, asset] : m_urdfAssetsMapping)
                 {
-                    bool visual = (asset.m_assetType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
-                    bool collider =
+                    const bool visual =
+                        (asset.m_assetType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                    const bool collider =
                         (asset.m_assetType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
                     if (visual || collider)
                     {
@@ -362,9 +359,10 @@ namespace ROS2RobotImporter
             {
                 QString type = tr("Unknown");
 
-                bool visual = (asset.m_assetType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
-                bool collider = (asset.m_assetType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
-                bool texture = (asset.m_assetType & Utils::ReferencedAssetType::Texture) == Utils::ReferencedAssetType::Texture;
+                const bool visual = (asset.m_assetType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                const bool collider =
+                    (asset.m_assetType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
+                const bool texture = (asset.m_assetType & Utils::ReferencedAssetType::Texture) == Utils::ReferencedAssetType::Texture;
                 if (visual && collider)
                 {
                     type = tr("Visual and Collider Mesh");
