@@ -116,7 +116,6 @@ namespace SimulationInterfaces
 
     AZ::Outcome<WorldResourcesList, FailedResult> LevelManager::GetAvailableWorlds(const GetWorldsRequest& request)
     {
-        m_actionRequestedFromSimInterfaces = true;
         WorldResourcesList availableWorlds;
         // request validation
         if (!request.additionalSources.empty())
@@ -150,7 +149,6 @@ namespace SimulationInterfaces
             availableWorlds.emplace_back(
                 GetLevelNameFromAssetPath(levelPath), Resource{ levelPath, "" }, "", AZStd::vector<AZStd::string>{});
         }
-        m_actionRequestedFromSimInterfaces = false;
         return AZ::Success(availableWorlds);
     }
 
@@ -162,7 +160,6 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
-        m_actionRequestedFromSimInterfaces = true;
         WorldResource currentWorld;
         auto* levelInterface = AzFramework::LevelSystemLifecycleInterface::Get();
         if (levelInterface == nullptr)
@@ -191,7 +188,6 @@ namespace SimulationInterfaces
         auto levelName = GetLevelNameFromAssetPath(levelPathStr);
         currentWorld.m_worldResource.m_uri = levelPathStr;
         currentWorld.m_name = levelName;
-        m_actionRequestedFromSimInterfaces = false;
         return AZ::Success(currentWorld);
     }
 
@@ -203,7 +199,6 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_FEATURE_UNSUPPORTED, errorMsg));
         }
-        m_actionRequestedFromSimInterfaces = true;
         WorldResource loadedWorld;
 
         if (request.levelResource.m_resourceString.empty() && request.levelResource.m_uri.empty())
@@ -239,11 +234,13 @@ namespace SimulationInterfaces
             return AZ::Failure(FailedResult(simulation_interfaces::srv::LoadWorld::Response::MISSING_ASSETS, errorMsg));
         }
 
+        m_actionRequestedFromSimInterfaces = true;
         ILevelSystem* levelSystem = GetLevelSystem();
         if (levelSystem == nullptr)
         {
             constexpr const char* errorMsg = "Failed to start, level System not available";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
+            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, errorMsg));
         }
 
@@ -262,6 +259,7 @@ namespace SimulationInterfaces
             AZ_Warning("SimulationInterfaces", false, errorMsg);
             SimulationManagerRequestBus::Broadcast(
                 &SimulationManagerRequests::SetSimulationState, simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
+            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::srv::LoadWorld::Response::RESOURCE_PARSE_ERROR, errorMsg));
         }
         // notify state machine
@@ -289,6 +287,7 @@ namespace SimulationInterfaces
             {
                 constexpr const char* errorMsg = "No level loaded";
                 AZ_Warning("SimulationInterfaces", false, errorMsg);
+                m_actionRequestedFromSimInterfaces = false;
                 return AZ::Failure(FailedResult(simulation_interfaces::srv::UnloadWorld::Response::NO_WORLD_LOADED, errorMsg));
             }
         }
@@ -297,6 +296,7 @@ namespace SimulationInterfaces
         {
             constexpr const char* errorMsg = "Level system is not available";
             AZ_Warning("SimulationInterfaces", false, errorMsg);
+            m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, errorMsg));
         }
 
@@ -320,6 +320,7 @@ namespace SimulationInterfaces
         if (!levelGathering.IsSuccess())
         {
             AZ_Error("LevelManager", false, "Error occurred during level gathering: %s", levelGathering.GetError().m_errorString.c_str());
+            m_actionRequestedFromSimInterfaces = false;
             return;
         }
         UnloadWorld();
