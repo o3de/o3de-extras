@@ -67,6 +67,7 @@ namespace SimulationInterfaces
         AZ::Outcome<Bounds, FailedResult> GetEntityBounds(const AZStd::string& name) override;
         AZ::Outcome<AZ::EntityId, FailedResult> GetEntityId(const AZStd::string& name) override;
         AZ::Outcome<AZ::EntityId, FailedResult> GetEntityRoot(const AZStd::string& name) override;
+        AZ::Outcome<AZStd::string, FailedResult> GetSimulatedBodyNameById(const AZ::EntityId& entityId) override;
 
         // helper methods to filter entities by different filters
         AZStd::vector<AZStd::string> FilterEntitiesByCategories(
