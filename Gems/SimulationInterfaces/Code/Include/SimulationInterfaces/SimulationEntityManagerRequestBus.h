@@ -9,8 +9,10 @@
 #pragma once
 
 #include "Result.h"
+#include "SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h"
 #include "SimulationInterfacesTypeIds.h"
 #include "TagFilter.h"
+#include <AzCore/std/algorithm.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
@@ -72,6 +74,49 @@ namespace SimulationInterfaces
     using SpawnCompletedCb = AZStd::function<void(const AZ::Outcome<AZStd::string, FailedResult>&)>;
     using PreInsertionCb = AZStd::function<void(const AZ::Outcome<AzFramework::SpawnableEntityContainerView, FailedResult>&)>;
 
+    struct BatchSpawnEntryResult
+    {
+        AZStd::string m_requestedName;
+        AZ::Outcome<AZStd::string, FailedResult> m_spawnOutcome;
+    };
+
+    struct BatchSpawnResult
+    {
+        AZStd::vector<BatchSpawnEntryResult> m_spawnResults;
+
+        bool AllSucceeded() const
+        {
+            return AZStd::all_of(
+                m_spawnResults.begin(),
+                m_spawnResults.end(),
+                [](const BatchSpawnEntryResult& result)
+                {
+                    return result.m_spawnOutcome.IsSuccess();
+                });
+        }
+    };
+
+    using BatchSpawnCompletedCb = AZStd::function<void(const BatchSpawnResult&)>;
+
+    static constexpr SimulationFeatureType SPAWNING_BATCH = 50;
+
+    enum BatchSpawningErrors : ErrorCodeType
+    {
+        BATCH_SPAWN_MISMATCH = 110,
+        BATCH_SPAWN_FAILED = 120,
+    };
+
+    struct SpawningEntity
+    {
+        AZStd::string name;
+        AZStd::string uri;
+        AZStd::string entityNamespace;
+        AZ::Transform initialPose;
+        bool allowRename;
+        PreInsertionCb preinsertionCb;
+        SpawnCompletedCb completedCb;
+    };
+
     class SimulationEntityManagerRequests
     {
     public:
@@ -121,15 +166,9 @@ namespace SimulationInterfaces
             PreInsertionCb preinsertionCb,
             SpawnCompletedCb completedCb) = 0;
 
-        //! Callback for when an entities have been spawned and registered.
-        virtual void SpawnEntities(
-            const AZStd::vector<AZStd::string>& names,
-            const AZStd::vector<AZStd::string>& uris,
-            const AZStd::vector<AZStd::string>& entityNamespaces,
-            const AZStd::vector<AZ::Transform>& initialPoses,
-            const AZStd::vector<bool>& allowRename,
-            AZStd::vector<PreInsertionCb>& preinsertionCb,
-            AZStd::vector<SpawnCompletedCb>& completedCb) = 0;
+        //! Callback for when all requested entities have either been spawned and registered or failed.
+        //! Results are returned in the same order as the input requests.
+        virtual void SpawnEntities(const AZStd::vector<SpawningEntity>& spawningEntities, BatchSpawnCompletedCb completedCb) = 0;
 
         //! Reset the simulation to begin.
         //! This will revert the entire simulation to the initial state.

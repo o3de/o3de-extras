@@ -33,8 +33,6 @@
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
-#include <AzFramework/Entity/EntityContextBus.h>
-#include <AzFramework/Entity/GameEntityContextBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <SimulationInterfaces/Bounds.h>
 #include <SimulationInterfaces/Result.h>
@@ -204,7 +202,8 @@ namespace SimulationInterfaces
                 simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS,
                 simulation_interfaces::msg::SimulatorFeatures::DELETING,
                 simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
-                simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
+                simulation_interfaces::msg::SimulatorFeatures::SPAWNING,
+                SPAWNING_BATCH });
     }
 
     void SimulationEntitiesManager::Deactivate()
@@ -812,7 +811,11 @@ namespace SimulationInterfaces
                     auto config = frameComponent->GetConfiguration();
                     config.m_namespaceConfiguration.m_customNamespace = entityNamespace;
                     config.m_namespaceConfiguration.m_namespaceStrategy = ROS2::NamespaceConfiguration::NamespaceStrategy::Custom;
-                    AZ_Printf("SimulationInterfaces::SpawnEntity", "Setting namespace to %s for entity %s\n", entityNamespace.c_str(), entity->GetName().c_str());
+                    AZ_Printf(
+                        "SimulationInterfaces::SpawnEntity",
+                        "Setting namespace to %s for entity %s\n",
+                        entityNamespace.c_str(),
+                        entity->GetName().c_str());
                     frameComponent->SetConfiguration(config);
                     break;
                 }
@@ -868,8 +871,9 @@ namespace SimulationInterfaces
                 }
                 else
                 {
-                    spawnData->second.m_completedCb(AZ::Failure(FailedResult(
-                        simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Failed to spawn/or register simulation entity")));
+                    spawnData->second.m_completedCb(
+                        AZ::Failure(FailedResult(
+                            simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, "Failed to spawn/or register simulation entity")));
                 }
                 m_spawnCompletedCallbacks.erase(spawnData);
             }
@@ -888,34 +892,82 @@ namespace SimulationInterfaces
     }
 
     void SimulationEntitiesManager::SpawnEntities(
-        const AZStd::vector<AZStd::string>& names,
-        const AZStd::vector<AZStd::string>& uris,
-        const AZStd::vector<AZStd::string>& entityNamespaces,
-        const AZStd::vector<AZ::Transform>& initialPoses,
-        const AZStd::vector<bool>& allowRename,
-        AZStd::vector<PreInsertionCb>& preinsertionCb,
-        AZStd::vector<SpawnCompletedCb>& completedCb)
+        const AZStd::vector<SpawningEntity>& spawningEntities,
+        BatchSpawnCompletedCb completedCb)
     {
-        // Get the common array size (minimum length across all arrays)
-        size_t arraySize = names.size();
-        arraySize = AZStd::min(arraySize, uris.size());
-        arraySize = AZStd::min(arraySize, entityNamespaces.size());
-        arraySize = AZStd::min(arraySize, initialPoses.size());
-        arraySize = AZStd::min(arraySize, allowRename.size());
-        arraySize = AZStd::min(arraySize, preinsertionCb.size());
-        arraySize = AZStd::min(arraySize, completedCb.size());
-
-        // Spawn each entity using the existing SpawnEntity method
-        for (size_t i = 0; i < arraySize; ++i)
+        if (auto outcome = IsWorldLoaded(); !outcome.IsSuccess())
         {
+            if (completedCb)
+            {
+                BatchSpawnResult result;
+                result.m_spawnResults.reserve(spawningEntities.size());
+                for (const auto& spawningEntity : spawningEntities)
+                {
+                    result.m_spawnResults.push_back({ spawningEntity.name, AZ::Failure(outcome.GetError()) });
+                }
+                completedCb(result);
+            }
+            return;
+        }
+
+        if (spawningEntities.empty())
+        {
+            if (completedCb)
+            {
+                completedCb(BatchSpawnResult{});
+            }
+            return;
+        }
+
+        auto batchContext = AZStd::make_shared<BatchSpawnContext>();
+        batchContext->m_completedCb = AZStd::move(completedCb);
+        batchContext->m_result.m_spawnResults.resize(spawningEntities.size());
+
+        for (size_t i = 0; i < spawningEntities.size(); ++i)
+        {
+            const auto& spawningEntity = spawningEntities[i];
+            batchContext->m_result.m_spawnResults[i].m_requestedName = spawningEntity.name;
+
+            SpawnCompletedCb wrappedCompletedCb =
+                [batchContext, i, entityCompletedCb = spawningEntity.completedCb](const AZ::Outcome<AZStd::string, FailedResult>& outcome)
+            {
+                if (entityCompletedCb)
+                {
+                    entityCompletedCb(outcome);
+                }
+
+                BatchSpawnCompletedCb batchCompletedCb;
+                BatchSpawnResult batchResult;
+
+                {
+                    AZStd::lock_guard<AZStd::mutex> lock(batchContext->m_mutex);
+                    batchContext->m_result.m_spawnResults[i].m_spawnOutcome = outcome;
+                    ++batchContext->m_completedCount;
+
+                    if (batchContext->m_finished || batchContext->m_completedCount != batchContext->m_result.m_spawnResults.size())
+                    {
+                        return;
+                    }
+
+                    batchContext->m_finished = true;
+                    batchCompletedCb = batchContext->m_completedCb;
+                    batchResult = batchContext->m_result;
+                }
+
+                if (batchCompletedCb)
+                {
+                    batchCompletedCb(batchResult);
+                }
+            };
+
             SpawnEntity(
-                names[i],
-                uris[i],
-                entityNamespaces[i],
-                initialPoses[i],
-                allowRename[i],
-                preinsertionCb[i],
-                completedCb[i]);
+                spawningEntity.name,
+                spawningEntity.uri,
+                spawningEntity.entityNamespace,
+                spawningEntity.initialPose,
+                spawningEntity.allowRename,
+                spawningEntity.preinsertionCb,
+                AZStd::move(wrappedCompletedCb));
         }
     }
 
@@ -975,9 +1027,10 @@ namespace SimulationInterfaces
     {
         if (!m_simulatedEntityToEntityIdMap.contains(name))
         {
-            return AZ::Failure(SimulationInterfaces::FailedResult(
-                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
-                AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
+            return AZ::Failure(
+                SimulationInterfaces::FailedResult(
+                    simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                    AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
         }
         // check if entity with given name has entity info assigned, clear it if needed
         RemoveEntityInfoIfNeeded(name);
@@ -998,9 +1051,10 @@ namespace SimulationInterfaces
     {
         if (!m_simulatedEntityToEntityIdMap.contains(name))
         {
-            return AZ::Failure(SimulationInterfaces::FailedResult(
-                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
-                AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
+            return AZ::Failure(
+                SimulationInterfaces::FailedResult(
+                    simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                    AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
         }
 
         auto findIt = m_nameToEntityInfo.find(name);
@@ -1030,9 +1084,10 @@ namespace SimulationInterfaces
     {
         if (!m_simulatedEntityToEntityIdMap.contains(name))
         {
-            return AZ::Failure(SimulationInterfaces::FailedResult(
-                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
-                AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
+            return AZ::Failure(
+                SimulationInterfaces::FailedResult(
+                    simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                    AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
         }
         auto simulatedBodyOutcome = Utils::GetSimulatedBody(m_simulatedEntityToEntityIdMap.at(name));
         if (!simulatedBodyOutcome.IsSuccess())
@@ -1067,9 +1122,10 @@ namespace SimulationInterfaces
     {
         if (!m_simulatedEntityToEntityIdMap.contains(name))
         {
-            return AZ::Failure(SimulationInterfaces::FailedResult(
-                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
-                AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
+            return AZ::Failure(
+                SimulationInterfaces::FailedResult(
+                    simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                    AZStd::string::format("Entity with given name \"%s\" doesn't exists", name.c_str())));
         }
         return AZ::Success(m_simulatedEntityToEntityIdMap.at(name));
     }
@@ -1078,9 +1134,11 @@ namespace SimulationInterfaces
     {
         if (!m_simulatedEntityToPrefabRoot.contains(name))
         {
-            return AZ::Failure(SimulationInterfaces::FailedResult(
-                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
-                AZStd::string::format("Entity with given name \"%s\" doesn't exists in available cache of prefab roots", name.c_str())));
+            return AZ::Failure(
+                SimulationInterfaces::FailedResult(
+                    simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                    AZStd::string::format(
+                        "Entity with given name \"%s\" doesn't exists in available cache of prefab roots", name.c_str())));
         }
         return AZ::Success(m_simulatedEntityToPrefabRoot.at(name));
     }
