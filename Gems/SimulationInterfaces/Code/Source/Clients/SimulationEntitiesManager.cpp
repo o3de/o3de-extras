@@ -31,6 +31,7 @@
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
+#include <AzFramework/Physics/SimulatedBodies/StaticRigidBody.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
 #include <AzFramework/Entity/EntityContextBus.h>
@@ -347,9 +348,14 @@ namespace SimulationInterfaces
             AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> simulatedBody = Utils::GetSimulatedBody(entityId);
             if (simulatedBody.IsSuccess())
             {
+                // check for dynamic and static rigid bodies
                 auto rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(simulatedBody.GetValue());
+                auto staticRigidBody = azdynamic_cast<AzPhysics::StaticRigidBody*>(simulatedBody.GetValue());
+
+                bool hasDynamicShapes = rigidBody ? rigidBody->GetShapeCount() > 0 : false;
+                bool hasStaticShapes = staticRigidBody ? staticRigidBody->GetShapeCount() > 0 : false;
                 // entity is simulated body and has collider, check overlap
-                if (rigidBody && rigidBody->GetShapeCount() > 0)
+                if (hasDynamicShapes || hasStaticShapes)
                 {
                     // perform relatively expensive search only for entities which really can be inside the shape
                     if (AZStd::ranges::contains(result.m_hits, entityId, &AzPhysics::SceneQueryHit::m_entityId))
