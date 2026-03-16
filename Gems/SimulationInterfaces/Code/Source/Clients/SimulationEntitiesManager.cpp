@@ -1062,7 +1062,7 @@ namespace SimulationInterfaces
             return AZ::Failure(SimulationInterfaces::FailedResult(
                 simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
                 AZStd::string::format(
-                    "Entity with given ID \"%s\" doesn't exists in available cache of simulated entities names",
+                    "Entity with given ID \"%s\" doesn't exist in the available cache of simulated entities names",
                     entityId.ToString().c_str())));
         }
 
