@@ -190,14 +190,12 @@ namespace ROS2RobotImporter::Utils
 
     //! Copies and prepares asset that is referenced in SDF/URDF.
     //! Modifies urdfAsset in place.
-    //! @param unresolvedFileName - unresolved urdf path to asset
     //! @param importedAssetsDest - destination ImportedAssetsDest for imported assets.
     //! @param urdfAsset - asset info. Will be modified.
     //! @param duplicationCounter - number indication the number of times the asset has been duplicated
     //! @param fileIO - instance to fileIO class
     //! @returns status of the copy process
     CopyStatus CopyReferencedAsset(
-        const AZ::IO::Path& unresolvedFileName,
         const ImportedAssetsDest& importedAssetsDest,
         Utils::UrdfAsset& urdfAsset,
         unsigned int duplicationCounter,

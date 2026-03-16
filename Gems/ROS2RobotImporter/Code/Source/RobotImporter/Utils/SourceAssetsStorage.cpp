@@ -315,7 +315,7 @@ namespace ROS2RobotImporter::Utils
             {
                 duplicatedFilenames[urdfAsset.m_assetUri] = 0;
             }
-            CopyReferencedAsset(unresolvedFileName, destDirectory.GetValue(), urdfAsset, duplicatedFilenames[urdfAsset.m_assetUri]);
+            CopyReferencedAsset(destDirectory.GetValue(), urdfAsset, duplicatedFilenames[urdfAsset.m_assetUri]);
         }
         Utils::RemoveTmpDir(destDirectory.GetValue().importDirectoryTmp);
 
@@ -521,18 +521,11 @@ namespace ROS2RobotImporter::Utils
     }
 
     CopyStatus CopyReferencedAsset(
-        const AZ::IO::Path& unresolvedFileName,
         const ImportedAssetsDest& importedAssetsDest,
         Utils::UrdfAsset& urdfAsset,
         unsigned int duplicationCounter,
         AZ::IO::FileIOBase* fileIO)
     {
-        if (urdfAsset.m_resolvedUrdfPath.empty())
-        {
-            AZ_Warning("CopyAssetForURDF", false, "There is no resolved path for %s", unresolvedFileName.c_str());
-            return CopyStatus::Unresolvable;
-        }
-
         AZStd::string filename = urdfAsset.m_resolvedUrdfPath.Filename().String();
         if (duplicationCounter > 0)
         {

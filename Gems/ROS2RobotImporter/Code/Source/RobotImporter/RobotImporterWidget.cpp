@@ -411,8 +411,17 @@ namespace ROS2RobotImporter
                                 m_assetPage->OnAssetCopyStatusChanged(
                                     Utils::CopyStatus::Copying, AZStd::string(unresolvedFileName.c_str()), "");
                             }
-                            auto copyStatus = Utils::CopyReferencedAsset(
-                                unresolvedFileName, destStatus.GetValue(), urdfAsset, duplicatedFilenames[urdfAsset.m_assetUri]);
+
+                            auto copyStatus = Utils::CopyStatus::Unresolvable;
+                            if (urdfAsset.m_resolvedUrdfPath.empty())
+                            {
+                                AZ_Warning("CopyAssetForURDF", false, "There is no resolved path for %s", unresolvedFileName.c_str());
+                            }
+                            else
+                            {
+                                copyStatus =
+                                    Utils::CopyReferencedAsset(destStatus.GetValue(), urdfAsset, duplicatedFilenames[urdfAsset.m_assetUri]);
+                            }
 
                             m_assetPage->OnAssetCopyStatusChanged(
                                 copyStatus,
