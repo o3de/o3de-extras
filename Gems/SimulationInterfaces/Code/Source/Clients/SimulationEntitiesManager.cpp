@@ -202,8 +202,7 @@ namespace SimulationInterfaces
                 simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS,
                 simulation_interfaces::msg::SimulatorFeatures::DELETING,
                 simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
-                simulation_interfaces::msg::SimulatorFeatures::SPAWNING,
-                SPAWNING_BATCH });
+                simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
     }
 
     void SimulationEntitiesManager::Deactivate()
@@ -895,6 +894,11 @@ namespace SimulationInterfaces
     {
         if (auto outcome = IsWorldLoaded(); !outcome.IsSuccess())
         {
+            AZ_Warning(
+                "SimulationInterfaces",
+                false,
+                "SpawnEntities called but world is not loaded: %s",
+                outcome.GetError().m_errorString.c_str());
             if (completedCb)
             {
                 BatchSpawnResult result;
@@ -910,6 +914,7 @@ namespace SimulationInterfaces
 
         if (spawningEntities.empty())
         {
+            AZ_Warning("SimulationInterfaces", false, "SpawnEntities called with an empty list of entities");
             if (completedCb)
             {
                 completedCb(BatchSpawnResult{});
@@ -934,20 +939,6 @@ namespace SimulationInterfaces
                 }
 
                 batchContext->m_result.m_spawnResults[i] = outcome;
-                ++batchContext->m_completedCount;
-                AZ_Assert(
-                    batchContext->m_completedCount <= batchContext->m_result.m_spawnResults.size(),
-                    "SpawnEntities: completed count exceeded expected number of entities");
-
-                if (batchContext->m_completedCount != batchContext->m_result.m_spawnResults.size())
-                {
-                    return;
-                }
-
-                if (batchContext->m_completedCb)
-                {
-                    batchContext->m_completedCb(batchContext->m_result);
-                }
             };
 
             SpawnEntity(

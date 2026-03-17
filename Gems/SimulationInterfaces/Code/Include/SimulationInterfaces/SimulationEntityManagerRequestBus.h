@@ -9,7 +9,6 @@
 #pragma once
 
 #include "Result.h"
-#include "SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h"
 #include <AzCore/std/algorithm.h>
 #include "SimulationInterfacesTypeIds.h"
 #include "TagFilter.h"
@@ -91,8 +90,6 @@ namespace SimulationInterfaces
     };
 
     using BatchSpawnCompletedCb = AZStd::function<void(const BatchSpawnResult&)>;
-
-    static constexpr SimulationFeatureType SPAWNING_BATCH = 50;
 
     struct SpawningEntity
     {

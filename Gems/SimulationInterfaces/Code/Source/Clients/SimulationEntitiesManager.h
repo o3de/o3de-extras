@@ -136,7 +136,14 @@ namespace SimulationInterfaces
         {
             BatchSpawnResult m_result;
             BatchSpawnCompletedCb m_completedCb;
-            size_t m_completedCount = 0;
+
+            ~BatchSpawnContext()
+            {
+                if (m_completedCb)
+                {
+                    m_completedCb(m_result);
+                }
+            }
         };
 
         AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, SpawnCompletedCbData> m_spawnCompletedCallbacks;

@@ -34,9 +34,9 @@ namespace UnitTest
                 const AZStd::string& uri,
                 const AZStd::string& entityNamespace,
                 const AZ::Transform& initialPose,
-                 const bool allowRename,
-                 PreInsertionCb preinsertionCb,
-                 SpawnCompletedCb completedCb));
+                const bool allowRename,
+                PreInsertionCb preinsertionCb,
+                SpawnCompletedCb completedCb));
         MOCK_METHOD2(
             RegisterNewSimulatedBody,
             AZ::Outcome<AZStd::string, FailedResult>(const AZStd::string& proposedName, const AZ::EntityId& entityId));
