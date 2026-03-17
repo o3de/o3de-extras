@@ -12,7 +12,6 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/Script/ScriptTimePoint.h>
-#include <AzCore/std/parallel/mutex.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Entity/EntityContextBus.h>
 #include <AzFramework/Physics/PhysicsScene.h>
@@ -61,6 +60,7 @@ namespace SimulationInterfaces
             SpawnCompletedCb completedCb) override;
 
         void SpawnEntities(const AZStd::vector<SpawningEntity>& spawningEntities, BatchSpawnCompletedCb completedCb) override;
+
         AZ::Outcome<void, FailedResult> ResetAllEntitiesToInitialState() override;
         AZ::Outcome<AZStd::string, FailedResult> RegisterNewSimulatedBody(
             const AZStd::string& proposedName, const AZ::EntityId& entityId) override;
@@ -136,9 +136,7 @@ namespace SimulationInterfaces
         {
             BatchSpawnResult m_result;
             BatchSpawnCompletedCb m_completedCb;
-            AZStd::mutex m_mutex;
             size_t m_completedCount = 0;
-            bool m_finished = false;
         };
 
         AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, SpawnCompletedCbData> m_spawnCompletedCallbacks;

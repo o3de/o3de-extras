@@ -10,9 +10,9 @@
 
 #include "Result.h"
 #include "SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h"
+#include <AzCore/std/algorithm.h>
 #include "SimulationInterfacesTypeIds.h"
 #include "TagFilter.h"
-#include <AzCore/std/algorithm.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
@@ -74,24 +74,18 @@ namespace SimulationInterfaces
     using SpawnCompletedCb = AZStd::function<void(const AZ::Outcome<AZStd::string, FailedResult>&)>;
     using PreInsertionCb = AZStd::function<void(const AZ::Outcome<AzFramework::SpawnableEntityContainerView, FailedResult>&)>;
 
-    struct BatchSpawnEntryResult
-    {
-        AZStd::string m_requestedName;
-        AZ::Outcome<AZStd::string, FailedResult> m_spawnOutcome;
-    };
-
     struct BatchSpawnResult
     {
-        AZStd::vector<BatchSpawnEntryResult> m_spawnResults;
+        AZStd::vector<AZ::Outcome<AZStd::string, FailedResult>> m_spawnResults;
 
         bool AllSucceeded() const
         {
             return AZStd::all_of(
                 m_spawnResults.begin(),
                 m_spawnResults.end(),
-                [](const BatchSpawnEntryResult& result)
+                [](const AZ::Outcome<AZStd::string, FailedResult>& result)
                 {
-                    return result.m_spawnOutcome.IsSuccess();
+                    return result.IsSuccess();
                 });
         }
     };
@@ -99,12 +93,6 @@ namespace SimulationInterfaces
     using BatchSpawnCompletedCb = AZStd::function<void(const BatchSpawnResult&)>;
 
     static constexpr SimulationFeatureType SPAWNING_BATCH = 50;
-
-    enum BatchSpawningErrors : ErrorCodeType
-    {
-        BATCH_SPAWN_MISMATCH = 110,
-        BATCH_SPAWN_FAILED = 120,
-    };
 
     struct SpawningEntity
     {

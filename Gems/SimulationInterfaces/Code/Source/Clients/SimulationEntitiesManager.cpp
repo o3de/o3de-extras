@@ -891,9 +891,7 @@ namespace SimulationInterfaces
         AZ_Info("SimulationInterfaces", "Spawning uri %s with ticket id %d\n", uri.c_str(), ticketId);
     }
 
-    void SimulationEntitiesManager::SpawnEntities(
-        const AZStd::vector<SpawningEntity>& spawningEntities,
-        BatchSpawnCompletedCb completedCb)
+    void SimulationEntitiesManager::SpawnEntities(const AZStd::vector<SpawningEntity>& spawningEntities, BatchSpawnCompletedCb completedCb)
     {
         if (auto outcome = IsWorldLoaded(); !outcome.IsSuccess())
         {
@@ -901,9 +899,9 @@ namespace SimulationInterfaces
             {
                 BatchSpawnResult result;
                 result.m_spawnResults.reserve(spawningEntities.size());
-                for (const auto& spawningEntity : spawningEntities)
+                for (size_t i = 0; i < spawningEntities.size(); ++i)
                 {
-                    result.m_spawnResults.push_back({ spawningEntity.name, AZ::Failure(outcome.GetError()) });
+                    result.m_spawnResults.push_back(AZ::Failure(outcome.GetError()));
                 }
                 completedCb(result);
             }
@@ -926,7 +924,6 @@ namespace SimulationInterfaces
         for (size_t i = 0; i < spawningEntities.size(); ++i)
         {
             const auto& spawningEntity = spawningEntities[i];
-            batchContext->m_result.m_spawnResults[i].m_requestedName = spawningEntity.name;
 
             SpawnCompletedCb wrappedCompletedCb =
                 [batchContext, i, entityCompletedCb = spawningEntity.completedCb](const AZ::Outcome<AZStd::string, FailedResult>& outcome)
@@ -936,27 +933,20 @@ namespace SimulationInterfaces
                     entityCompletedCb(outcome);
                 }
 
-                BatchSpawnCompletedCb batchCompletedCb;
-                BatchSpawnResult batchResult;
+                batchContext->m_result.m_spawnResults[i] = outcome;
+                ++batchContext->m_completedCount;
+                AZ_Assert(
+                    batchContext->m_completedCount <= batchContext->m_result.m_spawnResults.size(),
+                    "SpawnEntities: completed count exceeded expected number of entities");
 
+                if (batchContext->m_completedCount != batchContext->m_result.m_spawnResults.size())
                 {
-                    AZStd::lock_guard<AZStd::mutex> lock(batchContext->m_mutex);
-                    batchContext->m_result.m_spawnResults[i].m_spawnOutcome = outcome;
-                    ++batchContext->m_completedCount;
-
-                    if (batchContext->m_finished || batchContext->m_completedCount != batchContext->m_result.m_spawnResults.size())
-                    {
-                        return;
-                    }
-
-                    batchContext->m_finished = true;
-                    batchCompletedCb = batchContext->m_completedCb;
-                    batchResult = batchContext->m_result;
+                    return;
                 }
 
-                if (batchCompletedCb)
+                if (batchContext->m_completedCb)
                 {
-                    batchCompletedCb(batchResult);
+                    batchContext->m_completedCb(batchContext->m_result);
                 }
             };
 
