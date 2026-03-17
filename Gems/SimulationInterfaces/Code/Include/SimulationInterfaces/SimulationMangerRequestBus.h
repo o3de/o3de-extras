@@ -86,9 +86,19 @@ namespace SimulationInterfaces
         AZ_RTTI(SimulationManagerNotifications, SimulationManagerNotificationsTypeId);
         virtual ~SimulationManagerNotifications() = default;
 
+        //! Both methods set as virtual with default implementation to not force users to define both callbacks if not needed
+
         //! Notify about simulation step finish
         //! @param remainingSteps - remaining steps to pause simulation
-        virtual void OnSimulationStepFinish(const AZ::u64 remainingSteps) = 0;
+        virtual void OnSimulationStepFinish(const AZ::u64 remainingSteps)
+        {
+        }
+
+        //! Notify about simulation state change
+        //! @param setState - id of the state that was set
+        virtual void OnSimulationStateChange(const SimulationState& setState)
+        {
+        }
     };
 
     class SimulationMangerNotificationsBusTraits : public AZ::EBusTraits
