@@ -92,6 +92,19 @@ namespace ROS2RobotImporter
         return m_success;
     };
 
+    void CheckAssetPage::initializePage()
+    {
+        if (m_copyReferencedAssetsThread)
+        {
+            m_copyReferencedAssetsThread->join();
+        }
+    }
+
+    void CheckAssetPage::SetCopyThread(AZStd::shared_ptr<AZStd::thread> copyThread)
+    {
+        m_copyReferencedAssetsThread = copyThread;
+    }
+
     void CheckAssetPage::ReportAsset(const AZStd::string unresolvedFileName, const Utils::UrdfAsset& urdfAsset, const QString& type)
     {
         int rowId = m_table->rowCount();

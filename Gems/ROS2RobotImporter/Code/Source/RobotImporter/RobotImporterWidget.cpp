@@ -273,6 +273,7 @@ namespace ROS2RobotImporter
         if (currentPage() == m_assetPage)
         {
             FillAssetPage();
+            m_assetPage->SetCopyThread(m_copyReferencedAssetsThread);
         }
         else if (currentPage() == m_prefabMakerPage)
         {
@@ -555,13 +556,6 @@ namespace ROS2RobotImporter
 
     int RobotImporterWidget::nextId() const
     {
-        if (currentPage() == m_assetPage)
-        {
-            if (m_copyReferencedAssetsThread)
-            {
-                m_copyReferencedAssetsThread->join();
-            }
-        }
         if ((currentPage() == m_fileSelectPage && m_params.empty()) || currentPage() == m_xacroParamsPage)
         {
             if (m_robotDescriptionPage->isComplete())

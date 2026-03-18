@@ -13,6 +13,7 @@
 #include <AzCore/Math/Crc.h>
 #include <AzCore/std/containers/map.h>
 #include <AzCore/std/containers/vector.h>
+#include <AzCore/std/parallel/thread.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <QLabel>
@@ -38,11 +39,14 @@ namespace ROS2RobotImporter
         void ClearAssetsList();
         bool IsEmpty() const;
         bool isComplete() const override;
+        void initializePage() override;
 
         void OnAssetCopyStatusChanged(
             const Utils::CopyStatus& status, const AZStd::string& unresolvedFileName, const AZStd::string assetPath);
 
         void OnAssetProcessStatusChanged(const AZStd::string& unresolvedFileName, const Utils::UrdfAsset& urdfAsset, bool isError);
+
+        void SetCopyThread(AZStd::shared_ptr<AZStd::thread> copyThread);
 
     private:
         bool m_success;
@@ -60,5 +64,8 @@ namespace ROS2RobotImporter
         QIcon m_processingIcon;
 
         int GetRowIndex(const AZStd::string& unresolvedFileName);
+
+        // Thread that runs the copy process for referenced assets, so the UI doesn't freeze during the copy.
+        AZStd::shared_ptr<AZStd::thread> m_copyReferencedAssetsThread;
     };
 } // namespace ROS2RobotImporter
