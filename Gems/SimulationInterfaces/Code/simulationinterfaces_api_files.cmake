@@ -19,4 +19,5 @@ set(FILES
     Include/SimulationInterfaces/LevelManagerRequestBus.h
     Include/SimulationInterfaces/ROS2SimulationInterfacesTypeIds.h
     Include/SimulationInterfaces/ROS2SimulationInterfacesRequestBus.h
+    Include/SimulationInterfaces/PathUtils.h
 )

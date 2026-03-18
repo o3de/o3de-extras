@@ -39,6 +39,7 @@
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <SimulationInterfaces/Bounds.h>
+#include <SimulationInterfaces/PathUtils.h>
 #include <SimulationInterfaces/Result.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
@@ -730,7 +731,7 @@ namespace SimulationInterfaces
             if (isSpawnable)
             {
                 Spawnable spawnable;
-                spawnable.m_uri = Utils::RelPathToUri(assetInfo.m_relativePath);
+                spawnable.m_uri = PathUtilities::RelPathToUri(assetInfo.m_relativePath);
                 spawnables.push_back(spawnable);
             }
         };
@@ -778,7 +779,7 @@ namespace SimulationInterfaces
         }
 
         // get rel path from uri
-        const AZStd::string relPath = Utils::UriToRelPath(uri);
+        const AZStd::string relPath = PathUtilities::UriToRelPath(uri);
 
         // create spawnable
         AZ::Data::AssetId assetId;
