@@ -26,12 +26,6 @@
 
 namespace SimulationInterfaces::Utils
 {
-    //! Convert a relative path to a URI
-    //! relative path: "path/to/file.txt"
-    //! URI: "product_asset:///path/to/file.txt"
-    AZStd::string RelPathToUri(AZStd::string_view relPath);
-    AZStd::string UriToRelPath(AZStd::string_view relPath);
-
     //! Filter named poses given by map by given tag filter
     //! @param entitiesToFilter map [entityName,entityId] describing NamedPoses which should be processed
     //! @param tagFilter definition of tag filter to apply

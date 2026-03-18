@@ -20,25 +20,6 @@
 
 namespace SimulationInterfaces::Utils
 {
-    const char* const ProductAssetPrefix = "product_asset:///";
-    AZStd::string RelPathToUri(AZStd::string_view relPath)
-    {
-        AZStd::string uri = relPath;
-        AZStd::replace(uri.begin(), uri.end(), '\\', '/');
-        uri.insert(0, ProductAssetPrefix);
-        return uri;
-    }
-
-    AZStd::string UriToRelPath(AZStd::string_view uri)
-    {
-        if (uri.starts_with(ProductAssetPrefix))
-        {
-            const AZStd::string_view productAssetPrefix{ ProductAssetPrefix };
-            return uri.substr(productAssetPrefix.length());
-        }
-        return {};
-    }
-
     bool AreTagsMatching(const TagFilter& tagFilter, const AZStd::vector<AZStd::string>& entityTags)
     {
         if (tagFilter.m_tags.empty())
