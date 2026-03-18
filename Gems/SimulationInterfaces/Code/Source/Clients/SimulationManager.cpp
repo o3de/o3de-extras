@@ -519,6 +519,7 @@ namespace SimulationInterfaces
             }
         }
         m_simulationState = stateToSet;
+        SimulationManagerNotificationsBus::Broadcast(&SimulationManagerNotifications::OnSimulationStateChange, m_simulationState);
         return AZ::Success();
     }
 
