@@ -7,8 +7,6 @@
  */
 #pragma once
 
-#include <AzCore/IO/Path/Path.h>
-#include <AzCore/Settings/SettingsRegistry.h>
 #include <AzCore/std/optional.h>
 #include <AzCore/std/string/string.h>
 
@@ -43,4 +41,4 @@ namespace SimulationInterfaces::PathUtilities
         return {};
     }
 
-} // namespace SimulationInterfaces::RegistryUtilities
+} // namespace SimulationInterfaces::PathUtilities
