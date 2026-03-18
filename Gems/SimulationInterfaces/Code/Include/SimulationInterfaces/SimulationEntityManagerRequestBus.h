@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Result.h"
+#include <AzCore/std/algorithm.h>
 #include "SimulationInterfacesTypeIds.h"
 #include "TagFilter.h"
 #include <AzCore/Component/EntityId.h>
@@ -70,8 +71,36 @@ namespace SimulationInterfaces
     using SpawnableList = AZStd::vector<Spawnable>;
     using DeletionCompletedCb = AZStd::function<void(const AZ::Outcome<void, FailedResult>&)>;
     using SpawnCompletedCb = AZStd::function<void(const AZ::Outcome<AZStd::string, FailedResult>&)>;
-    using PreInsertionCb =
-        AZStd::function<void(const AZ::Outcome<AzFramework::SpawnableEntityContainerView, FailedResult>&)>;
+    using PreInsertionCb = AZStd::function<void(const AZ::Outcome<AzFramework::SpawnableEntityContainerView, FailedResult>&)>;
+
+    struct BatchSpawnResult
+    {
+        AZStd::vector<AZ::Outcome<AZStd::string, FailedResult>> m_spawnResults;
+
+        bool AllSucceeded() const
+        {
+            return AZStd::all_of(
+                m_spawnResults.begin(),
+                m_spawnResults.end(),
+                [](const AZ::Outcome<AZStd::string, FailedResult>& result)
+                {
+                    return result.IsSuccess();
+                });
+        }
+    };
+
+    using BatchSpawnCompletedCb = AZStd::function<void(const BatchSpawnResult&)>;
+
+    struct SpawningEntity
+    {
+        AZStd::string name;
+        AZStd::string uri;
+        AZStd::string entityNamespace;
+        AZ::Transform initialPose;
+        bool allowRename;
+        PreInsertionCb preinsertionCb;
+        SpawnCompletedCb completedCb;
+    };
 
     class SimulationEntityManagerRequests
     {
@@ -121,6 +150,10 @@ namespace SimulationInterfaces
             const bool allowRename,
             PreInsertionCb preinsertionCb,
             SpawnCompletedCb completedCb) = 0;
+
+        //! Callback for when all requested entities have either been spawned and registered or failed.
+        //! Results are returned in the same order as the input requests.
+        virtual void SpawnEntities(const AZStd::vector<SpawningEntity>& spawningEntities, BatchSpawnCompletedCb completedCb) = 0;
 
         //! Reset the simulation to begin.
         //! This will revert the entire simulation to the initial state.

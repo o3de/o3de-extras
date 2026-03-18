@@ -26,6 +26,7 @@ namespace UnitTest
         MOCK_METHOD1(DeleteAllEntities, void(DeletionCompletedCb completedCb));
         MOCK_METHOD0(GetSpawnables, AZ::Outcome<SpawnableList, FailedResult>());
         MOCK_METHOD0(ResetAllEntitiesToInitialState, AZ::Outcome<void, FailedResult>());
+        MOCK_METHOD2(SpawnEntities, void(const AZStd::vector<SpawningEntity>& spawningEntities, BatchSpawnCompletedCb completedCb));
         MOCK_METHOD7(
             SpawnEntity,
             void(
