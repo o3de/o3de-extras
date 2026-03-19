@@ -57,6 +57,7 @@ namespace ROS2Controllers
                 JointMotorControllerComponent::CreateDescriptor(),
                 ManualMotorControllerComponent::CreateDescriptor(),
                 AckermannControlComponent::CreateDescriptor(),
+                PidMotorControllerComponent::CreateDescriptor(),
                 RigidBodyTwistControlComponent::CreateDescriptor(),
                 SkidSteeringControlComponent::CreateDescriptor(),
                 ROS2RobotControlComponent::CreateDescriptor(),
