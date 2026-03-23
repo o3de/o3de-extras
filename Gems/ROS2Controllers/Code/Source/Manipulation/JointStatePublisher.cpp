@@ -10,7 +10,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2NamesBus.h>
 #include <ROS2Controllers/Manipulation/JointsManipulationRequests.h>
-
+#include <ROS2/Frame/ROS2FrameComponentBus.h>
 #include "JointStatePublisher.h"
 #include "ManipulationUtils.h"
 
@@ -72,7 +72,14 @@ namespace ROS2Controllers
 
         for (const auto& [jointName, jointInfo] : manipulatorJoints)
         {
-            m_jointNames.push_back(jointName);
+            // query the entity for the joint name with namespace
+            const AZ::EntityId entityId = jointInfo.m_entityComponentIdPair.GetEntityId();
+            AZ_Assert(entityId.IsValid(), "Invalid EntityId for joint %s", jointName.c_str());
+
+            // get namespaced joint name
+            AZStd::string namespacedFrameId;
+            ROS2::ROS2FrameComponentBus::EventResult(namespacedFrameId, entityId, &ROS2::ROS2FrameComponentRequests::GetNamespacedJointName);
+            m_jointNames.push_back(namespacedFrameId);
             m_jointInfos.push_back(jointInfo);
         }
 

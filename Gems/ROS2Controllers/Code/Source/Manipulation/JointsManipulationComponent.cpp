@@ -431,6 +431,14 @@ namespace ROS2Controllers
     {
         if (m_manipulationJoints.empty())
         {
+            AZStd::string namespaceFromFrame;
+            ROS2::ROS2FrameComponentBus::EventResult(namespaceFromFrame, m_entity->GetId(), &ROS2::ROS2FrameComponentRequests::GetNamespace);
+
+            for (auto & [jointName, position] : m_initialPositions)
+            {
+                // apply namespace to the joint names in the configuration
+                ROS2::ROS2NamesRequestBus::BroadcastResult(jointName, &ROS2::ROS2NamesRequests::GetNamespacedName, namespaceFromFrame, jointName);
+            }
             m_manipulationJoints = Internal::GetAllEntityHierarchyJoints(GetEntityId());
             Internal::SetInitialPositions(m_manipulationJoints, m_initialPositions);
             if (m_manipulationJoints.empty())
