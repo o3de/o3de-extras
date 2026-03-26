@@ -7,11 +7,11 @@
             "NodeSelectionList": {
                 "selectedNodes": [
                     "RootNode",
-                    "RootNode.ConveyorBelt_effector1",
-                    "RootNode.ConveyorBelt_effector1.transform",
-                    "RootNode.ConveyorBelt_effector1.custom_properties",
-                    "RootNode.ConveyorBelt_effector1.UVMap",
-                    "RootNode.ConveyorBelt_effector1.MFrame"
+                    "RootNode.ConveyorBelt_effector",
+                    "RootNode.ConveyorBelt_effector.MFrame",
+                    "RootNode.ConveyorBelt_effector.UVMap",
+                    "RootNode.ConveyorBelt_effector.custom_properties",
+                    "RootNode.ConveyorBelt_effector.transform"
                 ]
             },
             "export method": 1,
@@ -36,28 +36,41 @@
             "nodeSelectionList": {
                 "selectedNodes": [
                     "RootNode",
-                    "RootNode.ConveyorBelt_effector1",
-                    "RootNode.ConveyorBelt_effector1.transform",
-                    "RootNode.ConveyorBelt_effector1.custom_properties",
-                    "RootNode.ConveyorBelt_effector1.UVMap",
-                    "RootNode.ConveyorBelt_effector1.MFrame"
+                    "RootNode.ConveyorBelt_effector",
+                    "RootNode.ConveyorBelt_effector.MFrame",
+                    "RootNode.ConveyorBelt_effector.UVMap",
+                    "RootNode.ConveyorBelt_effector.custom_properties",
+                    "RootNode.ConveyorBelt_effector.transform"
                 ]
             },
             "rules": {
                 "rules": [
                     {
                         "$type": "MaterialRule"
+                    },
+                    {
+                        "$type": "CoordinateSystemRule",
+                        "useAdvancedData": true,
+                        "rotation": [
+                            0.0,
+                            0.0,
+                            0.7071067690849304,
+                            0.7071067094802856
+                        ]
                     }
                 ]
             },
             "id": "{EF775872-953F-5658-B5CD-84FFD540A594}"
         },
         {
+            "$type": "{41DCBEAB-203C-4A05-96FA-98E1D8A96FA1} ImportGroup"
+        },
+        {
             "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
-            "name": "default_ConveyorBelt_effector_CB384CBE_EF7A_5C86_A483_CE39D126478C_",
+            "name": "default_ConveyorBelt_effector_20C8B702_36C3_59F4_8FF7_E610CDDA9F11_",
             "nodeSelectionList": {
                 "selectedNodes": [
-                    "RootNode.ConveyorBelt_effector1"
+                    "RootNode.ConveyorBelt_effector"
                 ]
             },
             "rules": {
@@ -77,12 +90,12 @@
                     }
                 ]
             },
-            "id": "{CB384CBE-EF7A-5C86-A483-CE39D126478C}"
+            "id": "{20C8B702-36C3-59F4-8FF7-E610CDDA9F11}"
         },
         {
             "$type": "PrefabGroup",
-            "name": "Assets/Factory/ConveyorLine/ConveyorBelt_effector_fbx.procprefab",
-            "id": "{D615E2FC-D4AA-5CF2-935E-4C976F2B4E37}"
+            "name": "Factory/ConveyorLine/ConveyorBelt_effector_fbx.procprefab",
+            "id": "{B1E17BDD-A909-5A24-83B5-F8E9223F578C}"
         }
     ]
 }

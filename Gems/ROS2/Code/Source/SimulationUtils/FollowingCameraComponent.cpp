@@ -217,7 +217,7 @@ namespace ROS2
     {
         const AzFramework::InputDeviceId& deviceId = inputChannel.GetInputDevice().GetInputDeviceId();
 
-        if (AzFramework::InputDeviceKeyboard::IsKeyboardDevice(deviceId) && inputChannel.IsStateBegan())
+        if (AzFramework::InputDeviceKeyboard::IsKeyboardDevice(deviceId))
         {
             OnKeyboardEvent(inputChannel);
         }

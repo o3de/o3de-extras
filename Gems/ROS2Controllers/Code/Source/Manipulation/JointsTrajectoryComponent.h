@@ -69,7 +69,8 @@ namespace ROS2Controllers
         TrajectoryGoal m_trajectoryGoal;
         TrajectoryActionStatus m_goalStatus = TrajectoryActionStatus::Idle;
         rclcpp::Time m_trajectoryExecutionStartTime;
-        ManipulationJoints m_manipulationJoints;
+        ManipulationJoints m_manipulationJoints; //!< Cached joints of the manipulator, initialized on the start of trajectory execution,
+                                                 //!< keyed by namespaced joint names
         builtin_interfaces::msg::Time m_lastTickTimestamp; //!< ROS 2 Timestamp during last OnTick call
 
         bool m_checkForPositionErrors = false; //!< If true, check if joints reached the goal position before reporting success
