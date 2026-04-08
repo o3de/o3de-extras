@@ -7,6 +7,7 @@
  */
 
 #include "SpawnEntitiesServiceHandler.h"
+#include "SpawnServiceUtils.h"
 #include <AzFramework/Physics/ShapeConfiguration.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/TF/TransformInterface.h>
@@ -48,7 +49,7 @@ namespace ROS2SimulationInterfaces
             const AZStd::string_view messageFrameId{ spawnRequest.initial_pose.header.frame_id.c_str(),
                                                      spawnRequest.initial_pose.header.frame_id.size() };
 
-            if (!name.empty() && !ValidateEntityName(name))
+            if (!name.empty() && !SpawnServiceUtils::ValidateEntityName(name))
             {
                 spawnResult.result.result = simulation_interfaces::msg::SpawnResult::NAME_INVALID;
                 spawnResult.result.error_message =
@@ -57,7 +58,7 @@ namespace ROS2SimulationInterfaces
                 continue;
             }
 
-            if (!entityNamespace.empty() && !ValidateNamespaceName(entityNamespace))
+            if (!entityNamespace.empty() && !SpawnServiceUtils::ValidateNamespaceName(entityNamespace))
             {
                 spawnResult.result.result = simulation_interfaces::msg::SpawnResult::NAMESPACE_INVALID;
                 spawnResult.result.error_message =
@@ -86,11 +87,24 @@ namespace ROS2SimulationInterfaces
                 }
             }
 
+            const AZ::Transform requestedPose = ROS2::ROS2Conversions::FromROS2Pose(spawnRequest.initial_pose.pose);
+            if (const auto poseValidation = SpawnServiceUtils::ValidateTransformNormalized(requestedPose); !poseValidation.IsSuccess())
+            {
+                spawnResult.result.result = simulation_interfaces::msg::SpawnResult::INVALID_POSE;
+                spawnResult.result.error_message = poseValidation.GetError().c_str();
+                hasFailures = true;
+                continue;
+            }
+
+            const AZ::Transform initialPose = transformOffset *
+                AZ::Transform::CreateFromQuaternionAndTranslation(
+                                                  requestedPose.GetRotation().GetNormalized(), requestedPose.GetTranslation());
+
             SimulationInterfaces::SpawningEntity spawningEntity;
             spawningEntity.name = AZStd::string(name);
             spawningEntity.uri = AZStd::string(uri);
             spawningEntity.entityNamespace = AZStd::string(entityNamespace);
-            spawningEntity.initialPose = transformOffset * ROS2::ROS2Conversions::FromROS2Pose(spawnRequest.initial_pose.pose);
+            spawningEntity.initialPose = initialPose;
             spawningEntity.allowRename = spawnRequest.allow_renaming;
             spawningEntity.preinsertionCb =
                 [](const AZ::Outcome<AzFramework::SpawnableEntityContainerView, SimulationInterfaces::FailedResult>&)
@@ -155,20 +169,6 @@ namespace ROS2SimulationInterfaces
             });
 
         return AZStd::nullopt;
-    }
-
-    bool SpawnEntitiesServiceHandler::ValidateEntityName(const AZStd::string& entityName)
-    {
-        const AZStd::regex entityRegex{ R"(^[a-zA-Z0-9_]+$)" }; // Entity names can only contain alphanumeric characters and underscores
-        return AZStd::regex_match(entityName, entityRegex);
-    }
-
-    bool SpawnEntitiesServiceHandler::ValidateNamespaceName(const AZStd::string& namespaceName)
-    {
-        const AZStd::regex namespaceRegex{
-            R"(^[a-zA-Z0-9_/]+$)"
-        }; // Namespace names can only contain alphanumeric characters and underscores and forward slashes
-        return AZStd::regex_match(namespaceName, namespaceRegex);
     }
 
 } // namespace ROS2SimulationInterfaces
