@@ -37,6 +37,7 @@
 #include <Services/SetEntityInfoServiceHandler.h>
 #include <Services/SetEntityStateServiceHandler.h>
 #include <Services/SetSimulationStateServiceHandler.h>
+#include <Services/SpawnEntitiesServiceHandler.h>
 #include <Services/SpawnEntityServiceHandler.h>
 #include <Services/StepSimulationServiceHandler.h>
 #include <Services/UnloadWorldServiceHandler.h>
@@ -93,6 +94,7 @@ namespace ROS2SimulationInterfaces
         RegisterInterface<GetSpawnablesServiceHandler>(ros2Node);
         RegisterInterface<SetEntityStateServiceHandler>(ros2Node);
         RegisterInterface<SpawnEntityServiceHandler>(ros2Node);
+        RegisterInterface<SpawnEntitiesServiceHandler>(ros2Node);
         RegisterInterface<GetSimulatorFeaturesServiceHandler>(ros2Node);
         RegisterInterface<ResetSimulationServiceHandler>(ros2Node);
         RegisterInterface<SimulateStepsActionServerHandler>(ros2Node);
