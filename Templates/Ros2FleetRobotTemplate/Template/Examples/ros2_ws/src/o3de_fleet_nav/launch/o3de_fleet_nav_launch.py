@@ -20,7 +20,7 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import (DeclareLaunchArgument, ExecuteProcess, GroupAction,
-                            IncludeLaunchDescription, LogInfo)
+                            IncludeLaunchDescription, LogInfo, SetEnvironmentVariable)
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, TextSubstitution
@@ -55,6 +55,13 @@ def generate_launch_description():
     log_settings = LaunchConfiguration('log_settings', default='true')
 
     distro = os.getenv('ROS_DISTRO')
+
+    cyclonedds_uri = (
+        '<CycloneDDS><Domain id="any"><Discovery>'
+        '<ParticipantIndex>auto</ParticipantIndex>'
+        '<MaxAutoParticipantIndex>256</MaxAutoParticipantIndex>'
+        '</Discovery></Domain></CycloneDDS>'
+    )
 
     # Declare the launch arguments
     declare_map_yaml_cmd = DeclareLaunchArgument(
@@ -147,6 +154,12 @@ def generate_launch_description():
     ld.add_action(declare_rviz_config_file_cmd)
 
     # Launch robots
+    # Multi-robot Nav2 can exhaust the default Cyclone DDS participant index
+    # range. Set a higher default only when the user has not provided a
+    # CYCLONEDDS_URI.
+    if 'CYCLONEDDS_URI' not in os.environ:
+        ld.add_action(SetEnvironmentVariable('CYCLONEDDS_URI', cyclonedds_uri))
+
     for simulation_instance_cmd in nav_instances_cmds:
         ld.add_action(simulation_instance_cmd)
 
