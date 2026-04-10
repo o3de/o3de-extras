@@ -37,7 +37,7 @@ ly_add_target(
            AZ::AzCore
 )
 
-target_interface_depends_on_ros2_package(${gem_name}.API simulation_interfaces 1.1.0 REQUIRED)
+target_interface_depends_on_ros2_package(${gem_name}.API simulation_interfaces 1.4.0 REQUIRED)
 
 # The ${gem_name}.Private.Object target is an internal target
 # It should not be used outside of this Gems CMakeLists.txt
@@ -63,7 +63,7 @@ ly_add_target(
             Gem::DebugDraw.API
 )
 target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp std_msgs geometry_msgs rclcpp_action tf2_ros)
-target_depends_on_ros2_package(${gem_name}.Private.Object simulation_interfaces 1.1.0 REQUIRED)
+target_depends_on_ros2_package(${gem_name}.Private.Object simulation_interfaces 1.4.0 REQUIRED)
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
 ly_add_target(
