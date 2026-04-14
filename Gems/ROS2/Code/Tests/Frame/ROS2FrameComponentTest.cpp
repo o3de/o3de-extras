@@ -147,6 +147,7 @@ namespace UnitTest
         ROS2::ROS2FrameConfiguration config;
 
         AZ::Entity entity;
+        entity.SetName("single_frame_entity");
         const std::string entityName = entity.GetName().c_str();
         entity.CreateComponent<AzFramework::TransformComponent>();
         auto frame = entity.CreateComponent<ROS2::ROS2FrameComponent>(config);
@@ -210,6 +211,7 @@ namespace UnitTest
         ROS2::ROS2FrameConfiguration config;
 
         AZ::Entity entity;
+        entity.SetName("update_namespace_entity");
         const std::string entityName = entity.GetName().c_str();
         entity.CreateComponent<AzFramework::TransformComponent>();
         auto frame = entity.CreateComponent<ROS2::ROS2FrameComponent>(config);
