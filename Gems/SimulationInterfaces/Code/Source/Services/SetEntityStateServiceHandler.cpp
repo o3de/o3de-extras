@@ -30,7 +30,11 @@ namespace ROS2SimulationInterfaces
 
         // Resolve frame transform offset once (needed for both pose and twist)
         AZ::Transform transformOffset = AZ::Transform::CreateIdentity();
+#if SIMULATION_INTERFACES_MAJOR_API_VERSION >= 2
         if ((request.set_pose || request.set_twist) && !messageFrameId.empty() && simulatorFrameId != messageFrameId)
+#else
+        if (!messageFrameId.empty() && simulatorFrameId != messageFrameId)
+#endif
         {
             const builtin_interfaces::msg::Time time = request.state.header.stamp;
             auto transformInterface = ROS2::TFInterface::Get();
@@ -50,8 +54,9 @@ namespace ROS2SimulationInterfaces
             }
         }
 
-        // Fetch current state so unflagged fields are preserved
         SimulationInterfaces::EntityState entityState;
+#if SIMULATION_INTERFACES_MAJOR_API_VERSION >= 2
+        // Fetch current state so unflagged fields are preserved
         {
             AZ::Outcome<SimulationInterfaces::EntityState, SimulationInterfaces::FailedResult> currentState;
             SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
@@ -81,6 +86,20 @@ namespace ROS2SimulationInterfaces
             entityState.m_twistAngular = transformOffset.TransformVector(ROS2::ROS2Conversions::FromROS2Vector3(request.state.twist.angular));
             entityState.m_twistLinear = transformOffset.TransformVector(ROS2::ROS2Conversions::FromROS2Vector3(request.state.twist.linear));
         }
+#else
+        const AZ::Transform requestedPose = ROS2::ROS2Conversions::FromROS2Pose(request.state.pose);
+        if (const auto poseValidation = SpawnServiceUtils::ValidateTransformNormalized(requestedPose); !poseValidation.IsSuccess())
+        {
+            Response response;
+            response.result.result = simulation_interfaces::srv::SetEntityState::Response::INVALID_POSE;
+            response.result.error_message = poseValidation.GetError().c_str();
+            return response;
+        }
+        entityState.m_pose = transformOffset *
+            AZ::Transform::CreateFromQuaternionAndTranslation(requestedPose.GetRotation().GetNormalized(), requestedPose.GetTranslation());
+        entityState.m_twistAngular = transformOffset.TransformVector(ROS2::ROS2Conversions::FromROS2Vector3(request.state.twist.angular));
+        entityState.m_twistLinear = transformOffset.TransformVector(ROS2::ROS2Conversions::FromROS2Vector3(request.state.twist.linear));
+#endif
 
         AZ::Outcome<void, SimulationInterfaces::FailedResult> outcome;
         SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
