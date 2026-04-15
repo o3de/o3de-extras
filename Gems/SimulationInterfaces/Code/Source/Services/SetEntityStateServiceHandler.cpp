@@ -7,6 +7,7 @@
  */
 
 #include "SetEntityStateServiceHandler.h"
+#include "SpawnServiceUtils.h"
 #include <ROS2/TF/TransformInterface.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/RegistryUtils.h>
@@ -45,12 +46,24 @@ namespace ROS2SimulationInterfaces
                 return response;
             }
         }
+
+        const AZ::Transform requestedPose = ROS2::ROS2Conversions::FromROS2Pose(request.state.pose);
+        if (const auto poseValidation = SpawnServiceUtils::ValidateTransformNormalized(requestedPose); !poseValidation.IsSuccess())
+        {
+            Response response;
+            response.result.result = simulation_interfaces::srv::SetEntityState::Response::INVALID_POSE;
+            response.result.error_message = poseValidation.GetError().c_str();
+            return response;
+        }
+
+        const AZ::Transform targetPose = transformOffset *
+            AZ::Transform::CreateFromQuaternionAndTranslation(requestedPose.GetRotation().GetNormalized(), requestedPose.GetTranslation());
+
         AZ::Outcome<void, SimulationInterfaces::FailedResult> outcome;
         AZStd::string entityName = request.entity.c_str();
 
         SimulationInterfaces::EntityState entityState;
-
-        entityState.m_pose = transformOffset * ROS2::ROS2Conversions::FromROS2Pose(request.state.pose);
+        entityState.m_pose = targetPose;
         entityState.m_twistAngular = transformOffset.TransformVector(ROS2::ROS2Conversions::FromROS2Vector3(request.state.twist.angular));
         entityState.m_twistLinear = transformOffset.TransformVector(ROS2::ROS2Conversions::FromROS2Vector3(request.state.twist.linear));
 
