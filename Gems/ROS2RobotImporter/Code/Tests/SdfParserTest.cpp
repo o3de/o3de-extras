@@ -350,7 +350,7 @@ namespace UnitTest
         // Make sure that all links are gathered
         AZStd::unordered_map<AZStd::string, const sdf::Link*> links = Utils::GetAllLinks(*myModel, true);
         auto otherLinks = Utils::GetAllLinks(*yourModel, true);
-        links.insert(AZStd::move(otherLinks.begin()), AZStd::move(otherLinks.end()));
+        links.insert(otherLinks.begin(), otherLinks.end());
 
         ASSERT_EQ(2, links.size());
         EXPECT_TRUE(links.contains("my_model::same_link_name"));

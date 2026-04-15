@@ -202,7 +202,7 @@ namespace ROS2Sensors
         auto positionIt = positionField.begin();
 
         AZStd::optional<Pc2MsgIt<float>> messageIntensityIt;
-        AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::Intensity>::const_iterator> intensityIt;
+        AZStd::optional<RaycastResults::ConstFieldSpan<RaycastResultFlags::Intensity>::iterator> intensityIt;
         if (results.IsFieldPresent<RaycastResultFlags::Intensity>())
         {
             messageIntensityIt = Pc2MsgIt<float>(message, "intensity");
@@ -217,7 +217,7 @@ namespace ROS2Sensors
         };
 
         AZStd::optional<MessageSegmentationIterators> messageSegDataIts;
-        AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::SegmentationData>::const_iterator> segDataIt;
+        AZStd::optional<RaycastResults::ConstFieldSpan<RaycastResultFlags::SegmentationData>::iterator> segDataIt;
         if (results.IsFieldPresent<RaycastResultFlags::SegmentationData>())
         {
             messageSegDataIts = MessageSegmentationIterators{
