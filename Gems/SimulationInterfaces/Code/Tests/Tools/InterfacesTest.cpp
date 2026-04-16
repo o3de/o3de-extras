@@ -11,6 +11,7 @@
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/Memory/AllocatorManager.h>
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Slice/SliceAssetHandler.h>
@@ -65,6 +66,7 @@ namespace UnitTest
         void AddGemsAndComponents() override;
         AZ::ComponentApplication* CreateApplicationInstance() override;
         void PostSystemEntityActivate() override;
+        void PostDestroyApplication() override;
 
     public:
         SimulationInterfaceROS2TestEnvironment() = default;
@@ -91,6 +93,17 @@ namespace UnitTest
     void SimulationInterfaceROS2TestEnvironment::PostSystemEntityActivate()
     {
         AZ::UserSettingsComponentRequestBus::Broadcast(&AZ::UserSettingsComponentRequests::DisableSaveOnFinalize);
+    }
+
+    void SimulationInterfaceROS2TestEnvironment::PostDestroyApplication()
+    {
+        // rclcpp maintains a global default context in a static std::shared_ptr<Context> that is only
+        // destroyed at process exit — after O3DE's allocator teardown. This causes false positive leak
+        // reports (confirmed as "still reachable" by valgrind, not truly lost). Clearing the allocation
+        // records here (after the application and all its components are fully torn down) prevents the
+        // spurious failure. All real O3DE allocations have been freed by this point.
+        AZ::AllocatorManager::Instance().SetDefaultTrackingMode(AZ::Debug::AllocationRecords::Mode::RECORD_NO_RECORDS);
+        AZ::AllocatorManager::Instance().SetTrackingMode(AZ::Debug::AllocationRecords::Mode::RECORD_NO_RECORDS);
     }
 
     class SimulationInterfaceROS2TestFixture : public ::testing::Test
