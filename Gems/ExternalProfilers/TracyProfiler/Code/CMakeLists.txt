@@ -22,6 +22,8 @@ FetchContent_MakeAvailable(Tracy)
 
 message(STATUS "TracyProfiler gem uses https://github.com/wolfpld/tracy version 0.13.1 (License: BSD-3-Clause)")
 
+target_compile_options(TracyClient ${O3DE_COMPILE_OPTION_DISABLE_WARNINGS})
+
 # Let's not clutter the root of any IDE folder structure with 3rd party dependencies
 # Setting the FOLDER makes it show up there in the solution build in VS and similarly
 # any other IDEs that organize in folders.
