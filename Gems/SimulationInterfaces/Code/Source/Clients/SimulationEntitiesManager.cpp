@@ -821,21 +821,12 @@ namespace SimulationInterfaces
             }
             AZ::Entity* root = *view.begin();
 
-            for (auto* entity : view)
+            for (AZ::Entity* entity : view)
             {
-                ROS2::ROS2FrameComponent* frameComponent = entity->template FindComponent<ROS2::ROS2FrameComponent>();
-                if (frameComponent)
+                auto* ros2Frame = entity->FindComponent<ROS2::ROS2FrameComponent>();
+                if (ros2Frame)
                 {
-                    const AZStd::string f = frameComponent->GetNamespacedFrameID();
-                    auto config = frameComponent->GetConfiguration();
-                    config.m_namespaceConfiguration.m_customNamespace = entityNamespace;
-                    config.m_namespaceConfiguration.m_namespaceStrategy = ROS2::NamespaceConfiguration::NamespaceStrategy::Custom;
-                    AZ_Printf(
-                        "SimulationInterfaces::SpawnEntity",
-                        "Setting namespace to %s for entity %s\n",
-                        entityNamespace.c_str(),
-                        entity->GetName().c_str());
-                    frameComponent->SetConfiguration(config);
+                    ros2Frame->UpdateNamespaceConfiguration(entityNamespace, ROS2::NamespaceConfiguration::NamespaceStrategy::Custom);
                     break;
                 }
             }
@@ -1105,8 +1096,7 @@ namespace SimulationInterfaces
             "Simulation Interfaces",
             rigidBody->GetShapeCount() == 1,
             "Entity Bounds in simulation interfaces doesn't support multiple shapes, only first one will be taken ");
-        auto shape = rigidBody->GetShape(0);
-        auto boundsOutput = Utils::ConvertPhysicalShapeToBounds(shape, m_simulatedEntityToEntityIdMap.at(name));
+        auto boundsOutput = Utils::ConvertPhysicalShapeToBounds(m_simulatedEntityToEntityIdMap.at(name));
         if (boundsOutput.IsSuccess())
         {
             return AZ::Success(boundsOutput.GetValue());
