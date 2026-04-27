@@ -441,7 +441,11 @@ namespace UnitTest
         auto client = node->create_client<simulation_interfaces::srv::SpawnEntity>("/spawn_entity");
         auto request = std::make_shared<simulation_interfaces::srv::SpawnEntity::Request>();
         request->name = "valid_name";
+#if SIMULATION_INTERFACES_MAJOR_API_VERSION >= 2
+        request->entity_resource.uri = "test_uri";
+#else
         request->uri = "test_uri";
+#endif
         request->entity_namespace = "test_namespace";
         request->allow_renaming = true;
 
@@ -479,7 +483,11 @@ namespace UnitTest
         auto client = node->create_client<simulation_interfaces::srv::SpawnEntity>("/spawn_entity");
         auto request = std::make_shared<simulation_interfaces::srv::SpawnEntity::Request>();
         request->name = "invalid name"; // invalid name
+#if SIMULATION_INTERFACES_MAJOR_API_VERSION >= 2
+        request->entity_resource.uri = "test_uri";
+#else
         request->uri = "test_uri";
+#endif
         request->entity_namespace = "test_namespace";
 
         auto future = client->async_send_request(request);
@@ -501,7 +509,11 @@ namespace UnitTest
         auto client = node->create_client<simulation_interfaces::srv::SpawnEntity>("/spawn_entity");
         auto request = std::make_shared<simulation_interfaces::srv::SpawnEntity::Request>();
         request->name = "valid_name";
+#if SIMULATION_INTERFACES_MAJOR_API_VERSION >= 2
+        request->entity_resource.uri = "test_uri";
+#else
         request->uri = "test_uri";
+#endif
         request->entity_namespace = "invalid namespace";
 
         auto future = client->async_send_request(request);

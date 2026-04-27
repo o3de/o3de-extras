@@ -36,7 +36,11 @@ namespace ROS2SimulationInterfaces
         auto convertToROS2 = [](const SimulationInterfaces::Spawnable& spawnable)
         {
             simulation_interfaces::msg::Spawnable simSpawnable;
+#if SIMULATION_INTERFACES_MAJOR_API_VERSION >= 2
+            simSpawnable.entity_resource.uri = spawnable.m_uri.c_str();
+#else
             simSpawnable.uri = spawnable.m_uri.c_str();
+#endif
             simSpawnable.description = spawnable.m_description.c_str();
             return simSpawnable;
         };
