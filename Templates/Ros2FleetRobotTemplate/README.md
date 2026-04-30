@@ -24,7 +24,7 @@ You can spawn a robot manually with a service call, for example:
 
 ```shell
 ros2 service call /spawn_entity simulation_interfaces/srv/SpawnEntity \
-  '{uri: "product_asset:///prefabs/proteuslaserscanner.spawnable", name: "proteus", entity_namespace: "robot1", allow_renaming: true, initial_pose: {pose: {pose: {position: {x: -6.0, y: 0.5, z: 0.2}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}}'
+  '{uri: "product_asset:///prefabs/proteuslaserscanner.spawnable", name: "proteus", entity_namespace: "robot1", allow_renaming: true, initial_pose: {pose: {position: {x: -6.0, y: 0.5, z: 0.2}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}'
 ```
 
 In the fleet navigation example, spawning is handled automatically by the `robot_spawner` node launched for each robot.
