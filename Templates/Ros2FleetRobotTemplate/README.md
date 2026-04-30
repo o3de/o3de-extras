@@ -19,17 +19,15 @@ to install all required dependencies and create your project with a template (ma
 
 ## Spawning robots
 
-The level contains spawn points configured to easily add more Proteus robots through ROS 2 calls.
-
-This is done with the [Spawner Component](https://development--o3deorg.netlify.app/docs/user-guide/interactivity/robotics/concepts-and-components-overview/#spawner).
-There are 4 spawn points already added in the level. You can use them all with the following service calls:
+Robots are spawned via the `simulation_interfaces/srv/SpawnEntity` service provided by O3DE.
+You can spawn a robot manually with a service call, for example:
 
 ```shell
-ros2 service call /spawn_entity gazebo_msgs/srv/SpawnEntity '{name: 'proteus', xml: 'spawnPoint1'}'& \
-ros2 service call /spawn_entity gazebo_msgs/srv/SpawnEntity '{name: 'proteus', xml: 'spawnPoint2'}'& \
-ros2 service call /spawn_entity gazebo_msgs/srv/SpawnEntity '{name: 'proteus', xml: 'spawnPoint3'}'& \
-ros2 service call /spawn_entity gazebo_msgs/srv/SpawnEntity '{name: 'proteus', xml: 'spawnPoint4'}'
+ros2 service call /spawn_entity simulation_interfaces/srv/SpawnEntity \
+  '{uri: "product_asset:///prefabs/proteuslaserscanner.spawnable", name: "proteus", entity_namespace: "robot1", allow_renaming: true, initial_pose: {pose: {pose: {position: {x: -6.0, y: 0.5, z: 0.2}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}}'
 ```
+
+In the fleet navigation example, spawning is handled automatically by the `robot_spawner` node launched for each robot.
 
 ## Fleet navigation
 
@@ -45,34 +43,52 @@ In this example, a fleet of robots is automatically spawned and each individual 
 
 You can configure the fleet by modifying `Example/ros2_ws/src/o3de_fleet_nav/config/fleet_config.yaml` file:
 
-```
+```yaml
 fleet:
   - robot_name: proteus
+    robot_uri: product_asset:///prefabs/proteuslaserscanner.spawnable
     robot_namespace: robot1
-    position: 
+    position:
       x: -6.0
       y: 0.5
       z: 0.2
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
   - robot_name: proteus
+    robot_uri: product_asset:///prefabs/proteuslaserscanner.spawnable
     robot_namespace: robot2
-    position: 
+    position:
       x: -6.0
       y: 7.5
       z: 0.2
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
   - robot_name: proteus
+    robot_uri: product_asset:///prefabs/proteuslaserscanner.spawnable
     robot_namespace: robot3
-    position: 
+    position:
       x: -6.0
       y: -6.0
       z: 0.2
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
 ```
 
 This configuration file contains the data about each robot in a fleet:
-- name (a type of the robot to spawn), 
-- namespace (must be unique per spawned robot),
-- spawning position (spawn position is also used as an AMCL initial estimation). 
-
-In this example, only the `proteus` robot is supported.
+- `robot_name`: identifier for the spawned entity,
+- `robot_uri`: asset URI of the robot prefab to spawn (in `product_asset:///` format),
+- `robot_namespace`: must be unique per spawned robot,
+- `position`: spawn position, also used as the AMCL initial pose estimate,
+- `orientation`: spawn orientation as a quaternion.
 
 You can modify contents of this file to add/remove robots or change their initial positions.
 
@@ -111,11 +127,11 @@ You can also use your robots in the simulation. To do so, you need to:
 - is controlled via the `cmd_vel` topic (see [Robot Control](https://docs.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/#robot-control)).
 
 When you have your robot set up:
-- create a prefab out of it (skip if URDF importer did that for you),
-- load the `Warehouse` level,
-- assign the prefab to the `RobotSpawner` entity inside `ROS2 Spawner Component` with a preferred name.
+- create a prefab out of it (skip if the URDF importer did that for you),
+- build the O3DE project so the prefab is processed into a `.spawnable` asset,
+- load the `Warehouse` level.
 
-Then you can alter `fleet_config.yaml` file to change the robot name to the assigned one, and start the fleet simulation with your robot!
+Then update `fleet_config.yaml` to set `robot_uri` to the `.spawnable` asset path of your prefab (e.g. `product_asset:///prefabs/myrobot.spawnable`) and start the fleet simulation with your robot!
 
 ### Building
 

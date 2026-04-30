@@ -41,10 +41,15 @@ def generate_launch_description():
             robots.append(
                 {
                     "name": robot["robot_name"],
+                    "uri": robot["robot_uri"],
                     "namespace": robot["robot_namespace"],
                     "x_pose": robot["position"]["x"],
                     "y_pose": robot["position"]["y"],
-                    "z_pose": robot["position"]["z"]
+                    "z_pose": robot["position"]["z"],
+                    "x_orientation": robot["orientation"]["x"],
+                    "y_orientation": robot["orientation"]["y"],
+                    "z_orientation": robot["orientation"]["z"],
+                    "w_orientation": robot["orientation"]["w"]
                 }
             )
 
@@ -97,10 +102,15 @@ def generate_launch_description():
             source_file=params_file,
             replacements={
                 '<robot_name>': robot['name'],
+                '<robot_uri>': robot['uri'],
                 '<robot_namespace>': robot['namespace'],
                 '<robot_initial_pose_x>': str(robot['x_pose']),
                 '<robot_initial_pose_y>': str(robot['y_pose']),
-                '<robot_initial_pose_z>': str(robot['z_pose'])
+                '<robot_initial_pose_z>': str(robot['z_pose']),
+                '<robot_initial_orientation_x>': str(robot['x_orientation']),
+                '<robot_initial_orientation_y>': str(robot['y_orientation']),
+                '<robot_initial_orientation_z>': str(robot['z_orientation']),
+                '<robot_initial_orientation_w>': str(robot['w_orientation'])
             })
         
 

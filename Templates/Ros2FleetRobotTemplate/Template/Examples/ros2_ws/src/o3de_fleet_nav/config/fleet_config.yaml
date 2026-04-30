@@ -1,19 +1,37 @@
 fleet:
   - robot_name: proteus
+    robot_uri: product_asset:///prefabs/proteuslaserscanner.spawnable
     robot_namespace: robot1
-    position: 
+    position:
       x: -6.0
       y: 0.5
       z: 0.2
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
   - robot_name: proteus
+    robot_uri: product_asset:///prefabs/proteuslaserscanner.spawnable
     robot_namespace: robot2
-    position: 
+    position:
       x: -6.0
       y: 7.5
       z: 0.2
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
   - robot_name: proteus
+    robot_uri: product_asset:///prefabs/proteuslaserscanner.spawnable
     robot_namespace: robot3
-    position: 
+    position:
       x: -6.0
       y: -6.0
       z: 0.2
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0

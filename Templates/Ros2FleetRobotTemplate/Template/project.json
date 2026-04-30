@@ -38,6 +38,7 @@
         "ROS2Sensors",
         "ScriptCanvasPhysics",
         "ScriptEvents",
+        "SimulationInterfaces",
         "StartingPointInput",
         "TextureAtlas",
         "WhiteBox",
