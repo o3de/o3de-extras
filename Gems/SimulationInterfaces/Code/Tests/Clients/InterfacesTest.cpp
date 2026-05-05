@@ -18,11 +18,9 @@
 #include <AzCore/UserSettings/UserSettingsComponent.h>
 #include <AzCore/std/containers/array.h>
 #include <AzCore/std/string/string_view.h>
-#include <AzQtComponents/Utilities/QtPluginPaths.h>
 #include <AzTest/GemTestEnvironment.h>
-#include <AzToolsFramework/Entity/EditorEntityContextComponent.h>
-#include <AzToolsFramework/ToolsComponents/TransformComponent.h>
-#include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
+
+#include <Common/RuntimeTestApplication.h>
 
 #include <Clients/ROS2SimulationInterfacesSystemComponent.h>
 #include <ROS2/ROS2Bus.h>
@@ -42,8 +40,6 @@
 #include "Mocks/SimulationEntityManagerMock.h"
 #include "Mocks/SimulationFeaturesAggregatorRequestsHandlerMock.h"
 #include "Mocks/SimulationManagerMock.h"
-
-#include <QApplication>
 
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -86,8 +82,7 @@ namespace UnitTest
 
     AZ::ComponentApplication* SimulationInterfaceROS2TestEnvironment::CreateApplicationInstance()
     {
-        // Using ToolsTestApplication to have AzFramework and AzToolsFramework components.
-        return aznew UnitTest::ToolsTestApplication("SimulationInterfaceROS2TestEnvironment");
+        return aznew UnitTest::RuntimeTestApplication("SimulationInterfaceROS2TestEnvironment");
     }
 
     void SimulationInterfaceROS2TestEnvironment::PostSystemEntityActivate()
@@ -648,12 +643,9 @@ namespace UnitTest
 
 } // namespace UnitTest
 
-// required to support running integration tests with Qt and PhysX
 AZTEST_EXPORT int AZ_UNIT_TEST_HOOK_NAME(int argc, char** argv)
 {
     ::testing::InitGoogleMock(&argc, argv);
-    AzQtComponents::PrepareQtPaths();
-    QApplication app(argc, argv);
     AZ::Test::printUnusedParametersWarning(argc, argv);
     AZ::Test::addTestEnvironments({ new UnitTest::SimulationInterfaceROS2TestEnvironment() });
     int result = RUN_ALL_TESTS();
