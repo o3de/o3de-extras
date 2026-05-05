@@ -259,10 +259,10 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
             # We support ${gem_name}.Editor.Tests on this platform, add ${gem_name}.Editor.Tests target which depends on
             # private ${gem_name}.Editor.Private.Object target
             ly_add_target(
-                NAME ${gem_name}.TestApp ${PAL_TRAIT_TEST_TARGET_TYPE}
+                NAME ${gem_name}.Editor.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
                 NAMESPACE Gem
                 FILES_CMAKE
-                    simulationinterfaces_editor_app_test.cmake
+                    simulationinterfaces_editor_tests_files.cmake
                 INCLUDE_DIRECTORIES
                     PRIVATE
                         Tests
@@ -285,9 +285,9 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                     ${PROJECT_NAME}.Assets
             )
 
-            # Add ${gem_name}.TestApp to googletest
+            # Add ${gem_name}.Editor.Tests to googletest
             ly_add_googletest(
-                NAME Gem::${gem_name}.TestApp
+                NAME Gem::${gem_name}.Editor.Tests
             )
 
         endif()
