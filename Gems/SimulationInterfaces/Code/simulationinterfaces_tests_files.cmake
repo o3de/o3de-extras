@@ -5,5 +5,9 @@
 #
 
 set(FILES
-    Tests/Clients/SimulationInterfacesTest.cpp
+    Tests/Common/RuntimeTestApplication.cpp
+    Tests/Common/RuntimeTestApplication.h
+    Tests/Common/RuntimeTestFixture.cpp
+    Tests/Common/RuntimeTestFixture.h
+    Tests/Clients/SimulationInterfaceTests.cpp
 )

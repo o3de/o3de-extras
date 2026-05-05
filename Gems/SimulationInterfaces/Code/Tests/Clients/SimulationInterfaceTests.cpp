@@ -7,7 +7,7 @@
  *
  */
 
-#include "TestFixture.h"
+#include <Common/RuntimeTestFixture.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 namespace UnitTest
 {
@@ -189,12 +189,9 @@ namespace UnitTest
     }
 } // namespace UnitTest
 
-// required to support running integration tests with Qt and PhysX
 AZTEST_EXPORT int AZ_UNIT_TEST_HOOK_NAME(int argc, char** argv)
 {
     ::testing::InitGoogleMock(&argc, argv);
-    AzQtComponents::PrepareQtPaths();
-    QApplication app(argc, argv);
     AZ::Test::printUnusedParametersWarning(argc, argv);
     AZ::Test::addTestEnvironments({ new UnitTest::SimulationInterfaceTestEnvironment() });
     int result = RUN_ALL_TESTS();

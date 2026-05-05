@@ -241,6 +241,9 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                     AZ::AzTest
                     AZ::AzFramework
                     Gem::${gem_name}.Private.Object
+            RUNTIME_DEPENDENCIES
+                Gem::PhysX5
+                Gem::LmbrCentral
         )
 
         # Add ${gem_name}.Tests to googletest
@@ -255,37 +258,6 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
         if(PAL_TRAIT_SIMULATIONINTERFACES_EDITOR_TEST_SUPPORTED)
             # We support ${gem_name}.Editor.Tests on this platform, add ${gem_name}.Editor.Tests target which depends on
             # private ${gem_name}.Editor.Private.Object target
-            ly_add_target(
-                NAME ${gem_name}.Editor.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
-                NAMESPACE Gem
-                FILES_CMAKE
-                    simulationinterfaces_editor_tests_files.cmake
-                INCLUDE_DIRECTORIES
-                    PRIVATE
-                        Tests
-                        Source
-                        Include
-                BUILD_DEPENDENCIES
-                    PRIVATE
-                        AZ::AzTest
-                        AZ::AzTestShared
-                        AZ::AzToolsFramework
-                        Legacy::CryCommon
-                        Legacy::EditorCommon
-                        Legacy::Editor.Headers
-                        AZ::AzManipulatorTestFramework.Static
-                        Gem::${gem_name}.API
-                        Gem::${gem_name}.Editor.Private.Object
-                RUNTIME_DEPENDENCIES
-                    Gem::PhysX5
-                    Gem::LmbrCentral
-            )
-
-            # Add ${gem_name}.Editor.Tests to googletest
-            ly_add_googletest(
-                NAME Gem::${gem_name}.Editor.Tests
-            )
-
             ly_add_target(
                 NAME ${gem_name}.TestApp ${PAL_TRAIT_TEST_TARGET_TYPE}
                 NAMESPACE Gem
