@@ -248,6 +248,10 @@
             "isTemplated": false
         },
         {
+            "file": "Registry/simulationinterface_settings.setreg",
+            "isTemplated": false
+        },
+        {
             "file": "Resources/GameSDK.ico",
             "isTemplated": false
         },
