@@ -4,7 +4,7 @@
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "summary": "A repository to hold various gems, projects, and templates for the O3DE engine.",
     "additional_info": "Extras gems, projects, and templates for O3DE. See the README.md at the root of this repository for more information",
-    "last_updated": "2025-12-09",
+    "last_updated": "2025-05-12",
     "$schemaVersion": "1.0.0",
     "gems_data": [
         {
@@ -178,7 +178,7 @@
                 "Atom_Feature_Common",
                 "Atom_Component_DebugCamera",
                 "CommonFeaturesAtom",
-                "PhysX5",
+                "PhysX",
                 "StartingPointInput"
             ],
             "restricted": "ROS2",
@@ -379,6 +379,30 @@
                     "engine_api_dependencies": [],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.5.0-gem.zip",
                     "sha256": "1142a78256af12bbc1b49de0ff1aab7b9251b99ee913ea47fa2c23ae6a476512"
+                },
+                {
+                    "version": "3.5.1",
+                    "origin_url": "https://robotec.ai",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
+                    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem",
+                    "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+                    "dependencies": [
+                        "Atom_RPI",
+                        "Atom_Feature_Common",
+                        "Atom_Component_DebugCamera",
+                        "CommonFeaturesAtom",
+                        "PhysX5",
+                        "PrimitiveAssets",
+                        "StartingPointInput",
+                        "LevelGeoreferencing"
+                    ],
+                    "compatible_engines": [
+                        "o3de-sdk>=2.4.0",
+                        "o3de>=2.4.0"
+                    ],
+                    "engine_api_dependencies": [],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.5.1-gem.zip",
+                    "sha256": "de9b58f9f50ca7fcaa60c8e8734131bd21ff390cc8cb40f660f0d358860fd6a9"
                 },
                 {
                     "version": "4.0.0",
@@ -901,6 +925,15 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.0.1-gem.zip",
                     "sha256": "e1c6a8b0d34b50886b2cb0a11523941d879ec0ed7582785bd7ec229ceba4a17d"
+                },
+                {
+                    "version": "2.0.2",
+                    "dependencies": [
+                        "ROS2>=3.5.0",
+                        "DebugDraw"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.0.2-gem.zip",
+                    "sha256": "09456bcc95787d3ab54c662c2819555e876ad62877f04d9e6f9d0f045c0bb019"
                 },
                 {
                     "version": "2.1.0",
