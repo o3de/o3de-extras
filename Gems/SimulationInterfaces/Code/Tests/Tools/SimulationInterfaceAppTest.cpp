@@ -10,6 +10,8 @@
 #include "TestFixture.h"
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <ROS2/Frame/ROS2FrameComponentBus.h>
+#include <AzCore/Asset/AssetManager.h>
+#include <AzFramework/Spawnable/Spawnable.h>
 namespace UnitTest
 {
     class SimulationInterfaceTestEnvironmentWithAssets : public SimulationInterfaceTestEnvironment
@@ -47,6 +49,14 @@ namespace UnitTest
             AZ::Data::s_invalidAssetType,
             false);
         AZ_Assert(assetId.IsValid(), "Failed to get asset id for %s", TestSpawnable.c_str());
+
+        // Block until the spawnable is fully loaded so the first SpawnEntity call doesn't race the
+        // async asset I/O job. SpawnableEntitiesManager requeues SpawnAllEntitiesCommand until
+        // m_spawnable.IsReady(), so a not-yet-loaded asset would silently stall the test.
+        auto preloadedAsset = AZ::Data::AssetManager::Instance().GetAsset<AzFramework::Spawnable>(
+            assetId, AZ::Data::AssetLoadBehavior::PreLoad);
+        AZ::Data::AssetManager::Instance().BlockUntilLoadComplete(preloadedAsset);
+        AZ_Assert(preloadedAsset.IsReady(), "Test spawnable %s did not finish loading", TestSpawnable.c_str());
     }
 
     int getNumberOfEntities()

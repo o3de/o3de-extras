@@ -172,6 +172,10 @@ namespace UnitTest
         AZ_Assert(app, "Failed to get application");
         for (int i = 0; i < numTicks; i++)
         {
+            // System tick drains AssetBus (so OnAssetReady notifications fire and assets transition
+            // to Ready) and any SystemTickBus::QueueFunction() lambdas gems posted at Activate time.
+            // Without it, SpawnableEntitiesManager requeues SpawnAllEntitiesCommand forever.
+            app->TickSystem();
             app->Tick();
         }
     }
