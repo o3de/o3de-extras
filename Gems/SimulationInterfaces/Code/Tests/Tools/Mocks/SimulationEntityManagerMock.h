@@ -26,6 +26,7 @@ namespace UnitTest
         MOCK_METHOD1(DeleteAllEntities, void(DeletionCompletedCb completedCb));
         MOCK_METHOD0(GetSpawnables, AZ::Outcome<SpawnableList, FailedResult>());
         MOCK_METHOD0(ResetAllEntitiesToInitialState, AZ::Outcome<void, FailedResult>());
+        MOCK_METHOD2(SpawnEntities, void(const AZStd::vector<SpawningEntity>& spawningEntities, BatchSpawnCompletedCb completedCb));
         MOCK_METHOD7(
             SpawnEntity,
             void(
@@ -45,5 +46,6 @@ namespace UnitTest
         MOCK_METHOD1(GetEntityBounds, AZ::Outcome<Bounds, FailedResult>(const AZStd::string& name));
         MOCK_METHOD1(GetEntityId, AZ::Outcome<AZ::EntityId, FailedResult>(const AZStd::string& name));
         MOCK_METHOD1(GetEntityRoot, AZ::Outcome<AZ::EntityId, FailedResult>(const AZStd::string& name));
+        MOCK_METHOD1(GetSimulatedBodyNameById, AZ::Outcome<AZStd::string, FailedResult>(const AZ::EntityId& entityId));
     };
 } // namespace UnitTest

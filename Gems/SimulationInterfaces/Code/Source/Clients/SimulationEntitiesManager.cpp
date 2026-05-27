@@ -14,6 +14,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Console/IConsole.h>
+#include <AzCore/Math/Capsule.h>
 #include <AzCore/Math/Obb.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/RTTI/RTTIMacros.h>
@@ -26,17 +27,19 @@
 #include <AzCore/std/string/regex.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Components/TransformComponent.h>
+#include <AzFramework/Entity/EntityContextBus.h>
+#include <AzFramework/Entity/GameEntityContextBus.h>
 #include <AzFramework/Physics/Common/PhysicsSceneQueries.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
+#include <AzFramework/Physics/SimulatedBodies/StaticRigidBody.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
-#include <AzFramework/Entity/EntityContextBus.h>
-#include <AzFramework/Entity/GameEntityContextBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <SimulationInterfaces/Bounds.h>
+#include <SimulationInterfaces/PathUtils.h>
 #include <SimulationInterfaces/Result.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
@@ -204,7 +207,8 @@ namespace SimulationInterfaces
                 simulation_interfaces::msg::SimulatorFeatures::ENTITY_BOUNDS,
                 simulation_interfaces::msg::SimulatorFeatures::DELETING,
                 simulation_interfaces::msg::SimulatorFeatures::SPAWNABLES,
-                simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
+                simulation_interfaces::msg::SimulatorFeatures::SPAWNING,
+                simulation_interfaces::msg::SimulatorFeatures::SPAWNING_ENTITIES });
     }
 
     void SimulationEntitiesManager::Deactivate()
@@ -347,9 +351,14 @@ namespace SimulationInterfaces
             AZ::Outcome<AzPhysics::SimulatedBody*, AZStd::string> simulatedBody = Utils::GetSimulatedBody(entityId);
             if (simulatedBody.IsSuccess())
             {
+                // check for dynamic and static rigid bodies
                 auto rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(simulatedBody.GetValue());
+                auto staticRigidBody = azdynamic_cast<AzPhysics::StaticRigidBody*>(simulatedBody.GetValue());
+
+                bool hasDynamicShapes = rigidBody ? rigidBody->GetShapeCount() > 0 : false;
+                bool hasStaticShapes = staticRigidBody ? staticRigidBody->GetShapeCount() > 0 : false;
                 // entity is simulated body and has collider, check overlap
-                if (rigidBody && rigidBody->GetShapeCount() > 0)
+                if (hasDynamicShapes || hasStaticShapes)
                 {
                     // perform relatively expensive search only for entities which really can be inside the shape
                     if (AZStd::ranges::contains(result.m_hits, entityId, &AzPhysics::SceneQueryHit::m_entityId))
@@ -360,6 +369,8 @@ namespace SimulationInterfaces
                     continue;
                 }
             }
+
+            // Allow check for all supported shapes. Simulation interfaces standard constraints are checked in ROS 2 layer of the node.
 
             // for non physical or no-colliding entities check if World TM is inside the control shape
             AZ::Vector3 worldTranslation;
@@ -381,9 +392,17 @@ namespace SimulationInterfaces
                     entities.push_back(name);
                 }
             }
+            else if (auto capsuleShape = dynamic_cast<Physics::CapsuleShapeConfiguration*>(shape.get()))
+            {
+                const auto capsule = capsuleShape->ToCapsule(shapePose);
+                if (capsule.Contains(worldTranslation))
+                {
+                    entities.push_back(name);
+                }
+            }
             else
             {
-                AZ_Warning("SimulationInterfaces", false, "Unsupported bounds type, skipped");
+                AZ_WarningOnce("SimulationInterfaces", false, "Non-physical entities support only primitive shapes for bounds check");
             }
         }
         return entities;
@@ -713,7 +732,7 @@ namespace SimulationInterfaces
             if (isSpawnable)
             {
                 Spawnable spawnable;
-                spawnable.m_uri = Utils::RelPathToUri(assetInfo.m_relativePath);
+                spawnable.m_uri = PathUtilities::RelPathToUri(assetInfo.m_relativePath);
                 spawnables.push_back(spawnable);
             }
         };
@@ -755,14 +774,13 @@ namespace SimulationInterfaces
         if (!initialPose.IsOrthogonal())
         {
             AZ_Warning("SimulationInterfaces", false, "Initial pose is not orthogonal");
-            completedCb(
-                AZ::Failure(FailedResult(
-                    simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
+            completedCb(AZ::Failure(FailedResult(
+                simulation_interfaces::srv::SpawnEntity::Response::INVALID_POSE, "Initial pose is not orthogonal"))); //  INVALID_POSE
             return;
         }
 
         // get rel path from uri
-        const AZStd::string relPath = Utils::UriToRelPath(uri);
+        const AZStd::string relPath = PathUtilities::UriToRelPath(uri);
 
         // create spawnable
         AZ::Data::AssetId assetId;
@@ -880,6 +898,68 @@ namespace SimulationInterfaces
         m_spawnCompletedCallbacks[ticketId] = data;
         m_spawnedTickets[ticketId] = ticket;
         AZ_Info("SimulationInterfaces", "Spawning uri %s with ticket id %d\n", uri.c_str(), ticketId);
+    }
+
+    void SimulationEntitiesManager::SpawnEntities(const AZStd::vector<SpawningEntity>& spawningEntities, BatchSpawnCompletedCb completedCb)
+    {
+        if (auto outcome = IsWorldLoaded(); !outcome.IsSuccess())
+        {
+            AZ_Warning(
+                "SimulationInterfaces",
+                false,
+                "SpawnEntities called but world is not loaded: %s",
+                outcome.GetError().m_errorString.c_str());
+            if (completedCb)
+            {
+                BatchSpawnResult result;
+                result.m_spawnResults.reserve(spawningEntities.size());
+                for (size_t i = 0; i < spawningEntities.size(); ++i)
+                {
+                    result.m_spawnResults.push_back(AZ::Failure(outcome.GetError()));
+                }
+                completedCb(result);
+            }
+            return;
+        }
+
+        if (spawningEntities.empty())
+        {
+            AZ_Warning("SimulationInterfaces", false, "SpawnEntities called with an empty list of entities");
+            if (completedCb)
+            {
+                completedCb(BatchSpawnResult{});
+            }
+            return;
+        }
+
+        auto batchContext = AZStd::make_shared<BatchSpawnContext>();
+        batchContext->m_completedCb = AZStd::move(completedCb);
+        batchContext->m_result.m_spawnResults.resize(spawningEntities.size());
+
+        for (size_t i = 0; i < spawningEntities.size(); ++i)
+        {
+            const auto& spawningEntity = spawningEntities[i];
+
+            SpawnCompletedCb wrappedCompletedCb =
+                [batchContext, i, entityCompletedCb = spawningEntity.completedCb](const AZ::Outcome<AZStd::string, FailedResult>& outcome)
+            {
+                if (entityCompletedCb)
+                {
+                    entityCompletedCb(outcome);
+                }
+
+                batchContext->m_result.m_spawnResults[i] = outcome;
+            };
+
+            SpawnEntity(
+                spawningEntity.name,
+                spawningEntity.uri,
+                spawningEntity.entityNamespace,
+                spawningEntity.initialPose,
+                spawningEntity.allowRename,
+                spawningEntity.preinsertionCb,
+                AZStd::move(wrappedCompletedCb));
+        }
     }
 
     AZStd::string SimulationEntitiesManager::GetSimulatedEntityName(AZ::EntityId entityId, const AZStd::string& proposedName) const
@@ -1045,6 +1125,22 @@ namespace SimulationInterfaces
                 AZStd::string::format("Entity with given name \"%s\" doesn't exists in available cache of prefab roots", name.c_str())));
         }
         return AZ::Success(m_simulatedEntityToPrefabRoot.at(name));
+    }
+
+    AZ::Outcome<AZStd::string, FailedResult> SimulationEntitiesManager::GetSimulatedBodyNameById(const AZ::EntityId& entityId)
+    {
+        const auto it = m_entityIdToSimulatedEntityMap.find(entityId);
+
+        if (it == m_entityIdToSimulatedEntityMap.end())
+        {
+            return AZ::Failure(SimulationInterfaces::FailedResult(
+                simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED,
+                AZStd::string::format(
+                    "Entity with given ID \"%s\" doesn't exist in the available cache of simulated entities names",
+                    entityId.ToString().c_str())));
+        }
+
+        return AZ::Success(it->second);
     }
 
 } // namespace SimulationInterfaces

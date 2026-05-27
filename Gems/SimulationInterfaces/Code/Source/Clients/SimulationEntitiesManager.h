@@ -58,6 +58,9 @@ namespace SimulationInterfaces
             const bool allowRename,
             PreInsertionCb preinsertionCb,
             SpawnCompletedCb completedCb) override;
+
+        void SpawnEntities(const AZStd::vector<SpawningEntity>& spawningEntities, BatchSpawnCompletedCb completedCb) override;
+
         AZ::Outcome<void, FailedResult> ResetAllEntitiesToInitialState() override;
         AZ::Outcome<AZStd::string, FailedResult> RegisterNewSimulatedBody(
             const AZStd::string& proposedName, const AZ::EntityId& entityId) override;
@@ -67,6 +70,7 @@ namespace SimulationInterfaces
         AZ::Outcome<Bounds, FailedResult> GetEntityBounds(const AZStd::string& name) override;
         AZ::Outcome<AZ::EntityId, FailedResult> GetEntityId(const AZStd::string& name) override;
         AZ::Outcome<AZ::EntityId, FailedResult> GetEntityRoot(const AZStd::string& name) override;
+        AZ::Outcome<AZStd::string, FailedResult> GetSimulatedBodyNameById(const AZ::EntityId& entityId) override;
 
         // helper methods to filter entities by different filters
         AZStd::vector<AZStd::string> FilterEntitiesByCategories(
@@ -128,6 +132,21 @@ namespace SimulationInterfaces
             SpawnCompletedCb m_completedCb; //! User callback to be called when the entity is registered
             PreInsertionCb m_preInsertionCb; //! User callback to be called when entity prefab is added but inactive
         };
+
+        struct BatchSpawnContext
+        {
+            BatchSpawnResult m_result;
+            BatchSpawnCompletedCb m_completedCb;
+
+            ~BatchSpawnContext()
+            {
+                if (m_completedCb)
+                {
+                    m_completedCb(m_result);
+                }
+            }
+        };
+
         AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, SpawnCompletedCbData> m_spawnCompletedCallbacks;
     };
 

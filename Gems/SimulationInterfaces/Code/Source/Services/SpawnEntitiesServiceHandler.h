@@ -11,23 +11,23 @@
 #include <AzCore/std/string/string_view.h>
 #include <Interfaces/ISimulationFeaturesBase.h>
 #include <ROS2/Handlers/ROS2ServiceBase.h>
-#include <simulation_interfaces/srv/spawn_entity.hpp>
+#include <simulation_interfaces/srv/spawn_entities.hpp>
 
 namespace ROS2SimulationInterfaces
 {
-    class SpawnEntityServiceHandler
-        : public ROS2::ROS2ServiceBase<simulation_interfaces::srv::SpawnEntity>
+    class SpawnEntitiesServiceHandler
+        : public ROS2::ROS2ServiceBase<simulation_interfaces::srv::SpawnEntities>
         , public ISimulationFeaturesBase
     {
     public:
         AZStd::string_view GetTypeName() const override
         {
-            return "SpawnEntity";
+            return "SpawnEntities";
         }
 
         AZStd::string_view GetDefaultName() const override
         {
-            return "spawn_entity";
+            return "spawn_entities";
         }
         AZStd::unordered_set<SimulationFeatureType> GetProvidedFeatures() override;
 
