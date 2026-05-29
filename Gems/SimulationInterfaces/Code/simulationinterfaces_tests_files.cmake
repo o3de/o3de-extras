@@ -7,7 +7,7 @@
 set(FILES
     Tests/Common/RuntimeTestApplication.cpp
     Tests/Common/RuntimeTestApplication.h
-    Tests/Common/RuntimeTestFixture.cpp
-    Tests/Common/RuntimeTestFixture.h
+    Tests/Common/SimulationInterfaceTestFixture.cpp
+    Tests/Common/SimulationInterfaceTestFixture.h
     Tests/Clients/SimulationInterfaceTests.cpp
 )
