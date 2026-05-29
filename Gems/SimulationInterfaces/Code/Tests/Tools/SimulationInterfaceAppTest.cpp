@@ -65,6 +65,8 @@ namespace UnitTest
         }
     };
 
+    //! Extends the editor test environment to load the asset catalog and preload the test spawnable
+    //! during PostSystemEntityActivate, so SpawnEntity-based tests have a ready asset to spawn from.
     class SimulationInterfaceTestEnvironmentWithAssets : public SimulationInterfaceTestEnvironment
     {
     protected:
