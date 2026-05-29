@@ -241,6 +241,9 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                     AZ::AzTest
                     AZ::AzFramework
                     Gem::${gem_name}.Private.Object
+            RUNTIME_DEPENDENCIES
+                Gem::PhysX5
+                Gem::LmbrCentral
         )
 
         # Add ${gem_name}.Tests to googletest
@@ -279,6 +282,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 RUNTIME_DEPENDENCIES
                     Gem::PhysX5
                     Gem::LmbrCentral
+                    ${PROJECT_NAME}.Assets
             )
 
             # Add ${gem_name}.Editor.Tests to googletest
@@ -286,70 +290,33 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 NAME Gem::${gem_name}.Editor.Tests
             )
 
-            ly_add_target(
-                NAME ${gem_name}.TestApp ${PAL_TRAIT_TEST_TARGET_TYPE}
-                NAMESPACE Gem
-                FILES_CMAKE
-                    simulationinterfaces_editor_app_test.cmake
-                INCLUDE_DIRECTORIES
-                    PRIVATE
-                        Tests
-                        Source
-                        Include
-                BUILD_DEPENDENCIES
-                    PRIVATE
-                        AZ::AzTest
-                        AZ::AzTestShared
-                        AZ::AzToolsFramework
-                        Legacy::CryCommon
-                        Legacy::EditorCommon
-                        Legacy::Editor.Headers
-                        AZ::AzManipulatorTestFramework.Static
-                        Gem::${gem_name}.API
-                        Gem::${gem_name}.Editor.Private.Object
-                RUNTIME_DEPENDENCIES
-                    Gem::PhysX5
-                    Gem::LmbrCentral
-                    ${PROJECT_NAME}.Assets
-            )
-
-            # Add ${gem_name}.TestApp to googletest
-            ly_add_googletest(
-                NAME Gem::${gem_name}.TestApp
-            )
-
-            ly_add_target(
-                NAME ${gem_name}.ROS2Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
-                NAMESPACE Gem
-                FILES_CMAKE
-                    ros2_simulationinterfaces_tests_files.cmake
-                INCLUDE_DIRECTORIES
-                    PRIVATE
-                        Tests
-                        Source
-                        Include
-                BUILD_DEPENDENCIES
-                    PRIVATE
-                        AZ::AzTest
-                        AZ::AzTestShared
-                        AZ::AzToolsFramework
-                        Legacy::CryCommon
-                        Legacy::EditorCommon
-                        Legacy::Editor.Headers
-                        AZ::AzManipulatorTestFramework.Static
-                        Gem::${gem_name}.API
-                        Gem::${gem_name}.Editor.Private.Object
-                        Gem::SimulationInterfaces.API
-                        Gem::ROS2.Static
-                        Gem::${gem_name}.Editor.Private.Object
-                RUNTIME_DEPENDENCIES
-                    Gem::ROS2
-                )
-
-            # Add ${gem_name}.ROS2Tests to googletest
-            ly_add_googletest(
-                NAME Gem::${gem_name}.ROS2Tests
-            )
         endif()
+    endif()
+
+    if(PAL_TRAIT_SIMULATIONINTERFACES_TEST_SUPPORTED)
+        ly_add_target(
+            NAME ${gem_name}.ROS2Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
+            NAMESPACE Gem
+            FILES_CMAKE
+                ros2_simulationinterfaces_tests_files.cmake
+            INCLUDE_DIRECTORIES
+                PRIVATE
+                    Tests
+                    Source
+                    Include
+            BUILD_DEPENDENCIES
+                PRIVATE
+                    AZ::AzTest
+                    AZ::AzTestShared
+                    AZ::AzFramework
+                    Gem::${gem_name}.API
+                    Gem::${gem_name}.Private.Object
+                    Gem::ROS2.Static
+        )
+
+        # Add ${gem_name}.ROS2Tests to googletest
+        ly_add_googletest(
+            NAME Gem::${gem_name}.ROS2Tests
+        )
     endif()
 endif()

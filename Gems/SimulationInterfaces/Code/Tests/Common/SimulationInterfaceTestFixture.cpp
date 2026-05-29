@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) Contributors to the Open 3D Engine Project.
  * For complete copyright and license terms please see the LICENSE at the root of this distribution.
@@ -7,42 +6,16 @@
  *
  */
 
-#include "TestFixture.h"
+#include "SimulationInterfaceTestFixture.h"
+
+#include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/Component/EntityId.h>
-#include <Clients/SimulationEntitiesManager.h>
-#include <Clients/SimulationManager.h>
+#include <AzCore/Component/TransformBus.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <gtest/gtest.h>
+
 namespace UnitTest
 {
-    void SimulationInterfaceTestEnvironment::AddGemsAndComponents()
-    {
-        constexpr AZStd::array<AZStd::string_view, 4> requiredGems = { "PhysX5", // required for PhysX Dynamic
-                                                                       "LmbrCentral", // for shapes
-                                                                       "ROS2", // For frame component
-                                                                       "SimulationInterfaces" };
-        AddActiveGems(requiredGems);
-        AddDynamicModulePaths({ "PhysX5.Gem" });
-        AddDynamicModulePaths({ "LmbrCentral" });
-        AddDynamicModulePaths({ "ROS2" });
-        AddComponentDescriptors(
-            AZStd::initializer_list<AZ::ComponentDescriptor*>{ SimulationInterfaces::SimulationEntitiesManager::CreateDescriptor(),
-                                                               SimulationInterfaces::SimulationManager::CreateDescriptor() });
-        AddRequiredComponents(
-            { SimulationInterfaces::SimulationEntitiesManager::TYPEINFO_Uuid(), SimulationInterfaces::SimulationManager::TYPEINFO_Uuid() });
-    }
-
-    void SimulationInterfaceTestEnvironment::PostSystemEntityActivate()
-    {
-        AZ::UserSettingsComponentRequestBus::Broadcast(&AZ::UserSettingsComponentRequests::DisableSaveOnFinalize);
-    }
-
-    AZ::ComponentApplication* SimulationInterfaceTestEnvironment::CreateApplicationInstance()
-    {
-        // Using ToolsTestApplication to have AzFramework and AzToolsFramework components.
-        return aznew UnitTest::ToolsTestApplication("SimulationInterfaceTestEnvironment");
-    }
-
     void SimulationInterfaceTestFixture::AddAsset(const AZStd::string& assetPath)
     {
         AZ::Data::AssetInfo info;
@@ -71,7 +44,8 @@ namespace UnitTest
         entity->CreateComponent(AZ::Uuid(PhysXShapeColliderComponentTypeId));
         entity->CreateComponent(AZ::Uuid(SphereShapeComponentTypeId));
         entity->Init();
-        entity->Activate();
+        entity->SetEntityActive(true);
+        entity->ApplyEffectiveActiveState();
         AZ_Assert(entity->GetState() == AZ::Entity::State::Active, "Entity is not active");
 
         // register entity
@@ -104,10 +78,12 @@ namespace UnitTest
                 output, &SimulationInterfaces::SimulationEntityManagerRequests::UnregisterSimulatedBody, entity.second->GetName());
             AZ_Assert(
                 output.IsSuccess(), "Failed to unregister entity from simulation_interfaces, %s", output.GetError().m_errorString.c_str());
-            entity.second->Deactivate();
+            entity.second->SetEntityActive(false);
+            entity.second->ApplyEffectiveActiveState();
         }
         m_entities.clear();
     }
+
     void SimulationInterfaceTestFixture::DeleteEntity(const AZ::EntityId& entityId)
     {
         auto findIt = m_entities.find(entityId);
@@ -118,7 +94,8 @@ namespace UnitTest
                 output, &SimulationInterfaces::SimulationEntityManagerRequests::UnregisterSimulatedBody, findIt->second->GetName());
             AZ_Assert(
                 output.IsSuccess(), "Failed to unregister entity from simulation_interfaces, %s", output.GetError().m_errorString.c_str());
-            findIt->second->Deactivate();
+            findIt->second->SetEntityActive(false);
+            findIt->second->ApplyEffectiveActiveState();
             m_entities.erase(findIt);
         }
     }
@@ -158,9 +135,10 @@ namespace UnitTest
 
     void SimulationInterfaceTestFixture::StepPhysics(int numSteps)
     {
+        auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
+        AZ_Assert(physicsSystem, "Failed to get physics system interface");
         for (int i = 0; i < numSteps; i++)
         {
-            auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
             physicsSystem->Simulate(1.0f / 60.0f);
         }
     }
@@ -173,6 +151,10 @@ namespace UnitTest
         for (int i = 0; i < numTicks; i++)
         {
             app->Tick();
+            // System tick drains AssetBus (so OnAssetReady notifications fire and assets transition
+            // to Ready) and any SystemTickBus::QueueFunction() lambdas gems posted at Activate time.
+            // Without it, SpawnableEntitiesManager requeues SpawnAllEntitiesCommand forever.
+            app->TickSystem();
         }
     }
 
