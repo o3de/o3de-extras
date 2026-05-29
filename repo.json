@@ -2729,6 +2729,11 @@
                     "version": "2.1.0",
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/multiplayer-2.1.0-template.zip",
                     "sha256": "4020f7cbbca61acdddb71ec0054798aa6ea6bd47d3b56547754bd8e1f3562420"
+                },
+                {
+                    "version": "2.1.1",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/multiplayer-2.1.1-template.zip",
+                    "sha256": "82cc1fea13d68820f6fa6129e2fbf59732984ed0f27b48f065e7d86e26c621a2"
                 }
             ]
         },
