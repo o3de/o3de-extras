@@ -11,7 +11,7 @@ include(FetchContent)
 FetchContent_Declare(
     Tracy
     GIT_REPOSITORY "https://github.com/wolfpld/tracy.git"
-    GIT_TAG "5d542dc09f3d9378d005092a4ad446bd405f819a" # version 0.11.1
+    GIT_TAG "05cceee0df3b8d7c6fa87e9638af311dbabc63cb" # version 0.13.1
 )
 
 set(TRACY_ENABLE ON)
@@ -20,7 +20,9 @@ set(TRACY_ON_DEMAND ON)
 
 FetchContent_MakeAvailable(Tracy)
 
-message(STATUS "TracyProfiler gem uses https://github.com/wolfpld/tracy version 0.11.1 (License: BSD-3-Clause)")
+message(STATUS "TracyProfiler gem uses https://github.com/wolfpld/tracy version 0.13.1 (License: BSD-3-Clause)")
+
+target_compile_options(TracyClient ${O3DE_COMPILE_OPTION_DISABLE_WARNINGS})
 
 # Let's not clutter the root of any IDE folder structure with 3rd party dependencies
 # Setting the FOLDER makes it show up there in the solution build in VS and similarly
