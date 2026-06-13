@@ -162,7 +162,7 @@
             <object-type name="Config"/>
         </object-type>
         <object-type name="FileDialog">     
-            <modify-function signature="GetSaveFileName(QWidget*,const QString&amp;,const QString&amp;,const QString&amp;,QString*,QFlags&lt;QFileDialog::Option&gt;)" allow-thread="yes">
+            <modify-function signature="GetSaveFileName(QWidget*,const QString&amp;,const QString&amp;,const QString&amp;,QString*,QFileDialog::Options)" allow-thread="yes">
                 <inject-documentation format="target" mode="append">
                     This method is works in the same way as the cpp version, with the exception that the selected filter
                     is returned in a tuple with the selected filename (filename, filter), rather than being stored in the 

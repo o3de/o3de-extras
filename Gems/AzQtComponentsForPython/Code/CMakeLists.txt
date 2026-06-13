@@ -11,7 +11,7 @@ o3de_pal_dir(pal_dir ${CMAKE_CURRENT_LIST_DIR}/Platform/${PAL_PLATFORM_NAME} "${
 include(${pal_dir}/PAL_${PAL_PLATFORM_NAME_LOWERCASE}.cmake)
 
 if (PAL_TRAIT_AZQTCOMPONENTSFORPYTHON_SUPPORTED)   
-    find_package(Qt5 5.12 REQUIRED COMPONENTS Core Gui Widgets)
+    find_package(Qt6 6.2 REQUIRED COMPONENTS Core Gui Widgets)
     
     # Find the qt package location.
     ly_get_package_association("Qt" QT_PACKAGE_NAME)
