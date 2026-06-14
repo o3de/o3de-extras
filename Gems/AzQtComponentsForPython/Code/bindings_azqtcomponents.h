@@ -8,6 +8,8 @@
  
 #pragma once
 
+#include <Python.h>
+
 #include <AzQtComponents/Components/ButtonDivider.h>
 #include <AzQtComponents/Components/ButtonStripe.h>
 #include <AzQtComponents/Components/ConfigHelpers.h>
@@ -39,7 +41,6 @@
 #include <AzQtComponents/Components/StylesheetPreprocessor.h>
 #include <AzQtComponents/Components/TagSelector.h>
 #include <AzQtComponents/Components/Titlebar.h>
-#include <AzQtComponents/Components/TitleBarOverdrawHandler.h>
 #include <AzQtComponents/Components/ToolBarArea.h>
 #include <AzQtComponents/Components/ToolButtonComboBox.h>
 #include <AzQtComponents/Components/ToolButtonLineEdit.h>

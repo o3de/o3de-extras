@@ -12,6 +12,7 @@
     <object-type name="QSlider" generate="no"/>
     
     <object-type name="FlowLayout">
+        <inject-code class="native" position="beginning" file="glue/qtwidgets.cpp" snippet="qwidget-retrieveobjectname"/>
         <inject-code class="native" position="beginning" file="glue/qtwidgets.cpp" snippet="qlayout-help-functions"/>
     </object-type>
      
@@ -24,6 +25,12 @@
         <object-type name="ButtonStripe"/>
         
         <namespace-type name="ConfigHelpers" generate="yes">
+            <inject-code class="native" position="beginning">
+                #ifdef _MSC_VER
+                #pragma warning(disable:4505)
+                #endif
+            </inject-code>
+
             <object-type name="GroupGuard"/>
             
             <rejection class="*" function-name="read"/>
@@ -180,9 +187,9 @@
                     //%RETURN_TYPE retval_ = %CPPSELF.%FUNCTION_NAME(%1, %2, %3, %4, &amp;%5, %6);
                 
                     %RETURN_TYPE retval_ = %CPPSELF.GetSaveFileName_(%1, %2, %3, %4, &amp;%5, %6);
-                    %PYARG_0 = PyTuple_New(2);
-                    PyTuple_SET_ITEM(%PYARG_0, 0, %CONVERTTOPYTHON[%RETURN_TYPE](retval_));
-                    PyTuple_SET_ITEM(%PYARG_0, 1, %CONVERTTOPYTHON[%ARG5_TYPE](%5));
+                    pyResult = PyTuple_New(2);
+                    PyTuple_SetItem(pyResult, 0, %CONVERTTOPYTHON[%RETURN_TYPE](retval_));
+                    PyTuple_SetItem(pyResult, 1, %CONVERTTOPYTHON[QString](%5));
 
                 </inject-code>
             </modify-function>
@@ -203,7 +210,13 @@
         
         <object-type name="AzMessageBox"/>
         
-        <namespace-type name="Internal" generate="yes"/>
+        <namespace-type name="Internal" generate="yes">
+            <inject-code class="native" position="beginning">
+                #ifdef _MSC_VER
+                #pragma warning(disable:4505)
+                #endif
+            </inject-code>
+        </namespace-type>
         <object-type name="OverlayWidgetButton"/>
         
         <object-type name="ProgressBar">

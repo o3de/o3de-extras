@@ -23,6 +23,9 @@ if (PAL_TRAIT_AZQTCOMPONENTSFORPYTHON_SUPPORTED)
         
     #Define the shared library for which we will create bindings.
     set_property(TARGET ${AZQTCOMPONENTS_LIBRARY} PROPERTY PREFIX "")
+    # Ensure Python development headers are available for Shiboken
+    find_package(Python3 COMPONENTS Development REQUIRED)
+    set(PYTHON_INCLUDE_DIRS ${Python3_INCLUDE_DIRS})
     
     add_shiboken_project(
         NAME AzQtComponentsForPython
@@ -39,10 +42,15 @@ if (PAL_TRAIT_AZQTCOMPONENTSFORPYTHON_SUPPORTED)
             ${LY_ROOT_FOLDER}/Code/Framework/AzCore 
             ${LY_ROOT_FOLDER}/Code/Framework/AzQtComponents
             ${LY_ROOT_FOLDER}/Code/Framework/AzCore/Platform/${PAL_PLATFORM_NAME} 
+            ${PYTHON_INCLUDE_DIRS}
             ${QT_MODULE_DIR}/include
             ${QT_MODULE_DIR}/include/QtWidgets
             ${QT_MODULE_DIR}/include/QtCore
             ${QT_MODULE_DIR}/include/QtGui
     )
+
+    if (TARGET Gem::AzQtComponentsForPython.Editor)
+        target_compile_options(Gem::AzQtComponentsForPython.Editor PRIVATE /wd4505)
+    endif()
     
 endif()
