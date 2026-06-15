@@ -10,13 +10,17 @@ o3de_pal_dir(pal_dir ${CMAKE_CURRENT_LIST_DIR}/Platform/${PAL_PLATFORM_NAME} "${
 
 include(${pal_dir}/PAL_${PAL_PLATFORM_NAME_LOWERCASE}.cmake)
 
-if (PAL_TRAIT_AZQTCOMPONENTSFORPYTHON_SUPPORTED)   
-    find_package(Qt6 6.2 REQUIRED COMPONENTS Core Gui Widgets)
-    
-    # Find the qt package location.
+if (PAL_TRAIT_AZQTCOMPONENTSFORPYTHON_SUPPORTED)
+    # Find the qt package location first so we can add its CMake folder
+    # to `CMAKE_PREFIX_PATH` and allow `find_package` to locate Qt6Config.cmake.
     ly_get_package_association("Qt" QT_PACKAGE_NAME)
     ly_package_get_target_folder(${QT_PACKAGE_NAME} QT_DOWNLOAD_LOCATION)
     set(QT_MODULE_DIR ${QT_DOWNLOAD_LOCATION}/${QT_PACKAGE_NAME}/qt)
+
+    # Ensure the Qt package's CMake config directory is searched.
+    list(APPEND CMAKE_PREFIX_PATH "${QT_MODULE_DIR}/lib/cmake")
+
+    find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets CONFIG)
                      
     # The library we're creating bindings for.
     set(AZQTCOMPONENTS_LIBRARY "AzQtComponents")
@@ -49,8 +53,8 @@ if (PAL_TRAIT_AZQTCOMPONENTSFORPYTHON_SUPPORTED)
             ${QT_MODULE_DIR}/include/QtGui
     )
 
-    if (TARGET Gem::AzQtComponentsForPython.Editor)
-        target_compile_options(Gem::AzQtComponentsForPython.Editor PRIVATE /wd4505)
+    if (TARGET AzQtComponentsForPython.Editor)
+        target_compile_options(AzQtComponentsForPython.Editor PRIVATE ${PAL_TRAIT_AZQTCOMPONENTSFORPYTHON_COMPILE_OPTIONS})
     endif()
     
 endif()

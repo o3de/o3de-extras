@@ -18,21 +18,13 @@
      
      <!-- Remove drawFrame class to prevent broken wrapping in BrowseEdit-->
     <rejection class="QFrame" function-name="drawFrame"/>
-  
     <namespace-type name="AzQtComponents" generate="yes">                
         <!--Components-->
         <object-type name="ButtonDivider"/>
         <object-type name="ButtonStripe"/>
         
         <namespace-type name="ConfigHelpers" generate="yes">
-            <inject-code class="native" position="beginning">
-                #ifdef _MSC_VER
-                #pragma warning(disable:4505)
-                #endif
-            </inject-code>
-
             <object-type name="GroupGuard"/>
-            
             <rejection class="*" function-name="read"/>
         </namespace-type>
         
@@ -211,11 +203,7 @@
         <object-type name="AzMessageBox"/>
         
         <namespace-type name="Internal" generate="yes">
-            <inject-code class="native" position="beginning">
-                #ifdef _MSC_VER
-                #pragma warning(disable:4505)
-                #endif
-            </inject-code>
+            <rejection class="*" function-name="Sbk_AzQtComponents_Internal_TypeF"/>
         </namespace-type>
         <object-type name="OverlayWidgetButton"/>
         
