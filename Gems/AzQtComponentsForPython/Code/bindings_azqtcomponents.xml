@@ -12,12 +12,12 @@
     <object-type name="QSlider" generate="no"/>
     
     <object-type name="FlowLayout">
+        <inject-code class="native" position="beginning" file="glue/qtwidgets.cpp" snippet="qwidget-retrieveobjectname"/>
         <inject-code class="native" position="beginning" file="glue/qtwidgets.cpp" snippet="qlayout-help-functions"/>
     </object-type>
      
      <!-- Remove drawFrame class to prevent broken wrapping in BrowseEdit-->
     <rejection class="QFrame" function-name="drawFrame"/>
-  
     <namespace-type name="AzQtComponents" generate="yes">                
         <!--Components-->
         <object-type name="ButtonDivider"/>
@@ -25,7 +25,6 @@
         
         <namespace-type name="ConfigHelpers" generate="yes">
             <object-type name="GroupGuard"/>
-            
             <rejection class="*" function-name="read"/>
         </namespace-type>
         
@@ -162,7 +161,7 @@
             <object-type name="Config"/>
         </object-type>
         <object-type name="FileDialog">     
-            <modify-function signature="GetSaveFileName(QWidget*,const QString&amp;,const QString&amp;,const QString&amp;,QString*,QFlags&lt;QFileDialog::Option&gt;)" allow-thread="yes">
+            <modify-function signature="GetSaveFileName(QWidget*,const QString&amp;,const QString&amp;,const QString&amp;,QString*,QFileDialog::Options)" allow-thread="yes">
                 <inject-documentation format="target" mode="append">
                     This method is works in the same way as the cpp version, with the exception that the selected filter
                     is returned in a tuple with the selected filename (filename, filter), rather than being stored in the 
@@ -180,9 +179,9 @@
                     //%RETURN_TYPE retval_ = %CPPSELF.%FUNCTION_NAME(%1, %2, %3, %4, &amp;%5, %6);
                 
                     %RETURN_TYPE retval_ = %CPPSELF.GetSaveFileName_(%1, %2, %3, %4, &amp;%5, %6);
-                    %PYARG_0 = PyTuple_New(2);
-                    PyTuple_SET_ITEM(%PYARG_0, 0, %CONVERTTOPYTHON[%RETURN_TYPE](retval_));
-                    PyTuple_SET_ITEM(%PYARG_0, 1, %CONVERTTOPYTHON[%ARG5_TYPE](%5));
+                    pyResult = PyTuple_New(2);
+                    PyTuple_SetItem(pyResult, 0, %CONVERTTOPYTHON[%RETURN_TYPE](retval_));
+                    PyTuple_SetItem(pyResult, 1, %CONVERTTOPYTHON[QString](%5));
 
                 </inject-code>
             </modify-function>
@@ -203,7 +202,9 @@
         
         <object-type name="AzMessageBox"/>
         
-        <namespace-type name="Internal" generate="yes"/>
+        <namespace-type name="Internal" generate="yes">
+            <rejection class="*" function-name="Sbk_AzQtComponents_Internal_TypeF"/>
+        </namespace-type>
         <object-type name="OverlayWidgetButton"/>
         
         <object-type name="ProgressBar">
