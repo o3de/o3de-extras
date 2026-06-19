@@ -50,6 +50,7 @@ ly_add_target(
     BUILD_DEPENDENCIES
         INTERFACE
            AZ::AzCore
+           AZ::AzFramework
 )
 
 target_interface_depends_on_ros2_package(${gem_name}.API simulation_interfaces REQUIRED)
