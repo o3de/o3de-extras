@@ -1,0 +1,39 @@
+{
+    "gem_name": "GameStateSamples",
+    "version": "1.0.0",
+    "display_name": "Game State Samples",
+    "license": "Code, text, data files: Apache-2.0 Or MIT, assets/content/images: CC BY 4.0",
+    "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
+    "origin": "O3DE Extras",
+    "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/GameStateSamples",
+    "type": "Code",
+    "summary": "Provides a set of sample game states (built on top of the Game State Gem), including primary user selection, main menu, level loading, level running, and level paused.",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "Gameplay",
+        "Sample",
+        "Assets"
+    ],
+    "icon_path": "preview.png",
+    "requirements": "",
+    "documentation_url": "https://o3de.org/docs/user-guide/gems/reference/gameplay/game-state-samples/",
+    "dependencies": [
+        "GameState",
+        "LocalUser",
+        "LyShine",
+        "SaveData",
+        "MessagePopup",
+        "LmbrCentral",
+        "UiBasics",
+        "LyShineExamples"
+    ],
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "compatible_engines": [
+        "o3de-sdk>=3.0.0",
+        "o3de>=4.0.0"
+    ],
+    "engine_api_dependencies": [],
+    "restricted": "GameStateSamples"
+}

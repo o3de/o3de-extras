@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder LightingPresets/Assets": {
+                    "watch": "@GEMROOT:LightingPresets@/Assets",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder LightingPresets/Registry": {
+                    "watch": "@GEMROOT:LightingPresets@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}

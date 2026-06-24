@@ -1,0 +1,32 @@
+{
+    "gem_name": "Atom_TestData",
+    "version": "2.0.0",
+    "display_name": "Atom Test Data",
+    "license": "Code, text, data files: Apache-2.0 Or MIT, assets/content/images: CC BY 4.0",
+    "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
+    "origin": "O3DE Extras",
+    "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/Atom/TestData",
+    "type": "Asset",
+    "summary": "A set of Test Asset Data to use with Atom",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "Atom_TestData",
+        "Assets"
+    ],
+    "platforms": [
+        ""
+    ],
+    "icon_path": "preview.png",
+    "requirements": "",
+    "documentation_url": "",
+    "dependencies": [],
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "compatible_engines": [
+        "o3de-sdk>=3.0.0",
+        "o3de>=4.0.0"
+    ],
+    "engine_api_dependencies": [],
+    "restricted": "Atom_TestData"
+}
