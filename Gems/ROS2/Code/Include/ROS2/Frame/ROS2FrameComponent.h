@@ -63,10 +63,12 @@ namespace ROS2
         AZStd::string GetJointName() const override;
         AZStd::string GetFrameName() const override;
         AZStd::string GetGlobalFrameID() const override;
+        AZ::Transform GetFrameTransform() const override;
 
         // ROSFrameInterface overrides
         ROS2FrameConfiguration GetConfiguration() const override;
         void SetConfiguration(const ROS2FrameConfiguration& config) override;
+
     private:
         AZStd::string m_computedNamespace; //!< Cached namespace
         AZStd::string m_computedFrameName; //!< Cached full frame name, including namespace
@@ -77,7 +79,6 @@ namespace ROS2
         AZStd::optional<AZStd::string> m_sourceFrame; //!< If not set, the source frame is assumed to be the parent frame in the TF tree
         AZStd::unique_ptr<ROS2Transform> m_ros2Transform;
 
-        AZ::Transform GetFrameTransform() const;
         const ROS2FrameComponent* GetParentROS2FrameComponent() const;
 
         // AZ::TickBus::Handler overrides
