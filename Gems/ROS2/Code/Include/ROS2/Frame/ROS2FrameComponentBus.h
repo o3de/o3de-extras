@@ -9,6 +9,7 @@
 #pragma once
 
 #include <AzCore/Component/ComponentBus.h>
+#include <AzCore/Math/Transform.h>
 #include <ROS2/ROS2TypeIds.h>
 
 namespace ROS2
@@ -53,6 +54,10 @@ namespace ROS2
         //! If empty, root frame is not published by the simulator.
         //! It is typically "odom", "map", "world", "myRobot/odom"
         virtual AZStd::string GetGlobalFrameID() const = 0;
+
+        //! Get the transform relative to the nearest ancestor entity with a ROS2Frame component.
+        //! @return If a parent ROS2Frame exists, the transform from that parent frame to this entity. Otherwise, the world transform.
+        virtual AZ::Transform GetFrameTransform() const = 0;
     };
 
     using ROS2FrameComponentBus = AZ::EBus<ROS2FrameComponentRequests>;
