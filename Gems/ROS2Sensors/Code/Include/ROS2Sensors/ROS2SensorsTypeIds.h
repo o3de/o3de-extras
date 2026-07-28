@@ -57,5 +57,7 @@ namespace ROS2Sensors
     // Sensors Components Tools TypeIds
     inline constexpr const char* ClassSegmentationConfigurationComponentTypeId = "{BAB1EA0C-7456-40EA-BC1E-71697137C27C}";
     inline constexpr const char* ROS2ImageEncodingConversionComponentTypeId = "{12449810-D179-44F1-8F72-22D8D3FA4460}";
+    inline constexpr const char* ROS2ImageCompressionComponentTypeId = "{8A3F2D14-5C6B-4E7A-9B21-0D4F8E6C3A79}";
+    inline constexpr const char* ImageCompressionSettingsTypeId = "{C2CDA4F9-A2C2-4582-8521-3EBADB258F2F}";
     inline constexpr const char* EncodingConversionTypeId = "{DB361ADC-B339-4A4E-A10B-C6BF6791EDA6}";
 } // namespace ROS2Sensors

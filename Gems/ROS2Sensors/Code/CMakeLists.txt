@@ -94,6 +94,7 @@ ly_add_target(
             Gem::PhysX5.Static # Imu Sensor
             Gem::ROS2.Static
             Gem::LevelGeoreferencing.API
+            3rdParty::PNG # Image compression
             ${gem_name}.Lidar.Static
 )
 
@@ -104,6 +105,18 @@ target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp sensor_msgs na
 if (WITH_GAZEBO_MSGS)
     target_depends_on_ros2_package(${gem_name}.Private.Object gazebo_msgs REQUIRED)
     target_compile_definitions(${gem_name}.Private.Object PUBLIC "WITH_GAZEBO_MSGS")
+endif()
+
+# libjpeg is optional. PNG covers every encoding the image compression supports; JPEG only adds a lossy
+# path for 8-bit color and mono images. Unlike PNG it is not part of the O3DE 3rdParty set, so we use
+# whatever the system provides and compile the JPEG path out when there is none.
+find_package(JPEG QUIET)
+if (JPEG_FOUND)
+    message(STATUS "Found libjpeg, enabling JPEG image compression")
+    target_link_libraries(${gem_name}.Private.Object PUBLIC JPEG::JPEG)
+    target_compile_definitions(${gem_name}.Private.Object PUBLIC "ROS2SENSORS_WITH_JPEG")
+else()
+    message(STATUS "Could not find libjpeg, image compression will be limited to PNG")
 endif()
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface

@@ -7,7 +7,7 @@
  */
 
 #pragma once
-
+#include "Camera/CameraUtilities.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/RTTI/TypeInfoSimple.h>
 #include <ROS2Sensors/Camera/CameraPostProcessingRequestBus.h>
@@ -15,16 +15,11 @@
 
 namespace ROS2Sensors
 {
-    enum class ImageEncoding : AZ::u8
-    {
-        RGBA8,
-        RGB8,
-        Mono8,
-        Mono16,
-    };
+
 
     struct EncodingConversion
     {
+
         AZ_TYPE_INFO(EncodingConversion, ROS2Sensors::EncodingConversionTypeId);
         static void Reflect(AZ::ReflectContext* context);
         AZ::Outcome<void, AZStd::string> ValidateInputEncoding(void* newValue, const AZ::Uuid& valueType);
@@ -35,6 +30,7 @@ namespace ROS2Sensors
             return encodingIn == rhs.encodingIn && encodingOut == rhs.encodingOut;
         }
 
+        using ImageEncoding = CameraUtils::ImageEncoding;
         ImageEncoding encodingIn = ImageEncoding::RGBA8;
         ImageEncoding encodingOut = ImageEncoding::RGB8;
     };

@@ -29,23 +29,10 @@ namespace ROS2Sensors
 {
     namespace
     {
-        const AZStd::unordered_map<ImageEncoding, const char*> ImageEncodingNames = {
-            { ImageEncoding::RGBA8, "rgba8" },
-            { ImageEncoding::RGB8, "rgb8" },
-            { ImageEncoding::Mono8, "mono8" },
-            { ImageEncoding::Mono16, "mono16" },
-        };
-        const AZStd::unordered_map<AZStd::string, ImageEncoding> ImageEncodingFromName = {
-            { "rgba8", ImageEncoding::RGBA8 },
-            { "rgb8", ImageEncoding::RGB8 },
-            { "mono8", ImageEncoding::Mono8 },
-            { "mono16", ImageEncoding::Mono16 },
-        };
-
         void Rgba8ToRgb8(sensor_msgs::msg::Image& image)
         {
-            const std::string inputEncoding = ImageEncodingNames.at(ImageEncoding::RGBA8);
-            const std::string outputEncoding = ImageEncodingNames.at(ImageEncoding::RGB8);
+            const std::string inputEncoding = CameraUtils::ImageEncodingNames.at(CameraUtils::ImageEncoding::RGBA8);
+            const std::string outputEncoding = CameraUtils::ImageEncodingNames.at(CameraUtils::ImageEncoding::RGB8);
             AZ_Assert(image.encoding == inputEncoding, "Image encoding is %s, expected %s", image.encoding.c_str(), inputEncoding.c_str());
             AZ_Assert(image.step == image.width * 4, "Image step (%d) is not width * 4 (%d)", image.step, image.width * 4);
             AZ_Assert(
@@ -69,7 +56,7 @@ namespace ROS2Sensors
         }
 
         const AZStd::unordered_map<EncodingConversion, const AZStd::function<void(sensor_msgs::msg::Image&)>> supportedFormatChange = {
-            { { ImageEncoding::RGBA8, ImageEncoding::RGB8 }, Rgba8ToRgb8 },
+            { { CameraUtils::ImageEncoding::RGBA8, CameraUtils::ImageEncoding::RGB8 }, Rgba8ToRgb8 },
         };
 
         AZ::Outcome<void, AZStd::string> ValidateEncodingConversion(EncodingConversion newConversion)
@@ -82,8 +69,8 @@ namespace ROS2Sensors
             {
                 return AZ::Failure(AZStd::string::format(
                     "Unsupported encoding change from %s to %s",
-                    ImageEncodingNames.at(newConversion.encodingIn),
-                    ImageEncodingNames.at(newConversion.encodingOut)));
+                    CameraUtils::ImageEncodingNames.at(newConversion.encodingIn),
+                    CameraUtils::ImageEncodingNames.at(newConversion.encodingOut)));
             }
             return AZ::Success();
         }
@@ -104,17 +91,17 @@ namespace ROS2Sensors
                 ec->Class<EncodingConversion>("Encoding Conversion", "Specifies encoding conversion")
                     ->DataElement(
                         AZ::Edit::UIHandlers::ComboBox, &EncodingConversion::encodingIn, "Encoding In", "Encoding of the input image")
-                    ->EnumAttribute(ImageEncoding::RGBA8, "rgba8")
-                    ->EnumAttribute(ImageEncoding::RGB8, "rgb8")
-                    ->EnumAttribute(ImageEncoding::Mono8, "mono8")
-                    ->EnumAttribute(ImageEncoding::Mono16, "mono16")
+                    ->EnumAttribute(CameraUtils::ImageEncoding::RGBA8, "rgba8")
+                    ->EnumAttribute(CameraUtils::ImageEncoding::RGB8, "rgb8")
+                    ->EnumAttribute(CameraUtils::ImageEncoding::Mono8, "mono8")
+                    ->EnumAttribute(CameraUtils::ImageEncoding::Mono16, "mono16")
                     ->Attribute(AZ::Edit::Attributes::ChangeValidate, &EncodingConversion::ValidateInputEncoding)
                     ->DataElement(
                         AZ::Edit::UIHandlers::ComboBox, &EncodingConversion::encodingOut, "Encoding Out", "Encoding of the output image")
-                    ->EnumAttribute(ImageEncoding::RGBA8, "rgba8")
-                    ->EnumAttribute(ImageEncoding::RGB8, "rgb8")
-                    ->EnumAttribute(ImageEncoding::Mono8, "mono8")
-                    ->EnumAttribute(ImageEncoding::Mono16, "mono16")
+                    ->EnumAttribute(CameraUtils::ImageEncoding::RGBA8, "rgba8")
+                    ->EnumAttribute(CameraUtils::ImageEncoding::RGB8, "rgb8")
+                    ->EnumAttribute(CameraUtils::ImageEncoding::Mono8, "mono8")
+                    ->EnumAttribute(CameraUtils::ImageEncoding::Mono16, "mono16")
                     ->Attribute(AZ::Edit::Attributes::ChangeValidate, &EncodingConversion::ValidateOutputEncoding);
             }
         }
@@ -180,12 +167,12 @@ namespace ROS2Sensors
 
     void ROS2ImageEncodingConversionComponent::ApplyPostProcessing(sensor_msgs::msg::Image& image)
     {
-        const auto nameIter = ImageEncodingFromName.find(image.encoding.c_str());
-        if (nameIter == ImageEncodingFromName.end())
+        const auto nameIter = CameraUtils::ImageEncodingFromName.find(image.encoding.c_str());
+        if (nameIter == CameraUtils::ImageEncodingFromName.end())
         {
             return;
         }
-        const ImageEncoding& encoding = nameIter->second;
+        const auto& encoding = nameIter->second;
         if (encoding != m_encodingConvertData.encodingIn)
         {
             return;
