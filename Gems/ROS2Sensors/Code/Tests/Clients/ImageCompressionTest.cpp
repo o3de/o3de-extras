@@ -6,7 +6,7 @@
  *
  */
 
-#include <Camera/PostProcessing/ImageCompression.h>
+#include <Camera/Compression/ImageCompression.h>
 
 #include <AzTest/AzTest.h>
 #include <cmath>
@@ -143,10 +143,10 @@ namespace ROS2Sensors
 
         const auto result = ImageCompression::Compress(image, PngSettings());
         ASSERT_TRUE(result.IsSuccess()) << result.GetError().c_str();
-        EXPECT_STREQ(result.GetValue().m_format.c_str(), "rgb8; png compressed bgr8");
+        EXPECT_STREQ(result.GetValue().format.c_str(), "rgb8; png compressed bgr8");
 
         DecodedPng decoded;
-        ASSERT_TRUE(DecodePng(result.GetValue().m_data, decoded));
+        ASSERT_TRUE(DecodePng(result.GetValue().data, decoded));
         EXPECT_EQ(decoded.m_width, image.width);
         EXPECT_EQ(decoded.m_height, image.height);
         EXPECT_TRUE(decoded.IsColor());
@@ -174,10 +174,10 @@ namespace ROS2Sensors
 
         const auto result = ImageCompression::Compress(image, PngSettings());
         ASSERT_TRUE(result.IsSuccess()) << result.GetError().c_str();
-        EXPECT_STREQ(result.GetValue().m_format.c_str(), "rgba8; png compressed bgra8");
+        EXPECT_STREQ(result.GetValue().format.c_str(), "rgba8; png compressed bgra8");
 
         DecodedPng decoded;
-        ASSERT_TRUE(DecodePng(result.GetValue().m_data, decoded));
+        ASSERT_TRUE(DecodePng(result.GetValue().data, decoded));
         ASSERT_TRUE(decoded.HasAlpha());
         for (uint32_t row = 0; row < image.height; ++row)
         {
@@ -196,10 +196,10 @@ namespace ROS2Sensors
 
         const auto result = ImageCompression::Compress(image, PngSettings());
         ASSERT_TRUE(result.IsSuccess()) << result.GetError().c_str();
-        EXPECT_STREQ(result.GetValue().m_format.c_str(), "mono8; png compressed mono8");
+        EXPECT_STREQ(result.GetValue().format.c_str(), "mono8; png compressed mono8");
 
         DecodedPng decoded;
-        ASSERT_TRUE(DecodePng(result.GetValue().m_data, decoded));
+        ASSERT_TRUE(DecodePng(result.GetValue().data, decoded));
         EXPECT_FALSE(decoded.IsColor());
         for (uint32_t row = 0; row < image.height; ++row)
         {
@@ -230,10 +230,10 @@ namespace ROS2Sensors
 
         const auto result = ImageCompression::Compress(image, PngSettings());
         ASSERT_TRUE(result.IsSuccess()) << result.GetError().c_str();
-        EXPECT_STREQ(result.GetValue().m_format.c_str(), "mono16; png compressed mono16");
+        EXPECT_STREQ(result.GetValue().format.c_str(), "mono16; png compressed mono16");
 
         // The stream itself has to be big-endian; check the first sample's bytes before libpng swaps them back.
-        const std::vector<uint8_t>& png = result.GetValue().m_data;
+        const std::vector<uint8_t>& png = result.GetValue().data;
         DecodedPng decoded;
         ASSERT_TRUE(DecodePng(png, decoded));
         ASSERT_TRUE(decoded.Is16Bit());
@@ -267,7 +267,7 @@ namespace ROS2Sensors
         ASSERT_TRUE(result.IsSuccess()) << result.GetError().c_str();
 
         DecodedPng decoded;
-        EXPECT_TRUE(DecodePng(result.GetValue().m_data, decoded));
+        EXPECT_TRUE(DecodePng(result.GetValue().data, decoded));
     }
 
     TEST(ImageCompressionTest, PngIsAlwaysAvailable)
@@ -304,8 +304,8 @@ namespace ROS2Sensors
 
         const auto result = ImageCompression::Compress(image, JpegSettings());
         ASSERT_TRUE(result.IsSuccess()) << result.GetError().c_str();
-        EXPECT_STREQ(result.GetValue().m_format.c_str(), "rgb8; jpeg compressed bgr8");
-        EXPECT_TRUE(HasJpegMarkers(result.GetValue().m_data));
+        EXPECT_STREQ(result.GetValue().format.c_str(), "rgb8; jpeg compressed bgr8");
+        EXPECT_TRUE(HasJpegMarkers(result.GetValue().data));
     }
 
     TEST(ImageCompressionTest, JpegCompressesRgba8ByDroppingAlpha)
@@ -315,8 +315,8 @@ namespace ROS2Sensors
 
         const auto result = ImageCompression::Compress(image, JpegSettings());
         ASSERT_TRUE(result.IsSuccess()) << result.GetError().c_str();
-        EXPECT_STREQ(result.GetValue().m_format.c_str(), "rgba8; jpeg compressed bgr8");
-        EXPECT_TRUE(HasJpegMarkers(result.GetValue().m_data));
+        EXPECT_STREQ(result.GetValue().format.c_str(), "rgba8; jpeg compressed bgr8");
+        EXPECT_TRUE(HasJpegMarkers(result.GetValue().data));
     }
 
     TEST(ImageCompressionTest, JpegCompressesMono8)
@@ -326,8 +326,8 @@ namespace ROS2Sensors
 
         const auto result = ImageCompression::Compress(image, JpegSettings());
         ASSERT_TRUE(result.IsSuccess()) << result.GetError().c_str();
-        EXPECT_STREQ(result.GetValue().m_format.c_str(), "mono8; jpeg compressed mono8");
-        EXPECT_TRUE(HasJpegMarkers(result.GetValue().m_data));
+        EXPECT_STREQ(result.GetValue().format.c_str(), "mono8; jpeg compressed mono8");
+        EXPECT_TRUE(HasJpegMarkers(result.GetValue().data));
     }
 
     TEST(ImageCompressionTest, JpegQualityAffectsSize)
@@ -344,13 +344,17 @@ namespace ROS2Sensors
         const auto highResult = ImageCompression::Compress(image, high);
         ASSERT_TRUE(lowResult.IsSuccess());
         ASSERT_TRUE(highResult.IsSuccess());
-        EXPECT_LT(lowResult.GetValue().m_data.size(), highResult.GetValue().m_data.size());
+        EXPECT_LT(lowResult.GetValue().data.size(), highResult.GetValue().data.size());
     }
 
+    //! Baseline JPEG stores 8 bits per sample, so mono16 fails instead of being published as another codec.
     TEST(ImageCompressionTest, JpegRejectsEncodingsWiderThan8Bits)
     {
-        auto mono16 = MakeImage("mono16", 8, 8, sizeof(uint16_t));
-        EXPECT_FALSE(ImageCompression::Compress(mono16, JpegSettings()).IsSuccess());
+        auto image = MakeImage("mono16", 8, 8, sizeof(uint16_t));
+        FillPattern(image, sizeof(uint16_t));
+
+        const auto result = ImageCompression::Compress(image, JpegSettings());
+        EXPECT_FALSE(result.IsSuccess());
     }
 #else
     TEST(ImageCompressionTest, JpegIsReportedUnavailable)

@@ -31,18 +31,6 @@ namespace ROS2Sensors::CameraUtils
         { "mono16", ImageEncoding::Mono16 }, { "32FC1", ImageEncoding::Depth32FC1 },
     };
 
-    //! Depth is the only channel published as single-channel float.
-    inline bool IsDepthEncoding(ImageEncoding encoding)
-    {
-        return encoding == ImageEncoding::Depth32FC1;
-    }
-
-    //! Everything else comes from the color channel, including the mono encodings it can be converted to.
-    inline bool IsColorEncoding(ImageEncoding encoding)
-    {
-        return !IsDepthEncoding(encoding);
-    }
-
     //! Function computes aspect ratio of the image.
     //! @param width Width of the image in pixels
     //! @param height Height of the image in pixels.

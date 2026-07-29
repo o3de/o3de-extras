@@ -94,8 +94,9 @@ ly_add_target(
             Gem::PhysX5.Static # Imu Sensor
             Gem::ROS2.Static
             Gem::LevelGeoreferencing.API
-            3rdParty::PNG # Image compression
             ${gem_name}.Lidar.Static
+        PRIVATE
+            3rdParty::PNG
 )
 
 target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp sensor_msgs nav_msgs vision_msgs)
@@ -273,6 +274,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                     AZ::AzTest
                     AZ::AzFramework
                     Gem::${gem_name}.Private.Object
+                    3rdParty::PNG # ImageCompressionTest decodes the streams it produces
         )
 
         # Add ${gem_name}.Tests to googletest

@@ -12,7 +12,7 @@
 #include <Clients/ROS2SensorsSystemComponent.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
-#include <Camera/PostProcessing/ROS2ImageCompressionComponent.h>
+#include <Camera/Compression/ROS2ImageCompressionComponent.h>
 #include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <Camera/ROS2CameraSystemComponent.h>

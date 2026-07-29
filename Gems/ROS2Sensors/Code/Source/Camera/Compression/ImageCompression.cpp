@@ -248,7 +248,8 @@ namespace ROS2Sensors::ImageCompression
             return true;
         }
 
-        AZ::Outcome<CompressionResult, AZStd::string> CompressJpeg(const sensor_msgs::msg::Image& image, const Settings& settings)
+        AZ::Outcome<sensor_msgs::msg::CompressedImage, AZStd::string> CompressJpeg(
+            const sensor_msgs::msg::Image& image, const Settings& settings)
         {
             const int quality = AZ::GetClamp(settings.m_jpegQuality, Settings::MinJpegQuality, Settings::MaxJpegQuality);
 
@@ -294,15 +295,17 @@ namespace ROS2Sensors::ImageCompression
                 return AZ::Failure(AZStd::string("JPEG compression failed"));
             }
 
-            CompressionResult result;
-            result.m_data.assign(jpegBuffer, jpegBuffer + jpegSize);
-            result.m_format = AZStd::string::format("%s; jpeg compressed %s", image.encoding.c_str(), decodedEncoding);
+            sensor_msgs::msg::CompressedImage result;
+            result.header = image.header;
+            result.data.assign(jpegBuffer, jpegBuffer + jpegSize);
+            result.format = AZStd::string::format("%s; jpeg compressed %s", image.encoding.c_str(), decodedEncoding).c_str();
             free(jpegBuffer);
             return AZ::Success(AZStd::move(result));
         }
 #endif // ROS2SENSORS_WITH_JPEG
 
-        AZ::Outcome<CompressionResult, AZStd::string> CompressPng(const sensor_msgs::msg::Image& image, const Settings& settings)
+        AZ::Outcome<sensor_msgs::msg::CompressedImage, AZStd::string> CompressPng(
+            const sensor_msgs::msg::Image& image, const Settings& settings)
         {
             const int level =
                 AZ::GetClamp(settings.m_pngCompressionLevel, Settings::MinPngCompressionLevel, Settings::MaxPngCompressionLevel);
@@ -344,13 +347,14 @@ namespace ROS2Sensors::ImageCompression
                 return AZ::Failure(AZStd::string::format("PNG cannot store %s", image.encoding.c_str()));
             }
 
-            CompressionResult result;
-            result.m_data.reserve(image.data.size() / 2);
-            if (!EncodePng(pixels, stride, image.width, image.height, colorType, bitDepth, level, &result.m_data))
+            sensor_msgs::msg::CompressedImage result;
+            result.header = image.header;
+            result.data.reserve(image.data.size() / 2);
+            if (!EncodePng(pixels, stride, image.width, image.height, colorType, bitDepth, level, &result.data))
             {
                 return AZ::Failure(AZStd::string("PNG compression failed"));
             }
-            result.m_format = AZStd::string::format("%s; png compressed %s", image.encoding.c_str(), decodedEncoding);
+            result.format = AZStd::string::format("%s; png compressed %s", image.encoding.c_str(), decodedEncoding).c_str();
             return AZ::Success(AZStd::move(result));
         }
     } // namespace
@@ -373,10 +377,9 @@ namespace ROS2Sensors::ImageCompression
                         AZ::Edit::UIHandlers::ComboBox,
                         &Settings::m_codec,
                         "Codec",
-                        "Codec for 8-bit images. Depth and mono16 always use PNG.")
+                        "Codec for 8-bit images. Depth and mono16 require PNG; JPEG cannot store them and publishes nothing.")
                     ->EnumAttribute(Codec::Jpeg, "JPEG (lossy, 8-bit only)")
                     ->EnumAttribute(Codec::Png, "PNG (lossless)")
-                    ->EnumAttribute(Codec::DoNotPublish, "Do not publish")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::EntireTree)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Slider,
@@ -419,7 +422,8 @@ namespace ROS2Sensors::ImageCompression
         return true;
     }
 
-    AZ::Outcome<CompressionResult, AZStd::string> Compress(const sensor_msgs::msg::Image& image, const Settings& settings)
+    AZ::Outcome<sensor_msgs::msg::CompressedImage, AZStd::string> Compress(
+        const sensor_msgs::msg::Image& image, const Settings& settings)
     {
         const auto layout = GetValidatedLayout(image);
         if (!layout.IsSuccess())
@@ -431,14 +435,14 @@ namespace ROS2Sensors::ImageCompression
         {
         case Codec::Jpeg:
 #ifdef ROS2SENSORS_WITH_JPEG
+            // Encodings wider than 8 bits fail rather than falling back: nothing is published, instead of
+            // publishing a codec the user did not ask for. CompressJpeg rejects them.
             return CompressJpeg(image, settings);
 #else
             return AZ::Failure(AZStd::string("JPEG support was not compiled in; libjpeg was not found at configure time"));
 #endif
         case Codec::Png:
             return CompressPng(image, settings);
-        case Codec::DoNotPublish:
-            return AZ::Failure(AZStd::string("Compression is disabled"));
         }
         return AZ::Failure(AZStd::string("Unknown codec"));
     }
