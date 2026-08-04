@@ -19,16 +19,6 @@
 //! Common utils for Prefab Maker classes
 namespace ROS2RobotImporter::PrefabMakerUtils
 {
-    //! Add required components to the entity.
-    //! Calling this will ensure all the required (default) components are added.
-    //! @param entityId entity to modify.
-    void AddRequiredComponentsToEntity(AZ::EntityId entityId);
-
-    //! For a given model, return path to its Assets.
-    //! @param modelPath path to the model.
-    //! @return path to assets directory for this model.
-    AZ::IO::Path GetAzModelAssetPathFromModelPath(const AZ::IO::Path& modelPath);
-
     //! Set the transform for an entity.
     //! @param origin pose for the entity to set.
     //! @param entityId entity which will be modified.

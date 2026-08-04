@@ -21,29 +21,6 @@
 
 namespace ROS2RobotImporter::PrefabMakerUtils
 {
-    AZ::IO::Path GetAzModelAssetPathFromModelPath(const AZ::IO::Path& modelPath)
-    {
-        bool assetFound = false;
-        AZ::Data::AssetInfo assetInfo;
-        AZ::IO::Path watchDir;
-        AzToolsFramework::AssetSystemRequestBus::BroadcastResult(
-            assetFound,
-            &AzToolsFramework::AssetSystem::AssetSystemRequest::GetSourceInfoBySourcePath,
-            modelPath.c_str(),
-            assetInfo,
-            watchDir.Native());
-
-        if (!assetFound)
-        {
-            AZ_Error("PrefabMakerUtils", false, "Could not find model asset for %s", modelPath.c_str());
-            return {};
-        }
-
-        auto assetPath = AZ::IO::Path(assetInfo.m_relativePath).ReplaceExtension("azmodel");
-        AZStd::to_lower(assetPath.Native().begin(), assetPath.Native().end());
-
-        return assetPath;
-    }
 
     void SetEntityTransformLocal(const gz::math::Pose3d& origin, AZ::EntityId entityId)
     {
@@ -128,14 +105,6 @@ namespace ROS2RobotImporter::PrefabMakerUtils
     {
         constexpr bool useLocalTransform = true;
         return SetEntityParentInternal(entityId, parentEntityId, useLocalTransform);
-    }
-
-    void AddRequiredComponentsToEntity(AZ::EntityId entityId)
-    {
-        AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
-        AZ_Assert(entity, "Unknown entity %s", entityId.ToString().c_str());
-        AzToolsFramework::EditorEntityContextRequestBus::Broadcast(
-            &AzToolsFramework::EditorEntityContextRequests::AddRequiredComponents, *entity);
     }
 
     AZStd::string MakeEntityName(const AZStd::string& rootName, const AZStd::string& type, size_t index)
