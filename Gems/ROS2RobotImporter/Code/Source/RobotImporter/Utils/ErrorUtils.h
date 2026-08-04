@@ -15,7 +15,6 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/function/function_template.h>
 #include <AzCore/std/string/string.h>
-#include <RobotImporter/URDF/SdfParser.h>
 
 #include <sdf/sdf.hh>
 
