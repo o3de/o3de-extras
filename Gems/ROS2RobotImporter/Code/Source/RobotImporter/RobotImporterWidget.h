@@ -17,8 +17,8 @@
 #include "Pages/RobotDescriptionPage.h"
 #include "Pages/XacroParamsPage.h"
 
-#include "URDF/SdfPrefabMaker.h"
 #include "URDF/SdfParser.h"
+#include "URDF/SdfPrefabMaker.h"
 #include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/parallel/thread.h>

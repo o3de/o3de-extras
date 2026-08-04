@@ -44,7 +44,8 @@ namespace ROS2RobotImporter
         void OnAssetCopyStatusChanged(
             const Utils::CopyStatus& status, const AZStd::string& unresolvedFileName, const AZStd::string assetPath);
 
-        void OnAssetProcessStatusChanged(const AZStd::string& unresolvedFileName, const Utils::ReferencedAsset& referencedAsset, bool isError);
+        void OnAssetProcessStatusChanged(
+            const AZStd::string& unresolvedFileName, const Utils::ReferencedAsset& referencedAsset, bool isError);
 
         void SetCopyThread(AZStd::shared_ptr<AZStd::thread> copyThread);
 

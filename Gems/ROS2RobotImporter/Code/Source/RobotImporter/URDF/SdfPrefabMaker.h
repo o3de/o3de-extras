@@ -13,8 +13,8 @@
 #include "InertialsMaker.h"
 #include "JointsMaker.h"
 #include "RobotControlMaker.h"
-#include "SensorsMaker.h"
 #include "SdfParser.h"
+#include "SensorsMaker.h"
 #include "VisualsMaker.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Transform.h>

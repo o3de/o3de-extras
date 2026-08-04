@@ -639,7 +639,7 @@ namespace ROS2RobotImporter
         }
 
         // Allow the created model entity to persist if there are no errors at ths point
-        [[maybe_unused]] auto _ = entity.release();
+        entity.release();
 
         return entityId;
     }

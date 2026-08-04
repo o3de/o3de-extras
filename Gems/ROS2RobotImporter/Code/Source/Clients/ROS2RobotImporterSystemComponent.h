@@ -29,9 +29,9 @@ namespace ROS2RobotImporter
     protected:
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
-        void Init() override{};
-        void Activate() override{};
-        void Deactivate() override{};
+        void Init() override {};
+        void Activate() override {};
+        void Deactivate() override {};
         //////////////////////////////////////////////////////////////////////////
     };
 } // namespace ROS2RobotImporter

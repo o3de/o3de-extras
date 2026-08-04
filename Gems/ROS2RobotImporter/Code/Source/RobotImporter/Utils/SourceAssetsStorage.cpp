@@ -559,7 +559,8 @@ namespace ROS2RobotImporter::Utils
                 FlushIOOfAsset(targetPathAssetTmp);
 
                 const bool needsVisual = (referencedAsset.m_assetType & ReferencedAssetType::VisualMesh) == ReferencedAssetType::VisualMesh;
-                const bool needsCollider = (referencedAsset.m_assetType & ReferencedAssetType::ColliderMesh) == ReferencedAssetType::ColliderMesh;
+                const bool needsCollider =
+                    (referencedAsset.m_assetType & ReferencedAssetType::ColliderMesh) == ReferencedAssetType::ColliderMesh;
                 const bool isMeshFile = (needsVisual || needsCollider);
 
                 // if the asset is a mesh, create asset info at destination location using the temporary mesh file

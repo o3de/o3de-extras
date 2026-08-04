@@ -22,8 +22,8 @@
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 #include <AssetBuilderSDK/SerializationDependencies.h>
 
-#include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/URDF/SdfParser.h>
+#include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
@@ -121,16 +121,11 @@ namespace ROS2RobotImporter
             AZ::Data::AssetInfo assetInfo;
             AZStd::string watchFolder;
             AssetSysReqBus::BroadcastResult(
-                sourceAssetFound,
-                &AssetSysReqBus::Events::GetSourceInfoBySourcePath,
-                asset.m_resolvedPath.c_str(),
-                assetInfo,
-                watchFolder);
+                sourceAssetFound, &AssetSysReqBus::Events::GetSourceInfoBySourcePath, asset.m_resolvedPath.c_str(), assetInfo, watchFolder);
 
             if (!sourceAssetFound)
             {
-                AZ_Warning(
-                    SdfAssetBuilderName, false, "Cannot find source asset info for '%s', skipping.", asset.m_resolvedPath.c_str());
+                AZ_Warning(SdfAssetBuilderName, false, "Cannot find source asset info for '%s', skipping.", asset.m_resolvedPath.c_str());
                 continue;
             }
 

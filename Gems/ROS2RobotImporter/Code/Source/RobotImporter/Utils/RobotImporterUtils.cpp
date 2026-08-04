@@ -604,7 +604,8 @@ namespace ROS2RobotImporter::Utils
         auto GetAssetsFromModel = [&referencedAssetMap](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
         {
             AZStd::string modelUri(model.Uri().c_str(), model.Uri().size());
-            const auto addFilenameFromGeometry = [&referencedAssetMap, &modelUri](const sdf::Geometry* geometry, ReferencedAssetType assetType)
+            const auto addFilenameFromGeometry =
+                [&referencedAssetMap, &modelUri](const sdf::Geometry* geometry, ReferencedAssetType assetType)
             {
                 if (geometry->Type() == sdf::GeometryType::MESH)
                 {

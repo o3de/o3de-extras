@@ -16,8 +16,8 @@
 #include <QApplication>
 #include <QScreen>
 #include <QTranslator>
-#include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/URDF/SdfParser.h>
+#include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
@@ -420,8 +420,8 @@ namespace ROS2RobotImporter
                             }
                             else
                             {
-                                copyStatus =
-                                    Utils::CopyReferencedAsset(destStatus.GetValue(), referencedAsset, duplicatedFilenames[referencedAsset.m_assetUri]);
+                                copyStatus = Utils::CopyReferencedAsset(
+                                    destStatus.GetValue(), referencedAsset, duplicatedFilenames[referencedAsset.m_assetUri]);
                             }
 
                             m_assetPage->OnAssetCopyStatusChanged(

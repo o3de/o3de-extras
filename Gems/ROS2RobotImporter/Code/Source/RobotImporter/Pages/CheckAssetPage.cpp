@@ -105,7 +105,8 @@ namespace ROS2RobotImporter
         m_copyReferencedAssetsThread = copyThread;
     }
 
-    void CheckAssetPage::ReportAsset(const AZStd::string unresolvedFileName, const Utils::ReferencedAsset& referencedAsset, const QString& type)
+    void CheckAssetPage::ReportAsset(
+        const AZStd::string unresolvedFileName, const Utils::ReferencedAsset& referencedAsset, const QString& type)
     {
         int rowId = m_table->rowCount();
         m_table->setRowCount(rowId + 1);
@@ -127,7 +128,8 @@ namespace ROS2RobotImporter
                 rowId,
                 Columns::ResolvedMeshPath,
                 createCell(
-                    true, QString::fromUtf8(referencedAsset.m_resolvedPath.String().data(), referencedAsset.m_resolvedPath.String().size())));
+                    true,
+                    QString::fromUtf8(referencedAsset.m_resolvedPath.String().data(), referencedAsset.m_resolvedPath.String().size())));
             m_table->item(rowId, Columns::ResolvedMeshPath)->setIcon(m_okIcon);
         }
         else
