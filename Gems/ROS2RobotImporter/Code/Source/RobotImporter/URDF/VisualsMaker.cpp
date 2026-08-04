@@ -27,8 +27,8 @@
 namespace ROS2RobotImporter
 {
     VisualsMaker::VisualsMaker() = default;
-    VisualsMaker::VisualsMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping)
-        : m_urdfAssetsMapping(urdfAssetsMapping)
+    VisualsMaker::VisualsMaker(const AZStd::shared_ptr<Utils::ReferencedAssetMap>& referencedAssetMap)
+        : m_referencedAssetMap(referencedAssetMap)
     {
     }
 
@@ -155,7 +155,7 @@ namespace ROS2RobotImporter
             {
                 auto boxGeometry = geometry->BoxShape();
                 AZ_Assert(boxGeometry, "geometry is not Box");
-                const AZ::Vector3 boxDimensions = URDF::TypeConversions::ConvertVector3(boxGeometry->Size());
+                const AZ::Vector3 boxDimensions = Utils::TypeConversions::ConvertVector3(boxGeometry->Size());
 
                 // The `_box_1x1.fbx.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
                 const char* boxAssetRelPath = "objects/_primitives/_box_1x1.fbx.azmodel"; // relative path to cache folder.
@@ -174,10 +174,10 @@ namespace ROS2RobotImporter
             {
                 auto meshGeometry = geometry->MeshShape();
                 AZ_Assert(meshGeometry, "geometry is not Mesh");
-                const AZ::Vector3 scaleVector = URDF::TypeConversions::ConvertVector3(meshGeometry->Scale());
+                const AZ::Vector3 scaleVector = Utils::TypeConversions::ConvertVector3(meshGeometry->Scale());
 
                 const auto asset =
-                    PrefabMakerUtils::GetAssetFromUri(*m_urdfAssetsMapping, modelUri, AZStd::string(meshGeometry->Uri().c_str()));
+                    PrefabMakerUtils::GetAssetFromUri(*m_referencedAssetMap, modelUri, AZStd::string(meshGeometry->Uri().c_str()));
                 AZ_Warning("AddVisual", asset, "There is no source asset for %s.", meshGeometry->Uri().c_str());
 
                 if (asset)
@@ -283,7 +283,7 @@ namespace ROS2RobotImporter
 
     static void OverrideMaterialPbrSettings(
         const sdf::Material* material,
-        const AZStd::shared_ptr<Utils::UrdfAssetMap>& assetMapping,
+        const AZStd::shared_ptr<Utils::ReferencedAssetMap>& assetMapping,
         const AZStd::string& modelUri,
         AZ::Render::MaterialAssignmentMap& overrides)
     {
@@ -408,7 +408,7 @@ namespace ROS2RobotImporter
             // It will likely be too dark, but that's still probably better than not setting the color at all.
             // Convert from gamma to linear to try and account for the different color spaces between phong and PBR rendering.
             const auto materialColor = material->Element()->HasElement("diffuse") ? material->Diffuse() : material->Ambient();
-            const AZ::Color baseColor = URDF::TypeConversions::ConvertColor(materialColor).GammaToLinear();
+            const AZ::Color baseColor = Utils::TypeConversions::ConvertColor(materialColor).GammaToLinear();
 
             for (auto& [id, materialAssignment] : overrides)
             {
@@ -445,7 +445,7 @@ namespace ROS2RobotImporter
             // Get the color and convert from gamma to linear to try and account for the different color spaces between phong and PBR
             // rendering.
             const auto materialColor = material->Emissive();
-            const AZ::Color emissiveColor = URDF::TypeConversions::ConvertColor(materialColor).GammaToLinear();
+            const AZ::Color emissiveColor = Utils::TypeConversions::ConvertColor(materialColor).GammaToLinear();
 
             // It seems to be fairly common to have an emissive entry of black, which isn't emissive at all.
             // Only enable the emissive color if it's a non-black value.
@@ -492,7 +492,7 @@ namespace ROS2RobotImporter
                 // anyways, so it's hard to say what perceptual brightness model would cause any better or worse results here.
                 // Another possibility to consider would be taking the max of the RGB values.
                 const auto materialColor = material->Specular();
-                const AZ::Color specularColor = URDF::TypeConversions::ConvertColor(materialColor);
+                const AZ::Color specularColor = Utils::TypeConversions::ConvertColor(materialColor);
                 const float specularBrightness = (specularColor.GetR() + specularColor.GetG() + specularColor.GetB()) / 3.0f;
                 roughness = 1.0f - specularBrightness;
 
@@ -565,7 +565,7 @@ namespace ROS2RobotImporter
         // Try to override all of the various material settings based on what's contained in the <material> and <visual> elements in the
         // source file.
         OverrideScriptMaterial(material, config.m_materials);
-        OverrideMaterialPbrSettings(material, m_urdfAssetsMapping, modelUri, config.m_materials);
+        OverrideMaterialPbrSettings(material, m_referencedAssetMap, modelUri, config.m_materials);
         OverrideMaterialBaseColor(material, config.m_materials);
         OverrideMaterialTransparency(visual, config.m_materials);
         OverrideMaterialEmissiveSettings(material, config.m_materials);

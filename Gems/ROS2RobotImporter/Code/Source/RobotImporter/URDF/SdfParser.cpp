@@ -6,7 +6,7 @@
  *
  */
 
-#include "UrdfParser.h"
+#include "SdfParser.h"
 
 #include <sstream>
 
@@ -17,7 +17,7 @@
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 
-namespace ROS2RobotImporter::UrdfParser
+namespace ROS2RobotImporter::SdfParser
 {
     class RedirectSDFOutputStream
     {
@@ -122,16 +122,16 @@ namespace ROS2RobotImporter::UrdfParser
         // Store path in a AZ::IO::FixedMaxPath which is stack based structure that provides memory
         // for the path string and is null terminated.
         // It is backed by an AZStd::fixed_string<1024> which is a char buffer of 1025 internally
-        AZ::IO::FixedMaxPath urdfFilePath = filePath.FixedMaxPathString();
-        std::ifstream istream(urdfFilePath.c_str());
+        AZ::IO::FixedMaxPath sourceFilePath = filePath.FixedMaxPathString();
+        std::ifstream istream(sourceFilePath.c_str());
         if (!istream)
         {
-            auto fileNotFoundMessage = AZStd::fixed_string<1024>::format("File %.*s does not exist", AZ_PATH_ARG(urdfFilePath));
+            auto fileNotFoundMessage = AZStd::fixed_string<1024>::format("File %.*s does not exist", AZ_PATH_ARG(sourceFilePath));
             ParseResult fileNotFoundResult;
             fileNotFoundResult.m_sdfErrors.emplace_back(
                 sdf::ErrorCode::FILE_READ,
                 std::string{ fileNotFoundMessage.c_str(), fileNotFoundMessage.size() },
-                std::string{ urdfFilePath.c_str(), urdfFilePath.Native().size() });
+                std::string{ sourceFilePath.c_str(), sourceFilePath.Native().size() });
             return fileNotFoundResult;
         }
 
@@ -149,4 +149,4 @@ namespace ROS2RobotImporter::UrdfParser
         return Parse(xmlStr, parserConfig);
     }
 
-} // namespace ROS2RobotImporter::UrdfParser
+} // namespace ROS2RobotImporter::SdfParser

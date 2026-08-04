@@ -8,16 +8,16 @@
 
 #include "TypeConversions.h"
 
-namespace ROS2RobotImporter::URDF
+namespace ROS2RobotImporter::Utils
 {
-    AZ::Vector3 TypeConversions::ConvertVector3(const gz::math::Vector3d& urdfVector)
+    AZ::Vector3 TypeConversions::ConvertVector3(const gz::math::Vector3d& gzVector)
     {
-        return AZ::Vector3(urdfVector.X(), urdfVector.Y(), urdfVector.Z());
+        return AZ::Vector3(gzVector.X(), gzVector.Y(), gzVector.Z());
     }
 
-    AZ::Quaternion TypeConversions::ConvertQuaternion(const gz::math::Quaterniond& urdfQuaternion)
+    AZ::Quaternion TypeConversions::ConvertQuaternion(const gz::math::Quaterniond& gzQuaternion)
     {
-        return AZ::Quaternion(urdfQuaternion.X(), urdfQuaternion.Y(), urdfQuaternion.Z(), urdfQuaternion.W());
+        return AZ::Quaternion(gzQuaternion.X(), gzQuaternion.Y(), gzQuaternion.Z(), gzQuaternion.W());
     }
 
     AZ::Color TypeConversions::ConvertColor(const gz::math::Color& color)
@@ -27,9 +27,9 @@ namespace ROS2RobotImporter::URDF
 
     AZ::Transform TypeConversions::ConvertPose(const gz::math::Pose3d& pose)
     {
-        AZ::Quaternion azRotation = URDF::TypeConversions::ConvertQuaternion(pose.Rot());
-        AZ::Vector3 azPosition = URDF::TypeConversions::ConvertVector3(pose.Pos());
+        AZ::Quaternion azRotation = Utils::TypeConversions::ConvertQuaternion(pose.Rot());
+        AZ::Vector3 azPosition = Utils::TypeConversions::ConvertVector3(pose.Pos());
         return AZ::Transform(azPosition, azRotation, 1.0f);
     }
 
-} // namespace ROS2RobotImporter::URDF
+} // namespace ROS2RobotImporter::Utils

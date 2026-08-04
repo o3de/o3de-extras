@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "UrdfParser.h"
+#include "SdfParser.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <PhysX/ArticulationTypes.h>

@@ -37,7 +37,7 @@ namespace ROS2RobotImporter::Utils
 {
 
     //! A helper class that do no extend PhysX::Pipeline::MeshGroup functionality, but gives necessary setters.
-    class UrdfPhysxMeshGroupHelper : public PhysX::Pipeline::MeshGroup
+    class PhysxMeshGroupHelper : public PhysX::Pipeline::MeshGroup
     {
     public:
         void SetIsDecomposeMeshes(bool decompose)
@@ -285,37 +285,37 @@ namespace ROS2RobotImporter::Utils
     }
 
     void CopyReferencedAssetsAndCreateAssetMap(
-        UrdfAssetMap& urdfAssetMap,
-        const AZ::IO::Path& urdfFilepath,
+        ReferencedAssetMap& referencedAssetMap,
+        const AZ::IO::Path& sourceFilePath,
         const SdfAssetBuilderSettings& sdfBuilderSettings,
         AZStd::string_view outputDirSuffix,
         AZ::IO::FileIOBase* fileIO)
     {
-        ResolveAssetMap(urdfAssetMap, urdfFilepath, sdfBuilderSettings);
-        AZStd::mutex urdfAssetMapMutex;
-        if (urdfAssetMap.empty())
+        ResolveAssetMap(referencedAssetMap, sourceFilePath, sdfBuilderSettings);
+        AZStd::mutex referencedAssetMapMutex;
+        if (referencedAssetMap.empty())
         {
             return;
         }
 
-        auto destDirectory = PrepareImportedAssetsDest(urdfFilepath, outputDirSuffix, fileIO);
+        auto destDirectory = PrepareImportedAssetsDest(sourceFilePath, outputDirSuffix, fileIO);
         if (!destDirectory.IsSuccess())
         {
             return;
         }
 
         AZStd::unordered_map<AZ::IO::Path, unsigned int> duplicatedFilenames;
-        for (auto& [unresolvedFileName, urdfAsset] : urdfAssetMap)
+        for (auto& [unresolvedFileName, referencedAsset] : referencedAssetMap)
         {
-            if (duplicatedFilenames.contains(urdfAsset.m_assetUri))
+            if (duplicatedFilenames.contains(referencedAsset.m_assetUri))
             {
-                duplicatedFilenames[urdfAsset.m_assetUri]++;
+                duplicatedFilenames[referencedAsset.m_assetUri]++;
             }
             else
             {
-                duplicatedFilenames[urdfAsset.m_assetUri] = 0;
+                duplicatedFilenames[referencedAsset.m_assetUri] = 0;
             }
-            CopyReferencedAsset(destDirectory.GetValue(), urdfAsset, duplicatedFilenames[urdfAsset.m_assetUri]);
+            CopyReferencedAsset(destDirectory.GetValue(), referencedAsset, duplicatedFilenames[referencedAsset.m_assetUri]);
         }
         Utils::RemoveTmpDir(destDirectory.GetValue().importDirectoryTmp);
 
@@ -323,7 +323,7 @@ namespace ROS2RobotImporter::Utils
     }
 
     void FindReferencedAssets(
-        UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings)
+        ReferencedAssetMap& unresolvedAssetMap, const AZ::IO::Path& sourceFilePath, const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
         if (!unresolvedAssetMap.empty())
         {
@@ -332,8 +332,8 @@ namespace ROS2RobotImporter::Utils
             // Search for suitable mappings by comparing checksum
             for (auto& [unresolvedFileName, asset] : unresolvedAssetMap)
             {
-                asset.m_urdfFileCRC = Utils::GetFileCRC(asset.m_resolvedUrdfPath);
-                auto found_source_asset = availableAssets.find(asset.m_urdfFileCRC);
+                asset.m_resolvedFileCRC = Utils::GetFileCRC(asset.m_resolvedPath);
+                auto found_source_asset = availableAssets.find(asset.m_resolvedFileCRC);
                 if (found_source_asset != availableAssets.end())
                 {
                     asset.m_availableAssetInfo = found_source_asset->second;
@@ -420,7 +420,7 @@ namespace ROS2RobotImporter::Utils
 
         if (collider)
         {
-            AZStd::shared_ptr<UrdfPhysxMeshGroupHelper> physxDataMeshGroup = AZStd::make_shared<UrdfPhysxMeshGroupHelper>();
+            AZStd::shared_ptr<PhysxMeshGroupHelper> physxDataMeshGroup = AZStd::make_shared<PhysxMeshGroupHelper>();
             physxDataMeshGroup->SetIsDecomposeMeshes(true);
             physxDataMeshGroup->SetMeshExportMethod(PhysX::Pipeline::MeshExportMethod::Convex);
 
@@ -457,29 +457,29 @@ namespace ROS2RobotImporter::Utils
     }
 
     void ResolveAssetMap(
-        UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings)
+        ReferencedAssetMap& unresolvedAssetMap, const AZ::IO::Path& sourceFilePath, const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
         auto amentPrefixPath = Utils::GetAmentPrefixPath();
 
         for (auto& [unresolvedFileName, asset] : unresolvedAssetMap)
         {
-            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(unresolvedFileName, urdfFilepath, amentPrefixPath, sdfBuilderSettings);
-            asset.m_urdfFileCRC = AZ::Crc32();
+            asset.m_resolvedPath = Utils::ResolveAssetPath(unresolvedFileName, sourceFilePath, amentPrefixPath, sdfBuilderSettings);
+            asset.m_resolvedFileCRC = AZ::Crc32();
         }
     }
 
     AZ::Outcome<ImportedAssetsDest> PrepareImportedAssetsDest(
-        const AZ::IO::Path& urdfFilepath, AZStd::string_view outputDirSuffix, AZ::IO::FileIOBase* fileIO)
+        const AZ::IO::Path& sourceFilePath, AZStd::string_view outputDirSuffix, AZ::IO::FileIOBase* fileIO)
     {
         AZ_Assert(fileIO, "No FileIO instance");
-        AZ::Crc32 urdfFileCrc;
-        urdfFileCrc.Add(urdfFilepath.c_str(), urdfFilepath.Native().size());
+        AZ::Crc32 sourceFileCrc;
+        sourceFileCrc.Add(sourceFilePath.c_str(), sourceFilePath.Native().size());
 
         // By naming the temp directory '$tmp_*', the default configuration in AssetProcessorPlatformConfig.setreg will
         // exclude these files from processing.
-        const AZStd::string directoryNameTmp = AZStd::string::format("$tmp_%u.tmp", AZ::u32(urdfFileCrc));
+        const AZStd::string directoryNameTmp = AZStd::string::format("$tmp_%u.tmp", AZ::u32(sourceFileCrc));
         const auto directoryNameDst = AZ::IO::FixedMaxPathString::format(
-            "%u_%.*s%.*s", AZ::u32(urdfFileCrc), AZ_PATH_ARG(urdfFilepath.Stem()), AZ_STRING_ARG(outputDirSuffix));
+            "%u_%.*s%.*s", AZ::u32(sourceFileCrc), AZ_PATH_ARG(sourceFilePath.Stem()), AZ_STRING_ARG(outputDirSuffix));
 
         const AZ::IO::Path importDirectoryTmp = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "Importer" / directoryNameTmp;
         const AZ::IO::Path importDirectoryDst = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "Importer" / directoryNameDst;
@@ -487,8 +487,8 @@ namespace ROS2RobotImporter::Utils
         fileIO->DestroyPath(importDirectoryTmp.c_str());
         const auto outcomeCreateDstDir = fileIO->CreatePath(importDirectoryDst.c_str());
         const auto outcomeCreateTmpDir = fileIO->CreatePath(importDirectoryTmp.c_str());
-        AZ_Error("CopyAssetForURDF", outcomeCreateDstDir, "Cannot create destination directory : %s", importDirectoryDst.c_str());
-        AZ_Error("CopyAssetForURDF", outcomeCreateTmpDir, "Cannot create temporary directory : %s", importDirectoryTmp.c_str());
+        AZ_Error("CopyReferencedAsset", outcomeCreateDstDir, "Cannot create destination directory : %s", importDirectoryDst.c_str());
+        AZ_Error("CopyReferencedAsset", outcomeCreateTmpDir, "Cannot create temporary directory : %s", importDirectoryTmp.c_str());
 
         if (!outcomeCreateDstDir || !outcomeCreateTmpDir)
         {
@@ -514,7 +514,7 @@ namespace ROS2RobotImporter::Utils
         const auto outcomeRemoveTmpDir = fileIO->DestroyPath($tmpDir.c_str());
         if (!outcomeRemoveTmpDir)
         {
-            AZ_Error("CopyAssetForURDF", false, "Cannot remove temporary directory : %s", $tmpDir.c_str());
+            AZ_Error("CopyReferencedAsset", false, "Cannot remove temporary directory : %s", $tmpDir.c_str());
             return AZ::Failure();
         }
         return AZ::Success(true);
@@ -522,15 +522,15 @@ namespace ROS2RobotImporter::Utils
 
     CopyStatus CopyReferencedAsset(
         const ImportedAssetsDest& importedAssetsDest,
-        Utils::UrdfAsset& urdfAsset,
+        Utils::ReferencedAsset& referencedAsset,
         unsigned int duplicationCounter,
         AZ::IO::FileIOBase* fileIO)
     {
-        AZStd::string filename = urdfAsset.m_resolvedUrdfPath.Filename().String();
+        AZStd::string filename = referencedAsset.m_resolvedPath.Filename().String();
         if (duplicationCounter > 0)
         {
-            AZStd::string stem = urdfAsset.m_resolvedUrdfPath.Stem().String();
-            AZStd::string extension = urdfAsset.m_resolvedUrdfPath.Extension().String();
+            AZStd::string stem = referencedAsset.m_resolvedPath.Stem().String();
+            AZStd::string extension = referencedAsset.m_resolvedPath.Extension().String();
             filename = AZStd::string::format("%s_%u%s", stem.c_str(), duplicationCounter, extension.c_str());
         }
 
@@ -542,14 +542,14 @@ namespace ROS2RobotImporter::Utils
         bool targetAssetExists = fileIO->Exists(targetPathAssetDst.c_str());
         if (!targetAssetExists)
         {
-            urdfAsset.m_copyStatus = CopyStatus::Copying;
+            referencedAsset.m_copyStatus = CopyStatus::Copying;
 
             // copy mesh file to temporary location ignored by AP
-            const auto outcomeCopyTmp = fileIO->Copy(urdfAsset.m_resolvedUrdfPath.c_str(), targetPathAssetTmp.c_str());
+            const auto outcomeCopyTmp = fileIO->Copy(referencedAsset.m_resolvedPath.c_str(), targetPathAssetTmp.c_str());
             AZ_Printf(
-                "CopyAssetForURDF",
+                "CopyReferencedAsset",
                 "Copy %s to %s, result: %d",
-                urdfAsset.m_resolvedUrdfPath.c_str(),
+                referencedAsset.m_resolvedPath.c_str(),
                 targetPathAssetTmp.c_str(),
                 outcomeCopyTmp.GetResultCode());
 
@@ -558,8 +558,8 @@ namespace ROS2RobotImporter::Utils
                 // call FlushIOOfAsset to ensure the asset processor is aware of the new file
                 FlushIOOfAsset(targetPathAssetTmp);
 
-                const bool needsVisual = (urdfAsset.m_assetType & ReferencedAssetType::VisualMesh) == ReferencedAssetType::VisualMesh;
-                const bool needsCollider = (urdfAsset.m_assetType & ReferencedAssetType::ColliderMesh) == ReferencedAssetType::ColliderMesh;
+                const bool needsVisual = (referencedAsset.m_assetType & ReferencedAssetType::VisualMesh) == ReferencedAssetType::VisualMesh;
+                const bool needsCollider = (referencedAsset.m_assetType & ReferencedAssetType::ColliderMesh) == ReferencedAssetType::ColliderMesh;
                 const bool isMeshFile = (needsVisual || needsCollider);
 
                 // if the asset is a mesh, create asset info at destination location using the temporary mesh file
@@ -578,7 +578,7 @@ namespace ROS2RobotImporter::Utils
                             const AZ::IO::Path assetLocalPath(AZ::IO::Path(AZ::IO::Path(AZ::Utils::GetProjectPath()) / unresolvedAssetPath)
                                                                   .LexicallyRelative(importedAssetsDest.importDirectoryTmp));
 
-                            const AZ::IO::Path assetFullPathSrc(AZ::IO::Path(urdfAsset.m_resolvedUrdfPath.ParentPath()) / assetLocalPath);
+                            const AZ::IO::Path assetFullPathSrc(AZ::IO::Path(referencedAsset.m_resolvedPath.ParentPath()) / assetLocalPath);
                             const AZ::IO::Path assetFullPathDst(importedAssetsDest.importDirectoryDst / assetLocalPath);
 
                             const auto outcomeMkdir = fileIO->CreatePath(AZ::IO::Path(assetFullPathDst.ParentPath()).c_str());
@@ -590,7 +590,7 @@ namespace ROS2RobotImporter::Utils
                             const auto outcomeCopy = fileIO->Copy(assetFullPathSrc.c_str(), assetFullPathDst.c_str());
                             if (!outcomeCopy)
                             {
-                                urdfAsset.m_copyStatus = CopyStatus::Failed;
+                                referencedAsset.m_copyStatus = CopyStatus::Failed;
                             }
                         }
                     }
@@ -598,7 +598,7 @@ namespace ROS2RobotImporter::Utils
                     // move asset file from temporary location to destination location
                     const auto outcomeMoveDst = fileIO->Rename(targetPathAssetTmp.c_str(), targetPathAssetDst.c_str());
                     AZ_Printf(
-                        "CopyAssetForURDF",
+                        "CopyReferencedAsset",
                         "Rename file %s to %s, result: %d",
                         targetPathAssetTmp.c_str(),
                         targetPathAssetDst.c_str(),
@@ -607,27 +607,27 @@ namespace ROS2RobotImporter::Utils
                     // call FlushIOOfAsset to ensure the asset processor is aware of the new file
                     FlushIOOfAsset(targetPathAssetDst);
 
-                    urdfAsset.m_copyStatus = outcomeMoveDst ? CopyStatus::Copied : CopyStatus::Failed;
+                    referencedAsset.m_copyStatus = outcomeMoveDst ? CopyStatus::Copied : CopyStatus::Failed;
                 }
             }
             else
             {
-                urdfAsset.m_copyStatus = CopyStatus::Failed;
+                referencedAsset.m_copyStatus = CopyStatus::Failed;
             }
         }
         else
         {
-            AZ_Printf("CopyAssetForURDF", "File %s already exists, omitting import", targetPathAssetDst.c_str());
-            urdfAsset.m_copyStatus = CopyStatus::Exists;
+            AZ_Printf("CopyReferencedAsset", "File %s already exists, omitting import", targetPathAssetDst.c_str());
+            referencedAsset.m_copyStatus = CopyStatus::Exists;
         }
 
-        if (urdfAsset.m_copyStatus == CopyStatus::Exists || urdfAsset.m_copyStatus == CopyStatus::Copied)
+        if (referencedAsset.m_copyStatus == CopyStatus::Exists || referencedAsset.m_copyStatus == CopyStatus::Copied)
         {
-            urdfAsset.m_availableAssetInfo = Utils::GetAvailableAssetInfo(targetPathAssetDst.String());
+            referencedAsset.m_availableAssetInfo = Utils::GetAvailableAssetInfo(targetPathAssetDst.String());
         }
-        urdfAsset.m_urdfFileCRC = AZ::Crc32();
+        referencedAsset.m_resolvedFileCRC = AZ::Crc32();
 
-        return urdfAsset.m_copyStatus;
+        return referencedAsset.m_copyStatus;
     }
 
     AZStd::unordered_set<AZ::IO::Path> GetMeshTextureAssets(const AZ::IO::Path& sourceMeshAssetPath)
@@ -676,7 +676,7 @@ namespace ROS2RobotImporter::Utils
         AzFramework::AssetSystemRequestBus::BroadcastResult(
             assetStatus, &AzFramework::AssetSystem::AssetSystemRequests::GetAssetStatus_FlushIO, path.c_str());
         AZ_Warning(
-            "CopyAssetForURDF",
+            "CopyReferencedAsset",
             assetStatus != AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown,
             "Asset processor did not recognize the new file %s.",
             path.c_str());

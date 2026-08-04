@@ -28,7 +28,7 @@ namespace ROS2RobotImporter
 namespace ROS2RobotImporter::Utils
 {
     //! Structure contains essential information about the source and product assets in O3DE.
-    //! It is designed to provide necessary information for other classes in URDF converter, eg CollidersMaker or VisualsMaker.
+    //! It is designed to provide necessary information for other classes of the importer, eg CollidersMaker or VisualsMaker.
     struct AvailableAsset
     {
         //! Relative path to source asset eg `Assets/foo_robot/meshes/bar_link.dae`.
@@ -65,10 +65,10 @@ namespace ROS2RobotImporter::Utils
         Failed, //! Failed
     };
 
-    //! The structure contains a mapping between URDF's path to O3DE asset information.
-    struct UrdfAsset
+    //! The structure contains a mapping between an unresolved URI from the source file and O3DE asset information.
+    struct ReferencedAsset
     {
-        UrdfAsset() = default;
+        ReferencedAsset() = default;
 
         //! The model URI associated with the asset.
         AZStd::string m_modelUri;
@@ -76,11 +76,11 @@ namespace ROS2RobotImporter::Utils
         //! Unresolved path to asset, eg `package://meshes/bar_link.dae`.
         AZ::IO::Path m_assetUri;
 
-        //! Resolved URDF path, points to the valid mesh in the filesystem, eg `/home/user/ros_ws/src/foo_robot/meshes/bar_link.dae'
-        AZ::IO::Path m_resolvedUrdfPath;
+        //! Resolved path, points to the valid mesh in the filesystem, eg `/home/user/ros_ws/src/foo_robot/meshes/bar_link.dae'
+        AZ::IO::Path m_resolvedPath;
 
-        //! Checksum of the file located pointed by `m_resolvedUrdfPath`.
-        AZ::Crc32 m_urdfFileCRC;
+        //! Checksum of the file pointed by `m_resolvedPath`.
+        AZ::Crc32 m_resolvedFileCRC;
 
         //! Status of the copy process.
         CopyStatus m_copyStatus = Waiting;
@@ -103,7 +103,7 @@ namespace ROS2RobotImporter::Utils
     };
 
     /// Type that hold result of mapping from asset name (model URI + asset URI) to asset info
-    using UrdfAssetMap = AZStd::unordered_map<AZ::IO::Path, Utils::UrdfAsset>;
+    using ReferencedAssetMap = AZStd::unordered_map<AZ::IO::Path, Utils::ReferencedAsset>;
 
     //! Function computes CRC32 on first kilobyte of file.
     AZ::Crc32 GetFileCRC(const AZ::IO::Path& filename);
@@ -115,13 +115,13 @@ namespace ROS2RobotImporter::Utils
     //! Discover an association between meshes in input SDF/URDF and O3DE source and product assets.
     //! Steps:
     //! - Function scans all available O3DE assets by calling `GetInterestingSourceAssetsCRC`.
-    //! - Files pointed by resolved URDF paths have their checksum computed `GetFileCRC`.
-    //! - Suitable mapping to the O3DE asset is found by comparing the checksum of the file pointed by the URDF path and source asset.
+    //! - Files pointed by resolved paths have their checksum computed `GetFileCRC`.
+    //! - Suitable mapping to the O3DE asset is found by comparing the checksum of the file pointed by the resolved path and source asset.
     //! @param unresolvedAssetMap - list of the unresolved paths from the SDF/URDF file that are to be found as assets
-    //! @param urdfFilepath - path of URDF file, used for resolving paths of referenced assets
+    //! @param sourceFilePath - path of the SDF/URDF file, used for resolving paths of referenced assets
     //! @param sdfBuilderSettings - the builder settings that should be used to resolve paths
     void FindReferencedAssets(
-        UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings);
+        ReferencedAssetMap& unresolvedAssetMap, const AZ::IO::Path& sourceFilePath, const SdfAssetBuilderSettings& sdfBuilderSettings);
 
     //! Helper function that gets all the potential primary product asset paths from the source asset GUID
     //! @param sourceAssetUUID is source asset GUID
@@ -169,45 +169,45 @@ namespace ROS2RobotImporter::Utils
     //! Copies and prepares assets that are referenced in SDF/URDF.
     //! It resolves every asset, creates a directory in Project's Asset directory, copies files, and prepares assets info.
     //! Finally, it assembles its results into mapping that allows mapping the SDF/URDF mesh name to the source asset.
-    //! @param urdfAssetMap - files to copy (as unresolved urdf paths)
-    //! @param urdfFilepath - path to URDF file (as a global path)
+    //! @param referencedAssetMap - files to copy (as unresolved URIs)
+    //! @param sourceFilePath - path to the SDF/URDF file (as a global path)
     //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
     //! @param outputDirSuffix - suffix to make output directory unique, if xacro file was used
     //! @param fileIO - instance to fileIO class
     void CopyReferencedAssetsAndCreateAssetMap(
-        UrdfAssetMap& urdfAssetMap,
-        const AZ::IO::Path& urdfFilepath,
+        ReferencedAssetMap& referencedAssetMap,
+        const AZ::IO::Path& sourceFilePath,
         const SdfAssetBuilderSettings& sdfBuilderSettings,
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
-    //! Creates a mapping from unresolved URDF paths to source asset info.
+    //! Creates a mapping from unresolved URIs to source asset info.
     //! @param unresolvedAssetMap - list of assets discovered in the input SDF/URDF file
-    //! @param urdfFilepath - path to URDF file (as a global path)
+    //! @param sourceFilePath - path to the SDF/URDF file (as a global path)
     //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
     void ResolveAssetMap(
-        UrdfAssetMap& unresolvedAssetMap, const AZ::IO::Path& urdfFilepath, const SdfAssetBuilderSettings& sdfBuilderSettings);
+        ReferencedAssetMap& unresolvedAssetMap, const AZ::IO::Path& sourceFilePath, const SdfAssetBuilderSettings& sdfBuilderSettings);
 
     //! Copies and prepares asset that is referenced in SDF/URDF.
-    //! Modifies urdfAsset in place.
+    //! Modifies referencedAsset in place.
     //! @param importedAssetsDest - destination ImportedAssetsDest for imported assets.
-    //! @param urdfAsset - asset info. Will be modified.
+    //! @param referencedAsset - asset info. Will be modified.
     //! @param duplicationCounter - number indication the number of times the asset has been duplicated
     //! @param fileIO - instance to fileIO class
     //! @returns status of the copy process
     CopyStatus CopyReferencedAsset(
         const ImportedAssetsDest& importedAssetsDest,
-        Utils::UrdfAsset& urdfAsset,
+        Utils::ReferencedAsset& referencedAsset,
         unsigned int duplicationCounter,
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
     //! Prepares temporary and final directory for imported assets.
-    //! @param urdfFilepath - path to URDF file (as a global path)
+    //! @param sourceFilePath - path to the SDF/URDF file (as a global path)
     //! @param outputDirSuffix - name of the output directory
     //! @param fileIO - instance to fileIO class
     //! @returns structure containing paths to temporary and final directory for imported assets, or failure if failed to create.
     AZ::Outcome<ImportedAssetsDest> PrepareImportedAssetsDest(
-        const AZ::IO::Path& urdfFilepath,
+        const AZ::IO::Path& sourceFilePath,
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 

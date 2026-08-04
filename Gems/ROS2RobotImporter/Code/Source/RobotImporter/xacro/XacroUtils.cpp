@@ -93,14 +93,14 @@ namespace ROS2RobotImporter::Utils::xacro
             {
                 // modify in memory URDF result
                 auto [modifiedXmlStr, modifiedElements] = (Utils::ModifyURDFInMemory(output));
-                outcome.m_urdfHandle = UrdfParser::Parse(modifiedXmlStr, parserConfig);
-                outcome.m_urdfHandle.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
-                outcome.m_urdfHandle.m_urdfModifications = AZStd::move(modifiedElements);
+                outcome.m_parseResult = SdfParser::Parse(modifiedXmlStr, parserConfig);
+                outcome.m_parseResult.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
+                outcome.m_parseResult.m_urdfModifications = AZStd::move(modifiedElements);
                 outcome.m_succeed = true;
             }
             else
             {
-                outcome.m_urdfHandle = UrdfParser::Parse(output, parserConfig);
+                outcome.m_parseResult = SdfParser::Parse(output, parserConfig);
                 outcome.m_succeed = true;
             }
         }

@@ -15,7 +15,7 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/function/function_template.h>
 #include <AzCore/std/string/string.h>
-#include <RobotImporter/URDF/UrdfParser.h>
+#include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
@@ -36,13 +36,13 @@ namespace ROS2RobotImporter::Utils
     //! @param sdfModel Model object which is used to query the joints from SDF format data
     //! @param link the link that will be subjected to the heuristic.
     //! @return true if the link is likely a wheel link.
-    bool IsWheelURDFHeuristics(const sdf::Model& model, const sdf::Link* link);
+    bool IsWheelHeuristics(const sdf::Model& model, const sdf::Link* link);
 
     //! Returns an AZ::Transform converted from the link pose defined relative to another frame.
     //! @param semanticPose pointer to URDF/SDF link
     //! @param t initial transform, multiplied against link transform
     //! @returns Transform of link
-    AZ::Transform GetLocalTransformURDF(const sdf::SemanticPose& semanticPose, AZ::Transform t = AZ::Transform::Identity());
+    AZ::Transform GetLocalTransform(const sdf::SemanticPose& semanticPose, AZ::Transform t = AZ::Transform::Identity());
 
     //! Type Alias representing a "stack" of Model object that were visited on the way to the current Link/Joint Visitor Callback
     using ModelStack = AZStd::deque<AZStd::reference_wrapper<const sdf::Model>>;
@@ -194,7 +194,7 @@ namespace ROS2RobotImporter::Utils
     //! The URIs will still need to get resolved via ResolveAssetPath() to point to a valid file location.
     //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
     //! @returns mapping from asset name (model URI + asset URI) to asset info.
-    UrdfAssetMap GetReferencedAssetFilenames(const sdf::Root& root);
+    ReferencedAssetMap GetReferencedAssetFilenames(const sdf::Root& root);
 
     //! Callback used to check for file exist of a path referenced within a URDF/SDF file
     //! @param path Candidate local filesystem path to check for existence

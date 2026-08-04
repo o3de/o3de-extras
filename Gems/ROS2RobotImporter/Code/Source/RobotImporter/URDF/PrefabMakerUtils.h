@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "UrdfParser.h"
+#include "SdfParser.h"
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/std/optional.h>
 #include <AzCore/std/string/string.h>
@@ -68,10 +68,10 @@ namespace ROS2RobotImporter::PrefabMakerUtils
     //! @param assetUri a path to the Asset within the model (e.g. mesh, texture) for which the Asset is requested.
     //! @return Asset for the mesh, if found in the mapping.
     AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
-        const Utils::UrdfAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const AZStd::string& assetUri);
+        const Utils::ReferencedAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const AZStd::string& assetUri);
 
     //! Get Asset from path. Version for std::string.
     //! @see GetAssetFromUri.
     AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
-        const Utils::UrdfAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const std::string& assetUri);
+        const Utils::ReferencedAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const std::string& assetUri);
 } // namespace ROS2RobotImporter::PrefabMakerUtils

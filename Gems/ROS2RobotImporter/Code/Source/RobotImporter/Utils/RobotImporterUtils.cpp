@@ -29,7 +29,7 @@ namespace ROS2RobotImporter::Utils
         };
     } // namespace Internal
 
-    bool IsWheelURDFHeuristics(const sdf::Model& model, const sdf::Link* link)
+    bool IsWheelHeuristics(const sdf::Model& model, const sdf::Link* link)
     {
         auto wheelMatcher = [](AZStd::string_view name)
         {
@@ -80,7 +80,7 @@ namespace ROS2RobotImporter::Utils
         return isWheel;
     }
 
-    AZ::Transform GetLocalTransformURDF(const sdf::SemanticPose& semanticPose, AZ::Transform t)
+    AZ::Transform GetLocalTransform(const sdf::SemanticPose& semanticPose, AZ::Transform t)
     {
         // Determine if the pose is relative to another link
         // See doxygen at
@@ -95,7 +95,7 @@ namespace ROS2RobotImporter::Utils
             return {};
         }
 
-        const AZ::Transform localTransform = URDF::TypeConversions::ConvertPose(resolvedPose);
+        const AZ::Transform localTransform = Utils::TypeConversions::ConvertPose(resolvedPose);
         const AZ::Transform resolvedTransform = localTransform * t;
         return resolvedTransform;
     }
@@ -598,13 +598,13 @@ namespace ROS2RobotImporter::Utils
         return resultModel;
     }
 
-    UrdfAssetMap GetReferencedAssetFilenames(const sdf::Root& root)
+    ReferencedAssetMap GetReferencedAssetFilenames(const sdf::Root& root)
     {
-        UrdfAssetMap urdfAssetMap;
-        auto GetAssetsFromModel = [&urdfAssetMap](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
+        ReferencedAssetMap referencedAssetMap;
+        auto GetAssetsFromModel = [&referencedAssetMap](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
         {
             AZStd::string modelUri(model.Uri().c_str(), model.Uri().size());
-            const auto addFilenameFromGeometry = [&urdfAssetMap, &modelUri](const sdf::Geometry* geometry, ReferencedAssetType assetType)
+            const auto addFilenameFromGeometry = [&referencedAssetMap, &modelUri](const sdf::Geometry* geometry, ReferencedAssetType assetType)
             {
                 if (geometry->Type() == sdf::GeometryType::MESH)
                 {
@@ -612,23 +612,23 @@ namespace ROS2RobotImporter::Utils
                     {
                         const AZ::IO::Path assetUri(mesh->Uri().c_str(), mesh->Uri().size());
                         const AZStd::string modelAssetUri = (modelUri.empty()) ? assetUri.String() : modelUri + "/" + assetUri.String();
-                        if (urdfAssetMap.contains(modelAssetUri))
+                        if (referencedAssetMap.contains(modelAssetUri))
                         {
-                            urdfAssetMap[modelAssetUri].m_assetType |= assetType;
+                            referencedAssetMap[modelAssetUri].m_assetType |= assetType;
                         }
                         else
                         {
-                            UrdfAsset asset;
+                            ReferencedAsset asset;
                             asset.m_assetType = assetType;
                             asset.m_modelUri = modelUri;
                             asset.m_assetUri = assetUri;
-                            urdfAssetMap.emplace(modelAssetUri, AZStd::move(asset));
+                            referencedAssetMap.emplace(modelAssetUri, AZStd::move(asset));
                         }
                     }
                 }
             };
 
-            const auto addFilenamesFromMaterial = [&urdfAssetMap, &modelUri](const sdf::Material* material)
+            const auto addFilenamesFromMaterial = [&referencedAssetMap, &modelUri](const sdf::Material* material)
             {
                 // Only PBR entries on a material have filenames that need to be added.
                 if ((!material) || (!material->PbrMaterial()))
@@ -648,16 +648,16 @@ namespace ROS2RobotImporter::Utils
                         }
                     }
 
-                    const auto emplaceTexture = [&urdfAssetMap, &modelUri](const std::string& texturePath)
+                    const auto emplaceTexture = [&referencedAssetMap, &modelUri](const std::string& texturePath)
                     {
-                        UrdfAsset asset;
+                        ReferencedAsset asset;
                         asset.m_assetType = ReferencedAssetType::Texture;
                         asset.m_modelUri = modelUri;
                         asset.m_assetUri = AZ::IO::Path(texturePath.data(), texturePath.size());
 
                         const AZStd::string modelAssetUri =
                             (modelUri.empty()) ? asset.m_assetUri.String() : modelUri + "/" + asset.m_assetUri.String();
-                        urdfAssetMap.emplace(modelAssetUri, AZStd::move(asset));
+                        referencedAssetMap.emplace(modelAssetUri, AZStd::move(asset));
                     };
 
                     if (auto texture = pbrWorkflow->AlbedoMap(); !texture.empty())
@@ -719,7 +719,7 @@ namespace ROS2RobotImporter::Utils
 
         VisitModels(root, GetAssetsFromModel);
 
-        return urdfAssetMap;
+        return referencedAssetMap;
     }
 
     AZ::IO::Path ResolveAmentPrefixPath(AZ::IO::Path unresolvedPath, AZStd::string_view amentPrefixPath, const FileExistsCB& fileExistsCB)
@@ -962,12 +962,12 @@ namespace ROS2RobotImporter::Utils
             {
                 if (getEnvOutcome.GetError().m_errorCode == AZ::Utils::GetEnvErrorCode::EnvNotSet)
                 {
-                    AZ_Error("UrdfAssetMap", false, "AMENT_PREFIX_PATH is not set in the environment.");
+                    AZ_Error("ReferencedAssetMap", false, "AMENT_PREFIX_PATH is not set in the environment.");
                 }
                 else if (getEnvOutcome.GetError().m_errorCode == AZ::Utils::GetEnvErrorCode::BufferTooSmall)
                 {
                     AZ_Error(
-                        "UrdfAssetMap",
+                        "ReferencedAssetMap",
                         false,
                         "AMENT_PREFIX_PATH is too long (%zu), maximum permissible size is %zu ",
                         getEnvOutcome.GetError().m_requiredSize,
@@ -975,7 +975,7 @@ namespace ROS2RobotImporter::Utils
                 }
                 else
                 {
-                    AZ_Error("UrdfAssetMap", false, "AMENT_PREFIX_PATH is not found.");
+                    AZ_Error("ReferencedAssetMap", false, "AMENT_PREFIX_PATH is not found.");
                 }
             }
 
