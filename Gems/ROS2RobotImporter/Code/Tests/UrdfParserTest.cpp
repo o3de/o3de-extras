@@ -10,8 +10,8 @@
 #include <AzCore/std/ranges/ranges_algorithm.h>
 #include <AzCore/std/string/string.h>
 #include <AzTest/AzTest.h>
-#include <RobotImporter/Sdf/SdfHeuristics.h>
-#include <RobotImporter/Sdf/SdfQueries.h>
+#include <RobotImporter/Queries/SdfHeuristics.h>
+#include <RobotImporter/Queries/SdfQueries.h>
 #include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>

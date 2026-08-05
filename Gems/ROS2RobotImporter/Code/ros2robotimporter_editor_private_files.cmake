@@ -29,14 +29,14 @@ set(FILES
     Source/RobotImporter/Pages/XacroParamsPage.h
     Source/RobotImporter/RobotImporterWidget.cpp
     Source/RobotImporter/RobotImporterWidget.h
-    Source/RobotImporter/Sdf/SdfHeuristics.cpp
-    Source/RobotImporter/Sdf/SdfHeuristics.h
-    Source/RobotImporter/Sdf/SdfPluginUtils.cpp
-    Source/RobotImporter/Sdf/SdfPluginUtils.h
-    Source/RobotImporter/Sdf/SdfQueries.cpp
-    Source/RobotImporter/Sdf/SdfQueries.h
-    Source/RobotImporter/Sdf/SdfVisitors.cpp
-    Source/RobotImporter/Sdf/SdfVisitors.h
+    Source/RobotImporter/Queries/SdfHeuristics.cpp
+    Source/RobotImporter/Queries/SdfHeuristics.h
+    Source/RobotImporter/Queries/SdfPluginUtils.cpp
+    Source/RobotImporter/Queries/SdfPluginUtils.h
+    Source/RobotImporter/Queries/SdfQueries.cpp
+    Source/RobotImporter/Queries/SdfQueries.h
+    Source/RobotImporter/Queries/SdfVisitors.cpp
+    Source/RobotImporter/Queries/SdfVisitors.h
     Source/RobotImporter/SDFormat/Hooks/ROS2AckermannModelHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2CameraSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2GNSSSensorHook.cpp

@@ -6,7 +6,7 @@
  *
  */
 
-#include <RobotImporter/Sdf/SdfPluginUtils.h>
+#include <RobotImporter/Queries/SdfPluginUtils.h>
 
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/std/function/function_template.h>

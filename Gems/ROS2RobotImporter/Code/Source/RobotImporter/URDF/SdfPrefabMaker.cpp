@@ -25,9 +25,9 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2/ROS2EditorBus.h>
-#include <RobotImporter/Sdf/SdfHeuristics.h>
-#include <RobotImporter/Sdf/SdfQueries.h>
-#include <RobotImporter/Sdf/SdfVisitors.h>
+#include <RobotImporter/Queries/SdfHeuristics.h>
+#include <RobotImporter/Queries/SdfQueries.h>
+#include <RobotImporter/Queries/SdfVisitors.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Assets/AssetTypes.h>
 #include <RobotImporter/Utils/TypeConversions.h>

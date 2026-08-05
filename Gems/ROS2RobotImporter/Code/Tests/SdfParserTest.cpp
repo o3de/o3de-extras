@@ -11,9 +11,9 @@
 #include <AzTest/AzTest.h>
 #include <AzTest/Utils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
-#include <RobotImporter/Sdf/SdfPluginUtils.h>
-#include <RobotImporter/Sdf/SdfQueries.h>
-#include <RobotImporter/Sdf/SdfVisitors.h>
+#include <RobotImporter/Queries/SdfPluginUtils.h>
+#include <RobotImporter/Queries/SdfQueries.h>
+#include <RobotImporter/Queries/SdfVisitors.h>
 #include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 

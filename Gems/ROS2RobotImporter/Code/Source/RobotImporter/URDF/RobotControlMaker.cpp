@@ -10,7 +10,7 @@
 
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <ROS2RobotImporter/ROS2RobotImporterBus.h>
-#include <RobotImporter/Sdf/SdfPluginUtils.h>
+#include <RobotImporter/Queries/SdfPluginUtils.h>
 
 namespace ROS2RobotImporter
 {

@@ -6,12 +6,12 @@
  *
  */
 
-#include <RobotImporter/Sdf/SdfHeuristics.h>
+#include <RobotImporter/Queries/SdfHeuristics.h>
 
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
-#include <RobotImporter/Sdf/SdfQueries.h>
+#include <RobotImporter/Queries/SdfQueries.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 

@@ -11,7 +11,7 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AzCore/Utils/Utils.h>
-#include <RobotImporter/Sdf/SdfVisitors.h>
+#include <RobotImporter/Queries/SdfVisitors.h>
 #include <AzCore/IO/SystemFile.h>
 
 namespace ROS2RobotImporter::Utils

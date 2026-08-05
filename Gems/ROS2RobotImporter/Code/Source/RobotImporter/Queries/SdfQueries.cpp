@@ -6,8 +6,8 @@
  *
  */
 
-#include <RobotImporter/Sdf/SdfQueries.h>
-#include <RobotImporter/Sdf/SdfVisitors.h>
+#include <RobotImporter/Queries/SdfQueries.h>
+#include <RobotImporter/Queries/SdfVisitors.h>
 
 namespace ROS2RobotImporter::Utils
 {
