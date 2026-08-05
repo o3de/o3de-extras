@@ -12,7 +12,7 @@
 #include <QHeaderView>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetLookup.h>
 
 namespace ROS2RobotImporter
 {

@@ -13,7 +13,6 @@
 #include <ROS2Controllers/ROS2ControllersEditorBus.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
-#include <RobotImporter/Assets/AssetPathResolver.h>
 #include <Source/EditorArticulationLinkComponent.h>
 
 namespace ROS2RobotImporter::SDFormat

@@ -16,6 +16,7 @@
 #include <RobotImporter/FixURDF/FixURDF.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
 
 namespace ROS2RobotImporter::SdfParser
 {
@@ -147,6 +148,55 @@ namespace ROS2RobotImporter::SdfParser
             return result;
         }
         return Parse(xmlStr, parserConfig);
+    }
+
+
+    sdf::ParserConfig CreateSdfParserConfigFromSettings(const SdfAssetBuilderSettings& settings, const AZ::IO::PathView& baseFilePath)
+    {
+        sdf::ParserConfig sdfConfig;
+
+        sdfConfig.URDFSetPreserveFixedJoint(settings.m_urdfPreserveFixedJoints);
+
+        // Fill in the URI resolution with the supplied prefix mappings.
+        for (auto& [prefix, pathList] : settings.m_resolverSettings.m_uriPrefixMap)
+        {
+            std::string uriPath;
+            for (auto& path : pathList)
+            {
+                if (!uriPath.empty())
+                {
+                    uriPath.append(std::string(":"));
+                }
+
+                uriPath.append(std::string(path.c_str(), path.size()));
+            }
+            if (!prefix.empty() && !uriPath.empty())
+            {
+                std::string uriPrefix(prefix.c_str(), prefix.size());
+                sdfConfig.AddURIPath(uriPrefix, uriPath);
+                AZ_Trace("SdfParserConfig", "Added URI mapping '%s' -> '%s'", uriPrefix.c_str(), uriPath.c_str());
+            }
+        }
+
+        // If any files couldn't be found using our supplied prefix mappings, this callback will get called.
+        // Attempt to use our full path resolution, and print a warning if it still couldn't be resolved.
+        sdfConfig.SetFindCallback(
+            [settings, baseFilePath](const std::string& fileName) -> std::string
+            {
+                auto amentPrefixPath = Utils::GetAmentPrefixPath();
+
+                auto resolved = Utils::ResolveAssetPath(AZ::IO::Path(fileName.c_str()), baseFilePath, amentPrefixPath, settings);
+                if (!resolved.empty())
+                {
+                    AZ_Trace("SdfParserConfig", "SDF SetFindCallback resolved '%s' -> '%s'", fileName.c_str(), resolved.c_str());
+                    return resolved.c_str();
+                }
+
+                AZ_Warning("SdfParserConfig", false, "SDF SetFindCallback failed to resolve '%s'", fileName.c_str());
+                return fileName;
+            });
+
+        return sdfConfig;
     }
 
 } // namespace ROS2RobotImporter::SdfParser

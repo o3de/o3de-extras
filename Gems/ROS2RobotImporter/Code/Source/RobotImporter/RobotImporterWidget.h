@@ -24,7 +24,6 @@
 #include <AzCore/std/parallel/thread.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <RobotImporter/FixURDF/URDFModifications.h>
-#include <RobotImporter/Assets/AssetPathResolver.h>
 #include <RobotImporter/xacro/XacroUtils.h>
 
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>

@@ -76,10 +76,15 @@ set(FILES
     Source/RobotImporter/Utils/ErrorUtils.h
     Source/RobotImporter/Utils/FilePath.cpp
     Source/RobotImporter/Utils/FilePath.h
+    Source/RobotImporter/Assets/AssetImporter.cpp
+    Source/RobotImporter/Assets/AssetImporter.h
     Source/RobotImporter/Assets/AssetPathResolver.cpp
     Source/RobotImporter/Assets/AssetPathResolver.h
-    Source/RobotImporter/Utils/SourceAssetsStorage.cpp
-    Source/RobotImporter/Utils/SourceAssetsStorage.h
+    Source/RobotImporter/Assets/AssetTypes.h
+    Source/RobotImporter/Assets/AssetLookup.cpp
+    Source/RobotImporter/Assets/AssetLookup.h
+    Source/RobotImporter/Assets/SceneManifestBuilder.cpp
+    Source/RobotImporter/Assets/SceneManifestBuilder.h
     Source/RobotImporter/Utils/TypeConversions.cpp
     Source/RobotImporter/Utils/TypeConversions.h
     Source/SdfAssetBuilder/SdfAssetBuilder.cpp

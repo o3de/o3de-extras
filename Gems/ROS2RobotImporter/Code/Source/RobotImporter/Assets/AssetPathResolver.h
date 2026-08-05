@@ -7,19 +7,12 @@
  */
 #pragma once
 
-#include <AzCore/Component/ComponentBus.h>
-#include <AzCore/IO/SystemFile.h>
-#include <AzCore/Math/Transform.h>
-#include <AzCore/std/containers/unordered_map.h>
-#include <AzCore/std/containers/unordered_set.h>
-#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/function/function_template.h>
 #include <AzCore/std/string/string.h>
-#include <RobotImporter/URDF/SdfParser.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetTypes.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
-#include <sdf/sdf.hh>
+#include <sdf/Root.hh>
 
 namespace ROS2RobotImporter::Utils
 {
@@ -60,12 +53,4 @@ namespace ROS2RobotImporter::Utils
     AmentPrefixString GetAmentPrefixPath();
 } // namespace ROS2RobotImporter::Utils
 
-namespace ROS2RobotImporter::Utils::SDFormat
-{
-    //! Given a set of SdfAssetBuilderSettings, produce an sdf::ParserConfig that can be used by the sdformat library.
-    //! @param settings The input settings to use
-    //! @param baseFilePath The base file getting parsed, which is used to help resolve file paths
-    //! @return The output parser config to use with sdformat.
-    sdf::ParserConfig CreateSdfParserConfigFromSettings(const SdfAssetBuilderSettings& settings, const AZ::IO::PathView& baseFilePath);
 
-} // namespace ROS2RobotImporter::Utils::SDFormat

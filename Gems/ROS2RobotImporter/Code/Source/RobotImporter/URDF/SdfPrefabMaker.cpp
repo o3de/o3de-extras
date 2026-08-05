@@ -29,7 +29,7 @@
 #include <RobotImporter/Sdf/SdfQueries.h>
 #include <RobotImporter/Sdf/SdfVisitors.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetTypes.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 
 namespace ROS2RobotImporter

@@ -26,6 +26,7 @@
 #include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Assets/AssetLookup.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace ROS2RobotImporter
@@ -194,7 +195,7 @@ namespace ROS2RobotImporter
         const auto fullSourcePath = AZ::IO::Path(request.m_watchFolder) / AZ::IO::Path(request.m_sourceFile);
 
         // Set the parser config settings for parsing the source file content through the libsdformat parser
-        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(m_globalSettings, fullSourcePath);
+        sdf::ParserConfig parserConfig = SdfParser::CreateSdfParserConfigFromSettings(m_globalSettings, fullSourcePath);
 
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", fullSourcePath.c_str());
         auto parsedSdfRootOutcome = SdfParser::ParseFromFile(fullSourcePath, parserConfig, m_globalSettings);
@@ -258,7 +259,7 @@ namespace ROS2RobotImporter
 
         // Set the parser config settings for parsing the source file content through the libsdformat parser
         sdf::ParserConfig parserConfig =
-            Utils::SDFormat::CreateSdfParserConfigFromSettings(m_globalSettings, AZ::IO::PathView(request.m_sourceFile));
+            SdfParser::CreateSdfParserConfigFromSettings(m_globalSettings, AZ::IO::PathView(request.m_sourceFile));
 
         // Read in and parse the source SDF file.
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", request.m_fullPath.c_str());

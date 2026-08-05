@@ -14,7 +14,7 @@
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetTypes.h>
 
 namespace ROS2RobotImporter
 {

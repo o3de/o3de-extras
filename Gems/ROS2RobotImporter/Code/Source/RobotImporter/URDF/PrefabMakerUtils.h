@@ -12,7 +12,7 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/std/optional.h>
 #include <AzCore/std/string/string.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetTypes.h>
 
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
 

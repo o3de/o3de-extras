@@ -15,6 +15,8 @@
 #include <AzCore/std/utility/move.h>
 #include <AzToolsFramework/API/ViewPaneOptions.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Assets/AssetImporter.h>
 #include <RobotImporter/RobotImporterWidget.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
@@ -133,7 +135,7 @@ namespace ROS2RobotImporter
         SdfAssetBuilderSettings sdfBuilderSettings;
         sdfBuilderSettings.LoadSettings();
         // Set the parser config settings for the source file content
-        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(sdfBuilderSettings, filePath);
+        sdf::ParserConfig parserConfig = SdfParser::CreateSdfParserConfigFromSettings(sdfBuilderSettings, filePath);
 
         auto parsedSdfOutcome = SdfParser::ParseFromFile(filePath, parserConfig, sdfBuilderSettings);
         if (!parsedSdfOutcome)

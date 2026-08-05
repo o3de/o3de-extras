@@ -16,7 +16,7 @@
 #include <PhysX/EditorColliderComponentRequestBus.h>
 #include <PhysX/MeshColliderComponentBus.h>
 #include <RobotImporter/Sdf/SdfHeuristics.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetLookup.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <SceneAPI/SceneCore/Containers/Scene.h>
 #include <SceneAPI/SceneCore/Containers/Utilities/Filters.h>

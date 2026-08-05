@@ -23,7 +23,7 @@
 #include <QTimer>
 #include <QVector>
 #include <QWizardPage>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetTypes.h>
 #endif
 
 namespace ROS2RobotImporter

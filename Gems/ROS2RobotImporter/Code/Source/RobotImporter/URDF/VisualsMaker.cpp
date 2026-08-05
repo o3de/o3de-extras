@@ -9,6 +9,7 @@
 #include "RobotImporter/URDF/VisualsMaker.h"
 #include "RobotImporter/URDF/PrefabMakerUtils.h"
 #include "RobotImporter/Utils/TypeConversions.h"
+#include <RobotImporter/Assets/AssetLookup.h>
 
 #include <Atom/RPI.Reflect/Material/MaterialAsset.h>
 #include <AtomLyIntegration/CommonFeatures/Material/MaterialComponentBus.h>

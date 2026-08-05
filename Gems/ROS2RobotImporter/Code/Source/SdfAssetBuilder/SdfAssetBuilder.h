@@ -12,9 +12,12 @@
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 
 #include <RobotImporter/URDF/SdfParser.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
-#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <RobotImporter/Assets/AssetTypes.h>
 
+namespace ROS2RobotImporter
+{
+    struct SdfAssetBuilderSettings;
+} // namespace ROS2RobotImporter
 namespace ROS2RobotImporter
 {
     [[maybe_unused]] constexpr const char* SdfAssetBuilderName = "SdfAssetBuilder";
