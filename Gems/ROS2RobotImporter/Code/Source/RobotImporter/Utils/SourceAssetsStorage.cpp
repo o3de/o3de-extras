@@ -8,7 +8,7 @@
 
 #include "SourceAssetsStorage.h"
 #include "AzCore/Outcome/Outcome.h"
-#include "RobotImporterUtils.h"
+#include "RobotImporter/Assets/AssetPathResolver.h"
 #include <Atom/RPI.Reflect/Image/StreamingImageAsset.h>
 #include <Atom/RPI.Reflect/Model/ModelAsset.h>
 #include <AzCore/IO/FileIO.h>

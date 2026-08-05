@@ -10,7 +10,7 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/ROS2NamesBus.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <RobotImporter/Sdf/SdfHeuristics.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 

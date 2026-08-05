@@ -11,9 +11,11 @@
 #include <AzTest/AzTest.h>
 #include <AzTest/Utils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
+#include <RobotImporter/Sdf/SdfPluginUtils.h>
+#include <RobotImporter/Sdf/SdfQueries.h>
+#include <RobotImporter/Sdf/SdfVisitors.h>
 #include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
 
 using namespace ROS2RobotImporter;
 

@@ -25,7 +25,7 @@
 #include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace ROS2RobotImporter

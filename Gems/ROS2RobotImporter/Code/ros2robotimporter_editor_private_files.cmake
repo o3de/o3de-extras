@@ -29,6 +29,14 @@ set(FILES
     Source/RobotImporter/Pages/XacroParamsPage.h
     Source/RobotImporter/RobotImporterWidget.cpp
     Source/RobotImporter/RobotImporterWidget.h
+    Source/RobotImporter/Sdf/SdfHeuristics.cpp
+    Source/RobotImporter/Sdf/SdfHeuristics.h
+    Source/RobotImporter/Sdf/SdfPluginUtils.cpp
+    Source/RobotImporter/Sdf/SdfPluginUtils.h
+    Source/RobotImporter/Sdf/SdfQueries.cpp
+    Source/RobotImporter/Sdf/SdfQueries.h
+    Source/RobotImporter/Sdf/SdfVisitors.cpp
+    Source/RobotImporter/Sdf/SdfVisitors.h
     Source/RobotImporter/SDFormat/Hooks/ROS2AckermannModelHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2CameraSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2GNSSSensorHook.cpp
@@ -68,8 +76,8 @@ set(FILES
     Source/RobotImporter/Utils/ErrorUtils.h
     Source/RobotImporter/Utils/FilePath.cpp
     Source/RobotImporter/Utils/FilePath.h
-    Source/RobotImporter/Utils/RobotImporterUtils.cpp
-    Source/RobotImporter/Utils/RobotImporterUtils.h
+    Source/RobotImporter/Assets/AssetPathResolver.cpp
+    Source/RobotImporter/Assets/AssetPathResolver.h
     Source/RobotImporter/Utils/SourceAssetsStorage.cpp
     Source/RobotImporter/Utils/SourceAssetsStorage.h
     Source/RobotImporter/Utils/TypeConversions.cpp

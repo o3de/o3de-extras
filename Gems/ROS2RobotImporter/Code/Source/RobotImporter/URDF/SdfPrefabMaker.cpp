@@ -25,8 +25,11 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2/ROS2EditorBus.h>
+#include <RobotImporter/Sdf/SdfHeuristics.h>
+#include <RobotImporter/Sdf/SdfQueries.h>
+#include <RobotImporter/Sdf/SdfVisitors.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <RobotImporter/Utils/SourceAssetsStorage.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 
 namespace ROS2RobotImporter

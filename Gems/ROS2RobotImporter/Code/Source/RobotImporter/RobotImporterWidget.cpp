@@ -20,7 +20,7 @@
 #include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
