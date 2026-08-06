@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "UrdfParser.h"
+#include "SdfParser.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/Math/Vector3.h>
@@ -23,11 +23,11 @@ namespace ROS2RobotImporter
     {
     public:
         VisualsMaker();
-        VisualsMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping);
+        VisualsMaker(const AZStd::shared_ptr<Utils::ReferencedAssetMap>& referencedAssetMap);
 
         //! Add zero, one or many visual elements to a given entity (depending on link content).
         //! Note that a sub-entity will be added to hold each visual (since they can have different transforms).
-        //! @param link A parsed URDF tree link node which could hold information about visuals.
+        //! @param link A parsed SDF link node which could hold information about visuals.
         //! @param modelUri The URI of the model to use for the visual.
         //! @param entityId A non-active entity which will be affected.
         //! @return List containing any entities created.
@@ -41,6 +41,6 @@ namespace ROS2RobotImporter
         void AddMaterialForVisual(
             const sdf::Visual* visual, const AZStd::string& modelUri, AZ::EntityId entityId, const AZ::Data::AssetId& assetId) const;
 
-        AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
+        AZStd::shared_ptr<Utils::ReferencedAssetMap> m_referencedAssetMap;
     };
 } // namespace ROS2RobotImporter

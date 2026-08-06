@@ -34,8 +34,8 @@ namespace ROS2RobotImporter
         static const char* CollidersMakerLoggingTag = "CollidersMaker";
     } // namespace Internal
 
-    CollidersMaker::CollidersMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping)
-        : m_urdfAssetsMapping(urdfAssetsMapping)
+    CollidersMaker::CollidersMaker(const AZStd::shared_ptr<Utils::ReferencedAssetMap>& referencedAssetMap)
+        : m_referencedAssetMap(referencedAssetMap)
     {
     }
 
@@ -67,7 +67,7 @@ namespace ROS2RobotImporter
     void CollidersMaker::AddColliders(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId)
     {
         AZStd::string typeString = "collider";
-        const bool isWheelEntity = Utils::IsWheelURDFHeuristics(model, link);
+        const bool isWheelEntity = Utils::IsWheelHeuristics(model, link);
         if (isWheelEntity)
         {
             AZ_Printf(Internal::CollidersMakerLoggingTag, "Due to its name, %s is considered a wheel entity\n", link->Name().c_str());
@@ -129,15 +129,15 @@ namespace ROS2RobotImporter
         Physics::ColliderConfiguration colliderConfig;
 
         colliderConfig.m_materialSlots.SetMaterialAsset(0, materialAsset);
-        colliderConfig.m_position = URDF::TypeConversions::ConvertVector3(collision->RawPose().Pos());
-        colliderConfig.m_rotation = URDF::TypeConversions::ConvertQuaternion(collision->RawPose().Rot());
+        colliderConfig.m_position = Utils::TypeConversions::ConvertVector3(collision->RawPose().Pos());
+        colliderConfig.m_rotation = Utils::TypeConversions::ConvertQuaternion(collision->RawPose().Rot());
         if (!isPrimitiveShape)
         {
             AZ_Printf(Internal::CollidersMakerLoggingTag, "Adding mesh collider to %s\n", entityId.ToString().c_str());
             auto meshGeometry = geometry->MeshShape();
             AZ_Assert(meshGeometry, "geometry is not meshGeometry");
 
-            auto asset = PrefabMakerUtils::GetAssetFromUri(*m_urdfAssetsMapping, modelUri, meshGeometry->Uri());
+            auto asset = PrefabMakerUtils::GetAssetFromUri(*m_referencedAssetMap, modelUri, meshGeometry->Uri());
             if (!asset)
             {
                 return;
@@ -183,7 +183,7 @@ namespace ROS2RobotImporter
             {
                 const auto boxGeometry = geometry->BoxShape();
                 AZ_Assert(boxGeometry, "geometry is not boxGeometry");
-                const Physics::BoxShapeConfiguration cfg{ URDF::TypeConversions::ConvertVector3(boxGeometry->Size()) };
+                const Physics::BoxShapeConfiguration cfg{ Utils::TypeConversions::ConvertVector3(boxGeometry->Size()) };
                 entity->CreateComponent<PhysX::EditorColliderComponent>(colliderConfig, cfg);
             }
             break;

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "UrdfParser.h"
+#include "SdfParser.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
@@ -25,7 +25,7 @@ namespace ROS2RobotImporter
     public:
         //! Construct the class based on SDF asset mapping.
         //! @param sdfAssetsMapping a prepared mapping of Assets used by the source URDF/SDF.
-        CollidersMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& sdfAssetsMapping);
+        CollidersMaker(const AZStd::shared_ptr<Utils::ReferencedAssetMap>& sdfAssetsMapping);
 
         //! Prevent copying of existing CollidersMaker
         CollidersMaker(const CollidersMaker& other) = delete;
@@ -51,6 +51,6 @@ namespace ROS2RobotImporter
             const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const;
 
         AZ::Data::Asset<Physics::MaterialAsset> m_wheelMaterial;
-        AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
+        AZStd::shared_ptr<Utils::ReferencedAssetMap> m_referencedAssetMap;
     };
 } // namespace ROS2RobotImporter

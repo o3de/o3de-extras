@@ -24,11 +24,12 @@
 #include <sdf/Root.hh>
 #include <sdf/Visual.hh>
 
-namespace ROS2RobotImporter::UrdfParser
+namespace ROS2RobotImporter::SdfParser
 {
-    //! Functions for parsing URDF/SDF data.
+    //! Functions for parsing robot description data (URDF, SDF, .world) into an sdf::Root object.
+    //! Every supported format is loaded through libsdformat, so the result is always an SDF object tree.
 
-    //! Stores the result of parsing URDF/SDF data
+    //! Stores the result of parsing robot description data
     //! The operator bool returns true if the sdf::Errors vector is empty
     struct ParseResult
     {
@@ -47,7 +48,7 @@ namespace ROS2RobotImporter::UrdfParser
         sdf::Root&& GetRoot() &&;
 
         //! Property getters for retrieving parsing messages
-        //! logged during libsdformat parsing of the URDF content
+        //! logged during libsdformat parsing of the file content
         //! This does not support a non-const lvalue overload
         //! As modification the result structure parser messages
         //! have no need to be modified inplace
@@ -87,7 +88,7 @@ namespace ROS2RobotImporter::UrdfParser
     using RootObjectOutcome = ParseResult;
 
     //! Parse string with URDF/SDF data and generate root SDF object.
-    //! @param xmlString a string that contains URDF data (XML format).
+    //! @param xmlString a string that contains URDF or SDF data (XML format).
     //! @param parserConfig structure that contains configuration options for the SDFormatter parser
     //!        The relevant ParserConfig functions for URDF importing are
     //!        URDFPreserveFixedJoint() function to prevent merging of robot links bound by fixed joint
@@ -96,8 +97,8 @@ namespace ROS2RobotImporter::UrdfParser
     RootObjectOutcome Parse(AZStd::string_view xmlString, const sdf::ParserConfig& parserConfig);
     RootObjectOutcome Parse(const std::string& xmlString, const sdf::ParserConfig& parserConfig);
 
-    //! Parse file with URDF data and generate model.
-    //! @param filePath is a path to file with URDF data that will be loaded and parsed.
+    //! Parse file with URDF/SDF data and generate model.
+    //! @param filePath is a path to a .urdf, .sdf or .world file that will be loaded and parsed.
     //! @param parserConfig structure that contains configuration options for the SDFormater parser
     //!        The relevant ParserConfig functions for URDF importing are
     //!        URDFPreserveFixedJoint() function to prevent merging of robot links bound by fixed joint
@@ -106,4 +107,4 @@ namespace ROS2RobotImporter::UrdfParser
     //! @return SDF root object containing parsed <world> or <model> tags
     RootObjectOutcome ParseFromFile(
         AZ::IO::PathView filePath, const sdf::ParserConfig& parserConfig, const SdfAssetBuilderSettings& settings);
-} // namespace ROS2RobotImporter::UrdfParser
+} // namespace ROS2RobotImporter::SdfParser

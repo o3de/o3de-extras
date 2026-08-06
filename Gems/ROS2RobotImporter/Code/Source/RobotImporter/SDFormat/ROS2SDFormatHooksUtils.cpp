@@ -79,7 +79,7 @@ namespace ROS2RobotImporter::SDFormat
     void HooksUtils::SetSensorEntityTransform(AZ::Entity& entity, const sdf::Sensor& sdfSensor)
     {
         const auto sensorSemanticPose = sdfSensor.SemanticPose();
-        AZ::Transform tf = Utils::GetLocalTransformURDF(sensorSemanticPose);
+        AZ::Transform tf = Utils::GetLocalTransform(sensorSemanticPose);
         auto* transformInterface = entity.FindComponent<AzToolsFramework::Components::TransformComponent>();
         if (transformInterface)
         {

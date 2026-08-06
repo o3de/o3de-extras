@@ -21,11 +21,11 @@ namespace ROS2RobotImporter
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
 
-        //! Generate prefab from the urdf file.
-        //! @param filePath The path of the urdf file
-        //! @param importAssetWithUrdf If true, the assets referenced in the urdf file will be imported
+        //! Generate prefab from the URDF/SDF file.
+        //! @param filePath The path of the URDF/SDF file
+        //! @param importAssetWithFile If true, the assets referenced in the URDF/SDF file will be imported
         //! @param useArticulation If true, the prefab will be generated with articulation
-        virtual bool GeneratePrefabFromFile(const AZStd::string_view filePath, bool importAssetWithUrdf, bool useArticulation) = 0;
+        virtual bool GeneratePrefabFromFile(const AZStd::string_view filePath, bool importAssetWithFile, bool useArticulation) = 0;
 
         //! Return the reference to the list of sensor importer hooks
         virtual const SDFormat::SensorImporterHooksStorage& GetSensorHooks() const = 0;

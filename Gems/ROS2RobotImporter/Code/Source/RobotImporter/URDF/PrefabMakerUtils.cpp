@@ -47,10 +47,10 @@ namespace ROS2RobotImporter::PrefabMakerUtils
 
     void SetEntityTransformLocal(const gz::math::Pose3d& origin, AZ::EntityId entityId)
     {
-        gz::math::Vector3 urdfPosition = origin.Pos();
-        gz::math::Quaternion urdfRotation = origin.Rot();
-        AZ::Quaternion azRotation = URDF::TypeConversions::ConvertQuaternion(urdfRotation);
-        AZ::Vector3 azPosition = URDF::TypeConversions::ConvertVector3(urdfPosition);
+        gz::math::Vector3 sdfPosition = origin.Pos();
+        gz::math::Quaternion sdfRotation = origin.Rot();
+        AZ::Quaternion azRotation = Utils::TypeConversions::ConvertQuaternion(sdfRotation);
+        AZ::Vector3 azPosition = Utils::TypeConversions::ConvertVector3(sdfPosition);
         AZ::Transform tf(azPosition, azRotation, 1.0f);
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
@@ -145,22 +145,22 @@ namespace ROS2RobotImporter::PrefabMakerUtils
     }
 
     AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
-        const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& modelUri, const AZStd::string& assetUri)
+        const Utils::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const AZStd::string& assetUri)
     {
         const AZStd::string modelAssetUri = (modelUri.empty()) ? assetUri : modelUri + "/" + assetUri;
-        if (!urdfAssetsMapping.contains(modelAssetUri))
+        if (!referencedAssetMap.contains(modelAssetUri))
         {
             AZ_Warning("GetAssetFromUri", false, "there is no asset for mesh %s in model %s", assetUri.c_str(), modelUri.c_str());
             return AZStd::nullopt;
         }
 
-        return urdfAssetsMapping.at(modelAssetUri).m_availableAssetInfo;
+        return referencedAssetMap.at(modelAssetUri).m_availableAssetInfo;
     }
 
     AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
-        const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& modelUri, const std::string& assetUri)
+        const Utils::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const std::string& assetUri)
     {
-        return GetAssetFromUri(urdfAssetsMapping, modelUri, AZStd::string(assetUri.c_str(), assetUri.size()));
+        return GetAssetFromUri(referencedAssetMap, modelUri, AZStd::string(assetUri.c_str(), assetUri.size()));
     }
 
 } // namespace ROS2RobotImporter::PrefabMakerUtils

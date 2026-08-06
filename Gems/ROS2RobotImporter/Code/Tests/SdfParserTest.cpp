@@ -11,7 +11,7 @@
 #include <AzTest/AzTest.h>
 #include <AzTest/Utils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
-#include <RobotImporter/URDF/UrdfParser.h>
+#include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 
@@ -233,7 +233,7 @@ namespace UnitTest
     TEST_F(SdfParserTest, SdfWithDuplicateModelNames_ResultsInError)
     {
         const auto xmlStr = GetSdfWithDuplicateModelName();
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, {});
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, {});
         ASSERT_FALSE(sdfRootOutcome);
         const auto& sdfErrors = sdfRootOutcome.GetSdfErrors();
         EXPECT_FALSE(sdfErrors.empty());
@@ -244,7 +244,7 @@ namespace UnitTest
     TEST_F(SdfParserTest, SdfWithModelsOnRootAndWorld_ParsesSuccessfully)
     {
         const auto xmlStr = GetSdfWithWorldThatHasMultipleModels();
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, {});
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, {});
         ASSERT_TRUE(sdfRootOutcome);
         const auto& sdfRoot = sdfRootOutcome.GetRoot();
         // This SDF should have a model on the root that points to root model
@@ -328,7 +328,7 @@ namespace UnitTest
     TEST_F(SdfParserTest, VisitingSdfWithMultipleModelsWithSameLinkName_VisitsAllLinks)
     {
         const auto xmlStr = GetSdfWithMultipleModelsThatHaveLinksWithTheSameName();
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, {});
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, {});
         ASSERT_TRUE(sdfRootOutcome);
         const auto& sdfRoot = sdfRootOutcome.GetRoot();
         // The SDF should also have a single world
@@ -389,7 +389,7 @@ namespace UnitTest
 
         sdfConfig.SetFindCallback(AZStd::move(SdfFindCallback));
 
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, sdfConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, sdfConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const auto& sdfRoot = sdfRootOutcome.GetRoot();
         // The SDF should also have a single world
@@ -424,7 +424,7 @@ namespace UnitTest
     {
         {
             const auto xmlStr = GetSdfWithTwoSensors();
-            const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, {});
+            const auto sdfRootOutcome = SdfParser::Parse(xmlStr, {});
             ASSERT_TRUE(sdfRootOutcome);
             const auto& sdfRoot = sdfRootOutcome.GetRoot();
             const auto* sdfModel = sdfRoot.Model();
@@ -474,7 +474,7 @@ namespace UnitTest
 
         {
             const auto xmlStr = GetSdfWithImuSensor();
-            const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, {});
+            const auto sdfRootOutcome = SdfParser::Parse(xmlStr, {});
             ASSERT_TRUE(sdfRootOutcome);
             const auto& sdfRoot = sdfRootOutcome.GetRoot();
             const auto* sdfModel = sdfRoot.Model();
@@ -546,7 +546,7 @@ namespace UnitTest
         };
 
         const auto xmlStr = GetSdfWithTwoSensors();
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, {});
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, {});
         ASSERT_TRUE(sdfRootOutcome);
         const auto& sdfRoot = sdfRootOutcome.GetRoot();
         const auto* sdfModel = sdfRoot.Model();
@@ -614,7 +614,7 @@ namespace UnitTest
     {
         {
             const auto xmlStr = GetSdfWithTwoSensors();
-            const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, {});
+            const auto sdfRootOutcome = SdfParser::Parse(xmlStr, {});
             ASSERT_TRUE(sdfRootOutcome);
             const auto& sdfRoot = sdfRootOutcome.GetRoot();
             const auto* sdfModel = sdfRoot.Model();
@@ -659,7 +659,7 @@ namespace UnitTest
         }
         {
             const auto xmlStr = GetSdfWithImuSensor();
-            const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, {});
+            const auto sdfRootOutcome = SdfParser::Parse(xmlStr, {});
             ASSERT_TRUE(sdfRootOutcome);
             const auto& sdfRoot = sdfRootOutcome.GetRoot();
             const auto* sdfModel = sdfRoot.Model();

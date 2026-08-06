@@ -10,7 +10,7 @@
 #include <AzCore/std/ranges/ranges_algorithm.h>
 #include <AzCore/std/string/string.h>
 #include <AzTest/AzTest.h>
-#include <RobotImporter/URDF/UrdfParser.h>
+#include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/xacro/XacroUtils.h>
@@ -326,7 +326,7 @@ namespace UnitTest
     {
         const auto xmlStr = GetUrdfWithOneLink();
         sdf::ParserConfig parserConfig;
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
@@ -376,7 +376,7 @@ namespace UnitTest
     {
         const auto xmlStr = GetUrdfWithTwoLinksAndJoint();
         sdf::ParserConfig parserConfig;
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
@@ -407,7 +407,7 @@ namespace UnitTest
         const auto xmlStr = GetUrdfWithTwoLinksAndJoint();
         sdf::ParserConfig parserConfig;
         parserConfig.URDFSetPreserveFixedJoint(true);
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
@@ -457,7 +457,7 @@ namespace UnitTest
     {
         const auto xmlStr = GetUrdfWithTwoLinksAndJoint("continuous");
         sdf::ParserConfig parserConfig;
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
@@ -510,7 +510,7 @@ namespace UnitTest
         const auto xmlStr = GetURDFWithTwoLinksAndBaseLinkNoInertia();
         sdf::ParserConfig parserConfig;
         parserConfig.URDFSetPreserveFixedJoint(true);
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_FALSE(sdfRootOutcome);
         AZStd::string errorString = Utils::JoinSdfErrorsToString(sdfRootOutcome.GetSdfErrors());
         printf("URDF with single link and no inertia: %s\n", errorString.c_str());
@@ -521,7 +521,7 @@ namespace UnitTest
         const auto xmlStr = GetURDFWithTwoLinksAndBaseLinkNoInertia();
         sdf::ParserConfig parserConfig;
         parserConfig.URDFSetPreserveFixedJoint(false);
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
@@ -554,7 +554,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         // Make sure joint reduction occurs
         parserConfig.URDFSetPreserveFixedJoint(false);
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
@@ -599,7 +599,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         // Make sure joint reduction occurs
         parserConfig.URDFSetPreserveFixedJoint(false);
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
@@ -642,25 +642,25 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const AZStd::string_view wheelName("wheel_left_link");
         const auto xmlStr = GetURDFWithWheel(wheelName, "continuous");
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         auto wheelCandidate = model->LinkByName(std::string(wheelName.data(), wheelName.size()));
         ASSERT_NE(nullptr, wheelCandidate);
-        EXPECT_TRUE(Utils::IsWheelURDFHeuristics(*model, wheelCandidate));
+        EXPECT_TRUE(Utils::IsWheelHeuristics(*model, wheelCandidate));
 
         const AZStd::string_view wheelNameSuffix("left_link_wheel");
         const auto xmlStr2 = GetURDFWithWheel(wheelNameSuffix, "continuous");
-        const auto sdfRootOutcome2 = UrdfParser::Parse(xmlStr2, parserConfig);
+        const auto sdfRootOutcome2 = SdfParser::Parse(xmlStr2, parserConfig);
         ASSERT_TRUE(sdfRootOutcome2);
         const sdf::Root& sdfRoot2 = sdfRootOutcome2.GetRoot();
         const sdf::Model* model2 = sdfRoot2.Model();
         ASSERT_NE(nullptr, model2);
         auto wheelCandidate2 = model2->LinkByName(std::string(wheelNameSuffix.data(), wheelNameSuffix.size()));
         ASSERT_NE(nullptr, wheelCandidate2);
-        EXPECT_TRUE(Utils::IsWheelURDFHeuristics(*model2, wheelCandidate2));
+        EXPECT_TRUE(Utils::IsWheelHeuristics(*model2, wheelCandidate2));
     }
 
     TEST_F(UrdfParserTest, WheelHeuristicNameNotValid1)
@@ -668,14 +668,14 @@ namespace UnitTest
         const AZStd::string wheelName("whe3l_left_link");
         const auto xmlStr = GetURDFWithWheel(wheelName, "continuous");
         sdf::ParserConfig parserConfig;
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         auto wheelCandidate = model->LinkByName(std::string(wheelName.data(), wheelName.size()));
         ASSERT_NE(nullptr, wheelCandidate);
-        EXPECT_FALSE(Utils::IsWheelURDFHeuristics(*model, wheelCandidate));
+        EXPECT_FALSE(Utils::IsWheelHeuristics(*model, wheelCandidate));
     }
 
     TEST_F(UrdfParserTest, WheelHeuristicJointNotValid)
@@ -683,7 +683,7 @@ namespace UnitTest
         const AZStd::string wheelName("wheel_left_link");
         const auto xmlStr = GetURDFWithWheel(wheelName, "fixed");
         sdf::ParserConfig parserConfig;
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
@@ -698,7 +698,7 @@ namespace UnitTest
 
         EXPECT_TRUE(model->FrameNameExists(std::string{ wheelName.c_str(), wheelName.size() }));
         EXPECT_TRUE(model->FrameNameExists("joint0"));
-        EXPECT_FALSE(Utils::IsWheelURDFHeuristics(*model, wheelCandidate));
+        EXPECT_FALSE(Utils::IsWheelHeuristics(*model, wheelCandidate));
     }
 
     TEST_F(UrdfParserTest, WheelHeuristicJointVisualNotValid)
@@ -706,14 +706,14 @@ namespace UnitTest
         const AZStd::string wheelName("wheel_left_link");
         const auto xmlStr = GetURDFWithWheel(wheelName, "continuous", false, true);
         sdf::ParserConfig parserConfig;
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         auto wheelCandidate = model->LinkByName(std::string(wheelName.c_str(), wheelName.size()));
         ASSERT_NE(nullptr, wheelCandidate);
-        EXPECT_FALSE(Utils::IsWheelURDFHeuristics(*model, wheelCandidate));
+        EXPECT_FALSE(Utils::IsWheelHeuristics(*model, wheelCandidate));
     }
 
     TEST_F(UrdfParserTest, WheelHeuristicJointColliderNotValid)
@@ -721,21 +721,21 @@ namespace UnitTest
         const AZStd::string wheelName("wheel_left_link");
         const auto xmlStr = GetURDFWithWheel(wheelName, "continuous", true, false);
         sdf::ParserConfig parserConfig;
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         auto wheelCandidate = model->LinkByName(std::string(wheelName.c_str(), wheelName.size()));
         ASSERT_NE(nullptr, wheelCandidate);
-        EXPECT_FALSE(Utils::IsWheelURDFHeuristics(*model, wheelCandidate));
+        EXPECT_FALSE(Utils::IsWheelHeuristics(*model, wheelCandidate));
     }
 
     TEST_F(UrdfParserTest, TestLinkListing)
     {
         const auto xmlStr = GetURDFWithTransforms();
         sdf::ParserConfig parserConfig;
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
@@ -762,7 +762,7 @@ namespace UnitTest
     {
         const auto xmlStr = GetURDFWithTransforms();
         sdf::ParserConfig parserConfig;
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
@@ -777,7 +777,7 @@ namespace UnitTest
     {
         const auto xmlStr = GetURDFWithTransforms();
         sdf::ParserConfig parserConfig;
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
@@ -799,19 +799,19 @@ namespace UnitTest
         const AZ::Vector3 expected_translation_link3{ -2.4000000953674316, 0.0, 0.0 };
 
         const auto base_link_pose = base_link_ptr->SemanticPose();
-        const AZ::Transform transform_from_urdf_link1 = Utils::GetLocalTransformURDF(base_link_pose);
+        const AZ::Transform transform_from_urdf_link1 = Utils::GetLocalTransform(base_link_pose);
         EXPECT_NEAR(expected_translation_link1.GetX(), transform_from_urdf_link1.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link1.GetY(), transform_from_urdf_link1.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link1.GetZ(), transform_from_urdf_link1.GetTranslation().GetZ(), 1e-5);
 
         const auto link2_pose = link2_ptr->SemanticPose();
-        const AZ::Transform transform_from_urdf_link2 = Utils::GetLocalTransformURDF(link2_pose);
+        const AZ::Transform transform_from_urdf_link2 = Utils::GetLocalTransform(link2_pose);
         EXPECT_NEAR(expected_translation_link2.GetX(), transform_from_urdf_link2.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link2.GetY(), transform_from_urdf_link2.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link2.GetZ(), transform_from_urdf_link2.GetTranslation().GetZ(), 1e-5);
 
         const auto link3_pose = link3_ptr->SemanticPose();
-        const AZ::Transform transform_from_urdf_link3 = Utils::GetLocalTransformURDF(link3_pose);
+        const AZ::Transform transform_from_urdf_link3 = Utils::GetLocalTransform(link3_pose);
         EXPECT_NEAR(expected_translation_link3.GetX(), transform_from_urdf_link3.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link3.GetY(), transform_from_urdf_link3.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link3.GetZ(), transform_from_urdf_link3.GetTranslation().GetZ(), 1e-5);
@@ -821,7 +821,7 @@ namespace UnitTest
     {
         const auto xmlStr = GetURDFWithTransforms();
         sdf::ParserConfig parserConfig;
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
@@ -846,7 +846,7 @@ namespace UnitTest
     {
         const auto xmlStr = GetURDFWithTransforms();
         sdf::ParserConfig parserConfig;
-        const auto sdfRootOutcome = UrdfParser::Parse(xmlStr, parserConfig);
+        const auto sdfRootOutcome = SdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();

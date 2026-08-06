@@ -55,10 +55,10 @@ set(FILES
     Source/RobotImporter/URDF/RobotControlMaker.h
     Source/RobotImporter/URDF/SensorsMaker.cpp
     Source/RobotImporter/URDF/SensorsMaker.h
-    Source/RobotImporter/URDF/UrdfParser.cpp
-    Source/RobotImporter/URDF/UrdfParser.h
-    Source/RobotImporter/URDF/URDFPrefabMaker.cpp
-    Source/RobotImporter/URDF/URDFPrefabMaker.h
+    Source/RobotImporter/URDF/SdfParser.cpp
+    Source/RobotImporter/URDF/SdfParser.h
+    Source/RobotImporter/URDF/SdfPrefabMaker.cpp
+    Source/RobotImporter/URDF/SdfPrefabMaker.h
     Source/RobotImporter/URDF/VisualsMaker.cpp
     Source/RobotImporter/URDF/VisualsMaker.h
     Source/RobotImporter/xacro/XacroUtils.cpp

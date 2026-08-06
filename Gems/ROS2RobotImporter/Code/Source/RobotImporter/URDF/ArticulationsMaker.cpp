@@ -52,7 +52,7 @@ namespace ROS2RobotImporter
             const sdf::JointAxis* jointAxis = joint->Axis();
             if (jointAxis != nullptr)
             {
-                jointCoordinateAxis = URDF::TypeConversions::ConvertVector3(jointAxis->Xyz());
+                jointCoordinateAxis = Utils::TypeConversions::ConvertVector3(jointAxis->Xyz());
                 quaternion = jointCoordinateAxis.IsZero()
                     ? AZ::Quaternion::CreateIdentity()
                     : AZ::Quaternion::CreateShortestArc(AZ::Vector3::CreateAxisX(), jointCoordinateAxis);
@@ -98,14 +98,14 @@ namespace ROS2RobotImporter
     ArticulationCfg& AddToArticulationConfig(ArticulationCfg& articulationLinkConfiguration, const gz::math::Inertiald& inertial)
     {
         articulationLinkConfiguration.m_solverPositionIterations =
-            AZStd::max(articulationLinkConfiguration.m_solverPositionIterations, URDF::DefaultNumberPosSolver);
+            AZStd::max(articulationLinkConfiguration.m_solverPositionIterations, Utils::DefaultNumberPosSolver);
         articulationLinkConfiguration.m_solverVelocityIterations =
-            AZStd::max(articulationLinkConfiguration.m_solverVelocityIterations, URDF::DefaultNumberVelSolver);
+            AZStd::max(articulationLinkConfiguration.m_solverVelocityIterations, Utils::DefaultNumberVelSolver);
 
         articulationLinkConfiguration.m_mass = inertial.MassMatrix().Mass();
-        articulationLinkConfiguration.m_centerOfMassOffset = URDF::TypeConversions::ConvertVector3(inertial.Pose().Pos());
+        articulationLinkConfiguration.m_centerOfMassOffset = Utils::TypeConversions::ConvertVector3(inertial.Pose().Pos());
 
-        if (!URDF::TypeConversions::ConvertQuaternion(inertial.Pose().Rot()).IsIdentity())
+        if (!Utils::TypeConversions::ConvertQuaternion(inertial.Pose().Rot()).IsIdentity())
         { // There is a rotation component in URDF that we are not able to apply
             AZ_Warning(
                 "AddArticulationLink", false, "Ignoring URDF/SDF inertial origin rotation (no such field in rigid body configuration)");
@@ -132,7 +132,7 @@ namespace ROS2RobotImporter
         AZStd::string linkName(link->Name().c_str(), link->Name().size());
         for (const sdf::Joint* joint : Utils::GetJointsForChildLink(model, linkName, getNestedModelJoints))
         {
-            const bool isWheelEntity = Utils::IsWheelURDFHeuristics(model, link);
+            const bool isWheelEntity = Utils::IsWheelHeuristics(model, link);
             articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, joint, isWheelEntity);
         }
 

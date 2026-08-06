@@ -13,8 +13,8 @@
 #include "InertialsMaker.h"
 #include "JointsMaker.h"
 #include "RobotControlMaker.h"
+#include "SdfParser.h"
 #include "SensorsMaker.h"
-#include "UrdfParser.h"
 #include "VisualsMaker.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Transform.h>
@@ -30,22 +30,22 @@
 namespace ROS2RobotImporter
 {
     //! Encapsulates constructive mapping of SDF elements to a complete prefab with entities and components
-    class URDFPrefabMaker
+    class SdfPrefabMaker
     {
     public:
         //! Construct PrefabMaker from arguments.
         //! @param root parsed SDF root object.
         //! @param prefabPath path to the prefab which will be created as a result of import.
-        //! @param urdfAssetsMapping prepared mapping of SDF meshes to Assets.
+        //! @param referencedAssetMap prepared mapping of SDF meshes to Assets.
         //! @param useArticulations allows sdfImporter to create PhysXArticulations instead of multiple rigid bodies and joints.
-        URDFPrefabMaker(
+        SdfPrefabMaker(
             const sdf::Root* root,
             AZStd::string prefabPath,
-            const AZStd::shared_ptr<Utils::UrdfAssetMap> sdfAssetsMapping,
+            const AZStd::shared_ptr<Utils::ReferencedAssetMap> sdfAssetsMapping,
             bool useArticulations = false,
             AZStd::optional<AZ::Transform> spawnPosition = AZStd::nullopt);
 
-        ~URDFPrefabMaker() = default;
+        ~SdfPrefabMaker() = default;
 
         //! On prefab creation this will contain a prefab template id when successful,
         //! and an error string on failure.

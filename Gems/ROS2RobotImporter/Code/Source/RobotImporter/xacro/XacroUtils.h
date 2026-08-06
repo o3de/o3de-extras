@@ -10,7 +10,7 @@
 
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/string/string.h>
-#include <RobotImporter/URDF/UrdfParser.h>
+#include <RobotImporter/URDF/SdfParser.h>
 
 namespace ROS2RobotImporter::Utils::xacro
 {
@@ -20,8 +20,8 @@ namespace ROS2RobotImporter::Utils::xacro
     //! Structure that keeps all artifacts of xacro execution
     struct ExecutionOutcome
     {
-        //! Parsed URDF from successful xacro's output
-        UrdfParser::RootObjectOutcome m_urdfHandle;
+        //! Result of parsing the URDF that xacro generated on its standard output
+        SdfParser::RootObjectOutcome m_parseResult;
         //! Return code of 'xacro' program
         bool m_succeed{ false };
         //! Called program name
@@ -34,7 +34,7 @@ namespace ROS2RobotImporter::Utils::xacro
         //! Gets if execution was a success
         explicit operator bool() const
         {
-            return m_succeed && m_urdfHandle;
+            return m_succeed && m_parseResult;
         }
     };
 

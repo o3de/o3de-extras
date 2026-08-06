@@ -6,7 +6,7 @@
  *
  */
 
-#include "URDFPrefabMaker.h"
+#include "SdfPrefabMaker.h"
 #include "CollidersMaker.h"
 #include "PrefabMakerUtils.h"
 #include <API/EditorAssetSystemAPI.h>
@@ -31,15 +31,15 @@
 
 namespace ROS2RobotImporter
 {
-    URDFPrefabMaker::URDFPrefabMaker(
+    SdfPrefabMaker::SdfPrefabMaker(
         const sdf::Root* root,
         AZStd::string prefabPath,
-        const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping,
+        const AZStd::shared_ptr<Utils::ReferencedAssetMap> referencedAssetMap,
         bool useArticulations,
         const AZStd::optional<AZ::Transform> spawnPosition)
         : m_root(root)
-        , m_visualsMaker(urdfAssetsMapping)
-        , m_collidersMaker(urdfAssetsMapping)
+        , m_visualsMaker(referencedAssetMap)
+        , m_collidersMaker(referencedAssetMap)
         , m_prefabPath(AZStd::move(prefabPath))
         , m_spawnPosition(spawnPosition)
         , m_useArticulations(useArticulations)
@@ -48,7 +48,7 @@ namespace ROS2RobotImporter
         AZ_Assert(m_root, "SDF Root is nullptr");
     }
 
-    URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabTemplateFromUrdfOrSdf()
+    SdfPrefabMaker::CreatePrefabTemplateResult SdfPrefabMaker::CreatePrefabTemplateFromUrdfOrSdf()
     {
         {
             AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
@@ -290,7 +290,7 @@ namespace ROS2RobotImporter
                 AZ::EntityId createdEntityId = createLinkEntityResult.GetValue();
                 std::string linkName = linkPtr->Name();
                 const auto linkSemanticPose = linkPtr->SemanticPose();
-                AZ::Transform tf = Utils::GetLocalTransformURDF(linkSemanticPose);
+                AZ::Transform tf = Utils::GetLocalTransform(linkSemanticPose);
                 auto* entity = AzToolsFramework::GetEntityById(createdEntityId);
                 if (entity)
                 {
@@ -561,7 +561,7 @@ namespace ROS2RobotImporter
         return AZ::Success(prefabTemplateId);
     }
 
-    URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabFromUrdfOrSdf()
+    SdfPrefabMaker::CreatePrefabTemplateResult SdfPrefabMaker::CreatePrefabFromUrdfOrSdf()
     {
         // Begin an undo batch for prefab creation process
         AzToolsFramework::UndoSystem::URSequencePoint* currentUndoBatch = nullptr;
@@ -569,7 +569,7 @@ namespace ROS2RobotImporter
             currentUndoBatch, &AzToolsFramework::ToolsApplicationRequests::BeginUndoBatch, "Robot Importer prefab creation");
         if (currentUndoBatch == nullptr)
         {
-            AZ_Warning("URDF Prefab Maker", false, "Unable to start undobatch, EBus might not be listening");
+            AZ_Warning("SdfPrefabMaker", false, "Unable to start undobatch, EBus might not be listening");
         }
 
         auto result = CreatePrefabTemplateFromUrdfOrSdf();
@@ -616,7 +616,7 @@ namespace ROS2RobotImporter
         return result;
     }
 
-    AzToolsFramework::Prefab::PrefabEntityResult URDFPrefabMaker::CreateEntityForModel(const sdf::Model& model)
+    AzToolsFramework::Prefab::PrefabEntityResult SdfPrefabMaker::CreateEntityForModel(const sdf::Model& model)
     {
         auto createEntityResult = PrefabMakerUtils::CreateEntity(AZ::EntityId{}, model.Name().c_str());
         if (!createEntityResult.IsSuccess())
@@ -632,7 +632,7 @@ namespace ROS2RobotImporter
             transformComponent != nullptr)
         {
             gz::math::Pose3d modelPose = model.RawPose();
-            AZ::Transform modelTransform = URDF::TypeConversions::ConvertPose(modelPose);
+            AZ::Transform modelTransform = Utils::TypeConversions::ConvertPose(modelPose);
             // Set the local transform for each model to have it be translated in relation
             // to its parent
             transformComponent->SetLocalTM(AZStd::move(modelTransform));
@@ -644,7 +644,7 @@ namespace ROS2RobotImporter
         return entityId;
     }
 
-    AzToolsFramework::Prefab::PrefabEntityResult URDFPrefabMaker::AddEntitiesForLink(
+    AzToolsFramework::Prefab::PrefabEntityResult SdfPrefabMaker::AddEntitiesForLink(
         const sdf::Link& link, const sdf::Model* attachedModel, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities)
     {
         auto createEntityResult = PrefabMakerUtils::CreateEntity(parentEntityId, link.Name().c_str());
@@ -660,7 +660,7 @@ namespace ROS2RobotImporter
         ROS2::ROS2FrameConfiguration frameConfiguration;
         frameConfiguration.m_frameName = AZStd::string(link.Name().c_str());
         auto* ros2interface = ROS2::ROS2EditorInterface::Get();
-        AZ_Assert(ros2interface, "ROS2EditorInterface not available in URDFPrefabMaker::AddEntitiesForLink");
+        AZ_Assert(ros2interface, "ROS2EditorInterface not available in SdfPrefabMaker::AddEntitiesForLink");
         auto* ros2FrameComponent = ros2interface->CreateROS2FrameEditorComponent(*entity, frameConfiguration);
         AZ_Assert(ros2FrameComponent, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
 
@@ -706,17 +706,17 @@ namespace ROS2RobotImporter
         return AZ::Success(entityId);
     }
 
-    const AZStd::string& URDFPrefabMaker::GetPrefabPath() const
+    const AZStd::string& SdfPrefabMaker::GetPrefabPath() const
     {
         return m_prefabPath;
     }
 
-    void URDFPrefabMaker::MoveEntityToDefaultSpawnPoint(
+    void SdfPrefabMaker::MoveEntityToDefaultSpawnPoint(
         const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition = AZStd::nullopt)
     {
         if (!spawnPosition.has_value())
         {
-            AZ_Trace("URDF Importer", "SpawnPosition is null - spawning in Editors default position\n");
+            AZ_Trace("SdfPrefabMaker", "SpawnPosition is null - spawning in Editors default position\n");
             return;
         }
 
@@ -726,15 +726,15 @@ namespace ROS2RobotImporter
 
             if (transformInterface_ == nullptr)
             {
-                AZ_Trace("URDF Importer", "TransformComponent not found in created entity\n") return;
+                AZ_Trace("SdfPrefabMaker", "TransformComponent not found in created entity\n") return;
             }
 
             transformInterface_->SetWorldTM(*spawnPosition);
-            AZ_Trace("URDF Importer", "Successfully set spawn position\n")
+            AZ_Trace("SdfPrefabMaker", "Successfully set spawn position\n")
         }
     }
 
-    AZStd::string URDFPrefabMaker::GetStatus()
+    AZStd::string SdfPrefabMaker::GetStatus()
     {
         AZStd::string report;
         AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
@@ -774,7 +774,7 @@ namespace ROS2RobotImporter
         return report;
     }
 
-    bool URDFPrefabMaker::ContainsModel() const
+    bool SdfPrefabMaker::ContainsModel() const
     {
         const sdf::Model* sdfModel{};
         auto GetModelAndStopIteration = [&sdfModel](const sdf::Model& model, const Utils::ModelStack&) -> Utils::VisitModelResponse

@@ -23,18 +23,18 @@ namespace ROS2RobotImporter
         PhysX::EditorRigidBodyConfiguration rigidBodyConfiguration;
         PhysX::RigidBodyConfiguration physxSpecificConfiguration;
         physxSpecificConfiguration.m_solverPositionIterations =
-            AZStd::max(physxSpecificConfiguration.m_solverPositionIterations, URDF::DefaultNumberPosSolver);
+            AZStd::max(physxSpecificConfiguration.m_solverPositionIterations, Utils::DefaultNumberPosSolver);
         physxSpecificConfiguration.m_solverVelocityIterations =
-            AZStd::max(physxSpecificConfiguration.m_solverVelocityIterations, URDF::DefaultNumberVelSolver);
+            AZStd::max(physxSpecificConfiguration.m_solverVelocityIterations, Utils::DefaultNumberVelSolver);
 
         rigidBodyConfiguration.m_mass = inertial.MassMatrix().Mass();
         rigidBodyConfiguration.m_computeMass = false;
 
-        rigidBodyConfiguration.m_centerOfMassOffset = URDF::TypeConversions::ConvertVector3(inertial.Pose().Pos());
+        rigidBodyConfiguration.m_centerOfMassOffset = Utils::TypeConversions::ConvertVector3(inertial.Pose().Pos());
         rigidBodyConfiguration.m_computeCenterOfMass = false;
 
-        if (!URDF::TypeConversions::ConvertQuaternion(inertial.Pose().Rot()).IsIdentity())
-        { // There is a rotation component in URDF that we are not able to apply
+        if (!Utils::TypeConversions::ConvertQuaternion(inertial.Pose().Rot()).IsIdentity())
+        { // There is a rotation component in the inertial pose that we are not able to apply
             AZ_Warning("AddInertial", false, "Ignoring URDF/SDF inertial origin rotation (no such field in rigid body configuration)");
         }
 

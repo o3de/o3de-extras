@@ -16,8 +16,8 @@
 #include <QApplication>
 #include <QScreen>
 #include <QTranslator>
-#include <RobotImporter/URDF/URDFPrefabMaker.h>
-#include <RobotImporter/URDF/UrdfParser.h>
+#include <RobotImporter/URDF/SdfParser.h>
+#include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
@@ -45,7 +45,7 @@ namespace ROS2RobotImporter
         addPage(m_prefabMakerPage);
 
         connect(this, &QWizard::currentIdChanged, this, &RobotImporterWidget::onCurrentIdChanged);
-        connect(m_prefabMakerPage, &QWizardPage::completeChanged, this, &RobotImporterWidget::OnUrdfCreated);
+        connect(m_prefabMakerPage, &QWizardPage::completeChanged, this, &RobotImporterWidget::OnPrefabCreated);
         connect(m_prefabMakerPage, &PrefabMakerPage::onCreateButtonPressed, this, &RobotImporterWidget::onCreateButtonPressed);
         connect(
             m_robotDescriptionPage,
@@ -87,7 +87,7 @@ namespace ROS2RobotImporter
         connect(m_refreshTimerCheckAssets, &QTimer::timeout, this, &RobotImporterWidget::RefreshTimerElapsed);
     }
 
-    void RobotImporterWidget::OnUrdfCreated()
+    void RobotImporterWidget::OnPrefabCreated()
     {
         // hide cancel and back buttons when last page succeed
         if (currentPage() == m_prefabMakerPage && m_prefabMakerPage->isComplete())
@@ -98,7 +98,7 @@ namespace ROS2RobotImporter
         }
     }
 
-    void RobotImporterWidget::AddModificationWarningsToReportString(QString& report, const UrdfParser::RootObjectOutcome& parsedSdfOutcome)
+    void RobotImporterWidget::AddModificationWarningsToReportString(QString& report, const SdfParser::RootObjectOutcome& parsedSdfOutcome)
     {
         // This is a URDF only path, and therefore the report text does not mention SDF
         report += "# " + tr("The URDF was parsed, though results were modified to be compatible with SDFormat") + "\n";
@@ -145,24 +145,24 @@ namespace ROS2RobotImporter
         m_modifiedUrdfWindow->SetUrdfData(AZStd::move(parsedSdfOutcome.m_modifiedURDFContent));
     }
 
-    void RobotImporterWidget::OpenUrdf()
+    void RobotImporterWidget::OpenRobotDescription()
     {
-        UrdfParser::RootObjectOutcome parsedSdfOutcome;
+        SdfParser::RootObjectOutcome parsedSdfOutcome;
         QString report;
-        if (!m_urdfPath.empty())
+        if (!m_sourceFilePath.empty())
         {
             // Read the SDF Settings from PrefabMakerPage
             const SdfAssetBuilderSettings& sdfBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
 
             // Set the parser config settings for URDF content
-            sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(sdfBuilderSettings, m_urdfPath);
+            sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(sdfBuilderSettings, m_sourceFilePath);
 
-            if (Utils::IsFileXacro(m_urdfPath))
+            if (Utils::IsFileXacro(m_sourceFilePath))
             {
                 Utils::xacro::ExecutionOutcome outcome =
-                    Utils::xacro::ParseXacro(m_urdfPath.String(), m_params, parserConfig, sdfBuilderSettings);
+                    Utils::xacro::ParseXacro(m_sourceFilePath.String(), m_params, parserConfig, sdfBuilderSettings);
                 // Store off the URDF parsing outcome which will be output later in this function
-                parsedSdfOutcome = AZStd::move(outcome.m_urdfHandle);
+                parsedSdfOutcome = AZStd::move(outcome.m_parseResult);
                 if (outcome)
                 {
                     report += "# " + tr("XACRO execution succeeded") + "\n";
@@ -208,22 +208,22 @@ namespace ROS2RobotImporter
                     }
                 }
             }
-            else if (Utils::IsFileUrdfOrSdf(m_urdfPath))
+            else if (Utils::IsFileUrdfOrSdf(m_sourceFilePath))
             {
-                // standard URDF
-                parsedSdfOutcome = UrdfParser::ParseFromFile(m_urdfPath, parserConfig, sdfBuilderSettings);
+                // Sdf root object from SDF/URDF file.
+                parsedSdfOutcome = SdfParser::ParseFromFile(m_sourceFilePath, parserConfig, sdfBuilderSettings);
             }
             else
             {
-                AZ_Assert(false, "Unknown file extension : %s \n", m_urdfPath.c_str());
+                AZ_Assert(false, "Unknown file extension : %s \n", m_sourceFilePath.c_str());
             }
 
             AZStd::string log;
-            const bool urdfParsedSuccess{ parsedSdfOutcome };
-            bool urdfParsedWithWarnings{ parsedSdfOutcome.UrdfParsedWithModifiedContent() };
-            if (urdfParsedSuccess)
+            const bool parsingSucceeded{ parsedSdfOutcome };
+            bool parsedWithWarnings{ parsedSdfOutcome.UrdfParsedWithModifiedContent() };
+            if (parsingSucceeded)
             {
-                if (urdfParsedWithWarnings)
+                if (parsedWithWarnings)
                 {
                     AddModificationWarningsToReportString(report, parsedSdfOutcome);
                 }
@@ -233,7 +233,7 @@ namespace ROS2RobotImporter
                 }
                 m_parsedSdf = AZStd::move(parsedSdfOutcome.GetRoot());
                 m_prefabMaker.reset();
-                m_urdfAssetsMapping = Utils::GetReferencedAssetFilenames(m_parsedSdf);
+                m_referencedAssetMap = Utils::GetReferencedAssetFilenames(m_parsedSdf);
                 m_assetPage->ClearAssetsList();
             }
             else
@@ -248,7 +248,7 @@ namespace ROS2RobotImporter
                 report += QString::fromUtf8(log.data(), int(log.size()));
                 report += "\n```\n";
                 AZ_Printf("RobotImporterWidget", "SDF Stream: %s\n", log.c_str());
-                urdfParsedWithWarnings = true;
+                parsedWithWarnings = true;
             }
             const auto& messages = parsedSdfOutcome.GetParseMessages();
             if (!messages.empty())
@@ -259,9 +259,9 @@ namespace ROS2RobotImporter
                 report += QString::fromUtf8(messages.c_str(), int(messages.size()));
                 report += "\n```\n";
                 AZ_Printf("RobotImporterWidget", "SDF Stream: %s\n", messages.c_str());
-                urdfParsedWithWarnings = true;
+                parsedWithWarnings = true;
             }
-            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
+            m_robotDescriptionPage->ReportParsingResult(report, parsingSucceeded, parsedWithWarnings);
         }
     }
 
@@ -281,7 +281,7 @@ namespace ROS2RobotImporter
         }
         else if (currentPage() == m_robotDescriptionPage)
         {
-            AZStd::string urdfName = m_urdfPath.ReplaceExtension("").String();
+            AZStd::string urdfName = m_sourceFilePath.ReplaceExtension("").String();
             urdfName.append("_modified.urdf");
             m_robotDescriptionPage->SetModifiedUrdfName(urdfName);
         }
@@ -339,11 +339,11 @@ namespace ROS2RobotImporter
             // Read the SDF Settings from PrefabMakerPage
             const SdfAssetBuilderSettings& sdfBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
 
-            Utils::ResolveAssetMap(m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
+            Utils::ResolveAssetMap(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
             if (!m_copyReferencedAssets)
             {
-                Utils::FindReferencedAssets(m_urdfAssetsMapping, m_urdfPath, sdfBuilderSettings);
-                for (const auto& [_, asset] : m_urdfAssetsMapping)
+                Utils::FindReferencedAssets(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
+                for (const auto& [_, asset] : m_referencedAssetMap)
                 {
                     const bool visual =
                         (asset.m_assetType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
@@ -356,7 +356,7 @@ namespace ROS2RobotImporter
                 }
             };
 
-            for (auto& [unresolvedFileName, asset] : m_urdfAssetsMapping)
+            for (auto& [unresolvedFileName, asset] : m_referencedAssetMap)
             {
                 QString type = tr("Unknown");
 
@@ -389,7 +389,7 @@ namespace ROS2RobotImporter
                 m_copyReferencedAssetsThread = AZStd::make_shared<AZStd::thread>(
                     [this, dirSuffix]()
                     {
-                        auto destStatus = Utils::PrepareImportedAssetsDest(m_urdfPath.String(), dirSuffix);
+                        auto destStatus = Utils::PrepareImportedAssetsDest(m_sourceFilePath.String(), dirSuffix);
                         if (!destStatus.IsSuccess())
                         {
                             AZ_Error("RobotImporterWidget", false, "Failed to create destination folder for imported assets");
@@ -397,37 +397,37 @@ namespace ROS2RobotImporter
                             return;
                         }
                         AZStd::unordered_map<AZ::IO::Path, unsigned int> duplicatedFilenames;
-                        for (auto& [unresolvedFileName, urdfAsset] : m_urdfAssetsMapping)
+                        for (auto& [unresolvedFileName, referencedAsset] : m_referencedAssetMap)
                         {
-                            if (duplicatedFilenames.contains(urdfAsset.m_assetUri))
+                            if (duplicatedFilenames.contains(referencedAsset.m_assetUri))
                             {
-                                duplicatedFilenames[urdfAsset.m_assetUri]++;
+                                duplicatedFilenames[referencedAsset.m_assetUri]++;
                             }
                             else
                             {
-                                duplicatedFilenames[urdfAsset.m_assetUri] = 0;
+                                duplicatedFilenames[referencedAsset.m_assetUri] = 0;
                             }
-                            if (urdfAsset.m_copyStatus == Utils::CopyStatus::Waiting)
+                            if (referencedAsset.m_copyStatus == Utils::CopyStatus::Waiting)
                             {
                                 m_assetPage->OnAssetCopyStatusChanged(
                                     Utils::CopyStatus::Copying, AZStd::string(unresolvedFileName.c_str()), "");
                             }
 
                             auto copyStatus = Utils::CopyStatus::Unresolvable;
-                            if (urdfAsset.m_resolvedUrdfPath.empty())
+                            if (referencedAsset.m_resolvedPath.empty())
                             {
-                                AZ_Warning("CopyAssetForURDF", false, "There is no resolved path for %s", unresolvedFileName.c_str());
+                                AZ_Warning("CopyReferencedAsset", false, "There is no resolved path for %s", unresolvedFileName.c_str());
                             }
                             else
                             {
-                                copyStatus =
-                                    Utils::CopyReferencedAsset(destStatus.GetValue(), urdfAsset, duplicatedFilenames[urdfAsset.m_assetUri]);
+                                copyStatus = Utils::CopyReferencedAsset(
+                                    destStatus.GetValue(), referencedAsset, duplicatedFilenames[referencedAsset.m_assetUri]);
                             }
 
                             m_assetPage->OnAssetCopyStatusChanged(
                                 copyStatus,
                                 AZStd::string(unresolvedFileName.c_str()),
-                                AZStd::string(urdfAsset.m_availableAssetInfo.m_sourceAssetRelativePath.c_str()));
+                                AZStd::string(referencedAsset.m_availableAssetInfo.m_sourceAssetRelativePath.c_str()));
 
                             if (copyStatus == Utils::CopyStatus::Copied || copyStatus == Utils::CopyStatus::Exists)
                             {
@@ -472,19 +472,19 @@ namespace ROS2RobotImporter
         AZStd::set<AZ::IO::Path> processedAssets;
         for (auto& assetToProcessPath : m_toProcessAssets)
         {
-            auto urdfAsset = m_urdfAssetsMapping.find(assetToProcessPath)->second;
-            auto assetFinishedOutcome = CheckIfAssetFinished(urdfAsset.m_availableAssetInfo.m_sourceAssetGlobalPath.c_str());
+            auto referencedAsset = m_referencedAssetMap.find(assetToProcessPath)->second;
+            auto assetFinishedOutcome = CheckIfAssetFinished(referencedAsset.m_availableAssetInfo.m_sourceAssetGlobalPath.c_str());
 
             if (assetFinishedOutcome.IsSuccess())
             {
                 processedAssets.insert(assetToProcessPath);
                 if (assetFinishedOutcome.GetValue() == false)
                 {
-                    m_assetPage->OnAssetProcessStatusChanged(assetToProcessPath.c_str(), urdfAsset, true);
+                    m_assetPage->OnAssetProcessStatusChanged(assetToProcessPath.c_str(), referencedAsset, true);
                 }
                 else
                 {
-                    m_assetPage->OnAssetProcessStatusChanged(assetToProcessPath.c_str(), urdfAsset, false);
+                    m_assetPage->OnAssetProcessStatusChanged(assetToProcessPath.c_str(), referencedAsset, false);
                 }
             }
         }
@@ -498,7 +498,7 @@ namespace ROS2RobotImporter
     void RobotImporterWidget::FillPrefabMakerPage()
     {
         // Use the URDF/SDF file name stem the prefab name
-        AZStd::string robotName = AZStd::string::format("%.*s.prefab", AZ_PATH_ARG(m_urdfPath.Stem()));
+        AZStd::string robotName = AZStd::string::format("%.*s.prefab", AZ_PATH_ARG(m_sourceFilePath.Stem()));
         m_prefabMakerPage->SetProposedPrefabName(robotName);
         QWizard::button(PrefabCreationButtonId)->setText(tr("Create Prefab"));
         QWizard::setOption(HavePrefabCreationButton, true);
@@ -511,26 +511,26 @@ namespace ROS2RobotImporter
         if (currentPage() == m_fileSelectPage)
         {
             m_params.clear();
-            m_urdfPath = AZStd::string(m_fileSelectPage->getFileName().toUtf8().constData());
-            if (Utils::IsFileXacro(m_urdfPath))
+            m_sourceFilePath = AZStd::string(m_fileSelectPage->getFileName().toUtf8().constData());
+            if (Utils::IsFileXacro(m_sourceFilePath))
             {
-                m_params = Utils::xacro::GetParameterFromXacroFile(m_urdfPath.String());
+                m_params = Utils::xacro::GetParameterFromXacroFile(m_sourceFilePath.String());
                 AZ_Printf("RobotImporterWidget", "Xacro has %d arguments\n", m_params.size());
                 m_xacroParamsPage->SetXacroParameters(m_params);
             }
             // no need to wait for param page - parse urdf now, nextId will skip unnecessary pages
-            if (m_params.empty() && Utils::IsFileXacroOrUrdfOrSdf(m_urdfPath))
+            if (m_params.empty() && Utils::IsFileXacroOrUrdfOrSdf(m_sourceFilePath))
             {
-                OpenUrdf();
+                OpenRobotDescription();
             }
             m_copyReferencedAssets = m_fileSelectPage->GetSdfAssetBuilderSettings().m_importReferencedMeshFiles;
         }
         if (currentPage() == m_xacroParamsPage)
         {
             m_params = m_xacroParamsPage->GetXacroParameters();
-            if (Utils::IsFileXacroOrUrdfOrSdf(m_urdfPath))
+            if (Utils::IsFileXacroOrUrdfOrSdf(m_sourceFilePath))
             {
-                OpenUrdf();
+                OpenRobotDescription();
             }
         }
         if (currentPage() == m_introPage)
@@ -565,7 +565,7 @@ namespace ROS2RobotImporter
                     // do not skip robot description page
                     return m_xacroParamsPage->nextId();
                 }
-                if (m_urdfAssetsMapping.empty())
+                if (m_referencedAssetMap.empty())
                 {
                     // skip two pages when urdf/sdf is parsed without problems, and it has no assets
                     return m_assetPage->nextId();
@@ -614,10 +614,10 @@ namespace ROS2RobotImporter
 
         const auto& sdfAssetBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
         const bool useArticulation = sdfAssetBuilderSettings.m_useArticulations;
-        m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
+        m_prefabMaker = AZStd::make_unique<SdfPrefabMaker>(
             &m_parsedSdf,
             prefabPath.String(),
-            AZStd::make_shared<Utils::UrdfAssetMap>(m_urdfAssetsMapping),
+            AZStd::make_shared<Utils::ReferencedAssetMap>(m_referencedAssetMap),
             useArticulation,
             m_prefabMakerPage->getSelectedSpawnPoint());
 

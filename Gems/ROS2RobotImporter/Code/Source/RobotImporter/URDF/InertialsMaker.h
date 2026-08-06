@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "UrdfParser.h"
+#include "SdfParser.h"
 #include <AzCore/Component/EntityId.h>
 
 namespace ROS2RobotImporter
