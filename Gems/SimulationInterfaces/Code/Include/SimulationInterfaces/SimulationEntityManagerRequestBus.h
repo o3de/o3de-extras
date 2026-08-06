@@ -216,4 +216,36 @@ namespace SimulationInterfaces
     using SimulationEntityManagerRequestBus = AZ::EBus<SimulationEntityManagerRequests, SimulationInterfacesBusTraits>;
     using SimulationEntityManagerInterface = AZ::Interface<SimulationEntityManagerRequests>;
 
+    //! Notifications about entities spawned through SimulationEntityManagerRequests::SpawnEntity / SpawnEntities.
+    class SimulationEntitiesManagerNotifications
+    {
+    public:
+        AZ_RTTI(SimulationEntitiesManagerNotifications, SimulationEntitiesManagerNotificationsTypeId);
+        virtual ~SimulationEntitiesManagerNotifications() = default;
+
+        //! Called once the spawned entities exist but are not yet inserted/activated into the world.
+        //! @param proposedName the name requested for the entity, not yet the final registered simulation entity name
+        virtual void OnEntityPreInsertion(const AZStd::string& proposedName, AzFramework::SpawnableEntityContainerView view)
+        {
+        }
+
+        //! Called after the entity has been registered with the simulation interfaces registry under its final, unique name.
+        virtual void OnEntitySpawned(const AZStd::string& simulationEntityName, AzFramework::SpawnableConstEntityContainerView view)
+        {
+        }
+    };
+
+    class SimulationEntitiesManagerNotificationsBusTraits : public AZ::EBusTraits
+    {
+    public:
+        //////////////////////////////////////////////////////////////////////////
+        // EBusTraits overrides
+        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
+        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
+        //////////////////////////////////////////////////////////////////////////
+    };
+
+    using SimulationEntitiesManagerNotificationBus =
+        AZ::EBus<SimulationEntitiesManagerNotifications, SimulationEntitiesManagerNotificationsBusTraits>;
+
 } // namespace SimulationInterfaces
