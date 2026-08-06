@@ -13,7 +13,7 @@
 #include <AzCore/Utils/Utils.h>
 #include <RobotImporter/Queries/SdfVisitors.h>
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::Assets
 {
     inline namespace Internal
     {
@@ -27,7 +27,8 @@ namespace ROS2RobotImporter::Utils
     ReferencedAssetMap GetReferencedAssetFilenames(const sdf::Root& root)
     {
         ReferencedAssetMap referencedAssetMap;
-        auto GetAssetsFromModel = [&referencedAssetMap](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
+        auto GetAssetsFromModel =
+            [&referencedAssetMap](const sdf::Model& model, const SDFormat::ModelStack&) -> SDFormat::VisitModelResponse
         {
             AZStd::string modelUri(model.Uri().c_str(), model.Uri().size());
             const auto addFilenameFromGeometry =
@@ -141,10 +142,10 @@ namespace ROS2RobotImporter::Utils
                 processLink(model.LinkByIndex(index));
             }
 
-            return VisitModelResponse::VisitNestedAndSiblings;
+            return SDFormat::VisitModelResponse::VisitNestedAndSiblings;
         };
 
-        VisitModels(root, GetAssetsFromModel);
+        SDFormat::VisitModels(root, GetAssetsFromModel);
 
         return referencedAssetMap;
     }
@@ -414,4 +415,4 @@ namespace ROS2RobotImporter::Utils
         return amentPrefixPath;
     }
 
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::Assets

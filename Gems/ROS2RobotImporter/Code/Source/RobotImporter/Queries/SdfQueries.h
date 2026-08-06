@@ -15,7 +15,7 @@
 
 #include <sdf/sdf.hh>
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::SDFormat
 {
     //! Determine whether a given link is likely a wheel link.
     //! This can be useful to provide a good default behavior - for example, to add Vehicle Dynamics components to this link's entity.
@@ -62,4 +62,4 @@ namespace ROS2RobotImporter::Utils
     //! @returns vector of joints where link is a parent
     AZStd::vector<const sdf::Joint*> GetJointsForParentLink(
         const sdf::Model& sdfModel, AZStd::string_view linkName, bool gatherNestedModelJoints = false);
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::SDFormat

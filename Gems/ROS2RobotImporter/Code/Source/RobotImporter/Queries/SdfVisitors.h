@@ -15,7 +15,7 @@
 
 #include <sdf/sdf.hh>
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::SDFormat
 {
     //! Type Alias representing a "stack" of Model object that were visited on the way to the current Link/Joint Visitor Callback
     using ModelStack = AZStd::deque<AZStd::reference_wrapper<const sdf::Model>>;
@@ -84,4 +84,4 @@ namespace ROS2RobotImporter::Utils
     //! @param visitNestedModels When true recurses to any nested <model> tags of the Model objects and invoke the visitor on them
     //! @returns void
     void VisitModels(const sdf::Model& sdfModel, const ModelVisitorCallback& modelVisitorCB, bool visitNestedModels = true);
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::SDFormat

@@ -8,7 +8,7 @@
 
 #include <RobotImporter/Queries/SdfVisitors.h>
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::SDFormat
 {
     void VisitLinks(const sdf::Model& sdfModel, const LinkVisitorCallback& linkVisitorCB, bool visitNestedModelLinks)
     {
@@ -253,4 +253,4 @@ namespace ROS2RobotImporter::Utils
         VisitModelsForNestedModels.m_recurseModels = visitNestedModels;
         VisitModelsForNestedModels(sdfModel);
     }
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::SDFormat

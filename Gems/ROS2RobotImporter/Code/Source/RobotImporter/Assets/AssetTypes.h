@@ -14,7 +14,7 @@
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/string/string.h>
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::Assets
 {
     //! Structure contains essential information about the source and product assets in O3DE.
     //! It is designed to provide necessary information for other classes of the importer, eg CollidersMaker or VisualsMaker.
@@ -92,5 +92,5 @@ namespace ROS2RobotImporter::Utils
     };
 
     /// Type that hold result of mapping from asset name (model URI + asset URI) to asset info
-    using ReferencedAssetMap = AZStd::unordered_map<AZ::IO::Path, Utils::ReferencedAsset>;
-} // namespace ROS2RobotImporter::Utils
+    using ReferencedAssetMap = AZStd::unordered_map<AZ::IO::Path, Assets::ReferencedAsset>;
+} // namespace ROS2RobotImporter::Assets

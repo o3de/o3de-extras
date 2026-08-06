@@ -19,7 +19,7 @@
 #include <SceneAPI/SceneData/Rules/UVsRule.h>
 #include <Source/Pipeline/MeshGroup.h> // PhysX/Code/Source/Pipeline/MeshGroup.h
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::Assets
 {
 
     //! A helper class that do no extend PhysX::Pipeline::MeshGroup functionality, but gives necessary setters.
@@ -58,7 +58,7 @@ namespace ROS2RobotImporter::Utils
         foundAsset.m_sourceAssetRelativePath = assetInfo.m_relativePath;
         foundAsset.m_sourceAssetGlobalPath = globalSourceAssetPath;
 
-        AZ::Crc32 crc = Utils::GetFileCRC(foundAsset.m_sourceAssetGlobalPath);
+        AZ::Crc32 crc = Assets::GetFileCRC(foundAsset.m_sourceAssetGlobalPath);
         if (crc == AZ::Crc32(0))
         {
             AZ_Warning("GetInterestingSourceAssetsCRC", false, "Zero CRC for source asset %s", foundAsset.m_sourceAssetGlobalPath.c_str());
@@ -188,4 +188,4 @@ namespace ROS2RobotImporter::Utils
         return CreateSceneManifest(sourceAssetPath, sourceAssetPath.Native() + ".assetinfo", collider, visual);
     }
 
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::Assets

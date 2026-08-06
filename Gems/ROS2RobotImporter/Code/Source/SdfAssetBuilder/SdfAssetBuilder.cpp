@@ -84,24 +84,24 @@ namespace ROS2RobotImporter
         // The AssetBuilderSDK doesn't support deregistration, so there's nothing more to do here.
     }
 
-    Utils::ReferencedAssetMap SdfAssetBuilder::FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const
+    Assets::ReferencedAssetMap SdfAssetBuilder::FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const
     {
         AZ_Info(SdfAssetBuilderName, "Parsing mesh and collider names");
 
-        Utils::ReferencedAssetMap allReferencedAssets = Utils::GetReferencedAssetFilenames(root);
-        Utils::ReferencedAssetMap existingReferencedAssets;
+        Assets::ReferencedAssetMap allReferencedAssets = Assets::GetReferencedAssetFilenames(root);
+        Assets::ReferencedAssetMap existingReferencedAssets;
 
         using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
 
-        auto amentPrefixPath = Utils::GetAmentPrefixPath();
+        auto amentPrefixPath = Assets::GetAmentPrefixPath();
 
         for (const auto& [unresolvedUri, assetReferenceType] : allReferencedAssets)
         {
-            Utils::ReferencedAsset asset;
+            Assets::ReferencedAsset asset;
 
             // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
             asset.m_resolvedPath =
-                Utils::ResolveAssetPath(unresolvedUri, AZ::IO::PathView(sourceFilename), amentPrefixPath, m_globalSettings);
+                Assets::ResolveAssetPath(unresolvedUri, AZ::IO::PathView(sourceFilename), amentPrefixPath, m_globalSettings);
             if (asset.m_resolvedPath.empty())
             {
                 AZ_Warning(
@@ -115,7 +115,7 @@ namespace ROS2RobotImporter
             // Get a checksum on the resolved file that we'll use to ensure we've matched with the correct relative
             // source asset. Ideally we'll be able to remove this check since it's not a very robust safety check and
             // adds some amount of overhead to the processing.
-            asset.m_resolvedFileCRC = Utils::GetFileCRC(asset.m_resolvedPath);
+            asset.m_resolvedFileCRC = Assets::GetFileCRC(asset.m_resolvedPath);
 
             // Given the absolute path to the asset, try to get the source asset info from the AssetProcessor.
             bool sourceAssetFound{ false };
@@ -139,7 +139,7 @@ namespace ROS2RobotImporter
 
             // We should determine if this CRC check is actually necessary for resolving URI references.
             // Ideally, the additional overhead should be removed and the asset reference result should be trusted.
-            AZ::Crc32 crc = Utils::GetFileCRC(asset.m_availableAssetInfo.m_sourceAssetGlobalPath);
+            AZ::Crc32 crc = Assets::GetFileCRC(asset.m_availableAssetInfo.m_sourceAssetGlobalPath);
             if (crc == asset.m_resolvedFileCRC)
             {
                 AZ_Info(
@@ -281,7 +281,7 @@ namespace ROS2RobotImporter
 
         // Resolve all the URI references into source asset GUIDs.
         AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
-        auto assetMap = AZStd::make_shared<Utils::ReferencedAssetMap>(FindAssets(sdfRoot, request.m_fullPath));
+        auto assetMap = AZStd::make_shared<Assets::ReferencedAssetMap>(FindAssets(sdfRoot, request.m_fullPath));
 
         // Given the parsed source file and asset mappings, generate an in-memory prefab.
         AZ_Info(SdfAssetBuilderName, "Creating prefab from source file.");

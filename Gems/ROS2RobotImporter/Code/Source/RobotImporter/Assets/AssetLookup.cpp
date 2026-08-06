@@ -23,7 +23,7 @@
 #include <SceneAPI/SceneCore/Events/SceneSerializationBus.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::Assets
 {
 
     namespace
@@ -115,7 +115,7 @@ namespace ROS2RobotImporter::Utils
             foundAsset.m_sourceAssetRelativePath = assetInfo.m_relativePath;
             foundAsset.m_sourceAssetGlobalPath = fullSourcePath.String();
 
-            AZ::Crc32 crc = Utils::GetFileCRC(foundAsset.m_sourceAssetGlobalPath);
+            AZ::Crc32 crc = Assets::GetFileCRC(foundAsset.m_sourceAssetGlobalPath);
             if (crc == AZ::Crc32(0))
             {
                 AZ_Warning(
@@ -160,12 +160,12 @@ namespace ROS2RobotImporter::Utils
     {
         if (!unresolvedAssetMap.empty())
         {
-            AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Utils::GetInterestingSourceAssetsCRC();
+            AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Assets::GetInterestingSourceAssetsCRC();
 
             // Search for suitable mappings by comparing checksum
             for (auto& [unresolvedFileName, asset] : unresolvedAssetMap)
             {
-                asset.m_resolvedFileCRC = Utils::GetFileCRC(asset.m_resolvedPath);
+                asset.m_resolvedFileCRC = Assets::GetFileCRC(asset.m_resolvedPath);
                 auto found_source_asset = availableAssets.find(asset.m_resolvedFileCRC);
                 if (found_source_asset != availableAssets.end())
                 {
@@ -178,11 +178,11 @@ namespace ROS2RobotImporter::Utils
     void ResolveAssetMap(
         ReferencedAssetMap& unresolvedAssetMap, const AZ::IO::Path& sourceFilePath, const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
-        auto amentPrefixPath = Utils::GetAmentPrefixPath();
+        auto amentPrefixPath = Assets::GetAmentPrefixPath();
 
         for (auto& [unresolvedFileName, asset] : unresolvedAssetMap)
         {
-            asset.m_resolvedPath = Utils::ResolveAssetPath(unresolvedFileName, sourceFilePath, amentPrefixPath, sdfBuilderSettings);
+            asset.m_resolvedPath = Assets::ResolveAssetPath(unresolvedFileName, sourceFilePath, amentPrefixPath, sdfBuilderSettings);
             asset.m_resolvedFileCRC = AZ::Crc32();
         }
     }
@@ -296,4 +296,4 @@ namespace ROS2RobotImporter::Utils
         return assetsFilepaths;
     }
 
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::Assets

@@ -81,7 +81,7 @@ namespace ROS2RobotImporter
         bool m_copyReferencedAssets{ false };
 
         /// mapping from unresolved URI to asset source
-        Utils::ReferencedAssetMap m_referencedAssetMap;
+        Assets::ReferencedAssetMap m_referencedAssetMap;
 
         AZStd::shared_ptr<AZStd::thread> m_copyReferencedAssetsThread;
         AZStd::unique_ptr<SdfPrefabMaker> m_prefabMaker;

@@ -13,7 +13,7 @@
 
 #include <sdf/sdf.hh>
 
-namespace ROS2RobotImporter::Utils::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     //! Retrieve plugin's filename. The filepath is converted into the filename if necessary.
     //! @param plugin plugin in the parsed SDFormat data
@@ -38,4 +38,4 @@ namespace ROS2RobotImporter::Utils::SDFormat
     //! @param supportedPlugins set of predefined plugins that are supported
     //! @returns true if plugin is supported
     bool IsPluginSupported(const sdf::Plugin& plugin, const AZStd::unordered_set<AZStd::string>& supportedPlugins);
-} // namespace ROS2RobotImporter::Utils::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

@@ -49,7 +49,7 @@ namespace ROS2RobotImporter
         if (sensorResult.IsSuccess())
         {
             const auto sensorElement = sensor->Element();
-            const auto& unsupportedSensorParams = Utils::SDFormat::GetUnsupportedParams(
+            const auto& unsupportedSensorParams = SDFormat::GetUnsupportedParams(
                 sensorElement, hook->m_supportedSensorParams, hook->m_pluginNames, hook->m_supportedPluginParams);
             AZStd::string status;
             if (unsupportedSensorParams.empty())

@@ -23,7 +23,7 @@ namespace ROS2RobotImporter
     {
     public:
         VisualsMaker();
-        VisualsMaker(const AZStd::shared_ptr<Utils::ReferencedAssetMap>& referencedAssetMap);
+        VisualsMaker(const AZStd::shared_ptr<Assets::ReferencedAssetMap>& referencedAssetMap);
 
         //! Add zero, one or many visual elements to a given entity (depending on link content).
         //! Note that a sub-entity will be added to hold each visual (since they can have different transforms).
@@ -41,6 +41,6 @@ namespace ROS2RobotImporter
         void AddMaterialForVisual(
             const sdf::Visual* visual, const AZStd::string& modelUri, AZ::EntityId entityId, const AZ::Data::AssetId& assetId) const;
 
-        AZStd::shared_ptr<Utils::ReferencedAssetMap> m_referencedAssetMap;
+        AZStd::shared_ptr<Assets::ReferencedAssetMap> m_referencedAssetMap;
     };
 } // namespace ROS2RobotImporter

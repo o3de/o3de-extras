@@ -21,7 +21,7 @@ namespace ROS2RobotImporter
     struct SdfAssetBuilderSettings;
 } // namespace ROS2RobotImporter
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::Assets
 {
     //! Function computes CRC32 on first kilobyte of file.
     AZ::Crc32 GetFileCRC(const AZ::IO::Path& filename);
@@ -79,4 +79,4 @@ namespace ROS2RobotImporter::Utils
     //! @returns list of file paths referenced in the scene
     AZStd::unordered_set<AZ::IO::Path> GetMeshTextureAssets(const AZ::IO::Path& sourceMeshAssetPath);
 
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::Assets

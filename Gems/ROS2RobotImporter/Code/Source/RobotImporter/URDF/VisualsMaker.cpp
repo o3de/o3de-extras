@@ -28,7 +28,7 @@
 namespace ROS2RobotImporter
 {
     VisualsMaker::VisualsMaker() = default;
-    VisualsMaker::VisualsMaker(const AZStd::shared_ptr<Utils::ReferencedAssetMap>& referencedAssetMap)
+    VisualsMaker::VisualsMaker(const AZStd::shared_ptr<Assets::ReferencedAssetMap>& referencedAssetMap)
         : m_referencedAssetMap(referencedAssetMap)
     {
     }
@@ -156,7 +156,7 @@ namespace ROS2RobotImporter
             {
                 auto boxGeometry = geometry->BoxShape();
                 AZ_Assert(boxGeometry, "geometry is not Box");
-                const AZ::Vector3 boxDimensions = Utils::TypeConversions::ConvertVector3(boxGeometry->Size());
+                const AZ::Vector3 boxDimensions = Utils::SDFormat::TypeConversions::ConvertVector3(boxGeometry->Size());
 
                 // The `_box_1x1.fbx.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
                 const char* boxAssetRelPath = "objects/_primitives/_box_1x1.fbx.azmodel"; // relative path to cache folder.
@@ -175,7 +175,7 @@ namespace ROS2RobotImporter
             {
                 auto meshGeometry = geometry->MeshShape();
                 AZ_Assert(meshGeometry, "geometry is not Mesh");
-                const AZ::Vector3 scaleVector = Utils::TypeConversions::ConvertVector3(meshGeometry->Scale());
+                const AZ::Vector3 scaleVector = Utils::SDFormat::TypeConversions::ConvertVector3(meshGeometry->Scale());
 
                 const auto asset =
                     PrefabMakerUtils::GetAssetFromUri(*m_referencedAssetMap, modelUri, AZStd::string(meshGeometry->Uri().c_str()));
@@ -183,7 +183,7 @@ namespace ROS2RobotImporter
 
                 if (asset)
                 {
-                    assetId = Utils::GetModelProductAssetId(asset->m_sourceGuid);
+                    assetId = Assets::GetModelProductAssetId(asset->m_sourceGuid);
                     AZ_Warning(
                         "AddVisual", assetId.IsValid(), "There is no product asset for %s.", asset->m_sourceAssetRelativePath.c_str());
                 }
@@ -284,7 +284,7 @@ namespace ROS2RobotImporter
 
     static void OverrideMaterialPbrSettings(
         const sdf::Material* material,
-        const AZStd::shared_ptr<Utils::ReferencedAssetMap>& assetMapping,
+        const AZStd::shared_ptr<Assets::ReferencedAssetMap>& assetMapping,
         const AZStd::string& modelUri,
         AZ::Render::MaterialAssignmentMap& overrides)
     {
@@ -319,7 +319,7 @@ namespace ROS2RobotImporter
 
                     if (asset)
                     {
-                        assetId = Utils::GetImageProductAssetId(asset->m_sourceGuid);
+                        assetId = Assets::GetImageProductAssetId(asset->m_sourceGuid);
                         AZ_Warning(
                             "AddVisual",
                             assetId.IsValid(),
@@ -409,7 +409,7 @@ namespace ROS2RobotImporter
             // It will likely be too dark, but that's still probably better than not setting the color at all.
             // Convert from gamma to linear to try and account for the different color spaces between phong and PBR rendering.
             const auto materialColor = material->Element()->HasElement("diffuse") ? material->Diffuse() : material->Ambient();
-            const AZ::Color baseColor = Utils::TypeConversions::ConvertColor(materialColor).GammaToLinear();
+            const AZ::Color baseColor = Utils::SDFormat::TypeConversions::ConvertColor(materialColor).GammaToLinear();
 
             for (auto& [id, materialAssignment] : overrides)
             {
@@ -446,7 +446,7 @@ namespace ROS2RobotImporter
             // Get the color and convert from gamma to linear to try and account for the different color spaces between phong and PBR
             // rendering.
             const auto materialColor = material->Emissive();
-            const AZ::Color emissiveColor = Utils::TypeConversions::ConvertColor(materialColor).GammaToLinear();
+            const AZ::Color emissiveColor = Utils::SDFormat::TypeConversions::ConvertColor(materialColor).GammaToLinear();
 
             // It seems to be fairly common to have an emissive entry of black, which isn't emissive at all.
             // Only enable the emissive color if it's a non-black value.
@@ -493,7 +493,7 @@ namespace ROS2RobotImporter
                 // anyways, so it's hard to say what perceptual brightness model would cause any better or worse results here.
                 // Another possibility to consider would be taking the max of the RGB values.
                 const auto materialColor = material->Specular();
-                const AZ::Color specularColor = Utils::TypeConversions::ConvertColor(materialColor);
+                const AZ::Color specularColor = Utils::SDFormat::TypeConversions::ConvertColor(materialColor);
                 const float specularBrightness = (specularColor.GetR() + specularColor.GetG() + specularColor.GetB()) / 3.0f;
                 roughness = 1.0f - specularBrightness;
 

@@ -182,9 +182,9 @@ namespace ROS2RobotImporter::SdfParser
         sdfConfig.SetFindCallback(
             [settings, baseFilePath](const std::string& fileName) -> std::string
             {
-                auto amentPrefixPath = Utils::GetAmentPrefixPath();
+                auto amentPrefixPath = Assets::GetAmentPrefixPath();
 
-                auto resolved = Utils::ResolveAssetPath(AZ::IO::Path(fileName.c_str()), baseFilePath, amentPrefixPath, settings);
+                auto resolved = Assets::ResolveAssetPath(AZ::IO::Path(fileName.c_str()), baseFilePath, amentPrefixPath, settings);
                 if (!resolved.empty())
                 {
                     AZ_Trace("SdfParserConfig", "SDF SetFindCallback resolved '%s' -> '%s'", fileName.c_str(), resolved.c_str());

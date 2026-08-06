@@ -12,7 +12,7 @@
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::SDFormat
 {
     bool IsWheelHeuristics(const sdf::Model& model, const sdf::Link* link)
     {
@@ -80,7 +80,7 @@ namespace ROS2RobotImporter::Utils
             return {};
         }
 
-        const AZ::Transform localTransform = Utils::TypeConversions::ConvertPose(resolvedPose);
+        const AZ::Transform localTransform = Utils::SDFormat::TypeConversions::ConvertPose(resolvedPose);
         const AZ::Transform resolvedTransform = localTransform * t;
         return resolvedTransform;
     }
@@ -170,4 +170,4 @@ namespace ROS2RobotImporter::Utils
         VisitJoints(sdfModel, GatherJointsWhereLinkIsParent, gatherNestedModelJoints);
         return joints;
     }
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::SDFormat

@@ -11,7 +11,7 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/std/function/function_template.h>
 
-namespace ROS2RobotImporter::Utils::SDFormat
+namespace ROS2RobotImporter::SDFormat
 {
     AZStd::string GetPluginFilename(const sdf::Plugin& plugin)
     {
@@ -96,4 +96,4 @@ namespace ROS2RobotImporter::Utils::SDFormat
     {
         return supportedPlugins.contains(GetPluginFilename(plugin));
     }
-} // namespace ROS2RobotImporter::Utils::SDFormat
+} // namespace ROS2RobotImporter::SDFormat

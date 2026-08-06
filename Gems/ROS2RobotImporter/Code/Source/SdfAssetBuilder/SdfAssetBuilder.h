@@ -49,7 +49,7 @@ namespace ROS2RobotImporter
         AZStd::string GetFingerprint() const;
 
         //! Create a mapping of all the asset references in the source file.
-        Utils::ReferencedAssetMap FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const;
+        Assets::ReferencedAssetMap FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const;
 
         SdfAssetBuilderSettings m_globalSettings;
         AZStd::string m_fingerprint;

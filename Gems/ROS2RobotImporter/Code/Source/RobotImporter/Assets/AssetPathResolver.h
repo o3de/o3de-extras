@@ -14,15 +14,15 @@
 
 #include <sdf/Root.hh>
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::Assets
 {
     inline namespace Internal
     {
         bool FileExistsCall(const AZ::IO::PathView& filePath);
     } // namespace Internal
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::Assets
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::Assets
 {
     //! Retrieve all assets referenced in SDF/URDF as unresolved URIs.
     //! The URIs will still need to get resolved via ResolveAssetPath() to point to a valid file location.
@@ -51,4 +51,4 @@ namespace ROS2RobotImporter::Utils
 
     using AmentPrefixString = AZStd::fixed_string<32768>;
     AmentPrefixString GetAmentPrefixPath();
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::Assets

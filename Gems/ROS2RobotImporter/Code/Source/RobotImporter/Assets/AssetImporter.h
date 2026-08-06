@@ -18,7 +18,7 @@ namespace ROS2RobotImporter
     struct SdfAssetBuilderSettings;
 } // namespace ROS2RobotImporter
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::Assets
 {
     //! Copies and prepares assets that are referenced in SDF/URDF.
     //! It resolves every asset, creates a directory in Project's Asset directory, copies files, and prepares assets info.
@@ -44,7 +44,7 @@ namespace ROS2RobotImporter::Utils
     //! @returns status of the copy process
     CopyStatus CopyReferencedAsset(
         const ImportedAssetsDest& importedAssetsDest,
-        Utils::ReferencedAsset& referencedAsset,
+        Assets::ReferencedAsset& referencedAsset,
         unsigned int duplicationCounter,
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
@@ -68,4 +68,4 @@ namespace ROS2RobotImporter::Utils
     //! @param path - path to asset to flush
     //! @returns status of the asset after flushing
     AzFramework::AssetSystem::AssetStatus FlushIOOfAsset(const AZ::IO::Path& path);
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::Assets

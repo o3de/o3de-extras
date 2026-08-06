@@ -57,11 +57,11 @@ namespace ROS2RobotImporter::PrefabMakerUtils
     //! @param modelUri a path to the Model (e.g. robot) in URDF/SDF file for which the Asset is requested.
     //! @param assetUri a path to the Asset within the model (e.g. mesh, texture) for which the Asset is requested.
     //! @return Asset for the mesh, if found in the mapping.
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
-        const Utils::ReferencedAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const AZStd::string& assetUri);
+    AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
+        const Assets::ReferencedAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const AZStd::string& assetUri);
 
     //! Get Asset from path. Version for std::string.
     //! @see GetAssetFromUri.
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
-        const Utils::ReferencedAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const std::string& assetUri);
+    AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
+        const Assets::ReferencedAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const std::string& assetUri);
 } // namespace ROS2RobotImporter::PrefabMakerUtils

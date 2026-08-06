@@ -106,7 +106,7 @@ namespace ROS2RobotImporter
     }
 
     void CheckAssetPage::ReportAsset(
-        const AZStd::string unresolvedFileName, const Utils::ReferencedAsset& referencedAsset, const QString& type)
+        const AZStd::string unresolvedFileName, const Assets::ReferencedAsset& referencedAsset, const QString& type)
     {
         int rowId = m_table->rowCount();
         m_table->setRowCount(rowId + 1);
@@ -179,7 +179,7 @@ namespace ROS2RobotImporter
     }
 
     void CheckAssetPage::OnAssetCopyStatusChanged(
-        const Utils::CopyStatus& status, const AZStd::string& unresolvedFileName, const AZStd::string assetPath)
+        const Assets::CopyStatus& status, const AZStd::string& unresolvedFileName, const AZStd::string assetPath)
     {
         int rowId = GetRowIndex(unresolvedFileName);
         if (rowId == -1)
@@ -189,27 +189,27 @@ namespace ROS2RobotImporter
 
         switch (status)
         {
-        case Utils::CopyStatus::Unresolvable:
+        case Assets::CopyStatus::Unresolvable:
             m_table->setItem(rowId, Columns::ResolvedMeshPath, createCell(false, tr("Unable to resolve mesh path")));
             m_table->item(rowId, Columns::ResolvedMeshPath)->setIcon(m_failureIcon);
             m_table->setItem(rowId, Columns::ProductAsset, createCell(true, ""));
             m_missingCount++;
             break;
-        case Utils::CopyStatus::Failed:
+        case Assets::CopyStatus::Failed:
             m_table->setItem(rowId, Columns::ProductAsset, createCell(false, tr("Failed to copy mesh")));
             m_table->item(rowId, Columns::ProductAsset)->setIcon(m_failureIcon);
             m_failedCount++;
             break;
-        case Utils::CopyStatus::Copying:
+        case Assets::CopyStatus::Copying:
             m_table->setItem(rowId, Columns::ProductAsset, createCell(true, tr("Copying")));
             m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
             break;
-        case Utils::CopyStatus::Copied:
+        case Assets::CopyStatus::Copied:
             m_table->setItem(rowId, Columns::ProductAsset, createCell(true, tr("Copied, waiting to be processed")));
             m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
             m_table->setItem(rowId, Columns::SourceAsset, createCell(true, assetPath.c_str()));
             break;
-        case Utils::CopyStatus::Exists:
+        case Assets::CopyStatus::Exists:
             m_table->setItem(rowId, Columns::ProductAsset, createCell(true, tr("Found file, waiting to be processed")));
             m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
 
@@ -219,7 +219,7 @@ namespace ROS2RobotImporter
     }
 
     void CheckAssetPage::OnAssetProcessStatusChanged(
-        const AZStd::string& unresolvedFileName, const Utils::ReferencedAsset& referencedAsset, bool isError)
+        const AZStd::string& unresolvedFileName, const Assets::ReferencedAsset& referencedAsset, bool isError)
     {
         int rowId = GetRowIndex(unresolvedFileName);
         if (rowId == -1)
@@ -229,7 +229,7 @@ namespace ROS2RobotImporter
 
         if (!isError)
         {
-            const AZStd::vector<AZStd::string> productPaths = Utils::GetProductAssets(referencedAsset.m_availableAssetInfo.m_sourceGuid);
+            const AZStd::vector<AZStd::string> productPaths = Assets::GetProductAssets(referencedAsset.m_availableAssetInfo.m_sourceGuid);
             QString text;
             for (const auto& productPath : productPaths)
             {

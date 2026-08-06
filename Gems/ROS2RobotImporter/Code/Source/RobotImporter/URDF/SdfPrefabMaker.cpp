@@ -36,7 +36,7 @@ namespace ROS2RobotImporter
     SdfPrefabMaker::SdfPrefabMaker(
         const sdf::Root* root,
         AZStd::string prefabPath,
-        const AZStd::shared_ptr<Utils::ReferencedAssetMap> referencedAssetMap,
+        const AZStd::shared_ptr<Assets::ReferencedAssetMap> referencedAssetMap,
         bool useArticulations,
         const AZStd::optional<AZ::Transform> spawnPosition)
         : m_root(root)
@@ -81,11 +81,11 @@ namespace ROS2RobotImporter
             AZStd::unordered_map<const sdf::Joint*, const sdf::Link*> m_jointToChildLinks;
         };
         JointsMapper jointsMapper;
-        auto GetAllJointsFromModel = [&jointsMapper](const sdf::Model& model, const Utils::ModelStack&) -> Utils::VisitModelResponse
+        auto GetAllJointsFromModel = [&jointsMapper](const sdf::Model& model, const SDFormat::ModelStack&) -> SDFormat::VisitModelResponse
         {
             // As the VisitModels function visits nested models by default, gatherNestedModelJoints is set to false
             constexpr bool gatherNestedModelJoints = false;
-            auto jointsForModel = Utils::GetAllJoints(model, gatherNestedModelJoints);
+            auto jointsForModel = SDFormat::GetAllJoints(model, gatherNestedModelJoints);
             for (const auto& [fullyQualifiedName, joint] : jointsForModel)
             {
                 JointsMapper::JointToAttachedModel jointToAttachedModel{
@@ -109,10 +109,10 @@ namespace ROS2RobotImporter
                 }
             }
 
-            return Utils::VisitModelResponse::VisitNestedAndSiblings;
+            return SDFormat::VisitModelResponse::VisitNestedAndSiblings;
         };
         // Gather all Joints in SDF including in nested models
-        Utils::VisitModels(*m_root, GetAllJointsFromModel, visitNestedModels);
+        SDFormat::VisitModels(*m_root, GetAllJointsFromModel, visitNestedModels);
 
         // Maintains references to all Links in the SDF and a mapping of links to the model it is attached to
         struct LinksMapper
@@ -142,11 +142,11 @@ namespace ROS2RobotImporter
         ModelMapper modelMapper;
 
         auto GetAllLinksAndSetModelHierarchy =
-            [&linksMapper, &modelMapper](const sdf::Model& model, const Utils::ModelStack& modelStack) -> Utils::VisitModelResponse
+            [&linksMapper, &modelMapper](const sdf::Model& model, const SDFormat::ModelStack& modelStack) -> SDFormat::VisitModelResponse
         {
             // As the VisitModels function visits nested models by default, gatherNestedModelLinks is set to false
             constexpr bool gatherNestedModelLinks = false;
-            auto linksForModel = Utils::GetAllLinks(model, gatherNestedModelLinks);
+            auto linksForModel = SDFormat::GetAllLinks(model, gatherNestedModelLinks);
             for (const auto& [fullyQualifiedName, link] : linksForModel)
             {
                 // Push back the mapping of link to attached model into the ordered vector
@@ -171,11 +171,11 @@ namespace ROS2RobotImporter
             nestedModelToAttachedModel.m_attachedModel = !modelStack.empty() ? &modelStack.back().get() : nullptr;
             modelMapper.m_models.push_back(AZStd::move(nestedModelToAttachedModel));
 
-            return Utils::VisitModelResponse::VisitNestedAndSiblings;
+            return SDFormat::VisitModelResponse::VisitNestedAndSiblings;
         };
 
         // Gather all links and add a mapping of nested model -> parent model for each model in the SDF
-        Utils::VisitModels(*m_root, GetAllLinksAndSetModelHierarchy, visitNestedModels);
+        SDFormat::VisitModels(*m_root, GetAllLinksAndSetModelHierarchy, visitNestedModels);
 
         // Build up a list of all entities created as a part of processing the file.
         AZStd::vector<AZ::EntityId> createdEntities;
@@ -292,7 +292,7 @@ namespace ROS2RobotImporter
                 AZ::EntityId createdEntityId = createLinkEntityResult.GetValue();
                 std::string linkName = linkPtr->Name();
                 const auto linkSemanticPose = linkPtr->SemanticPose();
-                AZ::Transform tf = Utils::GetLocalTransform(linkSemanticPose);
+                AZ::Transform tf = SDFormat::GetLocalTransform(linkSemanticPose);
                 auto* entity = AzToolsFramework::GetEntityById(createdEntityId);
                 if (entity)
                 {
@@ -339,7 +339,7 @@ namespace ROS2RobotImporter
 
             AZStd::vector<const sdf::Joint*> jointsWhereLinkIsChild;
             bool gatherNestedModelJoints = true;
-            jointsWhereLinkIsChild = Utils::GetJointsForChildLink(*attachedModel, azLinkName, gatherNestedModelJoints);
+            jointsWhereLinkIsChild = SDFormat::GetJointsForChildLink(*attachedModel, azLinkName, gatherNestedModelJoints);
 
             if (jointsWhereLinkIsChild.empty())
             {
@@ -634,7 +634,7 @@ namespace ROS2RobotImporter
             transformComponent != nullptr)
         {
             gz::math::Pose3d modelPose = model.RawPose();
-            AZ::Transform modelTransform = Utils::TypeConversions::ConvertPose(modelPose);
+            AZ::Transform modelTransform = Utils::SDFormat::TypeConversions::ConvertPose(modelPose);
             // Set the local transform for each model to have it be translated in relation
             // to its parent
             transformComponent->SetLocalTM(AZStd::move(modelTransform));
@@ -779,13 +779,13 @@ namespace ROS2RobotImporter
     bool SdfPrefabMaker::ContainsModel() const
     {
         const sdf::Model* sdfModel{};
-        auto GetModelAndStopIteration = [&sdfModel](const sdf::Model& model, const Utils::ModelStack&) -> Utils::VisitModelResponse
+        auto GetModelAndStopIteration = [&sdfModel](const sdf::Model& model, const SDFormat::ModelStack&) -> SDFormat::VisitModelResponse
         {
             sdfModel = &model;
             // Return stop to prevent further visitation of additional models
-            return Utils::VisitModelResponse::Stop;
+            return SDFormat::VisitModelResponse::Stop;
         };
-        Utils::VisitModels(*m_root, GetModelAndStopIteration);
+        SDFormat::VisitModels(*m_root, GetModelAndStopIteration);
         return sdfModel != nullptr;
     }
 } // namespace ROS2RobotImporter

@@ -12,7 +12,7 @@
 #include <AzCore/std/string/string.h>
 #include <RobotImporter/Assets/AssetTypes.h>
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::Assets
 {
     //! Retrieves the O3DE source asset info for an already existing source asset.
     //! @param globalSourceAssetPath - global path to the source asset
@@ -36,4 +36,4 @@ namespace ROS2RobotImporter::Utils
     bool CreateSceneManifest(
         const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, const bool collider, const bool visual);
 
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::Assets

@@ -30,10 +30,10 @@ namespace ROS2RobotImporter
         rigidBodyConfiguration.m_mass = inertial.MassMatrix().Mass();
         rigidBodyConfiguration.m_computeMass = false;
 
-        rigidBodyConfiguration.m_centerOfMassOffset = Utils::TypeConversions::ConvertVector3(inertial.Pose().Pos());
+        rigidBodyConfiguration.m_centerOfMassOffset = Utils::SDFormat::TypeConversions::ConvertVector3(inertial.Pose().Pos());
         rigidBodyConfiguration.m_computeCenterOfMass = false;
 
-        if (!Utils::TypeConversions::ConvertQuaternion(inertial.Pose().Rot()).IsIdentity())
+        if (!Utils::SDFormat::TypeConversions::ConvertQuaternion(inertial.Pose().Rot()).IsIdentity())
         { // There is a rotation component in the inertial pose that we are not able to apply
             AZ_Warning("AddInertial", false, "Ignoring URDF/SDF inertial origin rotation (no such field in rigid body configuration)");
         }

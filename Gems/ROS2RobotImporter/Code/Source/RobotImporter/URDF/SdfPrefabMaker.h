@@ -41,7 +41,7 @@ namespace ROS2RobotImporter
         SdfPrefabMaker(
             const sdf::Root* root,
             AZStd::string prefabPath,
-            const AZStd::shared_ptr<Utils::ReferencedAssetMap> sdfAssetsMapping,
+            const AZStd::shared_ptr<Assets::ReferencedAssetMap> sdfAssetsMapping,
             bool useArticulations = false,
             AZStd::optional<AZ::Transform> spawnPosition = AZStd::nullopt);
 

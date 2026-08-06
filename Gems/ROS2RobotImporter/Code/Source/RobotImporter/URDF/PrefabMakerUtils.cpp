@@ -26,8 +26,8 @@ namespace ROS2RobotImporter::PrefabMakerUtils
     {
         gz::math::Vector3 sdfPosition = origin.Pos();
         gz::math::Quaternion sdfRotation = origin.Rot();
-        AZ::Quaternion azRotation = Utils::TypeConversions::ConvertQuaternion(sdfRotation);
-        AZ::Vector3 azPosition = Utils::TypeConversions::ConvertVector3(sdfPosition);
+        AZ::Quaternion azRotation = Utils::SDFormat::TypeConversions::ConvertQuaternion(sdfRotation);
+        AZ::Vector3 azPosition = Utils::SDFormat::TypeConversions::ConvertVector3(sdfPosition);
         AZ::Transform tf(azPosition, azRotation, 1.0f);
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
@@ -113,8 +113,8 @@ namespace ROS2RobotImporter::PrefabMakerUtils
         return AZStd::string::format("%s_%s%s", rootName.c_str(), type.c_str(), suffix.c_str());
     }
 
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
-        const Utils::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const AZStd::string& assetUri)
+    AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
+        const Assets::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const AZStd::string& assetUri)
     {
         const AZStd::string modelAssetUri = (modelUri.empty()) ? assetUri : modelUri + "/" + assetUri;
         if (!referencedAssetMap.contains(modelAssetUri))
@@ -126,8 +126,8 @@ namespace ROS2RobotImporter::PrefabMakerUtils
         return referencedAssetMap.at(modelAssetUri).m_availableAssetInfo;
     }
 
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
-        const Utils::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const std::string& assetUri)
+    AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
+        const Assets::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const std::string& assetUri)
     {
         return GetAssetFromUri(referencedAssetMap, modelUri, AZStd::string(assetUri.c_str(), assetUri.size()));
     }

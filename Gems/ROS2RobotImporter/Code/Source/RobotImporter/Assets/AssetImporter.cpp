@@ -14,7 +14,7 @@
 #include <RobotImporter/Assets/AssetLookup.h>
 #include <RobotImporter/Assets/SceneManifestBuilder.h>
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::Assets
 {
     void CopyReferencedAssetsAndCreateAssetMap(
         ReferencedAssetMap& referencedAssetMap,
@@ -49,7 +49,7 @@ namespace ROS2RobotImporter::Utils
             }
             CopyReferencedAsset(destDirectory.GetValue(), referencedAsset, duplicatedFilenames[referencedAsset.m_assetUri]);
         }
-        Utils::RemoveTmpDir(destDirectory.GetValue().importDirectoryTmp);
+        Assets::RemoveTmpDir(destDirectory.GetValue().importDirectoryTmp);
 
         return;
     }
@@ -108,7 +108,7 @@ namespace ROS2RobotImporter::Utils
 
     CopyStatus CopyReferencedAsset(
         const ImportedAssetsDest& importedAssetsDest,
-        Utils::ReferencedAsset& referencedAsset,
+        Assets::ReferencedAsset& referencedAsset,
         unsigned int duplicationCounter,
         AZ::IO::FileIOBase* fileIO)
     {
@@ -158,7 +158,7 @@ namespace ROS2RobotImporter::Utils
                     // copy additional assets such as textures directly to destination location
                     if (isMeshFile)
                     {
-                        const auto& meshTextureAssets = Utils::GetMeshTextureAssets(targetPathAssetTmp);
+                        const auto& meshTextureAssets = Assets::GetMeshTextureAssets(targetPathAssetTmp);
                         for (const auto& unresolvedAssetPath : meshTextureAssets)
                         {
                             // Manifest returns local path in Project's directory temp folder
@@ -210,7 +210,7 @@ namespace ROS2RobotImporter::Utils
 
         if (referencedAsset.m_copyStatus == CopyStatus::Exists || referencedAsset.m_copyStatus == CopyStatus::Copied)
         {
-            referencedAsset.m_availableAssetInfo = Utils::GetAvailableAssetInfo(targetPathAssetDst.String());
+            referencedAsset.m_availableAssetInfo = Assets::GetAvailableAssetInfo(targetPathAssetDst.String());
         }
         referencedAsset.m_resolvedFileCRC = AZ::Crc32();
 
@@ -230,4 +230,4 @@ namespace ROS2RobotImporter::Utils
 
         return assetStatus;
     }
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::Assets

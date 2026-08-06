@@ -17,7 +17,7 @@
 #include <gz/math/Quaternion.hh>
 #include <gz/math/Vector3.hh>
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::Utils::SDFormat
 {
     //! Common types conversion between gz::math (libsdformat) and AZ formats
     namespace TypeConversions
@@ -27,4 +27,4 @@ namespace ROS2RobotImporter::Utils
         AZ::Color ConvertColor(const gz::math::Color& color);
         AZ::Transform ConvertPose(const gz::math::Pose3d& pose);
     }; // namespace TypeConversions
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::Utils::SDFormat
