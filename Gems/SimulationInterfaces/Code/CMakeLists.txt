@@ -274,7 +274,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                         AZ::AzTestShared
                         AZ::AzToolsFramework
                         Legacy::CryCommon
-                        Legacy::EditorCommon
+                        Legacy::EditorCore
                         Legacy::Editor.Headers
                         AZ::AzManipulatorTestFramework.Static
                         Gem::${gem_name}.API
