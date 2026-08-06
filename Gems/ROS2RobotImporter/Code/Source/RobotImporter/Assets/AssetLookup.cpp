@@ -17,6 +17,10 @@
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 #include <PhysX/MeshAsset.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
+#include <SceneAPI/SceneCore/Containers/Scene.h>
+#include <SceneAPI/SceneCore/Containers/Utilities/Filters.h>
+#include <SceneAPI/SceneCore/DataTypes/GraphData/IMaterialData.h>
+#include <SceneAPI/SceneCore/Events/SceneSerializationBus.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace ROS2RobotImporter::Utils
@@ -251,4 +255,45 @@ namespace ROS2RobotImporter::Utils
     {
         return GetProductAssetId(sourceAssetUUID, azrtti_typeid<PhysX::Pipeline::MeshAsset>());
     }
+
+    AZStd::unordered_set<AZ::IO::Path> GetMeshTextureAssets(const AZ::IO::Path& sourceMeshAssetPath)
+    {
+        AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene> scene;
+        AZ::SceneAPI::Events::SceneSerializationBus::BroadcastResult(
+            scene, &AZ::SceneAPI::Events::SceneSerialization::LoadScene, sourceMeshAssetPath.c_str(), AZ::Uuid::CreateNull(), "");
+        if (!scene)
+        {
+            AZ_Error("GetMeshTextureAssets", false, "Error loading mesh assets. Invalid scene: %s", sourceMeshAssetPath.c_str());
+            return AZStd::unordered_set<AZ::IO::Path>();
+        }
+
+        AZStd::unordered_set<AZ::IO::Path> assetsFilepaths;
+
+        // Look for material files
+        static const AZStd::array<AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType, 9> allTextureTypes{
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Diffuse,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Specular,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Bump,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Normal,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Metallic,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Roughness,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::AmbientOcclusion,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Emissive,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::BaseColor
+        };
+        auto view =
+            AZ::SceneAPI::Containers::MakeDerivedFilterView<AZ::SceneAPI::DataTypes::IMaterialData>(scene->GetGraph().GetContentStorage());
+        for (const auto& material : view)
+        {
+            for (auto textureType : allTextureTypes)
+            {
+                if (const AZ::IO::Path filePath(material.GetTexture(textureType)); !filePath.empty())
+                {
+                    assetsFilepaths.emplace(filePath);
+                }
+            }
+        }
+        return assetsFilepaths;
+    }
+
 } // namespace ROS2RobotImporter::Utils

@@ -73,4 +73,10 @@ namespace ROS2RobotImporter::Utils
     //! @param sourceAssetUUID is source asset GUID
     //! @returns product asset id (invalid id if not found)
     AZ::Data::AssetId GetPhysXMeshProductAssetId(const AZ::Uuid& sourceAssetUUID);
+
+    //! Creates a list of files referenced in an asset (e.g. materials)
+    //! @param sourceMeshAssetPath - global path to source asset used to find scene
+    //! @returns list of file paths referenced in the scene
+    AZStd::unordered_set<AZ::IO::Path> GetMeshTextureAssets(const AZ::IO::Path& sourceMeshAssetPath);
+
 } // namespace ROS2RobotImporter::Utils

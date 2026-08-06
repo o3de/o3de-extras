@@ -36,9 +36,4 @@ namespace ROS2RobotImporter::Utils
     bool CreateSceneManifest(
         const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, const bool collider, const bool visual);
 
-    //! Creates a list of files referenced in an asset (e.g. materials)
-    //! @param sourceMeshAssetPath - global path to source asset used to find scene
-    //! @returns list of file paths referenced in the scene
-    AZStd::unordered_set<AZ::IO::Path> GetMeshTextureAssets(const AZ::IO::Path& sourceMeshAssetPath);
-
 } // namespace ROS2RobotImporter::Utils
