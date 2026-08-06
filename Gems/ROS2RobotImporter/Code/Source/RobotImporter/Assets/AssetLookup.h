@@ -8,19 +8,18 @@
 #pragma once
 
 #include <AzCore/Asset/AssetCommon.h>
-#include <AzCore/Math/Uuid.h>
-#include <AzCore/std/containers/vector.h>
-#include <AzCore/std/string/string.h>
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/Math/Crc.h>
+#include <AzCore/Math/Uuid.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/containers/vector.h>
+#include <AzCore/std/string/string.h>
 #include <RobotImporter/Assets/AssetTypes.h>
 
 namespace ROS2RobotImporter
 {
     struct SdfAssetBuilderSettings;
 } // namespace ROS2RobotImporter
-
 
 namespace ROS2RobotImporter::Utils
 {
@@ -48,7 +47,7 @@ namespace ROS2RobotImporter::Utils
     //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
     void ResolveAssetMap(
         ReferencedAssetMap& unresolvedAssetMap, const AZ::IO::Path& sourceFilePath, const SdfAssetBuilderSettings& sdfBuilderSettings);
-    
+
     //! Helper function that gets all the potential primary product asset paths from the source asset GUID
     //! @param sourceAssetUUID is source asset GUID
     //! @returns vector of relative paths to products, empty if no products are found

@@ -15,8 +15,8 @@
 #include <AzCore/std/utility/move.h>
 #include <AzToolsFramework/API/ViewPaneOptions.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
-#include <RobotImporter/Assets/AssetPathResolver.h>
 #include <RobotImporter/Assets/AssetImporter.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
 #include <RobotImporter/RobotImporterWidget.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>

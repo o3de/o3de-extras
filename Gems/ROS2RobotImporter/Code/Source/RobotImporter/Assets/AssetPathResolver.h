@@ -52,5 +52,3 @@ namespace ROS2RobotImporter::Utils
     using AmentPrefixString = AZStd::fixed_string<32768>;
     AmentPrefixString GetAmentPrefixPath();
 } // namespace ROS2RobotImporter::Utils
-
-

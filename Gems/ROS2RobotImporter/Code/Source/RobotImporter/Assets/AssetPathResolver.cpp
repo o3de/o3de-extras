@@ -6,13 +6,12 @@
  *
  */
 
-
 #include "AssetPathResolver.h"
 #include <AzCore/IO/Path/Path.h>
+#include <AzCore/IO/SystemFile.h>
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AzCore/Utils/Utils.h>
 #include <RobotImporter/Queries/SdfVisitors.h>
-#include <AzCore/IO/SystemFile.h>
 
 namespace ROS2RobotImporter::Utils
 {

@@ -16,14 +16,14 @@
 #include <QApplication>
 #include <QScreen>
 #include <QTranslator>
+#include <RobotImporter/Assets/AssetImporter.h>
+#include <RobotImporter/Assets/AssetLookup.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Assets/SceneManifestBuilder.h>
 #include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
-#include <RobotImporter/Assets/AssetPathResolver.h>
-#include <RobotImporter/Assets/AssetImporter.h>
-#include <RobotImporter/Assets/AssetLookup.h>
-#include <RobotImporter/Assets/SceneManifestBuilder.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace ROS2RobotImporter

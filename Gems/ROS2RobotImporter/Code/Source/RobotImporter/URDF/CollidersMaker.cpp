@@ -15,8 +15,8 @@
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <PhysX/EditorColliderComponentRequestBus.h>
 #include <PhysX/MeshColliderComponentBus.h>
-#include <RobotImporter/Queries/SdfHeuristics.h>
 #include <RobotImporter/Assets/AssetLookup.h>
+#include <RobotImporter/Queries/SdfHeuristics.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <SceneAPI/SceneCore/Containers/Scene.h>
 #include <SceneAPI/SceneCore/Containers/Utilities/Filters.h>

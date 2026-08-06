@@ -113,5 +113,5 @@ namespace ROS2RobotImporter::SdfParser
     //! @param baseFilePath The base file getting parsed, which is used to help resolve file paths
     //! @return The output parser config to use with sdformat.
     sdf::ParserConfig CreateSdfParserConfigFromSettings(const SdfAssetBuilderSettings& settings, const AZ::IO::PathView& baseFilePath);
-    
+
 } // namespace ROS2RobotImporter::SdfParser

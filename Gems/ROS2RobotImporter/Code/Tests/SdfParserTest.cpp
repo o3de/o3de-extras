@@ -10,10 +10,10 @@
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzTest/AzTest.h>
 #include <AzTest/Utils.h>
-#include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 #include <RobotImporter/Queries/SdfPluginUtils.h>
 #include <RobotImporter/Queries/SdfQueries.h>
 #include <RobotImporter/Queries/SdfVisitors.h>
+#include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 #include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 

@@ -13,10 +13,10 @@
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/std/string/regex.h>
 #include <AzCore/std/string/string.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
 #include <RobotImporter/FixURDF/FixURDF.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
-#include <RobotImporter/Assets/AssetPathResolver.h>
 
 namespace ROS2RobotImporter::SdfParser
 {
@@ -149,7 +149,6 @@ namespace ROS2RobotImporter::SdfParser
         }
         return Parse(xmlStr, parserConfig);
     }
-
 
     sdf::ParserConfig CreateSdfParserConfigFromSettings(const SdfAssetBuilderSettings& settings, const AZ::IO::PathView& baseFilePath)
     {

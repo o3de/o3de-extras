@@ -8,14 +8,14 @@
 
 #include <RobotImporter/Assets/AssetLookup.h>
 
+#include <AssetDatabase/AssetDatabaseConnection.h>
 #include <Atom/RPI.Reflect/Image/StreamingImageAsset.h>
 #include <Atom/RPI.Reflect/Model/ModelAsset.h>
 #include <AzCore/Asset/AssetManagerBus.h>
-#include <AzToolsFramework/API/EditorAssetSystemAPI.h>
-#include <PhysX/MeshAsset.h>
-#include <AssetDatabase/AssetDatabaseConnection.h>
 #include <AzCore/IO/SystemFile.h>
 #include <AzCore/Settings/SettingsRegistry.h>
+#include <AzToolsFramework/API/EditorAssetSystemAPI.h>
+#include <PhysX/MeshAsset.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
