@@ -11,8 +11,8 @@
 #include <AzCore/std/string/string.h>
 #include <AzTest/AzTest.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Parsing/SdfParser.h>
 #include <RobotImporter/Queries/SdfQueries.h>
-#include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/xacro/XacroUtils.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>

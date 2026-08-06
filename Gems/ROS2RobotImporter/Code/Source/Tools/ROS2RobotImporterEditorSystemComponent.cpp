@@ -17,10 +17,10 @@
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <RobotImporter/Assets/AssetImporter.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Parsing/SdfParser.h>
 #include <RobotImporter/RobotImporterWidget.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
-#include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>

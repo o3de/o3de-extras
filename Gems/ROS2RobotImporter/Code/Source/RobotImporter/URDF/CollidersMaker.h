@@ -8,12 +8,13 @@
 
 #pragma once
 
-#include "SdfParser.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/Material/PhysicsMaterialManager.h>
 #include <RobotImporter/Assets/AssetTypes.h>
+#include <sdf/Collision.hh>
+#include <sdf/Model.hh>
 
 namespace ROS2RobotImporter
 {

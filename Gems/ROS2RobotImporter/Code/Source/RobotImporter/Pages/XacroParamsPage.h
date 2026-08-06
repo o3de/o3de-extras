@@ -16,7 +16,7 @@
 #include <QString>
 #include <QTableWidget>
 #include <QWizardPage>
-#include <RobotImporter/xacro/XacroUtils.h>
+#include <RobotImporter/Parsing/Xacro/XacroUtils.h>
 #endif
 
 namespace ROS2RobotImporter

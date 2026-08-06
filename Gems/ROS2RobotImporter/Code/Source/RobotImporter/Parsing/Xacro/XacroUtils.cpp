@@ -13,7 +13,7 @@
 #include <AzFramework/Process/ProcessCommunicator.h>
 #include <AzFramework/Process/ProcessWatcher.h>
 #include <QString>
-#include <RobotImporter/FixURDF/FixURDF.h>
+#include <RobotImporter/Parsing/FixURDF/FixURDF.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace ROS2RobotImporter::Utils::xacro

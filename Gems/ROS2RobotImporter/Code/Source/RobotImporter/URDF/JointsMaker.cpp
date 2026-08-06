@@ -15,6 +15,7 @@
 #include <Source/EditorHingeJointComponent.h>
 #include <Source/EditorPrismaticJointComponent.h>
 #include <Source/EditorRigidBodyComponent.h>
+#include <sdf/JointAxis.hh>
 
 namespace ROS2RobotImporter
 {

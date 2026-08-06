@@ -11,7 +11,7 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/utility/expected.h>
-#include <RobotImporter/FixURDF/URDFModifications.h>
+#include <RobotImporter/Parsing/FixURDF/URDFModifications.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 #include <sdf/Collision.hh>
 #include <sdf/Geometry.hh>

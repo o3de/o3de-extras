@@ -14,7 +14,7 @@
 #include <AzCore/std/string/regex.h>
 #include <AzCore/std/string/string.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
-#include <RobotImporter/FixURDF/FixURDF.h>
+#include <RobotImporter/Parsing/FixURDF/FixURDF.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 
