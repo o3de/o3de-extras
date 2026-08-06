@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include <AzCore/Math/Transform.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
@@ -16,6 +17,19 @@
 
 namespace ROS2RobotImporter::Utils
 {
+    //! Determine whether a given link is likely a wheel link.
+    //! This can be useful to provide a good default behavior - for example, to add Vehicle Dynamics components to this link's entity.
+    //! @param sdfModel Model object which is used to query the joints from SDF format data
+    //! @param link the link that will be subjected to the heuristic.
+    //! @return true if the link is likely a wheel link.
+    bool IsWheelHeuristics(const sdf::Model& model, const sdf::Link* link);
+
+    //! Returns an AZ::Transform converted from the link pose defined relative to another frame.
+    //! @param semanticPose pointer to URDF/SDF link
+    //! @param t initial transform, multiplied against link transform
+    //! @returns Transform of link
+    AZ::Transform GetLocalTransform(const sdf::SemanticPose& semanticPose, AZ::Transform t = AZ::Transform::Identity());
+
     //! Retrieve all links in URDF/SDF as a map, where a key is link's fully qualified name and a value is a pointer to link.
     //! Allows to retrieve a pointer to a link given it name.
     //! @param sdfModel object of SDF document corresponding to the <model> tag. It used to query links

@@ -9,7 +9,6 @@
 #include "ArticulationsMaker.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
-#include <RobotImporter/Queries/SdfHeuristics.h>
 #include <RobotImporter/Queries/SdfQueries.h>
 #include <RobotImporter/Utils/DefaultSolverConfiguration.h>
 #include <RobotImporter/Utils/TypeConversions.h>

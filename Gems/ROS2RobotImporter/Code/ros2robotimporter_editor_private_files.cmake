@@ -29,8 +29,6 @@ set(FILES
     Source/RobotImporter/Pages/XacroParamsPage.h
     Source/RobotImporter/RobotImporterWidget.cpp
     Source/RobotImporter/RobotImporterWidget.h
-    Source/RobotImporter/Queries/SdfHeuristics.cpp
-    Source/RobotImporter/Queries/SdfHeuristics.h
     Source/RobotImporter/Queries/SdfPluginUtils.cpp
     Source/RobotImporter/Queries/SdfPluginUtils.h
     Source/RobotImporter/Queries/SdfQueries.cpp
