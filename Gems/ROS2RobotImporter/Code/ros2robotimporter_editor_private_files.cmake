@@ -47,26 +47,26 @@ set(FILES
     Source/RobotImporter/SDFormat/ROS2SDFormatHooksUtils.cpp
     Source/RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h
     Source/RobotImporter/SDFormat/ROS2SensorHooks.h
-    Source/RobotImporter/URDF/ArticulationsMaker.cpp
-    Source/RobotImporter/URDF/ArticulationsMaker.h
-    Source/RobotImporter/URDF/CollidersMaker.cpp
-    Source/RobotImporter/URDF/CollidersMaker.h
-    Source/RobotImporter/URDF/InertialsMaker.cpp
-    Source/RobotImporter/URDF/InertialsMaker.h
-    Source/RobotImporter/URDF/JointsMaker.cpp
-    Source/RobotImporter/URDF/JointsMaker.h
-    Source/RobotImporter/URDF/PrefabMakerUtils.cpp
-    Source/RobotImporter/URDF/PrefabMakerUtils.h
-    Source/RobotImporter/URDF/RobotControlMaker.cpp
-    Source/RobotImporter/URDF/RobotControlMaker.h
-    Source/RobotImporter/URDF/SensorsMaker.cpp
-    Source/RobotImporter/URDF/SensorsMaker.h
+    Source/RobotImporter/Building/Makers/ArticulationsMaker.cpp
+    Source/RobotImporter/Building/Makers/ArticulationsMaker.h
+    Source/RobotImporter/Building/Makers/CollidersMaker.cpp
+    Source/RobotImporter/Building/Makers/CollidersMaker.h
+    Source/RobotImporter/Building/Makers/InertialsMaker.cpp
+    Source/RobotImporter/Building/Makers/InertialsMaker.h
+    Source/RobotImporter/Building/Makers/JointsMaker.cpp
+    Source/RobotImporter/Building/Makers/JointsMaker.h
+    Source/RobotImporter/Building/PrefabMakerUtils.cpp
+    Source/RobotImporter/Building/PrefabMakerUtils.h
+    Source/RobotImporter/Building/Makers/RobotControlMaker.cpp
+    Source/RobotImporter/Building/Makers/RobotControlMaker.h
+    Source/RobotImporter/Building/Makers/SensorsMaker.cpp
+    Source/RobotImporter/Building/Makers/SensorsMaker.h
     Source/RobotImporter/Parsing/SdfParser.cpp
     Source/RobotImporter/Parsing/SdfParser.h
-    Source/RobotImporter/URDF/SdfPrefabMaker.cpp
-    Source/RobotImporter/URDF/SdfPrefabMaker.h
-    Source/RobotImporter/URDF/VisualsMaker.cpp
-    Source/RobotImporter/URDF/VisualsMaker.h
+    Source/RobotImporter/Building/SdfPrefabMaker.cpp
+    Source/RobotImporter/Building/SdfPrefabMaker.h
+    Source/RobotImporter/Building/Makers/VisualsMaker.cpp
+    Source/RobotImporter/Building/Makers/VisualsMaker.h
     Source/RobotImporter/Parsing/Xacro/XacroUtils.cpp
     Source/RobotImporter/Parsing/Xacro/XacroUtils.h
     Source/RobotImporter/Utils/DefaultSolverConfiguration.h

@@ -11,9 +11,9 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <ROS2RobotImporter/ROS2RobotImporterBus.h>
+#include <RobotImporter/Building/PrefabMakerUtils.h>
 #include <RobotImporter/Queries/SdfPluginUtils.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
-#include <RobotImporter/URDF/PrefabMakerUtils.h>
 
 #include <sdf/Link.hh>
 #include <sdf/Sensor.hh>

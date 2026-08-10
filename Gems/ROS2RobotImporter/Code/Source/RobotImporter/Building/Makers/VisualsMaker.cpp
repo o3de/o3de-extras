@@ -6,8 +6,8 @@
  *
  */
 
-#include "RobotImporter/URDF/VisualsMaker.h"
-#include "RobotImporter/URDF/PrefabMakerUtils.h"
+#include "RobotImporter/Building/Makers/VisualsMaker.h"
+#include "RobotImporter/Building/PrefabMakerUtils.h"
 #include "RobotImporter/Utils/TypeConversions.h"
 #include <RobotImporter/Assets/AssetLookup.h>
 

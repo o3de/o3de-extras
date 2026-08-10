@@ -7,7 +7,6 @@
  */
 
 #include "CollidersMaker.h"
-#include "PrefabMakerUtils.h"
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/Serialization/Json/JsonUtils.h>
 #include <AzCore/StringFunc/StringFunc.h>
@@ -16,6 +15,7 @@
 #include <PhysX/EditorColliderComponentRequestBus.h>
 #include <PhysX/MeshColliderComponentBus.h>
 #include <RobotImporter/Assets/AssetLookup.h>
+#include <RobotImporter/Building/PrefabMakerUtils.h>
 #include <RobotImporter/Queries/SdfQueries.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <SceneAPI/SceneCore/Containers/Scene.h>
