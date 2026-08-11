@@ -46,8 +46,8 @@ namespace ROS2RobotImporter
                 ->Attribute(AZ::Script::Attributes::Category, "Robotics")
                 ->Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Automation)
                 ->Attribute(AZ::Script::Attributes::Module, "ROS2")
-                // The "ImportURDF" event name is kept for backwards compatibility with existing Python scripts,
-                // even though the importer accepts URDF, SDF and .world files.
+                ->Event("ImportRobotDescription", &RobotImporterRequestBus::Events::GeneratePrefabFromFile)
+                // The "ImportURDF" event name kept for backwards compatibility with existing Python scripts.
                 ->Event("ImportURDF", &RobotImporterRequestBus::Events::GeneratePrefabFromFile);
         }
     }

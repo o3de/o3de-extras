@@ -80,7 +80,7 @@ namespace ROS2RobotImporter::SdfParser
         sdf::Errors m_sdfErrors{ sdf::Error{ O3DESdfErrorParseNotStarted, std::string{ "No Parsing has occurred yet" } } };
 
         //! Stores the modified URDF content after parsing, empty if no modification occurred
-        std::string m_modifiedURDFContent;
+        std::string m_modifiedUrdfContent;
 
         //! Stores description of URDF modifications, empty if no modification occurred
         Utils::UrdfModifications m_urdfModifications;

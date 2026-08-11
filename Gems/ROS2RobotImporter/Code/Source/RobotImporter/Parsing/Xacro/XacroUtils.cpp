@@ -94,7 +94,7 @@ namespace ROS2RobotImporter::Utils::xacro
                 // modify in memory URDF result
                 auto [modifiedXmlStr, modifiedElements] = (Utils::ModifyURDFInMemory(output));
                 outcome.m_parseResult = SdfParser::Parse(modifiedXmlStr, parserConfig);
-                outcome.m_parseResult.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
+                outcome.m_parseResult.m_modifiedUrdfContent = AZStd::move(modifiedXmlStr);
                 outcome.m_parseResult.m_urdfModifications = AZStd::move(modifiedElements);
                 outcome.m_succeed = true;
             }

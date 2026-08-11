@@ -24,10 +24,10 @@ namespace ROS2RobotImporter::PrefabMakerUtils
 
     void SetEntityTransformLocal(const gz::math::Pose3d& origin, AZ::EntityId entityId)
     {
-        gz::math::Vector3 sdfPosition = origin.Pos();
-        gz::math::Quaternion sdfRotation = origin.Rot();
-        AZ::Quaternion azRotation = Utils::SDFormat::TypeConversions::ConvertQuaternion(sdfRotation);
-        AZ::Vector3 azPosition = Utils::SDFormat::TypeConversions::ConvertVector3(sdfPosition);
+        gz::math::Vector3 gzPosition = origin.Pos();
+        gz::math::Quaternion gzRotation = origin.Rot();
+        AZ::Quaternion azRotation = Utils::SDFormat::TypeConversions::ConvertQuaternion(gzRotation);
+        AZ::Vector3 azPosition = Utils::SDFormat::TypeConversions::ConvertVector3(gzPosition);
         AZ::Transform tf(azPosition, azRotation, 1.0f);
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);

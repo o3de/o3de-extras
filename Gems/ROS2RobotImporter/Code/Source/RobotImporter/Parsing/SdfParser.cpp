@@ -144,7 +144,7 @@ namespace ROS2RobotImporter::SdfParser
 
             auto result = Parse(modifiedXmlStr, parserConfig);
             result.m_urdfModifications = AZStd::move(modifiedElements);
-            result.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
+            result.m_modifiedUrdfContent = AZStd::move(modifiedXmlStr);
             return result;
         }
         return Parse(xmlStr, parserConfig);
