@@ -145,7 +145,7 @@ namespace ROS2RobotImporter
             }
         }
 
-        report += "\n\n# " + tr("💡Please check the modified code and/or save it using the interface below.") + "\n";
+        report += "\n\n# " + tr("⚠️ Please check the modified code and/or save it using the interface below.") + "\n";
         m_modifiedUrdfWindow->SetUrdfData(AZStd::move(parsedSdfOutcome.m_modifiedUrdfContent));
     }
 
