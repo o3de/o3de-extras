@@ -17,6 +17,7 @@
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <RobotImporter/Assets/AssetImporter.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Building/SdfPrefabMaker.h>
 #include <RobotImporter/Parsing/SdfParser.h>
 #include <RobotImporter/RobotImporterWidget.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>

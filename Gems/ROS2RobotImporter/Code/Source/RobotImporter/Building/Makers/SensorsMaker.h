@@ -11,7 +11,6 @@
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Outcome/Outcome.h>
-#include <AzCore/std/containers/set.h>
 #include <ROS2RobotImporter/SDFormatSensorImporterHook.h>
 #include <RobotImporter/RobotImporterStatusBus.h>
 

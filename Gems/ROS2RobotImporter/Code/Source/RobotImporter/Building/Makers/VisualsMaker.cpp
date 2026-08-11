@@ -24,8 +24,7 @@
 
 namespace ROS2RobotImporter
 {
-    VisualsMaker::VisualsMaker() = default;
-    VisualsMaker::VisualsMaker(ImportSessionId sessionId)
+    VisualsMaker::VisualsMaker(const ImportSessionId sessionId)
         : m_sessionId(sessionId)
     {
     }

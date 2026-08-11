@@ -85,13 +85,6 @@ namespace ROS2RobotImporter
         m_status.emplace(messageType, message);
     }
 
-    void ImportSession::ClearImportStatus()
-    {
-        AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-        m_status.clear();
-        m_articulationsCounter = 0u;
-    }
-
     void ImportSession::OnArticulatedLinkCreated()
     {
         AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);

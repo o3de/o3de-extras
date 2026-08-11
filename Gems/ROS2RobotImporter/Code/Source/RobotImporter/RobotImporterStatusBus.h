@@ -35,9 +35,6 @@ namespace ROS2RobotImporter
         virtual void OnImportStatusMessage(ImportStatusMessageType, const AZStd::string&)
         {
         }
-        virtual void ClearImportStatus()
-        {
-        }
         virtual void OnArticulatedLinkCreated()
         {
         }

@@ -10,6 +10,7 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/Math/Uuid.h>
 #include <AzCore/Utils/Utils.h>
+#include <AzCore/std/smart_ptr/make_shared.h>
 
 #include "RobotImporterWidget.h"
 #include <QApplication>
@@ -235,7 +236,6 @@ namespace ROS2RobotImporter
                     report += "# " + tr("The URDF/SDF was parsed and opened successfully") + "\n";
                 }
                 m_parsedSdf = AZStd::move(parsedSdfOutcome.GetRoot());
-                m_prefabMaker.reset();
                 m_referencedAssetMap = Assets::GetReferencedAssetFilenames(m_parsedSdf);
                 m_assetPage->ClearAssetsList();
             }
@@ -619,10 +619,10 @@ namespace ROS2RobotImporter
         const auto& sdfAssetBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
         const bool useArticulation = sdfAssetBuilderSettings.m_useArticulations;
         ImportSession session(m_referencedAssetMap);
-        m_prefabMaker = AZStd::make_unique<SdfPrefabMaker>(
+        SdfPrefabMaker prefabMaker(
             &m_parsedSdf, prefabPath.String(), session.GetId(), useArticulation, m_prefabMakerPage->getSelectedSpawnPoint());
 
-        auto prefabOutcome = m_prefabMaker->CreatePrefabFromUrdfOrSdf();
+        auto prefabOutcome = prefabMaker.CreatePrefabFromUrdfOrSdf();
         if (prefabOutcome.IsSuccess())
         {
             AZStd::string status = session.GetStatus();

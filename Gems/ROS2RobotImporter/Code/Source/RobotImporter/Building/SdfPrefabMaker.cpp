@@ -12,6 +12,7 @@
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Serialization/Json/JsonUtils.h>
+#include <AzCore/std/containers/unordered_map.h>
 #include <AzFramework/Scene/SceneSystemInterface.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderInterface.h>
@@ -23,7 +24,6 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2/ROS2EditorBus.h>
-#include <RobotImporter/Assets/AssetTypes.h>
 #include <RobotImporter/Building/PrefabMakerUtils.h>
 #include <RobotImporter/Queries/SdfQueries.h>
 #include <RobotImporter/Queries/SdfVisitors.h>
@@ -54,8 +54,6 @@ namespace ROS2RobotImporter
 
     SdfPrefabMaker::CreatePrefabTemplateResult SdfPrefabMaker::CreatePrefabTemplateFromUrdfOrSdf()
     {
-        RobotImporterStatusRequestBus::Event(m_sessionId, &RobotImporterStatusBus::ClearImportStatus);
-
         if (!ContainsModel())
         {
             return AZ::Failure(AZStd::string("URDF/SDF doesn't contain any models."));

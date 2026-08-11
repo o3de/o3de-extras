@@ -9,7 +9,6 @@
 #pragma once
 
 #include <AzCore/Component/EntityId.h>
-#include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/Material/PhysicsMaterialManager.h>
 #include <RobotImporter/Assets/AssetTypes.h>

@@ -17,15 +17,11 @@
 #include "Makers/VisualsMaker.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Transform.h>
-#include <AzCore/std/containers/map.h>
-#include <AzCore/std/smart_ptr/make_shared.h>
-#include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <AzCore/std/optional.h>
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/Prefab/PrefabIdTypes.h>
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
-#include <RobotImporter/Assets/AssetTypes.h>
 #include <RobotImporter/RobotImporterStatusBus.h>
-#include <optional>
 
 namespace ROS2RobotImporter
 {
@@ -86,7 +82,7 @@ namespace ROS2RobotImporter
         ArticulationsMaker m_articulationsMaker;
         RobotControlMaker m_controlMaker;
 
-        ImportSessionId m_sessionId;
+        const ImportSessionId m_sessionId;
         bool m_useArticulations{ false };
 
         const AZStd::optional<AZ::Transform> m_spawnPosition;
