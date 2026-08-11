@@ -20,6 +20,11 @@
 
 namespace ROS2RobotImporter
 {
+    SensorsMaker::SensorsMaker(const ImportSessionId sessionId)
+        : m_sessionId(sessionId)
+    {
+    }
+
     SensorsMaker::SensorHookCallOutcome SensorsMaker::CallSensorHook(
         AZ::EntityId entityId,
         const sdf::Sensor* sensor,
@@ -68,13 +73,15 @@ namespace ROS2RobotImporter
                     status.append("\n\t - " + up);
                 }
             }
-            m_status.emplace(AZStd::move(status));
+            RobotImporterStatusRequestBus::Event(
+                m_sessionId, &RobotImporterStatusBus::OnImportStatusMessage, ImportStatusMessageType::Sensor, AZStd::move(status));
         }
         else
         {
             const auto message = AZStd::string::format(
                 "%s (type %s) not created: %s", sensor->Name().c_str(), sensor->TypeStr().c_str(), sensorResult.GetError().c_str());
-            m_status.emplace(message);
+            RobotImporterStatusRequestBus::Event(
+                m_sessionId, &RobotImporterStatusBus::OnImportStatusMessage, ImportStatusMessageType::Sensor, message);
             return AZ::Failure(message);
         }
 
@@ -100,7 +107,8 @@ namespace ROS2RobotImporter
             }
             const auto message =
                 AZStd::string::format("%s (type %s) not created: cannot find the hook", sensor->Name().c_str(), sensor->TypeStr().c_str());
-            m_status.emplace(message);
+            RobotImporterStatusRequestBus::Event(
+                m_sessionId, &RobotImporterStatusBus::OnImportStatusMessage, ImportStatusMessageType::Sensor, message);
             return AZ::Failure(message);
         }
 
@@ -154,10 +162,5 @@ namespace ROS2RobotImporter
         }
 
         return createdEntities;
-    }
-
-    const AZStd::set<AZStd::string>& SensorsMaker::GetStatusMessages() const
-    {
-        return m_status;
     }
 } // namespace ROS2RobotImporter

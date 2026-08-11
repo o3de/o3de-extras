@@ -625,7 +625,7 @@ namespace ROS2RobotImporter
         auto prefabOutcome = m_prefabMaker->CreatePrefabFromUrdfOrSdf();
         if (prefabOutcome.IsSuccess())
         {
-            AZStd::string status = m_prefabMaker->GetStatus();
+            AZStd::string status = session.GetStatus();
             m_prefabMakerPage->ReportProgress(status);
             m_prefabMakerPage->SetSuccess(true);
         }
@@ -633,7 +633,7 @@ namespace ROS2RobotImporter
         {
             AZStd::string status = "# Failed to create prefab\n";
             status += prefabOutcome.GetError() + "\n";
-            status += m_prefabMaker->GetStatus();
+            status += session.GetStatus();
             m_prefabMakerPage->ReportProgress(status);
             m_prefabMakerPage->SetSuccess(false);
         }

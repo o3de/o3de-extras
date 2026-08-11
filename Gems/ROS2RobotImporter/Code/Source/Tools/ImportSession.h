@@ -8,12 +8,16 @@
 
 #pragma once
 
+#include <AzCore/std/containers/map.h>
+#include <AzCore/std/parallel/mutex.h>
 #include <RobotImporter/RobotImporterAssetsBus.h>
+#include <RobotImporter/RobotImporterStatusBus.h>
 
 namespace ROS2RobotImporter
 {
     class ImportSession
         : public RobotImporterAssetsRequestBus::Handler
+        , public RobotImporterStatusRequestBus::Handler
     {
     public:
         explicit ImportSession(Assets::ReferencedAssetMap referencedAssetMap);
@@ -21,11 +25,22 @@ namespace ROS2RobotImporter
 
         ImportSessionId GetId() const;
 
+        //! Get descriptive status of import.
+        //! A string with the status in Markdown format.
+        AZStd::string GetStatus();
+
     private:
+        void OnImportStatusMessage(ImportStatusMessageType, const AZStd::string&) override;
+        void ClearImportStatus() override;
+        void OnArticulatedLinkCreated() override;
         AZStd::optional<Assets::ReferencedAsset> FindRefferencedAssets(AZ::IO::Path modelUri) const override;
 
         const Assets::ReferencedAssetMap m_referencedAssetMap;
         const ImportSessionId m_Id;
+
+        AZStd::mutex m_statusLock;
+        AZStd::multimap<ImportStatusMessageType, AZStd::string> m_status;
+        unsigned int m_articulationsCounter{ 0u };
     };
 
 } // namespace ROS2RobotImporter

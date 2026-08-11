@@ -24,6 +24,7 @@
 #include <AzToolsFramework/Prefab/PrefabIdTypes.h>
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
 #include <RobotImporter/Assets/AssetTypes.h>
+#include <RobotImporter/RobotImporterStatusBus.h>
 #include <optional>
 
 namespace ROS2RobotImporter
@@ -63,10 +64,6 @@ namespace ROS2RobotImporter
         //! @return path to the prefab.
         const AZStd::string& GetPrefabPath() const;
 
-        //! Get descriptive status of import.
-        //! A string with the status in Markdown format.
-        AZStd::string GetStatus();
-
     private:
         AzToolsFramework::Prefab::PrefabEntityResult CreateEntityForModel(const sdf::Model& model);
         AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(
@@ -89,20 +86,7 @@ namespace ROS2RobotImporter
         ArticulationsMaker m_articulationsMaker;
         RobotControlMaker m_controlMaker;
 
-        //! Type of a status message.
-        enum class StatusMessageType
-        {
-            Model = 0,
-            Link,
-            Joint,
-            Sensor,
-            SensorPlugin,
-            ModelPlugin
-        };
-        AZStd::mutex m_statusLock;
-        AZStd::multimap<StatusMessageType, AZStd::string> m_status;
-        unsigned int m_articulationsCounter{ 0u };
-
+        ImportSessionId m_sessionId;
         bool m_useArticulations{ false };
 
         const AZStd::optional<AZ::Transform> m_spawnPosition;

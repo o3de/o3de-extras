@@ -13,6 +13,7 @@
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/set.h>
 #include <ROS2RobotImporter/SDFormatSensorImporterHook.h>
+#include <RobotImporter/RobotImporterStatusBus.h>
 
 #include <sdf/sdf.hh>
 
@@ -23,6 +24,10 @@ namespace ROS2RobotImporter
     class SensorsMaker
     {
     public:
+        //! Construct the class with given session id.
+        //! @param sessionId id of current import session, allowing communication with asset and status busses.
+        SensorsMaker(const ImportSessionId sessionId);
+
         //! Adds a sensor to an entity and sets it accordingly based on SDFormat description.
         //! @param model A parsed SDF model which could hold information about sensor to be made.
         //! @param link A parsed SDF tree link node used to identify link being currently processed.
@@ -30,12 +35,8 @@ namespace ROS2RobotImporter
         //! @return List containing any entities with sensors that were created.
         AZStd::vector<AZ::EntityId> AddSensors(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId);
 
-        //! Get a reference to collection of status messages (read-only)
-        //! @return A reference to set containing status messages.
-        const AZStd::set<AZStd::string>& GetStatusMessages() const;
-
     private:
-        AZStd::set<AZStd::string> m_status;
+        const ImportSessionId m_sessionId;
 
         using SensorHookCallOutcome = AZ::Outcome<void, AZStd::string>;
         SensorHookCallOutcome AddSensor(AZ::EntityId entityId, const sdf::Sensor* sensor, AZStd::vector<AZ::EntityId>& createdEntities);
