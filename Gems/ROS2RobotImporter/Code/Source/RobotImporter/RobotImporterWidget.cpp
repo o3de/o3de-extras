@@ -25,6 +25,7 @@
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <Tools/ImportSession.h>
 
 namespace ROS2RobotImporter
 {
@@ -617,12 +618,9 @@ namespace ROS2RobotImporter
 
         const auto& sdfAssetBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
         const bool useArticulation = sdfAssetBuilderSettings.m_useArticulations;
+        ImportSession session(m_referencedAssetMap);
         m_prefabMaker = AZStd::make_unique<SdfPrefabMaker>(
-            &m_parsedSdf,
-            prefabPath.String(),
-            AZStd::make_shared<Assets::ReferencedAssetMap>(m_referencedAssetMap),
-            useArticulation,
-            m_prefabMakerPage->getSelectedSpawnPoint());
+            &m_parsedSdf, prefabPath.String(), session.GetId(), useArticulation, m_prefabMakerPage->getSelectedSpawnPoint());
 
         auto prefabOutcome = m_prefabMaker->CreatePrefabFromUrdfOrSdf();
         if (prefabOutcome.IsSuccess())

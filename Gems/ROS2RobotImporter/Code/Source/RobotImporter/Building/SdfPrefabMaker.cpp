@@ -35,12 +35,12 @@ namespace ROS2RobotImporter
     SdfPrefabMaker::SdfPrefabMaker(
         const sdf::Root* root,
         AZStd::string prefabPath,
-        const AZStd::shared_ptr<Assets::ReferencedAssetMap> referencedAssetMap,
+        const ImportSessionId sessionId,
         bool useArticulations,
         const AZStd::optional<AZ::Transform> spawnPosition)
         : m_root(root)
-        , m_visualsMaker(referencedAssetMap)
-        , m_collidersMaker(referencedAssetMap)
+        , m_visualsMaker(sessionId)
+        , m_collidersMaker(sessionId)
         , m_prefabPath(AZStd::move(prefabPath))
         , m_spawnPosition(spawnPosition)
         , m_useArticulations(useArticulations)

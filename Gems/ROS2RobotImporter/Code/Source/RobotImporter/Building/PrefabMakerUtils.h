@@ -14,6 +14,7 @@
 #include <RobotImporter/Assets/AssetTypes.h>
 
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
+#include <RobotImporter/RobotImporterAssetsBus.h>
 #include <gz/math/Pose3.hh>
 
 //! Common utils for Prefab Maker classes
@@ -52,16 +53,16 @@ namespace ROS2RobotImporter::PrefabMakerUtils
     //! @return entity name, for example "robotBumper_visual_1".
     AZStd::string MakeEntityName(const AZStd::string& rootName, const AZStd::string& type, size_t index = 0);
 
-    //! Get an Asset for a specified Uri given its path and mapping.
-    //! @param sdfAssetsMapping mapping of SDF assets.
+    //! Get an Asset for a specified Uri given its path and sesion id.
+    //! @param sessionId id of current import session, allowing communication with asset and status busses.
     //! @param modelUri a path to the Model (e.g. robot) in URDF/SDF file for which the Asset is requested.
     //! @param assetUri a path to the Asset within the model (e.g. mesh, texture) for which the Asset is requested.
     //! @return Asset for the mesh, if found in the mapping.
     AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
-        const Assets::ReferencedAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const AZStd::string& assetUri);
+        const ImportSessionId sessionId, const AZStd::string& modelUri, const AZStd::string& assetUri);
 
     //! Get Asset from path. Version for std::string.
     //! @see GetAssetFromUri.
     AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
-        const Assets::ReferencedAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const std::string& assetUri);
+        const ImportSessionId sessionId, const AZStd::string& modelUri, const std::string& assetUri);
 } // namespace ROS2RobotImporter::PrefabMakerUtils

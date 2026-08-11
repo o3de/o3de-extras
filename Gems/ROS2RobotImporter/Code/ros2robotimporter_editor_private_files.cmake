@@ -9,6 +9,8 @@
 set(FILES
     ../Assets/Editor/Images/Icons/ROS2RobotImporter.qrc
     ../Assets/Editor/Images/Icons/ToolbarIcon.svg
+    Source/Tools/ImportSession.cpp
+    Source/Tools/ImportSession.h
     Source/Tools/ROS2RobotImporterEditorSystemComponent.cpp
     Source/Tools/ROS2RobotImporterEditorSystemComponent.h
     Source/RobotImporter/Parsing/FixURDF/FixURDF.cpp
@@ -27,6 +29,7 @@ set(FILES
     Source/RobotImporter/Pages/IntroPage.h
     Source/RobotImporter/Pages/XacroParamsPage.cpp
     Source/RobotImporter/Pages/XacroParamsPage.h
+    Source/RobotImporter/RobotImporterAssetsBus.h
     Source/RobotImporter/RobotImporterWidget.cpp
     Source/RobotImporter/RobotImporterWidget.h
     Source/RobotImporter/Queries/SdfPluginUtils.cpp

@@ -34,8 +34,8 @@ namespace ROS2RobotImporter
         static const char* CollidersMakerLoggingTag = "CollidersMaker";
     } // namespace Internal
 
-    CollidersMaker::CollidersMaker(const AZStd::shared_ptr<Assets::ReferencedAssetMap>& referencedAssetMap)
-        : m_referencedAssetMap(referencedAssetMap)
+    CollidersMaker::CollidersMaker(const ImportSessionId sessionId)
+        : m_sessionId(sessionId)
     {
     }
 
@@ -137,7 +137,7 @@ namespace ROS2RobotImporter
             auto meshGeometry = geometry->MeshShape();
             AZ_Assert(meshGeometry, "geometry is not meshGeometry");
 
-            auto asset = PrefabMakerUtils::GetAssetFromUri(*m_referencedAssetMap, modelUri, meshGeometry->Uri());
+            auto asset = PrefabMakerUtils::GetAssetFromUri(m_sessionId, modelUri, meshGeometry->Uri());
             if (!asset)
             {
                 return;

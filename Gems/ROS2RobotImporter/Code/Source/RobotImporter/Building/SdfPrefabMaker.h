@@ -35,12 +35,12 @@ namespace ROS2RobotImporter
         //! Construct PrefabMaker from arguments.
         //! @param root parsed SDF root object.
         //! @param prefabPath path to the prefab which will be created as a result of import.
-        //! @param referencedAssetMap prepared mapping of SDF meshes to Assets.
+        //! @param sessionId id of current import session, allowing communication with asset and status busses.
         //! @param useArticulations allows sdfImporter to create PhysXArticulations instead of multiple rigid bodies and joints.
         SdfPrefabMaker(
             const sdf::Root* root,
             AZStd::string prefabPath,
-            const AZStd::shared_ptr<Assets::ReferencedAssetMap> sdfAssetsMapping,
+            const ImportSessionId sessionId,
             bool useArticulations = false,
             AZStd::optional<AZ::Transform> spawnPosition = AZStd::nullopt);
 

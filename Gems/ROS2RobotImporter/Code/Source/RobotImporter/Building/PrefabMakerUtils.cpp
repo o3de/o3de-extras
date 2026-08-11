@@ -114,22 +114,25 @@ namespace ROS2RobotImporter::PrefabMakerUtils
     }
 
     AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
-        const Assets::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const AZStd::string& assetUri)
+        const ImportSessionId sessionId, const AZStd::string& modelUri, const AZStd::string& assetUri)
     {
         const AZStd::string modelAssetUri = (modelUri.empty()) ? assetUri : modelUri + "/" + assetUri;
-        if (!referencedAssetMap.contains(modelAssetUri))
+        AZStd::optional<Assets::ReferencedAsset> referrencedAsset;
+        RobotImporterAssetsRequestBus::EventResult(
+            referrencedAsset, sessionId, &RobotImporterAssetsBus::FindRefferencedAssets, AZ::IO::Path(modelAssetUri));
+        if (!referrencedAsset.has_value())
         {
             AZ_Warning("GetAssetFromUri", false, "there is no asset for mesh %s in model %s", assetUri.c_str(), modelUri.c_str());
             return AZStd::nullopt;
         }
 
-        return referencedAssetMap.at(modelAssetUri).m_availableAssetInfo;
+        return referrencedAsset.value().m_availableAssetInfo;
     }
 
     AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
-        const Assets::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const std::string& assetUri)
+        const ImportSessionId sessionId, const AZStd::string& modelUri, const std::string& assetUri)
     {
-        return GetAssetFromUri(referencedAssetMap, modelUri, AZStd::string(assetUri.c_str(), assetUri.size()));
+        return GetAssetFromUri(sessionId, modelUri, AZStd::string(assetUri.c_str(), assetUri.size()));
     }
 
 } // namespace ROS2RobotImporter::PrefabMakerUtils
