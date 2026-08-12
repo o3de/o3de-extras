@@ -21,36 +21,13 @@
 
 namespace ROS2RobotImporter::PrefabMakerUtils
 {
-    AZ::IO::Path GetAzModelAssetPathFromModelPath(const AZ::IO::Path& modelPath)
-    {
-        bool assetFound = false;
-        AZ::Data::AssetInfo assetInfo;
-        AZ::IO::Path watchDir;
-        AzToolsFramework::AssetSystemRequestBus::BroadcastResult(
-            assetFound,
-            &AzToolsFramework::AssetSystem::AssetSystemRequest::GetSourceInfoBySourcePath,
-            modelPath.c_str(),
-            assetInfo,
-            watchDir.Native());
-
-        if (!assetFound)
-        {
-            AZ_Error("PrefabMakerUtils", false, "Could not find model asset for %s", modelPath.c_str());
-            return {};
-        }
-
-        auto assetPath = AZ::IO::Path(assetInfo.m_relativePath).ReplaceExtension("azmodel");
-        AZStd::to_lower(assetPath.Native().begin(), assetPath.Native().end());
-
-        return assetPath;
-    }
 
     void SetEntityTransformLocal(const gz::math::Pose3d& origin, AZ::EntityId entityId)
     {
         gz::math::Vector3 sdfPosition = origin.Pos();
         gz::math::Quaternion sdfRotation = origin.Rot();
-        AZ::Quaternion azRotation = Utils::TypeConversions::ConvertQuaternion(sdfRotation);
-        AZ::Vector3 azPosition = Utils::TypeConversions::ConvertVector3(sdfPosition);
+        AZ::Quaternion azRotation = Utils::SDFormat::TypeConversions::ConvertQuaternion(sdfRotation);
+        AZ::Vector3 azPosition = Utils::SDFormat::TypeConversions::ConvertVector3(sdfPosition);
         AZ::Transform tf(azPosition, azRotation, 1.0f);
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
@@ -130,22 +107,14 @@ namespace ROS2RobotImporter::PrefabMakerUtils
         return SetEntityParentInternal(entityId, parentEntityId, useLocalTransform);
     }
 
-    void AddRequiredComponentsToEntity(AZ::EntityId entityId)
-    {
-        AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
-        AZ_Assert(entity, "Unknown entity %s", entityId.ToString().c_str());
-        AzToolsFramework::EditorEntityContextRequestBus::Broadcast(
-            &AzToolsFramework::EditorEntityContextRequests::AddRequiredComponents, *entity);
-    }
-
     AZStd::string MakeEntityName(const AZStd::string& rootName, const AZStd::string& type, size_t index)
     {
         const AZStd::string suffix = index == 0 ? AZStd::string() : AZStd::string::format("_%zu", index);
         return AZStd::string::format("%s_%s%s", rootName.c_str(), type.c_str(), suffix.c_str());
     }
 
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
-        const Utils::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const AZStd::string& assetUri)
+    AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
+        const Assets::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const AZStd::string& assetUri)
     {
         const AZStd::string modelAssetUri = (modelUri.empty()) ? assetUri : modelUri + "/" + assetUri;
         if (!referencedAssetMap.contains(modelAssetUri))
@@ -157,8 +126,8 @@ namespace ROS2RobotImporter::PrefabMakerUtils
         return referencedAssetMap.at(modelAssetUri).m_availableAssetInfo;
     }
 
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
-        const Utils::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const std::string& assetUri)
+    AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
+        const Assets::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const std::string& assetUri)
     {
         return GetAssetFromUri(referencedAssetMap, modelUri, AZStd::string(assetUri.c_str(), assetUri.size()));
     }

@@ -10,10 +10,12 @@
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzTest/AzTest.h>
 #include <AzTest/Utils.h>
+#include <RobotImporter/Queries/SdfPluginUtils.h>
+#include <RobotImporter/Queries/SdfQueries.h>
+#include <RobotImporter/Queries/SdfVisitors.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 #include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
 
 using namespace ROS2RobotImporter;
 
@@ -282,12 +284,12 @@ namespace UnitTest
         AZStd::vector<const sdf::Model*> models;
         // Test visitation return results. All model siblings and nested models are visited
         auto StoreModelAndVisitNestedModelsAndSiblings =
-            [&models](const sdf::Model& model, const Utils::ModelStack&) -> Utils::VisitModelResponse
+            [&models](const sdf::Model& model, const SDFormat::ModelStack&) -> SDFormat::VisitModelResponse
         {
             models.push_back(&model);
-            return Utils::VisitModelResponse::VisitNestedAndSiblings;
+            return SDFormat::VisitModelResponse::VisitNestedAndSiblings;
         };
-        Utils::VisitModels(sdfRoot, StoreModelAndVisitNestedModelsAndSiblings);
+        SDFormat::VisitModels(sdfRoot, StoreModelAndVisitNestedModelsAndSiblings);
 
         ASSERT_EQ(4, models.size());
         EXPECT_EQ("root_model", models[0]->Name());
@@ -299,12 +301,12 @@ namespace UnitTest
         // In this case only models directly on the SDF root object
         // or directory child of the sdf world has there models visited
         models.clear();
-        auto StoreModelAndVisitSiblings = [&models](const sdf::Model& model, const Utils::ModelStack&) -> Utils::VisitModelResponse
+        auto StoreModelAndVisitSiblings = [&models](const sdf::Model& model, const SDFormat::ModelStack&) -> SDFormat::VisitModelResponse
         {
             models.push_back(&model);
-            return Utils::VisitModelResponse::VisitSiblings;
+            return SDFormat::VisitModelResponse::VisitSiblings;
         };
-        Utils::VisitModels(sdfRoot, StoreModelAndVisitSiblings);
+        SDFormat::VisitModels(sdfRoot, StoreModelAndVisitSiblings);
 
         ASSERT_EQ(4, models.size());
         EXPECT_EQ("root_model", models[0]->Name());
@@ -314,12 +316,12 @@ namespace UnitTest
 
         // Visit only the first model and stop any futher visitation
         models.clear();
-        auto StoreModelAndStop = [&models](const sdf::Model& model, const Utils::ModelStack&) -> Utils::VisitModelResponse
+        auto StoreModelAndStop = [&models](const sdf::Model& model, const SDFormat::ModelStack&) -> SDFormat::VisitModelResponse
         {
             models.push_back(&model);
-            return Utils::VisitModelResponse::Stop;
+            return SDFormat::VisitModelResponse::Stop;
         };
-        Utils::VisitModels(sdfRoot, StoreModelAndStop);
+        SDFormat::VisitModels(sdfRoot, StoreModelAndStop);
 
         ASSERT_EQ(1, models.size());
         EXPECT_EQ("root_model", models[0]->Name());
@@ -348,8 +350,8 @@ namespace UnitTest
         EXPECT_TRUE(yourModel->LinkNameExists("same_link_name"));
 
         // Make sure that all links are gathered
-        AZStd::unordered_map<AZStd::string, const sdf::Link*> links = Utils::GetAllLinks(*myModel, true);
-        auto otherLinks = Utils::GetAllLinks(*yourModel, true);
+        AZStd::unordered_map<AZStd::string, const sdf::Link*> links = SDFormat::GetAllLinks(*myModel, true);
+        auto otherLinks = SDFormat::GetAllLinks(*yourModel, true);
         links.insert(otherLinks.begin(), otherLinks.end());
 
         ASSERT_EQ(2, links.size());
@@ -526,20 +528,20 @@ namespace UnitTest
 
         plug.SetName("test_camera");
         plug.SetFilename("libgazebo_ros_camera.so");
-        EXPECT_EQ("libgazebo_ros_camera.so", Utils::SDFormat::GetPluginFilename(plug));
-        EXPECT_TRUE(Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
+        EXPECT_EQ("libgazebo_ros_camera.so", SDFormat::GetPluginFilename(plug));
+        EXPECT_TRUE(SDFormat::IsPluginSupported(plug, supportedPlugins));
         plug.SetFilename("/usr/lib/libgazebo_ros_camera.so");
-        EXPECT_EQ("libgazebo_ros_camera.so", Utils::SDFormat::GetPluginFilename(plug));
-        EXPECT_TRUE(Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
+        EXPECT_EQ("libgazebo_ros_camera.so", SDFormat::GetPluginFilename(plug));
+        EXPECT_TRUE(SDFormat::IsPluginSupported(plug, supportedPlugins));
         plug.SetFilename("~/dev/libgazebo_ros_camera.so");
-        EXPECT_EQ("libgazebo_ros_camera.so", Utils::SDFormat::GetPluginFilename(plug));
-        EXPECT_TRUE(Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
+        EXPECT_EQ("libgazebo_ros_camera.so", SDFormat::GetPluginFilename(plug));
+        EXPECT_TRUE(SDFormat::IsPluginSupported(plug, supportedPlugins));
         plug.SetFilename("fun.so");
-        EXPECT_EQ("fun.so", Utils::SDFormat::GetPluginFilename(plug));
-        EXPECT_FALSE(Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
+        EXPECT_EQ("fun.so", SDFormat::GetPluginFilename(plug));
+        EXPECT_FALSE(SDFormat::IsPluginSupported(plug, supportedPlugins));
         plug.SetFilename("fun");
-        EXPECT_EQ("fun", Utils::SDFormat::GetPluginFilename(plug));
-        EXPECT_FALSE(Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
+        EXPECT_EQ("fun", SDFormat::GetPluginFilename(plug));
+        EXPECT_FALSE(SDFormat::IsPluginSupported(plug, supportedPlugins));
 
         AZStd::unordered_set<AZStd::string> cameraSupportedParams{
             ">update_rate", ">camera>horizontal_fov", ">camera>image>width", ">camera>image>height"
@@ -555,7 +557,7 @@ namespace UnitTest
         const sdf::ElementPtr laserElement = sdfModel->LinkByName("link2")->SensorByIndex(0U)->Element();
 
         {
-            const auto& unsupportedCameraParams = Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
+            const auto& unsupportedCameraParams = SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
             EXPECT_EQ(unsupportedCameraParams.size(), 4U);
             EXPECT_EQ(unsupportedCameraParams[0U], ">pose");
             EXPECT_EQ(unsupportedCameraParams[1U], ">camera>clip>near");
@@ -565,7 +567,7 @@ namespace UnitTest
 
         cameraSupportedParams.emplace(">pose");
         {
-            const auto& unsupportedCameraParams = Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
+            const auto& unsupportedCameraParams = SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
             EXPECT_EQ(unsupportedCameraParams.size(), 3U);
             EXPECT_EQ(unsupportedCameraParams[0U], ">camera>clip>near");
             EXPECT_EQ(unsupportedCameraParams[1U], ">camera>clip>far");
@@ -575,14 +577,13 @@ namespace UnitTest
         cameraSupportedParams.emplace(">camera>clip>near");
         cameraSupportedParams.emplace(">camera>clip>far");
         {
-            const auto& unsupportedCameraParams = Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
+            const auto& unsupportedCameraParams = SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
             EXPECT_EQ(unsupportedCameraParams.size(), 1U);
             EXPECT_EQ(unsupportedCameraParams[0U], "plugin \"libgazebo_ros_camera.so\"");
         }
 
         {
-            const auto& unsupportedCameraParams =
-                Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams, supportedPlugins);
+            const auto& unsupportedCameraParams = SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams, supportedPlugins);
             EXPECT_EQ(unsupportedCameraParams.size(), 1U);
             EXPECT_EQ(unsupportedCameraParams[0U], "plugin \"libgazebo_ros_camera.so\": >camera_name");
         }
@@ -590,7 +591,7 @@ namespace UnitTest
         AZStd::unordered_set<AZStd::string> supportedCameraPluginParams = { ">camera_name", ">ros>remapping" };
         {
             const auto& unsupportedCameraParams =
-                Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams, supportedPlugins, supportedCameraPluginParams);
+                SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams, supportedPlugins, supportedCameraPluginParams);
             EXPECT_EQ(unsupportedCameraParams.size(), 0U);
         }
 
@@ -605,7 +606,7 @@ namespace UnitTest
                                                                         ">ray>range>resolution",
                                                                         ">always_on",
                                                                         ">visualize" };
-        const auto& unsupportedLaserParams = Utils::SDFormat::GetUnsupportedParams(laserElement, laserSupportedParams, supportedPlugins);
+        const auto& unsupportedLaserParams = SDFormat::GetUnsupportedParams(laserElement, laserSupportedParams, supportedPlugins);
         EXPECT_EQ(unsupportedLaserParams.size(), 1U);
         EXPECT_EQ(unsupportedLaserParams[0U], "plugin \"librayplugin.so\"");
     }
@@ -622,7 +623,7 @@ namespace UnitTest
             const sdf::ElementPtr cameraElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
             const auto& cameraImporterHook = SDFormat::ROS2SensorHooks::ROS2CameraSensor();
 
-            const auto& unsupportedCameraParams = Utils::SDFormat::GetUnsupportedParams(
+            const auto& unsupportedCameraParams = SDFormat::GetUnsupportedParams(
                 cameraElement,
                 cameraImporterHook.m_supportedSensorParams,
                 cameraImporterHook.m_pluginNames,
@@ -633,13 +634,13 @@ namespace UnitTest
             sdf::Plugin plug;
             plug.SetName("test_camera");
             plug.SetFilename("libgazebo_ros_camera.so");
-            EXPECT_TRUE(Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
+            EXPECT_TRUE(SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
             plug.SetFilename("/usr/lib/libgazebo_ros_openni_kinect.so");
-            EXPECT_TRUE(Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
+            EXPECT_TRUE(SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
             plug.SetFilename("~/dev/libgazebo_ros_imu.so");
-            EXPECT_FALSE(Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
+            EXPECT_FALSE(SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
             plug.SetFilename("libgazebo_ros_camera");
-            EXPECT_FALSE(Utils::SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
+            EXPECT_FALSE(SDFormat::IsPluginSupported(plug, cameraImporterHook.m_pluginNames));
 
             EXPECT_TRUE(cameraImporterHook.m_sensorTypes.contains(sdf::SensorType::CAMERA));
             EXPECT_TRUE(cameraImporterHook.m_sensorTypes.contains(sdf::SensorType::DEPTH_CAMERA));
@@ -647,7 +648,7 @@ namespace UnitTest
 
             const sdf::ElementPtr lidarElement = sdfModel->LinkByName("link2")->SensorByIndex(0U)->Element();
             const auto& lidarImporterHook = SDFormat::ROS2SensorHooks::ROS2LidarSensor();
-            const auto& unsupportedLidarParams = Utils::SDFormat::GetUnsupportedParams(
+            const auto& unsupportedLidarParams = SDFormat::GetUnsupportedParams(
                 lidarElement,
                 lidarImporterHook.m_supportedSensorParams,
                 lidarImporterHook.m_pluginNames,
@@ -667,7 +668,7 @@ namespace UnitTest
             const sdf::ElementPtr imuElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
             const auto& importerHook = SDFormat::ROS2SensorHooks::ROS2ImuSensor();
 
-            const auto& unsupportedImuParams = Utils::SDFormat::GetUnsupportedParams(
+            const auto& unsupportedImuParams = SDFormat::GetUnsupportedParams(
                 imuElement, importerHook.m_supportedSensorParams, importerHook.m_pluginNames, importerHook.m_supportedPluginParams);
             EXPECT_EQ(unsupportedImuParams.size(), 1U);
             EXPECT_EQ(unsupportedImuParams[0U], ">always_on");

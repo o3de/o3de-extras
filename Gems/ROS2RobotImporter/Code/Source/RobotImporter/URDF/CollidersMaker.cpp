@@ -15,8 +15,8 @@
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <PhysX/EditorColliderComponentRequestBus.h>
 #include <PhysX/MeshColliderComponentBus.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetLookup.h>
+#include <RobotImporter/Queries/SdfQueries.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <SceneAPI/SceneCore/Containers/Scene.h>
 #include <SceneAPI/SceneCore/Containers/Utilities/Filters.h>
@@ -34,7 +34,7 @@ namespace ROS2RobotImporter
         static const char* CollidersMakerLoggingTag = "CollidersMaker";
     } // namespace Internal
 
-    CollidersMaker::CollidersMaker(const AZStd::shared_ptr<Utils::ReferencedAssetMap>& referencedAssetMap)
+    CollidersMaker::CollidersMaker(const AZStd::shared_ptr<Assets::ReferencedAssetMap>& referencedAssetMap)
         : m_referencedAssetMap(referencedAssetMap)
     {
     }
@@ -67,7 +67,7 @@ namespace ROS2RobotImporter
     void CollidersMaker::AddColliders(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId)
     {
         AZStd::string typeString = "collider";
-        const bool isWheelEntity = Utils::IsWheelHeuristics(model, link);
+        const bool isWheelEntity = SDFormat::IsWheelHeuristics(model, link);
         if (isWheelEntity)
         {
             AZ_Printf(Internal::CollidersMakerLoggingTag, "Due to its name, %s is considered a wheel entity\n", link->Name().c_str());
@@ -129,8 +129,8 @@ namespace ROS2RobotImporter
         Physics::ColliderConfiguration colliderConfig;
 
         colliderConfig.m_materialSlots.SetMaterialAsset(0, materialAsset);
-        colliderConfig.m_position = Utils::TypeConversions::ConvertVector3(collision->RawPose().Pos());
-        colliderConfig.m_rotation = Utils::TypeConversions::ConvertQuaternion(collision->RawPose().Rot());
+        colliderConfig.m_position = Utils::SDFormat::TypeConversions::ConvertVector3(collision->RawPose().Pos());
+        colliderConfig.m_rotation = Utils::SDFormat::TypeConversions::ConvertQuaternion(collision->RawPose().Rot());
         if (!isPrimitiveShape)
         {
             AZ_Printf(Internal::CollidersMakerLoggingTag, "Adding mesh collider to %s\n", entityId.ToString().c_str());
@@ -143,7 +143,7 @@ namespace ROS2RobotImporter
                 return;
             }
 
-            AZ::Data::AssetId assetId = Utils::GetPhysXMeshProductAssetId(asset->m_sourceGuid);
+            AZ::Data::AssetId assetId = Assets::GetPhysXMeshProductAssetId(asset->m_sourceGuid);
             if (!assetId.IsValid())
             {
                 AZ_Error(
@@ -183,7 +183,7 @@ namespace ROS2RobotImporter
             {
                 const auto boxGeometry = geometry->BoxShape();
                 AZ_Assert(boxGeometry, "geometry is not boxGeometry");
-                const Physics::BoxShapeConfiguration cfg{ Utils::TypeConversions::ConvertVector3(boxGeometry->Size()) };
+                const Physics::BoxShapeConfiguration cfg{ Utils::SDFormat::TypeConversions::ConvertVector3(boxGeometry->Size()) };
                 entity->CreateComponent<PhysX::EditorColliderComponent>(colliderConfig, cfg);
             }
             break;

@@ -12,23 +12,13 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/std/optional.h>
 #include <AzCore/std/string/string.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetTypes.h>
 
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
 
 //! Common utils for Prefab Maker classes
 namespace ROS2RobotImporter::PrefabMakerUtils
 {
-    //! Add required components to the entity.
-    //! Calling this will ensure all the required (default) components are added.
-    //! @param entityId entity to modify.
-    void AddRequiredComponentsToEntity(AZ::EntityId entityId);
-
-    //! For a given model, return path to its Assets.
-    //! @param modelPath path to the model.
-    //! @return path to assets directory for this model.
-    AZ::IO::Path GetAzModelAssetPathFromModelPath(const AZ::IO::Path& modelPath);
-
     //! Set the transform for an entity.
     //! @param origin pose for the entity to set.
     //! @param entityId entity which will be modified.
@@ -67,11 +57,11 @@ namespace ROS2RobotImporter::PrefabMakerUtils
     //! @param modelUri a path to the Model (e.g. robot) in URDF/SDF file for which the Asset is requested.
     //! @param assetUri a path to the Asset within the model (e.g. mesh, texture) for which the Asset is requested.
     //! @return Asset for the mesh, if found in the mapping.
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
-        const Utils::ReferencedAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const AZStd::string& assetUri);
+    AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
+        const Assets::ReferencedAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const AZStd::string& assetUri);
 
     //! Get Asset from path. Version for std::string.
     //! @see GetAssetFromUri.
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromUri(
-        const Utils::ReferencedAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const std::string& assetUri);
+    AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
+        const Assets::ReferencedAssetMap& sdfAssetsMapping, const AZStd::string& modelUri, const std::string& assetUri);
 } // namespace ROS2RobotImporter::PrefabMakerUtils

@@ -10,7 +10,7 @@
 
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <ROS2RobotImporter/ROS2RobotImporterBus.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <RobotImporter/Queries/SdfPluginUtils.h>
 
 namespace ROS2RobotImporter
 {
@@ -30,8 +30,7 @@ namespace ROS2RobotImporter
                 if (outcome.IsSuccess())
                 {
                     const auto pluginElement = plugin.Element();
-                    const auto& unsupportedPluginParams =
-                        Utils::SDFormat::GetUnsupportedParams(pluginElement, hook.m_supportedPluginParams);
+                    const auto& unsupportedPluginParams = SDFormat::GetUnsupportedParams(pluginElement, hook.m_supportedPluginParams);
                     AZStd::string status;
                     if (unsupportedPluginParams.empty())
                     {

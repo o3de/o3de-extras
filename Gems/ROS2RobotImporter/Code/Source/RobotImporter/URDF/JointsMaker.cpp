@@ -35,7 +35,7 @@ namespace ROS2RobotImporter
         auto quaternion = AZ::Quaternion::CreateIdentity();
         if (jointAxis != nullptr)
         {
-            jointCoordinateAxis = Utils::TypeConversions::ConvertVector3(jointAxis->Xyz());
+            jointCoordinateAxis = Utils::SDFormat::TypeConversions::ConvertVector3(jointAxis->Xyz());
             quaternion = jointCoordinateAxis.IsZero() ? AZ::Quaternion::CreateIdentity()
                                                       : AZ::Quaternion::CreateShortestArc(o3deJointDir, jointCoordinateAxis);
         }

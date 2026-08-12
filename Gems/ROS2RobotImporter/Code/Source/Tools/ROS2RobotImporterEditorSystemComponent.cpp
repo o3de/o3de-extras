@@ -15,6 +15,8 @@
 #include <AzCore/std/utility/move.h>
 #include <AzToolsFramework/API/ViewPaneOptions.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
+#include <RobotImporter/Assets/AssetImporter.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
 #include <RobotImporter/RobotImporterWidget.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
@@ -133,7 +135,7 @@ namespace ROS2RobotImporter
         SdfAssetBuilderSettings sdfBuilderSettings;
         sdfBuilderSettings.LoadSettings();
         // Set the parser config settings for the source file content
-        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(sdfBuilderSettings, filePath);
+        sdf::ParserConfig parserConfig = SdfParser::CreateSdfParserConfigFromSettings(sdfBuilderSettings, filePath);
 
         auto parsedSdfOutcome = SdfParser::ParseFromFile(filePath, parserConfig, sdfBuilderSettings);
         if (!parsedSdfOutcome)
@@ -147,10 +149,10 @@ namespace ROS2RobotImporter
         // SDF Root has been parsed successfully retrieve it from the Outcome
         const sdf::Root& parsedSdfRoot = parsedSdfOutcome.GetRoot();
 
-        auto referencedAssetMap = Utils::GetReferencedAssetFilenames(parsedSdfRoot);
+        auto referencedAssetMap = Assets::GetReferencedAssetFilenames(parsedSdfRoot);
         if (importAssetWithFile)
         {
-            Utils::CopyReferencedAssetsAndCreateAssetMap(referencedAssetMap, filePath, sdfBuilderSettings);
+            Assets::CopyReferencedAssetsAndCreateAssetMap(referencedAssetMap, filePath, sdfBuilderSettings);
         }
         bool allAssetProcessed = false;
         bool assetProcessorFailed = false;
@@ -234,7 +236,7 @@ namespace ROS2RobotImporter
         const AZ::IO::Path prefabPathRelative(AZ::IO::Path("Assets") / "Importer" / prefabName);
         const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRelative);
         AZStd::unique_ptr<SdfPrefabMaker> prefabMaker = AZStd::make_unique<SdfPrefabMaker>(
-            &parsedSdfRoot, prefabPath.String(), AZStd::make_shared<Utils::ReferencedAssetMap>(referencedAssetMap), useArticulation);
+            &parsedSdfRoot, prefabPath.String(), AZStd::make_shared<Assets::ReferencedAssetMap>(referencedAssetMap), useArticulation);
 
         auto prefabOutcome = prefabMaker->CreatePrefabFromUrdfOrSdf();
 

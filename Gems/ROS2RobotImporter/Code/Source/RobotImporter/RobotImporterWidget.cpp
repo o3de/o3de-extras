@@ -16,12 +16,14 @@
 #include <QApplication>
 #include <QScreen>
 #include <QTranslator>
+#include <RobotImporter/Assets/AssetImporter.h>
+#include <RobotImporter/Assets/AssetLookup.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Assets/SceneManifestBuilder.h>
 #include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace ROS2RobotImporter
@@ -155,7 +157,7 @@ namespace ROS2RobotImporter
             const SdfAssetBuilderSettings& sdfBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
 
             // Set the parser config settings for URDF content
-            sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(sdfBuilderSettings, m_sourceFilePath);
+            sdf::ParserConfig parserConfig = SdfParser::CreateSdfParserConfigFromSettings(sdfBuilderSettings, m_sourceFilePath);
 
             if (Utils::IsFileXacro(m_sourceFilePath))
             {
@@ -233,7 +235,7 @@ namespace ROS2RobotImporter
                 }
                 m_parsedSdf = AZStd::move(parsedSdfOutcome.GetRoot());
                 m_prefabMaker.reset();
-                m_referencedAssetMap = Utils::GetReferencedAssetFilenames(m_parsedSdf);
+                m_referencedAssetMap = Assets::GetReferencedAssetFilenames(m_parsedSdf);
                 m_assetPage->ClearAssetsList();
             }
             else
@@ -339,19 +341,19 @@ namespace ROS2RobotImporter
             // Read the SDF Settings from PrefabMakerPage
             const SdfAssetBuilderSettings& sdfBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
 
-            Utils::ResolveAssetMap(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
+            Assets::ResolveAssetMap(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
             if (!m_copyReferencedAssets)
             {
-                Utils::FindReferencedAssets(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
+                Assets::FindReferencedAssets(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
                 for (const auto& [_, asset] : m_referencedAssetMap)
                 {
                     const bool visual =
-                        (asset.m_assetType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                        (asset.m_assetType & Assets::ReferencedAssetType::VisualMesh) == Assets::ReferencedAssetType::VisualMesh;
                     const bool collider =
-                        (asset.m_assetType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
+                        (asset.m_assetType & Assets::ReferencedAssetType::ColliderMesh) == Assets::ReferencedAssetType::ColliderMesh;
                     if (visual || collider)
                     {
-                        Utils::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
+                        Assets::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
                     }
                 }
             };
@@ -360,10 +362,11 @@ namespace ROS2RobotImporter
             {
                 QString type = tr("Unknown");
 
-                const bool visual = (asset.m_assetType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                const bool visual =
+                    (asset.m_assetType & Assets::ReferencedAssetType::VisualMesh) == Assets::ReferencedAssetType::VisualMesh;
                 const bool collider =
-                    (asset.m_assetType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
-                const bool texture = (asset.m_assetType & Utils::ReferencedAssetType::Texture) == Utils::ReferencedAssetType::Texture;
+                    (asset.m_assetType & Assets::ReferencedAssetType::ColliderMesh) == Assets::ReferencedAssetType::ColliderMesh;
+                const bool texture = (asset.m_assetType & Assets::ReferencedAssetType::Texture) == Assets::ReferencedAssetType::Texture;
                 if (visual && collider)
                 {
                     type = tr("Visual and Collider Mesh");
@@ -389,7 +392,7 @@ namespace ROS2RobotImporter
                 m_copyReferencedAssetsThread = AZStd::make_shared<AZStd::thread>(
                     [this, dirSuffix]()
                     {
-                        auto destStatus = Utils::PrepareImportedAssetsDest(m_sourceFilePath.String(), dirSuffix);
+                        auto destStatus = Assets::PrepareImportedAssetsDest(m_sourceFilePath.String(), dirSuffix);
                         if (!destStatus.IsSuccess())
                         {
                             AZ_Error("RobotImporterWidget", false, "Failed to create destination folder for imported assets");
@@ -407,20 +410,20 @@ namespace ROS2RobotImporter
                             {
                                 duplicatedFilenames[referencedAsset.m_assetUri] = 0;
                             }
-                            if (referencedAsset.m_copyStatus == Utils::CopyStatus::Waiting)
+                            if (referencedAsset.m_copyStatus == Assets::CopyStatus::Waiting)
                             {
                                 m_assetPage->OnAssetCopyStatusChanged(
-                                    Utils::CopyStatus::Copying, AZStd::string(unresolvedFileName.c_str()), "");
+                                    Assets::CopyStatus::Copying, AZStd::string(unresolvedFileName.c_str()), "");
                             }
 
-                            auto copyStatus = Utils::CopyStatus::Unresolvable;
+                            auto copyStatus = Assets::CopyStatus::Unresolvable;
                             if (referencedAsset.m_resolvedPath.empty())
                             {
                                 AZ_Warning("CopyReferencedAsset", false, "There is no resolved path for %s", unresolvedFileName.c_str());
                             }
                             else
                             {
-                                copyStatus = Utils::CopyReferencedAsset(
+                                copyStatus = Assets::CopyReferencedAsset(
                                     destStatus.GetValue(), referencedAsset, duplicatedFilenames[referencedAsset.m_assetUri]);
                             }
 
@@ -429,7 +432,7 @@ namespace ROS2RobotImporter
                                 AZStd::string(unresolvedFileName.c_str()),
                                 AZStd::string(referencedAsset.m_availableAssetInfo.m_sourceAssetRelativePath.c_str()));
 
-                            if (copyStatus == Utils::CopyStatus::Copied || copyStatus == Utils::CopyStatus::Exists)
+                            if (copyStatus == Assets::CopyStatus::Copied || copyStatus == Assets::CopyStatus::Exists)
                             {
                                 m_toProcessAssets.insert(unresolvedFileName);
                             }
@@ -437,7 +440,7 @@ namespace ROS2RobotImporter
                             // Check all assets that are ready to be processed
                             CheckToProcessAssets();
                         }
-                        Utils::RemoveTmpDir(destStatus.GetValue().importDirectoryTmp);
+                        Assets::RemoveTmpDir(destStatus.GetValue().importDirectoryTmp);
 
                         if (!m_toProcessAssets.empty())
                         {
@@ -617,7 +620,7 @@ namespace ROS2RobotImporter
         m_prefabMaker = AZStd::make_unique<SdfPrefabMaker>(
             &m_parsedSdf,
             prefabPath.String(),
-            AZStd::make_shared<Utils::ReferencedAssetMap>(m_referencedAssetMap),
+            AZStd::make_shared<Assets::ReferencedAssetMap>(m_referencedAssetMap),
             useArticulation,
             m_prefabMakerPage->getSelectedSpawnPoint());
 
