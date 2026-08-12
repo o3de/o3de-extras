@@ -13,7 +13,7 @@
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/Material/PhysicsMaterialManager.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetTypes.h>
 
 namespace ROS2RobotImporter
 {
@@ -25,7 +25,7 @@ namespace ROS2RobotImporter
     public:
         //! Construct the class based on SDF asset mapping.
         //! @param sdfAssetsMapping a prepared mapping of Assets used by the source URDF/SDF.
-        CollidersMaker(const AZStd::shared_ptr<Utils::ReferencedAssetMap>& sdfAssetsMapping);
+        CollidersMaker(const AZStd::shared_ptr<Assets::ReferencedAssetMap>& sdfAssetsMapping);
 
         //! Prevent copying of existing CollidersMaker
         CollidersMaker(const CollidersMaker& other) = delete;
@@ -51,6 +51,6 @@ namespace ROS2RobotImporter
             const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const;
 
         AZ::Data::Asset<Physics::MaterialAsset> m_wheelMaterial;
-        AZStd::shared_ptr<Utils::ReferencedAssetMap> m_referencedAssetMap;
+        AZStd::shared_ptr<Assets::ReferencedAssetMap> m_referencedAssetMap;
     };
 } // namespace ROS2RobotImporter

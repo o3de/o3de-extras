@@ -11,10 +11,13 @@
 #include <AssetBuilderSDK/AssetBuilderBusses.h>
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 
+#include <RobotImporter/Assets/AssetTypes.h>
 #include <RobotImporter/URDF/SdfParser.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
-#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
+namespace ROS2RobotImporter
+{
+    struct SdfAssetBuilderSettings;
+} // namespace ROS2RobotImporter
 namespace ROS2RobotImporter
 {
     [[maybe_unused]] constexpr const char* SdfAssetBuilderName = "SdfAssetBuilder";
@@ -46,7 +49,7 @@ namespace ROS2RobotImporter
         AZStd::string GetFingerprint() const;
 
         //! Create a mapping of all the asset references in the source file.
-        Utils::ReferencedAssetMap FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const;
+        Assets::ReferencedAssetMap FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const;
 
         SdfAssetBuilderSettings m_globalSettings;
         AZStd::string m_fingerprint;

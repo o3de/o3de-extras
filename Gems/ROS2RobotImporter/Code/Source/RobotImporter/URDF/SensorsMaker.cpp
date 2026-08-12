@@ -11,9 +11,9 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <ROS2RobotImporter/ROS2RobotImporterBus.h>
+#include <RobotImporter/Queries/SdfPluginUtils.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/URDF/PrefabMakerUtils.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
 
 #include <sdf/Link.hh>
 #include <sdf/Sensor.hh>
@@ -49,7 +49,7 @@ namespace ROS2RobotImporter
         if (sensorResult.IsSuccess())
         {
             const auto sensorElement = sensor->Element();
-            const auto& unsupportedSensorParams = Utils::SDFormat::GetUnsupportedParams(
+            const auto& unsupportedSensorParams = SDFormat::GetUnsupportedParams(
                 sensorElement, hook->m_supportedSensorParams, hook->m_pluginNames, hook->m_supportedPluginParams);
             AZStd::string status;
             if (unsupportedSensorParams.empty())

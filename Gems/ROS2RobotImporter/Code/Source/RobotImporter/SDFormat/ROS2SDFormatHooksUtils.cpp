@@ -10,7 +10,7 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/ROS2NamesBus.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <RobotImporter/Queries/SdfQueries.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
@@ -79,7 +79,7 @@ namespace ROS2RobotImporter::SDFormat
     void HooksUtils::SetSensorEntityTransform(AZ::Entity& entity, const sdf::Sensor& sdfSensor)
     {
         const auto sensorSemanticPose = sdfSensor.SemanticPose();
-        AZ::Transform tf = Utils::GetLocalTransform(sensorSemanticPose);
+        AZ::Transform tf = SDFormat::GetLocalTransform(sensorSemanticPose);
         auto* transformInterface = entity.FindComponent<AzToolsFramework::Components::TransformComponent>();
         if (transformInterface)
         {

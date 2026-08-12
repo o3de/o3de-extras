@@ -10,9 +10,10 @@
 #include <AzCore/std/ranges/ranges_algorithm.h>
 #include <AzCore/std/string/string.h>
 #include <AzTest/AzTest.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Queries/SdfQueries.h>
 #include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/xacro/XacroUtils.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
@@ -580,7 +581,7 @@ namespace UnitTest
         ASSERT_NE(nullptr, link2);
 
         // Check the ROS2 visitor logic to make sure the joint with "world" parent link isn't visited
-        auto joints = Utils::GetAllJoints(*model);
+        auto joints = SDFormat::GetAllJoints(*model);
         EXPECT_EQ(1, joints.size());
         EXPECT_THAT(joints, ::testing::UnorderedPointwise(UnorderedMapKeyMatcher(), { "FooRobot::base_inertia_child_joint" }));
 
@@ -628,7 +629,7 @@ namespace UnitTest
 
         // The ROS2 Visitor logic should visit all reduced joints which
         // there should only be a single one of the revolute joint
-        auto joints = Utils::GetAllJoints(*model);
+        auto joints = SDFormat::GetAllJoints(*model);
         EXPECT_EQ(1, joints.size());
         EXPECT_THAT(joints, ::testing::UnorderedPointwise(UnorderedMapKeyMatcher(), { "FooRobot::base_inertia_child_joint" }));
 
@@ -649,7 +650,7 @@ namespace UnitTest
         ASSERT_NE(nullptr, model);
         auto wheelCandidate = model->LinkByName(std::string(wheelName.data(), wheelName.size()));
         ASSERT_NE(nullptr, wheelCandidate);
-        EXPECT_TRUE(Utils::IsWheelHeuristics(*model, wheelCandidate));
+        EXPECT_TRUE(SDFormat::IsWheelHeuristics(*model, wheelCandidate));
 
         const AZStd::string_view wheelNameSuffix("left_link_wheel");
         const auto xmlStr2 = GetURDFWithWheel(wheelNameSuffix, "continuous");
@@ -660,7 +661,7 @@ namespace UnitTest
         ASSERT_NE(nullptr, model2);
         auto wheelCandidate2 = model2->LinkByName(std::string(wheelNameSuffix.data(), wheelNameSuffix.size()));
         ASSERT_NE(nullptr, wheelCandidate2);
-        EXPECT_TRUE(Utils::IsWheelHeuristics(*model2, wheelCandidate2));
+        EXPECT_TRUE(SDFormat::IsWheelHeuristics(*model2, wheelCandidate2));
     }
 
     TEST_F(UrdfParserTest, WheelHeuristicNameNotValid1)
@@ -675,7 +676,7 @@ namespace UnitTest
         ASSERT_NE(nullptr, model);
         auto wheelCandidate = model->LinkByName(std::string(wheelName.data(), wheelName.size()));
         ASSERT_NE(nullptr, wheelCandidate);
-        EXPECT_FALSE(Utils::IsWheelHeuristics(*model, wheelCandidate));
+        EXPECT_FALSE(SDFormat::IsWheelHeuristics(*model, wheelCandidate));
     }
 
     TEST_F(UrdfParserTest, WheelHeuristicJointNotValid)
@@ -698,7 +699,7 @@ namespace UnitTest
 
         EXPECT_TRUE(model->FrameNameExists(std::string{ wheelName.c_str(), wheelName.size() }));
         EXPECT_TRUE(model->FrameNameExists("joint0"));
-        EXPECT_FALSE(Utils::IsWheelHeuristics(*model, wheelCandidate));
+        EXPECT_FALSE(SDFormat::IsWheelHeuristics(*model, wheelCandidate));
     }
 
     TEST_F(UrdfParserTest, WheelHeuristicJointVisualNotValid)
@@ -713,7 +714,7 @@ namespace UnitTest
         ASSERT_NE(nullptr, model);
         auto wheelCandidate = model->LinkByName(std::string(wheelName.c_str(), wheelName.size()));
         ASSERT_NE(nullptr, wheelCandidate);
-        EXPECT_FALSE(Utils::IsWheelHeuristics(*model, wheelCandidate));
+        EXPECT_FALSE(SDFormat::IsWheelHeuristics(*model, wheelCandidate));
     }
 
     TEST_F(UrdfParserTest, WheelHeuristicJointColliderNotValid)
@@ -728,7 +729,7 @@ namespace UnitTest
         ASSERT_NE(nullptr, model);
         auto wheelCandidate = model->LinkByName(std::string(wheelName.c_str(), wheelName.size()));
         ASSERT_NE(nullptr, wheelCandidate);
-        EXPECT_FALSE(Utils::IsWheelHeuristics(*model, wheelCandidate));
+        EXPECT_FALSE(SDFormat::IsWheelHeuristics(*model, wheelCandidate));
     }
 
     TEST_F(UrdfParserTest, TestLinkListing)
@@ -740,7 +741,7 @@ namespace UnitTest
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
-        auto links = Utils::GetAllLinks(*model);
+        auto links = SDFormat::GetAllLinks(*model);
         // As the "joint_bs" is a fixed joint, it and it's child link are combined
         // Therefore the "link1" child link and "joint_bs" fixed joint are combined
         // into the base_link of the SDF
@@ -767,7 +768,7 @@ namespace UnitTest
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
-        auto joints = Utils::GetAllJoints(*model);
+        auto joints = SDFormat::GetAllJoints(*model);
         EXPECT_EQ(2, joints.size());
         ASSERT_TRUE(joints.contains("complicated::joint0"));
         ASSERT_TRUE(joints.contains("complicated::joint1"));
@@ -782,7 +783,7 @@ namespace UnitTest
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
-        const auto links = Utils::GetAllLinks(*model);
+        const auto links = SDFormat::GetAllLinks(*model);
         // The "link1" is combined with the base_link through
         // joint reduction in the URDF->SDF parser logic
         // https://github.com/gazebosim/sdformat/issues/1110
@@ -799,19 +800,19 @@ namespace UnitTest
         const AZ::Vector3 expected_translation_link3{ -2.4000000953674316, 0.0, 0.0 };
 
         const auto base_link_pose = base_link_ptr->SemanticPose();
-        const AZ::Transform transform_from_urdf_link1 = Utils::GetLocalTransform(base_link_pose);
+        const AZ::Transform transform_from_urdf_link1 = SDFormat::GetLocalTransform(base_link_pose);
         EXPECT_NEAR(expected_translation_link1.GetX(), transform_from_urdf_link1.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link1.GetY(), transform_from_urdf_link1.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link1.GetZ(), transform_from_urdf_link1.GetTranslation().GetZ(), 1e-5);
 
         const auto link2_pose = link2_ptr->SemanticPose();
-        const AZ::Transform transform_from_urdf_link2 = Utils::GetLocalTransform(link2_pose);
+        const AZ::Transform transform_from_urdf_link2 = SDFormat::GetLocalTransform(link2_pose);
         EXPECT_NEAR(expected_translation_link2.GetX(), transform_from_urdf_link2.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link2.GetY(), transform_from_urdf_link2.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link2.GetZ(), transform_from_urdf_link2.GetTranslation().GetZ(), 1e-5);
 
         const auto link3_pose = link3_ptr->SemanticPose();
-        const AZ::Transform transform_from_urdf_link3 = Utils::GetLocalTransform(link3_pose);
+        const AZ::Transform transform_from_urdf_link3 = SDFormat::GetLocalTransform(link3_pose);
         EXPECT_NEAR(expected_translation_link3.GetX(), transform_from_urdf_link3.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link3.GetY(), transform_from_urdf_link3.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link3.GetZ(), transform_from_urdf_link3.GetTranslation().GetZ(), 1e-5);
@@ -826,7 +827,7 @@ namespace UnitTest
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
-        auto joints = Utils::GetJointsForParentLink(*model, "base_link");
+        auto joints = SDFormat::GetJointsForParentLink(*model, "base_link");
         EXPECT_EQ(1, joints.size());
 
         auto jointToNameProjection = [](const sdf::Joint* joint)
@@ -836,7 +837,7 @@ namespace UnitTest
         ASSERT_TRUE(AZStd::ranges::contains(joints, "joint0", jointToNameProjection));
 
         // Now check the middle link of "link2"
-        joints = Utils::GetJointsForParentLink(*model, "link2");
+        joints = SDFormat::GetJointsForParentLink(*model, "link2");
         EXPECT_EQ(1, joints.size());
 
         ASSERT_TRUE(AZStd::ranges::contains(joints, "joint1", jointToNameProjection));
@@ -851,7 +852,7 @@ namespace UnitTest
         const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
-        auto joints = Utils::GetJointsForChildLink(*model, "link2");
+        auto joints = SDFormat::GetJointsForChildLink(*model, "link2");
         EXPECT_EQ(1, joints.size());
 
         auto jointToNameProjection = [](const sdf::Joint* joint)
@@ -861,7 +862,7 @@ namespace UnitTest
         ASSERT_TRUE(AZStd::ranges::contains(joints, "joint0", jointToNameProjection));
 
         // Now check the final link of "link3"
-        joints = Utils::GetJointsForChildLink(*model, "link3");
+        joints = SDFormat::GetJointsForChildLink(*model, "link3");
         EXPECT_EQ(1, joints.size());
 
         ASSERT_TRUE(AZStd::ranges::contains(joints, "joint1", jointToNameProjection));
@@ -875,7 +876,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView dae = "file:///usr/ros/humble/meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
         constexpr AZ::IO::PathView expectedResult = "/usr/ros/humble/meshes/bar.dae";
-        auto result = Utils::ResolveAssetPath(
+        auto result = Assets::ResolveAssetPath(
             dae,
             urdf,
             "",
@@ -895,7 +896,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView dae = "file:///usr/ros/humble/meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
         constexpr AZ::IO::PathView expectedResult = "";
-        auto result = Utils::ResolveAssetPath(
+        auto result = Assets::ResolveAssetPath(
             dae,
             urdf,
             "",
@@ -914,7 +915,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView dae = "meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
         constexpr AZ::IO::PathView expectedResult = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
-        auto result = Utils::ResolveAssetPath(
+        auto result = Assets::ResolveAssetPath(
             dae,
             urdf,
             "",
@@ -933,7 +934,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView dae = "meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
         constexpr AZ::IO::PathView expectedResult = "";
-        auto result = Utils::ResolveAssetPath(
+        auto result = Assets::ResolveAssetPath(
             dae,
             urdf,
             "",
@@ -954,7 +955,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
         constexpr AZStd::string_view amentPrefixPath = "/ament/path1:/ament/path2";
         constexpr AZ::IO::PathView expectedResult = "";
-        auto result = Utils::ResolveAssetPath(
+        auto result = Assets::ResolveAssetPath(
             dae,
             urdf,
             amentPrefixPath,
@@ -977,7 +978,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
         constexpr AZStd::string_view amentPrefixPath = "/ament/path1:/ament/path2";
         constexpr AZ::IO::PathView expectedResult = "/ament/path2/share/robot/meshes/bar.dae";
-        auto result = Utils::ResolveAssetPath(
+        auto result = Assets::ResolveAssetPath(
             dae,
             urdf,
             amentPrefixPath,
@@ -1001,7 +1002,7 @@ namespace UnitTest
         {
             return p == expectedResult;
         };
-        auto result = Utils::ResolveAssetPath(dae, urdf, "", GetTestSettings(), mockFileSystem);
+        auto result = Assets::ResolveAssetPath(dae, urdf, "", GetTestSettings(), mockFileSystem);
         EXPECT_EQ(result, expectedResult);
     }
 
@@ -1020,7 +1021,7 @@ namespace UnitTest
             // This should never return true, because this path should never get requested.
             return p == resolvedDae;
         };
-        auto result = Utils::ResolveAssetPath(dae, urdf, "", settings, mockFileSystem);
+        auto result = Assets::ResolveAssetPath(dae, urdf, "", settings, mockFileSystem);
         EXPECT_EQ(result, "");
     }
 
@@ -1034,7 +1035,7 @@ namespace UnitTest
         {
             return (p == xml) || (p == resolvedDae);
         };
-        auto result = Utils::ResolveAssetPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", GetTestSettings(), mockFileSystem);
+        auto result = Assets::ResolveAssetPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", GetTestSettings(), mockFileSystem);
         EXPECT_EQ(result, resolvedDae);
     }
 
@@ -1048,7 +1049,7 @@ namespace UnitTest
         {
             return (p == xml) || (p == resolvedDae);
         };
-        auto result = Utils::ResolveAssetPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", GetTestSettings(), mockFileSystem);
+        auto result = Assets::ResolveAssetPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", GetTestSettings(), mockFileSystem);
         EXPECT_EQ(result, resolvedDae);
     }
 

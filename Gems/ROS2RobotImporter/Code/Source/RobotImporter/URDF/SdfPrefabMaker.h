@@ -24,7 +24,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/Prefab/PrefabIdTypes.h>
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetTypes.h>
 #include <optional>
 
 namespace ROS2RobotImporter
@@ -41,7 +41,7 @@ namespace ROS2RobotImporter
         SdfPrefabMaker(
             const sdf::Root* root,
             AZStd::string prefabPath,
-            const AZStd::shared_ptr<Utils::ReferencedAssetMap> sdfAssetsMapping,
+            const AZStd::shared_ptr<Assets::ReferencedAssetMap> sdfAssetsMapping,
             bool useArticulations = false,
             AZStd::optional<AZ::Transform> spawnPosition = AZStd::nullopt);
 
