@@ -19,6 +19,7 @@
 #include <AzCore/std/string/conversions.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/API/ApplicationAPI.h>
+#include <AzFramework/Spawnable/RootSpawnableInterface.h>
 #include <SimulationInterfaces/LevelManagerRequestBus.h>
 #include <SimulationInterfaces/Resource.h>
 #include <SimulationInterfaces/Result.h>
@@ -244,10 +245,10 @@ namespace SimulationInterfaces
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, errorMsg));
         }
 
-        // unload level if needed
+        // remove all entities and unload level if needed. unload world removes entities as one of its steps
         if (GetCurrentWorld().IsSuccess())
         {
-            levelSystem->UnloadLevel();
+            UnloadWorld();
         }
         // notify state machine
         SimulationManagerRequestBus::Broadcast(
@@ -299,8 +300,33 @@ namespace SimulationInterfaces
             m_actionRequestedFromSimInterfaces = false;
             return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, errorMsg));
         }
+        AZStd::atomic<bool> entitiesRemoved = false;
+        DeletionCompletedCb deleteAllCompletion = [&entitiesRemoved](const AZ::Outcome<void, FailedResult>& result)
+        {
+            entitiesRemoved = result.IsSuccess();
+        };
+
+        SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequests::DeleteAllEntities, deleteAllCompletion);
+
+        // DeleteAllEntities removes spawn tickets and process despawning in async way. UnloadWorld must be blocking operation, hence we
+        // need to wait till all spawnable tasks are finished
+        if (auto* rootSpawnable = AzFramework::RootSpawnableInterface::Get())
+        {
+            rootSpawnable->ProcessSpawnableQueueUntilEmpty();
+        }
+
+        if (!entitiesRemoved)
+        {
+            constexpr const char* errorMsg = "Failed to remove all entities before unloading level";
+            AZ_Warning("SimulationInterfaces", false, errorMsg);
+            m_actionRequestedFromSimInterfaces = false;
+            return AZ::Failure(FailedResult(simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED, errorMsg));
+        }
 
         levelSystem->UnloadLevel();
+        // clean up all left over assets event, especially un-/loading level spawnable
+        AZ::Data::AssetBus::ExecuteQueuedEvents();
+
         SimulationManagerRequestBus::Broadcast(
             &SimulationManagerRequests::SetSimulationState, simulation_interfaces::msg::SimulationState::STATE_NO_WORLD);
         m_actionRequestedFromSimInterfaces = false;
