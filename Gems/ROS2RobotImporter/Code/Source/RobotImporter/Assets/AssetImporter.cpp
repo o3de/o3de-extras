@@ -16,29 +16,29 @@
 
 namespace ROS2RobotImporter::Assets
 {
-    void CopyReferencedAssetsAndCreateAssetMap(
+    bool CopyReferencedAssets(
         ReferencedAssetMap& referencedAssetMap,
         const AZ::IO::Path& sourceFilePath,
-        const SdfAssetBuilderSettings& sdfBuilderSettings,
+        CopyAssetsStatusCallback statusCallback,
         AZStd::string_view outputDirSuffix,
         AZ::IO::FileIOBase* fileIO)
     {
-        ResolveAssetMap(referencedAssetMap, sourceFilePath, sdfBuilderSettings);
-        AZStd::mutex referencedAssetMapMutex;
         if (referencedAssetMap.empty())
         {
-            return;
+            return false;
         }
 
         auto destDirectory = PrepareImportedAssetsDest(sourceFilePath, outputDirSuffix, fileIO);
         if (!destDirectory.IsSuccess())
         {
-            return;
+            AZ_Error("CopyReferencedAsset", false, "Failed to create destination folder for imported assets");
+            return false;
         }
 
         AZStd::unordered_map<AZ::IO::Path, unsigned int> duplicatedFilenames;
         for (auto& [unresolvedFileName, referencedAsset] : referencedAssetMap)
         {
+            auto copyStatus = CopyStatus::Copying;
             if (duplicatedFilenames.contains(referencedAsset.m_assetUri))
             {
                 duplicatedFilenames[referencedAsset.m_assetUri]++;
@@ -47,11 +47,28 @@ namespace ROS2RobotImporter::Assets
             {
                 duplicatedFilenames[referencedAsset.m_assetUri] = 0;
             }
-            CopyReferencedAsset(destDirectory.GetValue(), referencedAsset, duplicatedFilenames[referencedAsset.m_assetUri]);
+            if (statusCallback)
+            {
+                statusCallback(copyStatus, unresolvedFileName, referencedAsset);
+            }
+            copyStatus = CopyStatus::Unresolvable;
+            if (referencedAsset.m_resolvedPath.empty())
+            {
+                AZ_Warning("CopyReferencedAsset", false, "There is no resolved path for %s", unresolvedFileName.c_str());
+            }
+            else
+            {
+                copyStatus =
+                    CopyReferencedAsset(destDirectory.GetValue(), referencedAsset, duplicatedFilenames[referencedAsset.m_assetUri]);
+            }
+            if (statusCallback)
+            {
+                statusCallback(copyStatus, unresolvedFileName, referencedAsset);
+            }
         }
-        Assets::RemoveTmpDir(destDirectory.GetValue().importDirectoryTmp);
+        RemoveTmpDir(destDirectory.GetValue().importDirectoryTmp);
 
-        return;
+        return true;
     }
 
     AZ::Outcome<ImportedAssetsDest> PrepareImportedAssetsDest(
