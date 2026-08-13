@@ -345,7 +345,7 @@ namespace ROS2RobotImporter
             Assets::ResolveAssetMap(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
             if (!m_copyReferencedAssets)
             {
-                Assets::FindReferencedAssets(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
+                Assets::FindReferencedAssets(m_referencedAssetMap);
                 for (const auto& [_, asset] : m_referencedAssetMap)
                 {
                     const bool visual =

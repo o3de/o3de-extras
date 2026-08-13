@@ -14,6 +14,7 @@
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/IO/SystemFile.h>
 #include <AzCore/Settings/SettingsRegistry.h>
+#include <AzCore/std/algorithm.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 #include <PhysX/MeshAsset.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
@@ -155,24 +156,81 @@ namespace ROS2RobotImporter::Assets
         return availableAssets;
     }
 
-    void FindReferencedAssets(
-        ReferencedAssetMap& unresolvedAssetMap, const AZ::IO::Path& sourceFilePath, const SdfAssetBuilderSettings& sdfBuilderSettings)
+    void FindReferencedAssets(ReferencedAssetMap& referencedAssetMap)
     {
-        if (!unresolvedAssetMap.empty())
+        if (referencedAssetMap.empty())
         {
-            AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Assets::GetInterestingSourceAssetsCRC();
+            return;
+        }
 
-            // Search for suitable mappings by comparing checksum
-            for (auto& [unresolvedFileName, asset] : unresolvedAssetMap)
+        // Try to match assets by exact path first. For unmatched assets look for a copy with the same content.
+        AZStd::vector<ReferencedAsset*> unmatchedAssets;
+        for (auto& [unresolvedFileName, asset] : referencedAssetMap)
+        {
+            if (asset.m_resolvedPath.empty())
             {
-                asset.m_resolvedFileCRC = Assets::GetFileCRC(asset.m_resolvedPath);
-                auto found_source_asset = availableAssets.find(asset.m_resolvedFileCRC);
-                if (found_source_asset != availableAssets.end())
-                {
-                    asset.m_availableAssetInfo = found_source_asset->second;
-                }
+                continue;
+            }
+
+            asset.m_resolvedFileCRC = Assets::GetFileCRC(asset.m_resolvedPath);
+            asset.m_availableAssetInfo = Assets::GetAvailableAssetInfo(asset.m_resolvedPath);
+            if (asset.m_availableAssetInfo.m_sourceGuid.IsNull())
+            {
+                unmatchedAssets.emplace_back(&asset);
             }
         }
+
+        if (unmatchedAssets.empty())
+        {
+            return;
+        }
+
+        AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Assets::GetInterestingSourceAssetsCRC();
+
+        // Search for suitable mappings by comparing checksum
+        for (auto& unmatchedAsset : unmatchedAssets)
+        {
+            auto found_source_asset = availableAssets.find(unmatchedAsset->m_resolvedFileCRC);
+            if (found_source_asset != availableAssets.end())
+            {
+                unmatchedAsset->m_availableAssetInfo = found_source_asset->second;
+            }
+        }
+    }
+
+    AvailableAsset GetAvailableAssetInfo(const AZ::IO::Path& globalSourceAssetPath)
+    {
+        using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
+
+        bool sourceAssetFound{ false };
+        AZ::Data::AssetInfo assetInfo;
+        AZStd::string watchFolder;
+        AvailableAsset foundAsset;
+
+        // get source asset info
+        AssetSysReqBus::BroadcastResult(
+            sourceAssetFound, &AssetSysReqBus::Events::GetSourceInfoBySourcePath, globalSourceAssetPath.c_str(), assetInfo, watchFolder);
+
+        if (!sourceAssetFound)
+        {
+            // Not an error on its own - the file may be outside every scan folder, or not scanned yet.
+            AZ_Trace("GetAvailableAssetInfo", "Cannot find source asset info for %s\n", globalSourceAssetPath.c_str());
+            return foundAsset;
+        }
+
+        const auto fullSourcePath = AZ::IO::Path(watchFolder) / AZ::IO::Path(assetInfo.m_relativePath);
+        foundAsset.m_sourceAssetRelativePath = assetInfo.m_relativePath;
+        foundAsset.m_sourceAssetGlobalPath = fullSourcePath.String();
+        foundAsset.m_sourceGuid = assetInfo.m_assetId.m_guid;
+
+        AZ::Crc32 crc = Assets::GetFileCRC(foundAsset.m_sourceAssetGlobalPath);
+        if (crc == AZ::Crc32(0))
+        {
+            AZ_Warning("GetInterestingSourceAssetsCRC", false, "Zero CRC for source asset %s", foundAsset.m_sourceAssetGlobalPath.c_str());
+            return foundAsset;
+        }
+
+        return foundAsset;
     }
 
     void ResolveAssetMap(

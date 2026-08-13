@@ -14,11 +14,6 @@
 
 namespace ROS2RobotImporter::Assets
 {
-    //! Retrieves the O3DE source asset info for an already existing source asset.
-    //! @param globalSourceAssetPath - global path to the source asset
-    //! @returns found asset info, or a default constructed one when the source asset is not known to the Asset Processor
-    AvailableAsset GetAvailableAssetInfo(const AZStd::string& globalSourceAssetPath);
-
     //! Creates side-car file (.assetinfo) that configures the imported scene (e.g. DAE file).
     //! The .assetinfo will be create next to scene's file.
     //! @param sourceAssetPath - global path to source asset

@@ -6,7 +6,7 @@
  *
  */
 
-#include <RobotImporter/Assets/AssetImporter.h>
+#include "AssetImporter.h"
 
 #include <AzCore/Math/Crc.h>
 #include <AzCore/Utils/Utils.h>
