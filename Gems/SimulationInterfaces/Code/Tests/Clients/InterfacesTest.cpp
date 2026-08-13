@@ -202,12 +202,12 @@ namespace UnitTest
         const AZStd::string entityName = AZStd::string(TestEntityName);
 
         EXPECT_CALL(*mock, DeleteEntity(entityName, _))
-            .WillOnce(::testing::Invoke(
+            .WillOnce(
                 [](const AZStd::string& name, SimulationInterfaces::DeletionCompletedCb completedCb)
                 {
                     EXPECT_EQ(name, "test_entity");
                     completedCb(AZ::Success());
-                }));
+                });
 
         auto future = client->async_send_request(request);
         SpinAppUntilFuture(future);
@@ -230,7 +230,7 @@ namespace UnitTest
         const AZStd::string entityName = AZStd::string(TestEntityName);
 
         EXPECT_CALL(mock, DeleteEntity(entityName, _))
-            .WillOnce(::testing::Invoke(
+            .WillOnce(
                 [](const AZStd::string& name, SimulationInterfaces::DeletionCompletedCb completedCb)
                 {
                     EXPECT_EQ(name, "test_entity");
@@ -238,7 +238,7 @@ namespace UnitTest
                     failedResult.m_errorCode = simulation_interfaces::msg::Result::RESULT_NOT_FOUND,
                     failedResult.m_errorString = "FooBar not found.";
                     completedCb(AZ::Failure(failedResult));
-                }));
+                });
 
         auto future = client->async_send_request(request);
         SpinAppUntilFuture(future);
@@ -267,7 +267,7 @@ namespace UnitTest
         request->filters.filter = "FooBarFilter";
 
         EXPECT_CALL(mock, GetEntities(_))
-            .WillOnce(::testing::Invoke(
+            .WillOnce(
                 [=](const EntityFilters& filter)
                 {
                     EXPECT_NE(filter.m_boundsShape, nullptr);
@@ -286,7 +286,7 @@ namespace UnitTest
 
                     EXPECT_EQ(filter.m_nameFilter, "FooBarFilter");
                     return AZ::Success(EntityNameList{ "FooBar" });
-                }));
+                });
 
         auto future = client->async_send_request(request);
         SpinAppUntilFuture(future);
@@ -339,7 +339,7 @@ namespace UnitTest
         request->filters.bounds.type = simulation_interfaces::msg::Bounds::TYPE_BOX;
 
         EXPECT_CALL(mock, GetEntities(_))
-            .WillOnce(::testing::Invoke(
+            .WillOnce(
                 [=](const EntityFilters& filter)
                 {
                     EXPECT_NE(filter.m_boundsShape, nullptr);
@@ -355,7 +355,7 @@ namespace UnitTest
                     auto loc = filter.m_boundsPose.GetTranslation();
                     EXPECT_EQ(loc, AZ::Vector3::CreateZero());
                     return AZ::Success(EntityNameList{ "FooBar" });
-                }));
+                });
 
         auto future = client->async_send_request(request);
         SpinAppUntilFuture(future);
@@ -422,11 +422,11 @@ namespace UnitTest
             static_cast<SimulationFeatureType>(0xFF), // invalid feature, should be ignored
         };
         EXPECT_CALL(mockAggregator, GetSimulationFeatures())
-            .WillOnce(::testing::Invoke(
+            .WillOnce(
                 [&](void)
                 {
                     return features;
-                }));
+                });
 
         auto client = node->create_client<simulation_interfaces::srv::GetSimulatorFeatures>("/get_simulator_features");
         auto request = std::make_shared<simulation_interfaces::srv::GetSimulatorFeatures::Request>();
@@ -459,7 +459,7 @@ namespace UnitTest
 
         auto future = client->async_send_request(request);
         EXPECT_CALL(mock, SpawnEntity(_, _, _, _, _, _, _))
-            .WillOnce(::testing::Invoke(
+            .WillOnce(
                 [](const AZStd::string& name,
                    const AZStd::string& uri,
                    const AZStd::string& entityNamespace,
@@ -473,7 +473,7 @@ namespace UnitTest
                     EXPECT_EQ(entityNamespace, "test_namespace");
                     EXPECT_TRUE(allowRename);
                     completedCb(AZ::Success("valid_name"));
-                }));
+                });
         SpinAppUntilFuture(future);
 
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
@@ -546,20 +546,20 @@ namespace UnitTest
         ASSERT_TRUE(client->wait_for_action_server(std::chrono::seconds(0)) == true) << "Action server is unavailable";
 
         EXPECT_CALL(mock, IsSimulationPaused())
-            .WillOnce(::testing::Invoke(
+            .WillOnce(
                 []()
                 {
                     return true;
-                }));
+                });
 
         EXPECT_CALL(mock, StepSimulation(steps));
 
         EXPECT_CALL(mock, IsSimulationStepsActive())
-            .WillOnce(::testing::Invoke(
+            .WillOnce(
                 []()
                 {
                     return false;
-                }));
+                });
 
         auto future = client->async_send_goal(*goal);
         SpinAppUntilFuture(future);
@@ -584,11 +584,11 @@ namespace UnitTest
         ASSERT_TRUE(client->wait_for_action_server(std::chrono::seconds(0)) == true) << "Action server is unavailable";
 
         EXPECT_CALL(mock, IsSimulationPaused())
-            .WillOnce(::testing::Invoke(
+            .WillOnce(
                 []()
                 {
                     return false;
-                }));
+                });
 
         auto future = client->async_send_goal(*goal);
         SpinAppUntilFuture(future);
@@ -614,20 +614,20 @@ namespace UnitTest
         ASSERT_TRUE(client->wait_for_action_server(std::chrono::seconds(0)) == true) << "Action server is unavailable";
 
         EXPECT_CALL(mock, IsSimulationPaused())
-            .WillOnce(::testing::Invoke(
+            .WillOnce(
                 []()
                 {
                     return true;
-                }));
+                });
 
         EXPECT_CALL(mock, StepSimulation(steps));
 
         EXPECT_CALL(mock, IsSimulationStepsActive())
-            .WillRepeatedly(::testing::Invoke(
+            .WillRepeatedly(
                 []()
                 {
                     return true;
-                }));
+                });
 
         EXPECT_CALL(mock, CancelStepSimulation());
 
