@@ -847,7 +847,7 @@ namespace SimulationInterfaces
             // run preinsertion Callback if exists
             if (spawnData != m_spawnCompletedCallbacks.end())
             {
-                SimulationEntitiesManagerNotificationBus::Broadcast(
+                SimulationEntitiesManagerNotificationsBus::Broadcast(
                     &SimulationEntitiesManagerNotifications::OnEntityPreInsertion, spawnData->second.m_userProposedName, view);
                 spawnData->second.m_preInsertionCb(AZ::Success(view));
             }
@@ -888,7 +888,7 @@ namespace SimulationInterfaces
                 if (finalNameOutcome.IsSuccess())
                 {
                     m_simulatedEntityToPrefabRoot[finalNameOutcome.GetValue()] = root->GetId();
-                    SimulationEntitiesManagerNotificationBus::Broadcast(
+                    SimulationEntitiesManagerNotificationsBus::Broadcast(
                         &SimulationEntitiesManagerNotifications::OnEntitySpawned, finalNameOutcome.GetValue(), view);
                     spawnData->second.m_completedCb(AZ::Success(finalNameOutcome.GetValue()));
                 }

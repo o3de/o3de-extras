@@ -245,7 +245,7 @@ namespace SimulationInterfaces
         //////////////////////////////////////////////////////////////////////////
     };
 
-    using SimulationEntitiesManagerNotificationBus =
+    using SimulationEntitiesManagerNotificationsBus =
         AZ::EBus<SimulationEntitiesManagerNotifications, SimulationEntitiesManagerNotificationsBusTraits>;
 
 } // namespace SimulationInterfaces
