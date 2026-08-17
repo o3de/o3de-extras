@@ -8,6 +8,8 @@
 #pragma once
 
 #include <AzCore/Math/Matrix3x3.h>
+#include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/string/string.h>
 
 //! Namespace contains utility functions for camera.
 namespace ROS2Sensors::CameraUtils
