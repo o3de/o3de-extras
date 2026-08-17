@@ -19,9 +19,9 @@
 #include <RobotImporter/Assets/AssetLookup.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
 #include <RobotImporter/Assets/SceneManifestBuilder.h>
+#include <RobotImporter/Building/SdfPrefabMaker.h>
 #include <RobotImporter/Parsing/FixURDF/URDFModifications.h>
 #include <RobotImporter/Parsing/SdfParser.h>
-#include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>

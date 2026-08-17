@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "ArticulationsMaker.h"
-#include "CollidersMaker.h"
-#include "InertialsMaker.h"
-#include "JointsMaker.h"
-#include "RobotControlMaker.h"
-#include "SensorsMaker.h"
-#include "VisualsMaker.h"
+#include "Makers/ArticulationsMaker.h"
+#include "Makers/CollidersMaker.h"
+#include "Makers/InertialsMaker.h"
+#include "Makers/JointsMaker.h"
+#include "Makers/RobotControlMaker.h"
+#include "Makers/SensorsMaker.h"
+#include "Makers/VisualsMaker.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/std/containers/map.h>

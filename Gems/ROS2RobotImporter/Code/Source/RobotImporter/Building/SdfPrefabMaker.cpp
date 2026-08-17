@@ -7,8 +7,6 @@
  */
 
 #include "SdfPrefabMaker.h"
-#include "CollidersMaker.h"
-#include "PrefabMakerUtils.h"
 #include <API/EditorAssetSystemAPI.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/IO/FileIO.h>
@@ -26,6 +24,7 @@
 #include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2/ROS2EditorBus.h>
 #include <RobotImporter/Assets/AssetTypes.h>
+#include <RobotImporter/Building/PrefabMakerUtils.h>
 #include <RobotImporter/Queries/SdfQueries.h>
 #include <RobotImporter/Queries/SdfVisitors.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
