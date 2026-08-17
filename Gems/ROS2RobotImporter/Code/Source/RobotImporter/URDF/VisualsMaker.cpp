@@ -22,9 +22,6 @@
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/ToolsComponents/EditorNonUniformScaleComponent.h>
 
-#include <sdf/Material.hh>
-#include <sdf/Pbr.hh>
-
 namespace ROS2RobotImporter
 {
     VisualsMaker::VisualsMaker() = default;

@@ -8,10 +8,12 @@
 
 #pragma once
 
-#include "SdfParser.h"
+#include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <PhysX/ArticulationTypes.h>
+#include <sdf/Model.hh>
 
 namespace ROS2RobotImporter
 {

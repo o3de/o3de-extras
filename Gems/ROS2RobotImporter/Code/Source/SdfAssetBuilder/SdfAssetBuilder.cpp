@@ -24,7 +24,7 @@
 
 #include <RobotImporter/Assets/AssetLookup.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
-#include <RobotImporter/URDF/SdfParser.h>
+#include <RobotImporter/Parsing/SdfParser.h>
 #include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>

@@ -11,8 +11,8 @@ set(FILES
     ../Assets/Editor/Images/Icons/ToolbarIcon.svg
     Source/Tools/ROS2RobotImporterEditorSystemComponent.cpp
     Source/Tools/ROS2RobotImporterEditorSystemComponent.h
-    Source/RobotImporter/FixURDF/FixURDF.cpp
-    Source/RobotImporter/FixURDF/FixURDF.h
+    Source/RobotImporter/Parsing/FixURDF/FixURDF.cpp
+    Source/RobotImporter/Parsing/FixURDF/FixURDF.h
     Source/RobotImporter/Pages/ModifiedURDFWindow.cpp
     Source/RobotImporter/Pages/ModifiedURDFWindow.h
     Source/RobotImporter/Pages/CheckAssetPage.cpp
@@ -61,14 +61,14 @@ set(FILES
     Source/RobotImporter/URDF/RobotControlMaker.h
     Source/RobotImporter/URDF/SensorsMaker.cpp
     Source/RobotImporter/URDF/SensorsMaker.h
-    Source/RobotImporter/URDF/SdfParser.cpp
-    Source/RobotImporter/URDF/SdfParser.h
+    Source/RobotImporter/Parsing/SdfParser.cpp
+    Source/RobotImporter/Parsing/SdfParser.h
     Source/RobotImporter/URDF/SdfPrefabMaker.cpp
     Source/RobotImporter/URDF/SdfPrefabMaker.h
     Source/RobotImporter/URDF/VisualsMaker.cpp
     Source/RobotImporter/URDF/VisualsMaker.h
-    Source/RobotImporter/xacro/XacroUtils.cpp
-    Source/RobotImporter/xacro/XacroUtils.h
+    Source/RobotImporter/Parsing/Xacro/XacroUtils.cpp
+    Source/RobotImporter/Parsing/Xacro/XacroUtils.h
     Source/RobotImporter/Utils/DefaultSolverConfiguration.h
     Source/RobotImporter/Utils/ErrorUtils.cpp
     Source/RobotImporter/Utils/ErrorUtils.h

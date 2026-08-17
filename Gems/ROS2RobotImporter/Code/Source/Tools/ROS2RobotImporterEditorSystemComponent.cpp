@@ -17,10 +17,10 @@
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <RobotImporter/Assets/AssetImporter.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Parsing/SdfParser.h>
 #include <RobotImporter/RobotImporterWidget.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
-#include <RobotImporter/URDF/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
@@ -46,8 +46,8 @@ namespace ROS2RobotImporter
                 ->Attribute(AZ::Script::Attributes::Category, "Robotics")
                 ->Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Automation)
                 ->Attribute(AZ::Script::Attributes::Module, "ROS2")
-                // The "ImportURDF" event name is kept for backwards compatibility with existing Python scripts,
-                // even though the importer accepts URDF, SDF and .world files.
+                ->Event("ImportRobotDescription", &RobotImporterRequestBus::Events::GeneratePrefabFromFile)
+                // The "ImportURDF" event name kept for backwards compatibility with existing Python scripts.
                 ->Event("ImportURDF", &RobotImporterRequestBus::Events::GeneratePrefabFromFile);
         }
     }

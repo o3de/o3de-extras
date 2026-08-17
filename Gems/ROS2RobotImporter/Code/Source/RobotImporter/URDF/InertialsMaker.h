@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "SdfParser.h"
 #include <AzCore/Component/EntityId.h>
+#include <gz/math/Inertial.hh>
 
 namespace ROS2RobotImporter
 {

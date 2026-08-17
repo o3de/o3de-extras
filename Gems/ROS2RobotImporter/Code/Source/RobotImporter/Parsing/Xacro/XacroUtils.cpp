@@ -13,7 +13,7 @@
 #include <AzFramework/Process/ProcessCommunicator.h>
 #include <AzFramework/Process/ProcessWatcher.h>
 #include <QString>
-#include <RobotImporter/FixURDF/FixURDF.h>
+#include <RobotImporter/Parsing/FixURDF/FixURDF.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace ROS2RobotImporter::Utils::xacro
@@ -94,7 +94,7 @@ namespace ROS2RobotImporter::Utils::xacro
                 // modify in memory URDF result
                 auto [modifiedXmlStr, modifiedElements] = (Utils::ModifyURDFInMemory(output));
                 outcome.m_parseResult = SdfParser::Parse(modifiedXmlStr, parserConfig);
-                outcome.m_parseResult.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
+                outcome.m_parseResult.m_modifiedUrdfContent = AZStd::move(modifiedXmlStr);
                 outcome.m_parseResult.m_urdfModifications = AZStd::move(modifiedElements);
                 outcome.m_succeed = true;
             }

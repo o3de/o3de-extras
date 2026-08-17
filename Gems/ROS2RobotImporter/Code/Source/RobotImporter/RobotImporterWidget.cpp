@@ -11,7 +11,6 @@
 #include <AzCore/Math/Uuid.h>
 #include <AzCore/Utils/Utils.h>
 
-#include "FixURDF/URDFModifications.h"
 #include "RobotImporterWidget.h"
 #include <QApplication>
 #include <QScreen>
@@ -20,7 +19,8 @@
 #include <RobotImporter/Assets/AssetLookup.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
 #include <RobotImporter/Assets/SceneManifestBuilder.h>
-#include <RobotImporter/URDF/SdfParser.h>
+#include <RobotImporter/Parsing/FixURDF/URDFModifications.h>
+#include <RobotImporter/Parsing/SdfParser.h>
 #include <RobotImporter/URDF/SdfPrefabMaker.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
@@ -144,7 +144,7 @@ namespace ROS2RobotImporter
         }
 
         report += "\n\n# " + tr("💡Please check the modified code and/or save it using the interface below.") + "\n";
-        m_modifiedUrdfWindow->SetUrdfData(AZStd::move(parsedSdfOutcome.m_modifiedURDFContent));
+        m_modifiedUrdfWindow->SetUrdfData(AZStd::move(parsedSdfOutcome.m_modifiedUrdfContent));
     }
 
     void RobotImporterWidget::OpenRobotDescription()

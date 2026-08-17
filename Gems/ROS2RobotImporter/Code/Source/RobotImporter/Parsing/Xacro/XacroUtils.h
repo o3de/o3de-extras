@@ -10,7 +10,7 @@
 
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/string/string.h>
-#include <RobotImporter/URDF/SdfParser.h>
+#include <RobotImporter/Parsing/SdfParser.h>
 
 namespace ROS2RobotImporter::Utils::xacro
 {

@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "SdfParser.h"
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/std/optional.h>
 #include <AzCore/std/string/string.h>
 #include <RobotImporter/Assets/AssetTypes.h>
 
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
+#include <gz/math/Pose3.hh>
 
 //! Common utils for Prefab Maker classes
 namespace ROS2RobotImporter::PrefabMakerUtils
