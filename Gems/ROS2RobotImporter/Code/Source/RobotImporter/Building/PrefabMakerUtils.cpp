@@ -6,7 +6,7 @@
  *
  */
 
-#include "RobotImporter/URDF/PrefabMakerUtils.h"
+#include "PrefabMakerUtils.h"
 #include "RobotImporter/Utils/TypeConversions.h"
 #include <AzCore/Math/Quaternion.h>
 #include <AzCore/Utils/Utils.h>
