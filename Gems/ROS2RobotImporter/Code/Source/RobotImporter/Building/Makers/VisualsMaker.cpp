@@ -6,10 +6,10 @@
  *
  */
 
-#include "RobotImporter/Building/Makers/VisualsMaker.h"
-#include "RobotImporter/Building/PrefabMakerUtils.h"
-#include "RobotImporter/Utils/TypeConversions.h"
+#include "VisualsMaker.h"
 #include <RobotImporter/Assets/AssetLookup.h>
+#include <RobotImporter/Building/PrefabMakerUtils.h>
+#include <RobotImporter/Utils/TypeConversions.h>
 
 #include <Atom/RPI.Reflect/Material/MaterialAsset.h>
 #include <AtomLyIntegration/CommonFeatures/Material/MaterialComponentBus.h>
