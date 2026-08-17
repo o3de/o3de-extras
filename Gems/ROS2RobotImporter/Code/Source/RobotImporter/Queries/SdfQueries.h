@@ -26,9 +26,9 @@ namespace ROS2RobotImporter::SDFormat
 
     //! Returns an AZ::Transform converted from the link pose defined relative to another frame.
     //! @param semanticPose pointer to URDF/SDF link
-    //! @param t initial transform, multiplied against link transform
+    //! @param initialTransform initial transform, multiplied against link transform
     //! @returns Transform of link
-    AZ::Transform GetLocalTransform(const sdf::SemanticPose& semanticPose, AZ::Transform t = AZ::Transform::Identity());
+    AZ::Transform GetLocalTransform(const sdf::SemanticPose& semanticPose, AZ::Transform initialTransform = AZ::Transform::Identity());
 
     //! Retrieve all links in URDF/SDF as a map, where a key is link's fully qualified name and a value is a pointer to link.
     //! Allows to retrieve a pointer to a link given it name.

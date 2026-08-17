@@ -17,14 +17,14 @@
 #include "Pages/RobotDescriptionPage.h"
 #include "Pages/XacroParamsPage.h"
 
-#include "URDF/SdfParser.h"
 #include "URDF/SdfPrefabMaker.h"
 #include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/parallel/thread.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
-#include <RobotImporter/FixURDF/URDFModifications.h>
-#include <RobotImporter/xacro/XacroUtils.h>
+#include <RobotImporter/Parsing/FixURDF/URDFModifications.h>
+#include <RobotImporter/Parsing/SdfParser.h>
+#include <RobotImporter/Parsing/Xacro/XacroUtils.h>
 
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
 #include <AzToolsFramework/Prefab/PrefabFocusInterface.h>

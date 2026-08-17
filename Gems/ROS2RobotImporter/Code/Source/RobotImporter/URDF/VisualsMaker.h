@@ -8,13 +8,15 @@
 
 #pragma once
 
-#include "SdfParser.h"
+#include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <RobotImporter/Assets/AssetTypes.h>
+
+#include <sdf/sdf.hh>
 
 namespace ROS2RobotImporter
 {
