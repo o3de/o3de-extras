@@ -43,10 +43,7 @@ namespace ROS2Sensors
 
         // AzToolsFramework::Components::EditorComponentBase overrides
         void BuildGameEntity(AZ::Entity* gameEntity) override;
-        const ROS2::SensorConfiguration& GetTopicConfiguration()
-        {
-            return m_sensorConfiguration;
-        }
+
     private:
         // CameraConfigurationRequestBus::Handler overrides ..
         void SetConfiguration(const CameraSensorConfiguration& configuration) override;

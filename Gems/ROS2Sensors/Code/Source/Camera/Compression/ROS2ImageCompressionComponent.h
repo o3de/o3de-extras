@@ -10,7 +10,6 @@
 #include "../Compression/ImageCompressionConfiguration.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/RTTI/TypeInfoSimple.h>
-#include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2Sensors/Camera/CameraPostProcessingRequestBus.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
@@ -33,9 +32,7 @@ namespace ROS2Sensors
 
         ROS2ImageCompressionComponent() = default;
         explicit ROS2ImageCompressionComponent(
-            ImageCompressionConfiguration::Channel channel,
-            const ROS2::TopicConfiguration& sourceCameraTopicConfig,
-            const ImageCompression::Settings& settings);
+            ImageCompressionConfiguration::Channel channel, const ImageCompression::Settings& settings);
         ~ROS2ImageCompressionComponent() override = default;
 
         void Activate() override;
@@ -51,7 +48,6 @@ namespace ROS2Sensors
         //! path only ever reads it. The post-processing bus dispatches frames concurrently.
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::CompressedImage>> m_publisher;
         ImageCompressionConfiguration::Channel m_channel;
-        ROS2::TopicConfiguration m_sourceCameraTopicConfig;
         ImageCompression::Settings m_compressionSettings;
     };
 } // namespace ROS2Sensors

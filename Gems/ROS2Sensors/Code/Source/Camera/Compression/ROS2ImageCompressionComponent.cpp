@@ -17,6 +17,7 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2NamesBus.h>
+#include <ROS2/Sensor/SensorConfigurationRequestBus.h>
 #include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
 
 namespace ROS2Sensors
@@ -28,11 +29,8 @@ namespace ROS2Sensors
     } // namespace
 
     ROS2ImageCompressionComponent::ROS2ImageCompressionComponent(
-        ImageCompressionConfiguration::Channel channel,
-        const ROS2::TopicConfiguration& sourceCameraTopicConfig,
-        const ImageCompression::Settings& settings)
+        ImageCompressionConfiguration::Channel channel, const ImageCompression::Settings& settings)
         : m_channel(channel)
-        , m_sourceCameraTopicConfig(sourceCameraTopicConfig)
         , m_compressionSettings(settings)
     {
     }
@@ -45,7 +43,6 @@ namespace ROS2Sensors
         {
             serializeContext->Class<ROS2ImageCompressionComponent, AZ::Component>()
                 ->Version(1)
-                ->Field("sourceConfig", &ROS2ImageCompressionComponent::m_sourceCameraTopicConfig)
                 ->Field("settings", &ROS2ImageCompressionComponent::m_compressionSettings)
                 ->Field("channel", &ROS2ImageCompressionComponent::m_channel);
         }
@@ -59,6 +56,30 @@ namespace ROS2Sensors
 
     void ROS2ImageCompressionComponent::Activate()
     {
+        const auto* cameraComponent = GetEntity()->FindComponent<ROS2CameraSensorComponent>();
+        AZ_Assert(cameraComponent, "Entity has no ROS2CameraSensorComponent");
+        if (!cameraComponent)
+        {
+            return;
+        }
+
+        // The camera sensor is a required service, so it has already activated and connected to the bus.
+        ROS2::SensorConfiguration sensorConfiguration;
+        ROS2::SensorConfigurationRequestBus::EventResult(
+            sensorConfiguration,
+            AZ::EntityComponentIdPair(GetEntityId(), cameraComponent->GetId()),
+            &ROS2::SensorConfigurationRequest::GetSensorConfiguration);
+
+        const auto* imageConfigName = m_channel == ImageCompressionConfiguration::Channel::Color
+            ? CameraConstants::ColorImageConfig
+            : CameraConstants::DepthImageConfig;
+        const auto sourceTopicConfig = sensorConfiguration.m_publishersConfigurations.find(imageConfigName);
+        if (sourceTopicConfig == sensorConfiguration.m_publishersConfigurations.end())
+        {
+            AZ_Error("ROS2ImageCompressionComponent", false, "Camera has no \"%s\" publisher configuration", imageConfigName);
+            return;
+        }
+
         AZStd::string cameraNamespace;
         if (const auto* frame = GetEntity()->FindComponent<ROS2::ROS2FrameComponent>())
         {
@@ -70,12 +91,12 @@ namespace ROS2Sensors
             fullTopic,
             &ROS2::ROS2NamesRequests::GetNamespacedName,
             cameraNamespace,
-            m_sourceCameraTopicConfig.m_topic + ImageCompressionConfiguration::TopicSuffix);
+            sourceTopicConfig->second.m_topic + ImageCompressionConfiguration::TopicSuffix);
 
         AZ_Printf("ROS2ImageCompressionComponent", "Publishing compressed on %s\n", fullTopic.c_str());
 
         m_publisher = ROS2::ROS2Interface::Get()->GetNode()->create_publisher<sensor_msgs::msg::CompressedImage>(
-            fullTopic.data(), m_sourceCameraTopicConfig.GetQoS());
+            fullTopic.data(), sourceTopicConfig->second.GetQoS());
 
         // Connect only once the publisher exists, so a dispatch can never observe a half-built component.
         CameraPostProcessingRequestBus::Handler::BusConnect(GetEntityId());

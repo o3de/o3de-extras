@@ -7,7 +7,6 @@
  */
 
 #include "ROS2ImageCompressionEditorComponent.h"
-#include "Camera/ROS2CameraSensorEditorComponent.h"
 #include "ROS2ImageCompressionComponent.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -54,23 +53,7 @@ namespace ROS2Sensors
 
     void ROS2ImageCompressionEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
-        const auto editorCameraComponent = this->GetEntity()->FindComponent<ROS2CameraSensorEditorComponent>();
-        AZ_Assert(editorCameraComponent, "Entity has no ROS2CameraSensorEditorComponent");
-        const AZStd::map<AZStd::string, ROS2::TopicConfiguration>& topicConfig =
-            editorCameraComponent->GetTopicConfiguration().m_publishersConfigurations;
-
-        AZ_Assert(topicConfig.contains(ROS2Sensors::CameraConstants::ColorImageConfig), "No color topic");
-        AZ_Assert(topicConfig.contains(ROS2Sensors::CameraConstants::DepthImageConfig), "No depth topic");
-
-        ROS2::TopicConfiguration orgTopicConfig;
-        if (m_configuration.m_channel == ImageCompressionConfiguration::Channel::Color)
-        {
-            orgTopicConfig = topicConfig.find(ROS2Sensors::CameraConstants::ColorImageConfig)->second;
-        }
-        else
-        {
-            orgTopicConfig = topicConfig.find(ROS2Sensors::CameraConstants::DepthImageConfig)->second;
-        }
-        gameEntity->CreateComponent<ROS2ImageCompressionComponent>(m_configuration.m_channel, orgTopicConfig, m_configuration.m_settings);
+        // The source camera topic is resolved at runtime over SensorConfigurationRequestBus, not baked in here.
+        gameEntity->CreateComponent<ROS2ImageCompressionComponent>(m_configuration.m_channel, m_configuration.m_settings);
     }
 } // namespace ROS2Sensors
