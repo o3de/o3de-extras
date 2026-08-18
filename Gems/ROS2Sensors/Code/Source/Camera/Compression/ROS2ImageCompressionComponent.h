@@ -41,11 +41,11 @@ namespace ROS2Sensors
         void Activate() override;
         void Deactivate() override;
 
+    private:
         //! CameraPostProcessingRequestBus::Handler overrides
         void ApplyPostProcessing(sensor_msgs::msg::Image& image) override;
         AZ::u8 GetPriority() const override;
 
-    private:
         void CompressAndPublish(const sensor_msgs::msg::Image& image);
         //! Created in Activate before the bus is connected and reset after it is disconnected, so the frame
         //! path only ever reads it. The post-processing bus dispatches frames concurrently.

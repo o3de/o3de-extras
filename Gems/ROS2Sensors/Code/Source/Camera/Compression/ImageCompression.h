@@ -11,13 +11,12 @@
 #include <AzCore/Math/Crc.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/RTTI/RTTI.h>
-#include <AzCore/RTTI/ReflectContext.h>
+#include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/base.h>
 #include <AzCore/std/string/string.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <sensor_msgs/msg/compressed_image.hpp>
 #include <sensor_msgs/msg/image.hpp>
-#include <vector>
 
 namespace ROS2Sensors::ImageCompression
 {
@@ -64,6 +63,5 @@ namespace ROS2Sensors::ImageCompression
     //! @note Requesting JPEG for an encoding wider than 8 bits, such as mono16, fails: baseline JPEG stores
     //!       8 bits per sample. Use PNG for those. Alpha is dropped when compressing rgba8 with JPEG.
     //!       Float encodings are not supported; quantize depth to mono16 before calling.
-    AZ::Outcome<sensor_msgs::msg::CompressedImage, AZStd::string> Compress(
-        const sensor_msgs::msg::Image& image, const Settings& settings);
+    AZ::Outcome<sensor_msgs::msg::CompressedImage, AZStd::string> Compress(const sensor_msgs::msg::Image& image, const Settings& settings);
 } // namespace ROS2Sensors::ImageCompression

@@ -8,10 +8,9 @@
 
 #pragma once
 
-#include "../Compression/ImageCompression.h"
-#include "Camera/CameraUtilities.h"
+#include "ImageCompression.h"
+#include <Camera/CameraUtilities.h>
 
-#include <AzCore/RTTI/ReflectContext.h>
 #include <AzCore/RTTI/TypeInfoSimple.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 

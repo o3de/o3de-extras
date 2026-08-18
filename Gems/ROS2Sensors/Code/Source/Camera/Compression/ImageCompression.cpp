@@ -12,6 +12,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/containers/vector.h>
 
 #include <cmath>
 #include <cstring>
@@ -22,7 +23,6 @@
 // jpeglib.h does not include the standard headers it depends on.
 #include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #include <jpeglib.h>
 #endif
@@ -39,7 +39,10 @@ namespace ROS2Sensors::ImageCompression
         };
 
         const AZStd::unordered_map<AZStd::string, EncodingLayout> SupportedEncodings = {
-            { "rgba8", { 4, 1 } }, { "rgb8", { 3, 1 } }, { "mono8", { 1, 1 } }, { "mono16", { 1, 2 } },
+            { "rgba8", { 4, 1 } },
+            { "rgb8", { 3, 1 } },
+            { "mono8", { 1, 1 } },
+            { "mono16", { 1, 2 } },
         };
 
         //! Validate that the message fields describe a consistent buffer, and return its layout.
@@ -60,17 +63,18 @@ namespace ROS2Sensors::ImageCompression
             const size_t minimumStep = static_cast<size_t>(image.width) * layout.m_channels * layout.m_bytesPerSample;
             if (image.step < minimumStep)
             {
-                return AZ::Failure(AZStd::string::format(
-                    "Image step (%zu) is smaller than a single %s row (%zu)",
-                    static_cast<size_t>(image.step),
-                    image.encoding.c_str(),
-                    minimumStep));
+                return AZ::Failure(
+                    AZStd::string::format(
+                        "Image step (%zu) is smaller than a single %s row (%zu)",
+                        static_cast<size_t>(image.step),
+                        image.encoding.c_str(),
+                        minimumStep));
             }
             const size_t minimumSize = static_cast<size_t>(image.step) * image.height;
             if (image.data.size() < minimumSize)
             {
-                return AZ::Failure(AZStd::string::format(
-                    "Image data size (%zu) is smaller than step * height (%zu)", image.data.size(), minimumSize));
+                return AZ::Failure(
+                    AZStd::string::format("Image data size (%zu) is smaller than step * height (%zu)", image.data.size(), minimumSize));
             }
 
             return AZ::Success(layout);
@@ -96,23 +100,6 @@ namespace ROS2Sensors::ImageCompression
                     uint16_t sample = 0;
                     std::memcpy(&sample, rowStart + static_cast<size_t>(column) * sizeof(uint16_t), sizeof(uint16_t));
                     AppendBigEndian16(out, sample);
-                }
-            }
-            return out;
-        }
-
-        //! Drop the alpha channel, since baseline JPEG has no way to store it.
-        std::vector<uint8_t> DropAlpha(const sensor_msgs::msg::Image& image)
-        {
-            std::vector<uint8_t> out;
-            out.reserve(static_cast<size_t>(image.width) * image.height * 3);
-            for (uint32_t row = 0; row < image.height; ++row)
-            {
-                const uint8_t* rowStart = image.data.data() + static_cast<size_t>(row) * image.step;
-                for (uint32_t column = 0; column < image.width; ++column)
-                {
-                    const uint8_t* pixel = rowStart + static_cast<size_t>(column) * 4;
-                    out.insert(out.end(), pixel, pixel + 3);
                 }
             }
             return out;
@@ -158,15 +145,7 @@ namespace ROS2Sensors::ImageCompression
             png_set_write_fn(png, out, PngWriteToVector, nullptr);
             png_set_compression_level(png, compressionLevel);
             png_set_IHDR(
-                png,
-                info,
-                width,
-                height,
-                bitDepth,
-                colorType,
-                PNG_INTERLACE_NONE,
-                PNG_COMPRESSION_TYPE_DEFAULT,
-                PNG_FILTER_TYPE_DEFAULT);
+                png, info, width, height, bitDepth, colorType, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
             png_write_info(png, info);
 
             for (uint32_t row = 0; row < height; ++row)
@@ -181,6 +160,23 @@ namespace ROS2Sensors::ImageCompression
         }
 
 #ifdef ROS2SENSORS_WITH_JPEG
+        //! Drop the alpha channel, since baseline JPEG has no way to store it.
+        std::vector<uint8_t> DropAlpha(const sensor_msgs::msg::Image& image)
+        {
+            std::vector<uint8_t> out;
+            out.reserve(static_cast<size_t>(image.width) * image.height * 3);
+            for (uint32_t row = 0; row < image.height; ++row)
+            {
+                const uint8_t* rowStart = image.data.data() + static_cast<size_t>(row) * image.step;
+                for (uint32_t column = 0; column < image.width; ++column)
+                {
+                    const uint8_t* pixel = rowStart + static_cast<size_t>(column) * 4;
+                    out.insert(out.end(), pixel, pixel + 3);
+                }
+            }
+            return out;
+        }
+
         struct JpegErrorManager
         {
             jpeg_error_mgr m_base;
@@ -284,8 +280,9 @@ namespace ROS2Sensors::ImageCompression
             }
             else
             {
-                return AZ::Failure(AZStd::string::format(
-                    "JPEG cannot store %s; it is limited to 8 bits per sample. Use PNG instead.", image.encoding.c_str()));
+                return AZ::Failure(
+                    AZStd::string::format(
+                        "JPEG cannot store %s; it is limited to 8 bits per sample. Use PNG instead.", image.encoding.c_str()));
             }
 
             unsigned char* jpegBuffer = nullptr;
@@ -357,6 +354,18 @@ namespace ROS2Sensors::ImageCompression
             result.format = AZStd::string::format("%s; png compressed %s", image.encoding.c_str(), decodedEncoding).c_str();
             return AZ::Success(AZStd::move(result));
         }
+
+        //! Codecs offered in the editor; a codec this build cannot encode is left out rather than failing at runtime.
+        AZStd::vector<AZ::Edit::EnumConstant<Codec>> AvailableCodecs()
+        {
+            AZStd::vector<AZ::Edit::EnumConstant<Codec>> codecs;
+            if (IsCodecAvailable(Codec::Jpeg))
+            {
+                codecs.emplace_back(Codec::Jpeg, "JPEG (lossy, 8-bit only)");
+            }
+            codecs.emplace_back(Codec::Png, "PNG (lossless)");
+            return codecs;
+        }
     } // namespace
 
     void Settings::Reflect(AZ::ReflectContext* context)
@@ -378,8 +387,7 @@ namespace ROS2Sensors::ImageCompression
                         &Settings::m_codec,
                         "Codec",
                         "Codec for 8-bit images. Depth and mono16 require PNG; JPEG cannot store them and publishes nothing.")
-                    ->EnumAttribute(Codec::Jpeg, "JPEG (lossy, 8-bit only)")
-                    ->EnumAttribute(Codec::Png, "PNG (lossless)")
+                    ->Attribute(AZ::Edit::Attributes::EnumValues, &AvailableCodecs)
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::EntireTree)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Slider,
@@ -396,7 +404,7 @@ namespace ROS2Sensors::ImageCompression
                         "zlib compression level, from fastest to smallest file")
                     ->Attribute(AZ::Edit::Attributes::Min, MinPngCompressionLevel)
                     ->Attribute(AZ::Edit::Attributes::Max, MaxPngCompressionLevel)
-                     ->Attribute(AZ::Edit::Attributes::Visibility, &Settings::GetPngVisibility);
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &Settings::GetPngVisibility);
             }
         }
     }
@@ -422,8 +430,7 @@ namespace ROS2Sensors::ImageCompression
         return true;
     }
 
-    AZ::Outcome<sensor_msgs::msg::CompressedImage, AZStd::string> Compress(
-        const sensor_msgs::msg::Image& image, const Settings& settings)
+    AZ::Outcome<sensor_msgs::msg::CompressedImage, AZStd::string> Compress(const sensor_msgs::msg::Image& image, const Settings& settings)
     {
         const auto layout = GetValidatedLayout(image);
         if (!layout.IsSuccess())

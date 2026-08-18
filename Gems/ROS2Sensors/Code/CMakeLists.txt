@@ -111,7 +111,7 @@ endif()
 # libjpeg is optional. PNG covers every encoding the image compression supports; JPEG only adds a lossy
 # path for 8-bit color and mono images. Unlike PNG it is not part of the O3DE 3rdParty set, so we use
 # whatever the system provides and compile the JPEG path out when there is none.
-find_package(JPEG QUIET)
+#find_package(JPEG QUIET)
 if (JPEG_FOUND)
     message(STATUS "Found libjpeg, enabling JPEG image compression")
     target_link_libraries(${gem_name}.Private.Object PUBLIC JPEG::JPEG)

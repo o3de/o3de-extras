@@ -131,22 +131,6 @@ namespace ROS2Sensors
             { { CameraUtils::ImageEncoding::Depth32FC1, CameraUtils::ImageEncoding::Mono16 }, Depth32FC1ToMono16 },
         };
 
-        AZ::Outcome<void, AZStd::string> ValidateEncodingConversion(const EncodingConversion& newConversion)
-        {
-            if (newConversion.encodingIn == newConversion.encodingOut)
-            {
-                return AZ::Failure(AZStd::string("Conversion to same type is forbidden"));
-            }
-            if (supportedFormatChange.find(newConversion) == supportedFormatChange.end())
-            {
-                return AZ::Failure(AZStd::string::format(
-                    "<b>\U000026A0\U0000FE0F Unsupported encoding change from %s to %s</b>",
-                    CameraUtils::ImageEncodingNames.at(newConversion.encodingIn),
-                    CameraUtils::ImageEncodingNames.at(newConversion.encodingOut)));
-            }
-            return AZ::Success();
-        }
-
     } // namespace
 
     bool ApplyEncodingConversion(sensor_msgs::msg::Image& image, const EncodingConversion& conversion)
@@ -209,9 +193,29 @@ namespace ROS2Sensors
         }
     }
 
+
+    AZ::Outcome<void, AZStd::string> EncodingConversion::ValidateEncodingConversion() const
+    {
+        constexpr char WarningGlyph[] = "\U000026A0\U0000FE0F";
+        if (encodingIn == encodingOut)
+        {
+            return AZ::Failure(AZStd::string("Conversion to same type is forbidden"));
+        }
+        if (supportedFormatChange.find(*this) == supportedFormatChange.end())
+        {
+            return AZ::Failure(AZStd::string::format(
+                "<b>%sUnsupported encoding change from %s to %s</b>",
+                WarningGlyph,
+                CameraUtils::ImageEncodingNames.at(encodingIn),
+                CameraUtils::ImageEncodingNames.at(encodingOut)));
+        }
+        return AZ::Success();
+    }
+
+
     AZStd::string EncodingConversion::GetEncodingUiComment() const
     {
-        const auto validation = ValidateEncodingConversion(*this);
+        const auto validation = ValidateEncodingConversion();
         if (validation.IsSuccess())
         {
             return AZStd::string::format(
@@ -275,11 +279,6 @@ namespace ROS2Sensors
     void ROS2ImageEncodingConversionComponent::Deactivate()
     {
         CameraPostProcessingRequestBus::Handler::BusDisconnect();
-    }
-
-    const EncodingConversion& ROS2ImageEncodingConversionComponent::GetEncodingConversion() const
-    {
-        return m_encodingConvertData;
     }
 
     void ROS2ImageEncodingConversionComponent::ApplyPostProcessing(sensor_msgs::msg::Image& image)

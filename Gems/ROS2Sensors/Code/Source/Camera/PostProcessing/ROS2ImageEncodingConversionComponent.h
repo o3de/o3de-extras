@@ -7,7 +7,7 @@
  */
 
 #pragma once
-#include "Camera/CameraUtilities.h"
+#include <Camera/CameraUtilities.h>
 #include <AzCore/Component/Component.h>
 #include <AzCore/RTTI/TypeInfoSimple.h>
 #include <ROS2Sensors/Camera/CameraPostProcessingRequestBus.h>
@@ -40,6 +40,10 @@ namespace ROS2Sensors
 
         //! The scale factor only means anything for depth input, the one conversion that scales samples.
         AZ::Crc32 GetScaleFactorVisibility() const;
+
+        //! Validates if conversion is valid
+        AZ::Outcome<void, AZStd::string> ValidateEncodingConversion() const;
+
     };
 
     //! Apply an encoding conversion to an image, in place.
@@ -62,10 +66,6 @@ namespace ROS2Sensors
 
         void Activate() override;
         void Deactivate() override;
-
-         //! Conversion this component applies, so that other components can tell what the entity's
-        //! post-processing chain does to a frame.
-        const EncodingConversion& GetEncodingConversion() const;
 
         //! CameraPostProcessingRequestBus::Handler overrides
         void ApplyPostProcessing(sensor_msgs::msg::Image& image) override;

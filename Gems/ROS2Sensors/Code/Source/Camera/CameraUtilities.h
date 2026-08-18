@@ -24,11 +24,13 @@ namespace ROS2Sensors::CameraUtils
         Mono16,
         Depth32FC1,
     };
-    const AZStd::unordered_map<ImageEncoding, const char*> ImageEncodingNames = {
+
+    inline const AZStd::unordered_map<ImageEncoding, const char*> ImageEncodingNames = {
         { ImageEncoding::RGBA8, "rgba8" },   { ImageEncoding::RGB8, "rgb8" },     { ImageEncoding::Mono8, "mono8" },
         { ImageEncoding::Mono16, "mono16" }, { ImageEncoding::Depth32FC1, "32FC1" },
     };
-    const AZStd::unordered_map<AZStd::string, ImageEncoding> ImageEncodingFromName = {
+
+    inline const AZStd::unordered_map<AZStd::string, ImageEncoding> ImageEncodingFromName = {
         { "rgba8", ImageEncoding::RGBA8 },   { "rgb8", ImageEncoding::RGB8 },     { "mono8", ImageEncoding::Mono8 },
         { "mono16", ImageEncoding::Mono16 }, { "32FC1", ImageEncoding::Depth32FC1 },
     };
