@@ -24,7 +24,7 @@ namespace ROS2Sensors
     //! so it creates its publisher only in a running simulation and never in the Editor.
     class ROS2ImageCompressionComponent
         : public AZ::Component
-        , public CameraPostProcessingRequestBus::Handler
+        , protected CameraPostProcessingRequestBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2ImageCompressionComponent, ROS2Sensors::ROS2ImageCompressionComponentTypeId, AZ::Component);
