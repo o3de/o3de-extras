@@ -45,7 +45,7 @@ namespace ROS2Sensors
         {
             serializeContext->Class<ROS2ImageCompressionComponent, AZ::Component>()
                 ->Version(1)
-                ->Field("source_config", &ROS2ImageCompressionComponent::m_sourceCameraTopicConfig)
+                ->Field("sourceConfig", &ROS2ImageCompressionComponent::m_sourceCameraTopicConfig)
                 ->Field("settings", &ROS2ImageCompressionComponent::m_compressionSettings)
                 ->Field("channel", &ROS2ImageCompressionComponent::m_channel);
         }
