@@ -60,7 +60,7 @@ namespace ROS2Sensors
             editorCameraComponent->GetTopicConfiguration().m_publishersConfigurations;
 
         AZ_Assert(topicConfig.contains(ROS2Sensors::CameraConstants::ColorImageConfig), "No color topic");
-        AZ_Assert(topicConfig.contains(ROS2Sensors::CameraConstants::DepthImageConfig), "No color topic");
+        AZ_Assert(topicConfig.contains(ROS2Sensors::CameraConstants::DepthImageConfig), "No depth topic");
 
         ROS2::TopicConfiguration orgTopicConfig;
         if (m_configuration.m_channel == ImageCompressionConfiguration::Channel::Color)
