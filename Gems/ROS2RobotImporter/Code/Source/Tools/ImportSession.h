@@ -16,8 +16,8 @@
 namespace ROS2RobotImporter
 {
     class ImportSession
-        : public RobotImporterAssetsRequestBus::Handler
-        , public RobotImporterStatusRequestBus::Handler
+        : private RobotImporterAssetsRequestBus::Handler
+        , private RobotImporterStatusRequestBus::Handler
     {
     public:
         explicit ImportSession(Assets::ReferencedAssetMap referencedAssetMap);
