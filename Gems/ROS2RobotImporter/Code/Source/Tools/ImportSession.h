@@ -32,7 +32,7 @@ namespace ROS2RobotImporter
     private:
         void OnImportStatusMessage(ImportStatusMessageType, const AZStd::string&) override;
         void OnArticulatedLinkCreated() override;
-        AZStd::optional<Assets::ReferencedAsset> FindRefferencedAssets(AZ::IO::Path modelUri) const override;
+        AZStd::optional<Assets::ReferencedAsset> FindReferencedAssets(const AZ::IO::Path& modelUri) const override;
 
         const Assets::ReferencedAssetMap m_referencedAssetMap;
         const ImportSessionId m_Id;
