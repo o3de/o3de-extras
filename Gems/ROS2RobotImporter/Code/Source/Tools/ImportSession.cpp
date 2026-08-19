@@ -93,8 +93,7 @@ namespace ROS2RobotImporter
 
     AZStd::optional<Assets::ReferencedAsset> ImportSession::FindRefferencedAssets(AZ::IO::Path modelUri) const
     {
-        auto it = m_referencedAssetMap.find(modelUri);
-        if (it != m_referencedAssetMap.end())
+        if (auto it = m_referencedAssetMap.find(modelUri); it != m_referencedAssetMap.end())
         {
             return it->second;
         }
