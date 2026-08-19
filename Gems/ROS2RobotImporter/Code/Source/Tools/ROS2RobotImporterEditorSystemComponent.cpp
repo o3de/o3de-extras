@@ -237,7 +237,7 @@ namespace ROS2RobotImporter
 
         const AZ::IO::Path prefabPathRelative(AZ::IO::Path("Assets") / "Importer" / prefabName);
         const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRelative);
-        ImportSession session(std::move(referencedAssetMap));
+        ImportSession session(AZStd::move(referencedAssetMap));
         AZStd::unique_ptr<SdfPrefabMaker> prefabMaker =
             AZStd::make_unique<SdfPrefabMaker>(&parsedSdfRoot, prefabPath.String(), session.GetId(), useArticulation);
 
