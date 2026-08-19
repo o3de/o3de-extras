@@ -54,9 +54,9 @@ namespace ROS2RobotImporter
                             status.append("\n\t - " + up);
                         }
                     }
-                    RobotImporterStatusRequestBus::Event(
+                    StatusAggregationRequestBus::Event(
                         m_sessionId,
-                        &RobotImporterStatusBus::OnImportStatusMessage,
+                        &StatusAggregationRequests::ReportImportStatusMessage,
                         ImportStatusMessageType::ModelPlugin,
                         AZStd::move(status));
 
@@ -66,8 +66,8 @@ namespace ROS2RobotImporter
                 {
                     const auto message = AZStd::string::format(
                         "%s (filename %s) not created: %s", plugin.Name().c_str(), plugin.Filename().c_str(), outcome.GetError().c_str());
-                    RobotImporterStatusRequestBus::Event(
-                        m_sessionId, &RobotImporterStatusBus::OnImportStatusMessage, ImportStatusMessageType::ModelPlugin, message);
+                    StatusAggregationRequestBus::Event(
+                        m_sessionId, &StatusAggregationRequests::ReportImportStatusMessage, ImportStatusMessageType::ModelPlugin, message);
                     return AZ::Failure(message);
                 }
             }
@@ -75,8 +75,8 @@ namespace ROS2RobotImporter
 
         const auto message =
             AZStd::string::format("%s (filename %s) not created: cannot find the hook", plugin.Name().c_str(), plugin.Filename().c_str());
-        RobotImporterStatusRequestBus::Event(
-            m_sessionId, &RobotImporterStatusBus::OnImportStatusMessage, ImportStatusMessageType::ModelPlugin, message);
+        StatusAggregationRequestBus::Event(
+            m_sessionId, &StatusAggregationRequests::ReportImportStatusMessage, ImportStatusMessageType::ModelPlugin, message);
         return AZ::Failure(message);
     }
 

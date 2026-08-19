@@ -12,7 +12,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/Material/PhysicsMaterialManager.h>
 #include <RobotImporter/Assets/AssetTypes.h>
-#include <RobotImporter/RobotImporterAssetsBus.h>
+#include <RobotImporter/ReferencedAssetsRequestBus.h>
 #include <sdf/Collision.hh>
 #include <sdf/Model.hh>
 

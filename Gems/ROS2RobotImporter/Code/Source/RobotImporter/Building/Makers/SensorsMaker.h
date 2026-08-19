@@ -12,7 +12,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <ROS2RobotImporter/SDFormatSensorImporterHook.h>
-#include <RobotImporter/RobotImporterStatusBus.h>
+#include <RobotImporter/StatusAggregationRequestBus.h>
 
 #include <sdf/sdf.hh>
 

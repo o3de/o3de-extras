@@ -194,17 +194,17 @@ namespace ROS2RobotImporter
                 createdEntities.emplace_back(createdModelEntityId);
                 createdModels.emplace(modelPtr, createModelEntityResult);
 
-                RobotImporterStatusRequestBus::Event(
+                StatusAggregationRequestBus::Event(
                     m_sessionId,
-                    &RobotImporterStatusBus::OnImportStatusMessage,
+                    &StatusAggregationRequests::ReportImportStatusMessage,
                     ImportStatusMessageType::Model,
                     AZStd::string::format("%s created as: %s", azModelName.c_str(), createdModelEntityId.ToString().c_str()));
             }
             else
             {
-                RobotImporterStatusRequestBus::Event(
+                StatusAggregationRequestBus::Event(
                     m_sessionId,
-                    &RobotImporterStatusBus::OnImportStatusMessage,
+                    &StatusAggregationRequests::ReportImportStatusMessage,
                     ImportStatusMessageType::Model,
                     AZStd::string::format("%s failed: %s", azModelName.c_str(), createModelEntityResult.GetError().c_str()));
             }
@@ -270,17 +270,17 @@ namespace ROS2RobotImporter
                 result.IsSuccess() ? (result.GetValue().ToString().c_str()) : ("[Failed]"));
             if (result.IsSuccess())
             {
-                RobotImporterStatusRequestBus::Event(
+                StatusAggregationRequestBus::Event(
                     m_sessionId,
-                    &RobotImporterStatusBus::OnImportStatusMessage,
+                    &StatusAggregationRequests::ReportImportStatusMessage,
                     ImportStatusMessageType::Link,
                     AZStd::string::format("%s created as: %s", azLinkName.c_str(), result.GetValue().ToString().c_str()));
             }
             else
             {
-                RobotImporterStatusRequestBus::Event(
+                StatusAggregationRequestBus::Event(
                     m_sessionId,
-                    &RobotImporterStatusBus::OnImportStatusMessage,
+                    &StatusAggregationRequests::ReportImportStatusMessage,
                     ImportStatusMessageType::Link,
                     AZStd::string::format("%s failed : %s", azLinkName.c_str(), result.GetError().c_str()));
             }
@@ -484,17 +484,17 @@ namespace ROS2RobotImporter
                     auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
                     if (result.IsSuccess())
                     {
-                        RobotImporterStatusRequestBus::Event(
+                        StatusAggregationRequestBus::Event(
                             m_sessionId,
-                            &RobotImporterStatusBus::OnImportStatusMessage,
+                            &StatusAggregationRequests::ReportImportStatusMessage,
                             ImportStatusMessageType::Joint,
                             AZStd::string::format("%s created as: %llu", azJointName.c_str(), result.GetValue()));
                     }
                     else
                     {
-                        RobotImporterStatusRequestBus::Event(
+                        StatusAggregationRequestBus::Event(
                             m_sessionId,
-                            &RobotImporterStatusBus::OnImportStatusMessage,
+                            &StatusAggregationRequests::ReportImportStatusMessage,
                             ImportStatusMessageType::Joint,
                             AZStd::string::format("%s failed : %s", azJointName.c_str(), result.GetError().c_str()));
                     }
@@ -673,19 +673,19 @@ namespace ROS2RobotImporter
                 AZStd::string azLinkName(linkName.c_str(), linkName.size());
                 if (linkResult.IsSuccess())
                 {
-                    RobotImporterStatusRequestBus::Event(
+                    StatusAggregationRequestBus::Event(
                         m_sessionId,
-                        &RobotImporterStatusBus::OnImportStatusMessage,
+                        &StatusAggregationRequests::ReportImportStatusMessage,
                         ImportStatusMessageType::Joint,
                         AZStd::string::format("%s created as articulation link: %llu", azLinkName.c_str(), linkResult.GetValue()));
 
-                    RobotImporterStatusRequestBus::Event(m_sessionId, &RobotImporterStatusBus::OnArticulatedLinkCreated);
+                    StatusAggregationRequestBus::Event(m_sessionId, &StatusAggregationRequests::ReportArticulatedLinkCreated);
                 }
                 else
                 {
-                    RobotImporterStatusRequestBus::Event(
+                    StatusAggregationRequestBus::Event(
                         m_sessionId,
-                        &RobotImporterStatusBus::OnImportStatusMessage,
+                        &StatusAggregationRequests::ReportImportStatusMessage,
                         ImportStatusMessageType::Joint,
                         AZStd::string::format("%s as articulation link failed: %s", azLinkName.c_str(), linkResult.GetError().c_str()));
                 }

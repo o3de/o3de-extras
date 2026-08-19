@@ -13,7 +13,7 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/Math/Vector3.h>
 #include <RobotImporter/Assets/AssetTypes.h>
-#include <RobotImporter/RobotImporterAssetsBus.h>
+#include <RobotImporter/ReferencedAssetsRequestBus.h>
 
 #include <sdf/sdf.hh>
 

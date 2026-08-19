@@ -113,26 +113,4 @@ namespace ROS2RobotImporter::PrefabMakerUtils
         return AZStd::string::format("%s_%s%s", rootName.c_str(), type.c_str(), suffix.c_str());
     }
 
-    AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
-        const ImportSessionId sessionId, const AZStd::string& modelUri, const AZStd::string& assetUri)
-    {
-        const AZStd::string modelAssetUri = (modelUri.empty()) ? assetUri : modelUri + "/" + assetUri;
-        AZStd::optional<Assets::ReferencedAsset> referrencedAsset;
-        RobotImporterAssetsRequestBus::EventResult(
-            referrencedAsset, sessionId, &RobotImporterAssetsBus::FindRefferencedAssets, AZ::IO::Path(modelAssetUri));
-        if (!referrencedAsset.has_value())
-        {
-            AZ_Warning("GetAssetFromUri", false, "there is no asset for mesh %s in model %s", assetUri.c_str(), modelUri.c_str());
-            return AZStd::nullopt;
-        }
-
-        return referrencedAsset.value().m_availableAssetInfo;
-    }
-
-    AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
-        const ImportSessionId sessionId, const AZStd::string& modelUri, const std::string& assetUri)
-    {
-        return GetAssetFromUri(sessionId, modelUri, AZStd::string(assetUri.c_str(), assetUri.size()));
-    }
-
 } // namespace ROS2RobotImporter::PrefabMakerUtils

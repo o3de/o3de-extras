@@ -29,8 +29,9 @@ set(FILES
     Source/RobotImporter/Pages/IntroPage.h
     Source/RobotImporter/Pages/XacroParamsPage.cpp
     Source/RobotImporter/Pages/XacroParamsPage.h
-    Source/RobotImporter/RobotImporterAssetsBus.h
-    Source/RobotImporter/RobotImporterStatusBus.h
+    Source/RobotImporter/ImportSessionId.h
+    Source/RobotImporter/ReferencedAssetsRequestBus.h
+    Source/RobotImporter/StatusAggregationRequestBus.h
     Source/RobotImporter/RobotImporterWidget.cpp
     Source/RobotImporter/RobotImporterWidget.h
     Source/RobotImporter/Queries/SdfPluginUtils.cpp

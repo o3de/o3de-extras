@@ -21,7 +21,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/Prefab/PrefabIdTypes.h>
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
-#include <RobotImporter/RobotImporterStatusBus.h>
+#include <RobotImporter/StatusAggregationRequestBus.h>
 
 namespace ROS2RobotImporter
 {

@@ -73,15 +73,15 @@ namespace ROS2RobotImporter
                     status.append("\n\t - " + up);
                 }
             }
-            RobotImporterStatusRequestBus::Event(
-                m_sessionId, &RobotImporterStatusBus::OnImportStatusMessage, ImportStatusMessageType::Sensor, AZStd::move(status));
+            StatusAggregationRequestBus::Event(
+                m_sessionId, &StatusAggregationRequests::ReportImportStatusMessage, ImportStatusMessageType::Sensor, AZStd::move(status));
         }
         else
         {
             const auto message = AZStd::string::format(
                 "%s (type %s) not created: %s", sensor->Name().c_str(), sensor->TypeStr().c_str(), sensorResult.GetError().c_str());
-            RobotImporterStatusRequestBus::Event(
-                m_sessionId, &RobotImporterStatusBus::OnImportStatusMessage, ImportStatusMessageType::Sensor, message);
+            StatusAggregationRequestBus::Event(
+                m_sessionId, &StatusAggregationRequests::ReportImportStatusMessage, ImportStatusMessageType::Sensor, message);
             return AZ::Failure(message);
         }
 
@@ -107,8 +107,8 @@ namespace ROS2RobotImporter
             }
             const auto message =
                 AZStd::string::format("%s (type %s) not created: cannot find the hook", sensor->Name().c_str(), sensor->TypeStr().c_str());
-            RobotImporterStatusRequestBus::Event(
-                m_sessionId, &RobotImporterStatusBus::OnImportStatusMessage, ImportStatusMessageType::Sensor, message);
+            StatusAggregationRequestBus::Event(
+                m_sessionId, &StatusAggregationRequests::ReportImportStatusMessage, ImportStatusMessageType::Sensor, message);
             return AZ::Failure(message);
         }
 

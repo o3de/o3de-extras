@@ -9,37 +9,27 @@
 
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/EBus/Policies.h>
+#include <AzCore/IO/Path/Path.h>
 #include <AzCore/std/string/string.h>
 #include <RobotImporter/Assets/AssetTypes.h>
+#include <RobotImporter/ImportSessionId.h>
 
 namespace ROS2RobotImporter
 {
-    using ImportSessionId = AZ::u32;
-    enum class ImportStatusMessageType
-    {
-        Model,
-        Link,
-        Joint,
-        Sensor,
-        SensorPlugin,
-        ModelPlugin
-    };
-
-    class RobotImporterStatusBus : public AZ::EBusTraits
+    class ReferencedAssetsRequests : public AZ::EBusTraits
     {
     public:
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
         using BusIdType = ImportSessionId;
 
-        virtual void OnImportStatusMessage(ImportStatusMessageType, const AZStd::string&)
-        {
-        }
-        virtual void OnArticulatedLinkCreated()
-        {
-        }
+        //! Return referenced asset from RefferencedAssetMap
+        //! @param modelUri URI of the model the asset belongs to, empty for assets outside of any model
+        //! @param assetUri unresolved URI of the asset within the model from the source file
+        virtual AZStd::optional<Assets::ReferencedAsset> FindReferencedAssets(
+            const AZStd::string& modelUri, const AZ::IO::Path& assetUri) const = 0;
     };
 
-    using RobotImporterStatusRequestBus = AZ::EBus<RobotImporterStatusBus>;
+    using ReferencedAssetsRequestBus = AZ::EBus<ReferencedAssetsRequests>;
 
 } // namespace ROS2RobotImporter

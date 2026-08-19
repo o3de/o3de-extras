@@ -20,24 +20,24 @@ namespace ROS2RobotImporter
 
     ImportSession::ImportSession(Assets::ReferencedAssetMap referencedAssetMap)
         : m_referencedAssetMap(AZStd::move(referencedAssetMap))
-        , m_Id(++s_nextSessionId)
+        , m_id(++s_nextSessionId)
     {
-        RobotImporterAssetsRequestBus::Handler::BusConnect(m_Id);
-        RobotImporterStatusRequestBus::Handler::BusConnect(m_Id);
+        ReferencedAssetsRequestBus::Handler::BusConnect(m_id);
+        StatusAggregationRequestBus::Handler::BusConnect(m_id);
     }
 
     ImportSession::~ImportSession()
     {
-        RobotImporterAssetsRequestBus::Handler::BusDisconnect();
-        RobotImporterStatusRequestBus::Handler::BusDisconnect();
+        ReferencedAssetsRequestBus::Handler::BusDisconnect();
+        StatusAggregationRequestBus::Handler::BusDisconnect();
     }
 
     ImportSessionId ImportSession::GetId() const
     {
-        return m_Id;
+        return m_id;
     }
 
-    AZStd::string ImportSession::GetStatus()
+    AZStd::string ImportSession::GetStatus() const
     {
         AZStd::string report;
         AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
@@ -79,21 +79,23 @@ namespace ROS2RobotImporter
         return report;
     }
 
-    void ImportSession::OnImportStatusMessage(ImportStatusMessageType messageType, const AZStd::string& message)
+    void ImportSession::ReportImportStatusMessage(ImportStatusMessageType messageType, const AZStd::string& message)
     {
         AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
         m_status.emplace(messageType, message);
     }
 
-    void ImportSession::OnArticulatedLinkCreated()
+    void ImportSession::ReportArticulatedLinkCreated()
     {
         AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
         m_articulationsCounter++;
     }
 
-    AZStd::optional<Assets::ReferencedAsset> ImportSession::FindRefferencedAssets(AZ::IO::Path modelUri) const
+    AZStd::optional<Assets::ReferencedAsset> ImportSession::FindReferencedAssets(
+        const AZStd::string& modelUri, const AZ::IO::Path& assetUri) const
     {
-        if (auto it = m_referencedAssetMap.find(modelUri); it != m_referencedAssetMap.end())
+        const AZ::IO::Path modelAssetKey = (modelUri.empty()) ? assetUri : AZ::IO::Path(modelUri + "/" + assetUri.String());
+        if (auto it = m_referencedAssetMap.find(modelAssetKey); it != m_referencedAssetMap.end())
         {
             return it->second;
         }
