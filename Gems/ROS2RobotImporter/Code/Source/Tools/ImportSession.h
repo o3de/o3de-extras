@@ -35,7 +35,7 @@ namespace ROS2RobotImporter
         AZStd::optional<Assets::ReferencedAsset> FindReferencedAssets(const AZ::IO::Path& modelUri) const override;
 
         const Assets::ReferencedAssetMap m_referencedAssetMap;
-        const ImportSessionId m_Id;
+        const ImportSessionId m_id;
 
         AZStd::mutex m_statusLock;
         AZStd::multimap<ImportStatusMessageType, AZStd::string> m_status;
