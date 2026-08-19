@@ -46,7 +46,7 @@ namespace ROS2RobotImporter
         constexpr unsigned int articulationsLimit = 64;
         if (m_articulationsCounter >= articulationsLimit)
         {
-            report += "\n##⚠️ Note: the number of articulations (" + AZStd::to_string(m_articulationsCounter) +
+            report += "\n## ⚠️ Note: the number of articulations (" + AZStd::to_string(m_articulationsCounter) +
                 ") might not be supported by the physics engine.\n";
         }
 
