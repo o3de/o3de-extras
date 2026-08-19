@@ -10,6 +10,7 @@
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <ROS2SensorsModuleInterface.h>
 
+#include "Camera/Compression/ROS2ImageCompressionEditorComponent.h"
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <Camera/ROS2EditorCameraSystemComponent.h>
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
@@ -29,6 +30,7 @@ namespace ROS2Sensors
                 {
                     ROS2SensorsEditorSystemComponent::CreateDescriptor(),
                     ROS2CameraSensorEditorComponent::CreateDescriptor(),
+                    ROS2ImageCompressionEditorComponent::CreateDescriptor(),
                     ROS2EditorCameraSystemComponent::CreateDescriptor(),
                     LidarRegistrarEditorSystemComponent::CreateDescriptor(),
                 });

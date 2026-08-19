@@ -8,4 +8,6 @@
 
 set(FILES
     Tests/Clients/ROS2SensorsTest.cpp
+    Tests/Clients/ImageCompressionTest.cpp
+    Tests/Clients/EncodingConversionTest.cpp
 )
