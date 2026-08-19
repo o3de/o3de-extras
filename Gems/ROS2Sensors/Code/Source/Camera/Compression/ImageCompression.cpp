@@ -347,7 +347,9 @@ namespace ROS2Sensors::ImageCompression
             sensor_msgs::msg::CompressedImage result;
             result.header = image.header;
             result.data.reserve(image.data.size() / 2);
-            if (!EncodePng(pixels, stride, image.width, image.height, colorType, bitDepth, level, &result.data))
+            // result.data is a rosidl::Buffer, not a std::vector; use CPU-backend conversion operator
+            std::vector<uint8_t>& resultData = result.data;
+            if (!EncodePng(pixels, stride, image.width, image.height, colorType, bitDepth, level, &resultData))
             {
                 return AZ::Failure(AZStd::string("PNG compression failed"));
             }
