@@ -55,7 +55,7 @@ namespace ROS2Sensors
     //! Change image format
     class ROS2ImageEncodingConversionComponent
         : public AZ::Component
-        , public CameraPostProcessingRequestBus::Handler
+        , protected CameraPostProcessingRequestBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2ImageEncodingConversionComponent, ROS2Sensors::ROS2ImageEncodingConversionComponentTypeId, AZ::Component);
