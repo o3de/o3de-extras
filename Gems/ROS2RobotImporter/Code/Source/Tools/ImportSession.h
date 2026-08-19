@@ -21,6 +21,7 @@ namespace ROS2RobotImporter
     {
     public:
         explicit ImportSession(Assets::ReferencedAssetMap referencedAssetMap);
+        CollidersMaker(const CollidersMaker& other) = delete;
         ~ImportSession();
 
         ImportSessionId GetId() const;
