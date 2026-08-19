@@ -9,7 +9,7 @@
 
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/EBus/Policies.h>
-#include <AzCore/std/string/string.h>
+#include <AzCore/IO/Path/Path.h>
 #include <RobotImporter/Assets/AssetTypes.h>
 
 namespace ROS2RobotImporter
