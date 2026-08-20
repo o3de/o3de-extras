@@ -14,6 +14,11 @@
 
 namespace ROS2RobotImporter
 {
+    RobotControlMaker::RobotControlMaker(const ImportSessionId sessionId)
+        : m_sessionId(sessionId)
+    {
+    }
+
     RobotControlMaker::ControlHookCallOutcome RobotControlMaker::AddPlugin(
         AZ::EntityId entityId, const sdf::Plugin& plugin, const sdf::Model& model, const SDFormat::CreatedEntitiesMap& createdEntities)
     {
@@ -49,7 +54,11 @@ namespace ROS2RobotImporter
                             status.append("\n\t - " + up);
                         }
                     }
-                    m_status.emplace(AZStd::move(status));
+                    StatusAggregationRequestBus::Event(
+                        m_sessionId,
+                        &StatusAggregationRequests::ReportImportStatusMessage,
+                        ImportStatusMessageType::ModelPlugin,
+                        AZStd::move(status));
 
                     return AZ::Success();
                 }
@@ -57,7 +66,8 @@ namespace ROS2RobotImporter
                 {
                     const auto message = AZStd::string::format(
                         "%s (filename %s) not created: %s", plugin.Name().c_str(), plugin.Filename().c_str(), outcome.GetError().c_str());
-                    m_status.emplace(message);
+                    StatusAggregationRequestBus::Event(
+                        m_sessionId, &StatusAggregationRequests::ReportImportStatusMessage, ImportStatusMessageType::ModelPlugin, message);
                     return AZ::Failure(message);
                 }
             }
@@ -65,7 +75,8 @@ namespace ROS2RobotImporter
 
         const auto message =
             AZStd::string::format("%s (filename %s) not created: cannot find the hook", plugin.Name().c_str(), plugin.Filename().c_str());
-        m_status.emplace(message);
+        StatusAggregationRequestBus::Event(
+            m_sessionId, &StatusAggregationRequests::ReportImportStatusMessage, ImportStatusMessageType::ModelPlugin, message);
         return AZ::Failure(message);
     }
 
@@ -78,10 +89,5 @@ namespace ROS2RobotImporter
             const auto outcome = AddPlugin(entityId, plugin, model, createdEntities);
             AZ_Warning("RobotControlMaker", outcome.IsSuccess(), outcome.GetError().c_str());
         }
-    }
-
-    const AZStd::set<AZStd::string>& RobotControlMaker::GetStatusMessages() const
-    {
-        return m_status;
     }
 } // namespace ROS2RobotImporter

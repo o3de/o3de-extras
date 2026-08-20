@@ -28,6 +28,7 @@
 #include <RobotImporter/Parsing/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <Tools/ImportSession.h>
 
 namespace ROS2RobotImporter
 {
@@ -281,11 +282,11 @@ namespace ROS2RobotImporter
 
         // Resolve all the URI references into source asset GUIDs.
         AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
-        auto assetMap = AZStd::make_shared<Assets::ReferencedAssetMap>(FindAssets(sdfRoot, request.m_fullPath));
+        ImportSession session(FindAssets(sdfRoot, request.m_fullPath));
 
         // Given the parsed source file and asset mappings, generate an in-memory prefab.
         AZ_Info(SdfAssetBuilderName, "Creating prefab from source file.");
-        auto prefabMaker = AZStd::make_unique<SdfPrefabMaker>(&sdfRoot, tempAssetOutputPath.String(), assetMap, useArticulation);
+        auto prefabMaker = AZStd::make_unique<SdfPrefabMaker>(&sdfRoot, tempAssetOutputPath.String(), session.GetId(), useArticulation);
         auto prefabResult = prefabMaker->CreatePrefabTemplateFromUrdfOrSdf();
         if (!prefabResult.IsSuccess())
         {

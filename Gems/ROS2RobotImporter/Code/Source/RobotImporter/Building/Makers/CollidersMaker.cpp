@@ -34,8 +34,8 @@ namespace ROS2RobotImporter
         static const char* CollidersMakerLoggingTag = "CollidersMaker";
     } // namespace Internal
 
-    CollidersMaker::CollidersMaker(const AZStd::shared_ptr<Assets::ReferencedAssetMap>& referencedAssetMap)
-        : m_referencedAssetMap(referencedAssetMap)
+    CollidersMaker::CollidersMaker(const ImportSessionId sessionId)
+        : m_sessionId(sessionId)
     {
     }
 
@@ -137,17 +137,29 @@ namespace ROS2RobotImporter
             auto meshGeometry = geometry->MeshShape();
             AZ_Assert(meshGeometry, "geometry is not meshGeometry");
 
-            auto asset = PrefabMakerUtils::GetAssetFromUri(*m_referencedAssetMap, modelUri, meshGeometry->Uri());
-            if (!asset)
+            AZStd::optional<Assets::ReferencedAsset> referencedAsset;
+            ReferencedAssetsRequestBus::EventResult(
+                referencedAsset,
+                m_sessionId,
+                &ReferencedAssetsRequests::FindReferencedAssets,
+                modelUri,
+                AZ::IO::Path(meshGeometry->Uri().c_str(), meshGeometry->Uri().size()));
+            if (!referencedAsset)
             {
+                AZ_Warning(
+                    Internal::CollidersMakerLoggingTag,
+                    false,
+                    "there is no asset for mesh %s in model %s",
+                    meshGeometry->Uri().c_str(),
+                    modelUri.c_str());
                 return;
             }
 
-            AZ::Data::AssetId assetId = Assets::GetPhysXMeshProductAssetId(asset->m_sourceGuid);
+            const Assets::AvailableAsset& asset = referencedAsset->m_availableAssetInfo;
+            AZ::Data::AssetId assetId = Assets::GetPhysXMeshProductAssetId(asset.m_sourceGuid);
             if (!assetId.IsValid())
             {
-                AZ_Error(
-                    Internal::CollidersMakerLoggingTag, false, "Could not find pxmodel for %s", asset->m_sourceAssetGlobalPath.c_str());
+                AZ_Error(Internal::CollidersMakerLoggingTag, false, "Could not find pxmodel for %s", asset.m_sourceAssetGlobalPath.c_str());
                 return;
             }
             AZ_Printf(

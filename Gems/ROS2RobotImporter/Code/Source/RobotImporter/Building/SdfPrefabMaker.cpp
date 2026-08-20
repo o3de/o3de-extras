@@ -12,6 +12,7 @@
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Serialization/Json/JsonUtils.h>
+#include <AzCore/std/containers/unordered_map.h>
 #include <AzFramework/Scene/SceneSystemInterface.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderInterface.h>
@@ -23,7 +24,6 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponentBus.h>
 #include <ROS2/ROS2EditorBus.h>
-#include <RobotImporter/Assets/AssetTypes.h>
 #include <RobotImporter/Building/PrefabMakerUtils.h>
 #include <RobotImporter/Queries/SdfQueries.h>
 #include <RobotImporter/Queries/SdfVisitors.h>
@@ -35,15 +35,18 @@ namespace ROS2RobotImporter
     SdfPrefabMaker::SdfPrefabMaker(
         const sdf::Root* root,
         AZStd::string prefabPath,
-        const AZStd::shared_ptr<Assets::ReferencedAssetMap> referencedAssetMap,
+        const ImportSessionId sessionId,
         bool useArticulations,
         const AZStd::optional<AZ::Transform> spawnPosition)
         : m_root(root)
-        , m_visualsMaker(referencedAssetMap)
-        , m_collidersMaker(referencedAssetMap)
+        , m_visualsMaker(sessionId)
+        , m_collidersMaker(sessionId)
+        , m_sensorsMaker(sessionId)
+        , m_controlMaker(sessionId)
         , m_prefabPath(AZStd::move(prefabPath))
         , m_spawnPosition(spawnPosition)
         , m_useArticulations(useArticulations)
+        , m_sessionId(sessionId)
     {
         AZ_Assert(!m_prefabPath.empty(), "Prefab path is empty");
         AZ_Assert(m_root, "SDF Root is nullptr");
@@ -51,12 +54,6 @@ namespace ROS2RobotImporter
 
     SdfPrefabMaker::CreatePrefabTemplateResult SdfPrefabMaker::CreatePrefabTemplateFromUrdfOrSdf()
     {
-        {
-            AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-            m_status.clear();
-            m_articulationsCounter = 0u;
-        }
-
         if (!ContainsModel())
         {
             return AZ::Failure(AZStd::string("URDF/SDF doesn't contain any models."));
@@ -197,16 +194,18 @@ namespace ROS2RobotImporter
                 createdEntities.emplace_back(createdModelEntityId);
                 createdModels.emplace(modelPtr, createModelEntityResult);
 
-                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-                m_status.emplace(
-                    StatusMessageType::Model,
+                StatusAggregationRequestBus::Event(
+                    m_sessionId,
+                    &StatusAggregationRequests::ReportImportStatusMessage,
+                    ImportStatusMessageType::Model,
                     AZStd::string::format("%s created as: %s", azModelName.c_str(), createdModelEntityId.ToString().c_str()));
             }
             else
             {
-                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-                m_status.emplace(
-                    StatusMessageType::Model,
+                StatusAggregationRequestBus::Event(
+                    m_sessionId,
+                    &StatusAggregationRequests::ReportImportStatusMessage,
+                    ImportStatusMessageType::Model,
                     AZStd::string::format("%s failed: %s", azModelName.c_str(), createModelEntityResult.GetError().c_str()));
             }
         }
@@ -269,17 +268,21 @@ namespace ROS2RobotImporter
                 "Link with name %s was created as: %s\n",
                 linkName.c_str(),
                 result.IsSuccess() ? (result.GetValue().ToString().c_str()) : ("[Failed]"));
-            AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
             if (result.IsSuccess())
             {
-                m_status.emplace(
-                    StatusMessageType::Link,
+                StatusAggregationRequestBus::Event(
+                    m_sessionId,
+                    &StatusAggregationRequests::ReportImportStatusMessage,
+                    ImportStatusMessageType::Link,
                     AZStd::string::format("%s created as: %s", azLinkName.c_str(), result.GetValue().ToString().c_str()));
             }
             else
             {
-                m_status.emplace(
-                    StatusMessageType::Link, AZStd::string::format("%s failed : %s", azLinkName.c_str(), result.GetError().c_str()));
+                StatusAggregationRequestBus::Event(
+                    m_sessionId,
+                    &StatusAggregationRequests::ReportImportStatusMessage,
+                    ImportStatusMessageType::Link,
+                    AZStd::string::format("%s failed : %s", azLinkName.c_str(), result.GetError().c_str()));
             }
         }
 
@@ -478,17 +481,21 @@ namespace ROS2RobotImporter
             {
                 if (leadEntity.IsSuccess() && childEntity.IsSuccess())
                 {
-                    AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
                     auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
                     if (result.IsSuccess())
                     {
-                        m_status.emplace(
-                            StatusMessageType::Joint, AZStd::string::format("%s created as: %llu", azJointName.c_str(), result.GetValue()));
+                        StatusAggregationRequestBus::Event(
+                            m_sessionId,
+                            &StatusAggregationRequests::ReportImportStatusMessage,
+                            ImportStatusMessageType::Joint,
+                            AZStd::string::format("%s created as: %llu", azJointName.c_str(), result.GetValue()));
                     }
                     else
                     {
-                        m_status.emplace(
-                            StatusMessageType::Joint,
+                        StatusAggregationRequestBus::Event(
+                            m_sessionId,
+                            &StatusAggregationRequests::ReportImportStatusMessage,
+                            ImportStatusMessageType::Joint,
                             AZStd::string::format("%s failed : %s", azJointName.c_str(), result.GetError().c_str()));
                     }
                 }
@@ -508,22 +515,6 @@ namespace ROS2RobotImporter
                 {
                     m_controlMaker.AddControlPlugins(*modelPtr, contentEntityId, createdLinks);
                 }
-            }
-        }
-
-        // Get the remaining log information (sensors, plugins)
-        {
-            AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-            const auto& modelPluginStatus = m_controlMaker.GetStatusMessages();
-            for (const auto& mps : modelPluginStatus)
-            {
-                m_status.emplace(StatusMessageType::ModelPlugin, mps);
-            }
-
-            const auto& sensorStatus = m_sensorsMaker.GetStatusMessages();
-            for (const auto& ss : sensorStatus)
-            {
-                m_status.emplace(StatusMessageType::Sensor, ss);
             }
         }
 
@@ -682,17 +673,20 @@ namespace ROS2RobotImporter
                 AZStd::string azLinkName(linkName.c_str(), linkName.size());
                 if (linkResult.IsSuccess())
                 {
-                    AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-                    m_status.emplace(
-                        StatusMessageType::Joint,
+                    StatusAggregationRequestBus::Event(
+                        m_sessionId,
+                        &StatusAggregationRequests::ReportImportStatusMessage,
+                        ImportStatusMessageType::Joint,
                         AZStd::string::format("%s created as articulation link: %llu", azLinkName.c_str(), linkResult.GetValue()));
-                    m_articulationsCounter++;
+
+                    StatusAggregationRequestBus::Event(m_sessionId, &StatusAggregationRequests::ReportArticulatedLinkCreated);
                 }
                 else
                 {
-                    AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-                    m_status.emplace(
-                        StatusMessageType::Joint,
+                    StatusAggregationRequestBus::Event(
+                        m_sessionId,
+                        &StatusAggregationRequests::ReportImportStatusMessage,
+                        ImportStatusMessageType::Joint,
                         AZStd::string::format("%s as articulation link failed: %s", azLinkName.c_str(), linkResult.GetError().c_str()));
                 }
             }
@@ -733,46 +727,6 @@ namespace ROS2RobotImporter
             transformInterface_->SetWorldTM(*spawnPosition);
             AZ_Trace("SdfPrefabMaker", "Successfully set spawn position\n")
         }
-    }
-
-    AZStd::string SdfPrefabMaker::GetStatus()
-    {
-        AZStd::string report;
-        AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-
-        // Print warnings first
-        constexpr unsigned int articulationsLimit = 64;
-        if (m_articulationsCounter >= articulationsLimit)
-        {
-            report += "\n## 💡 Note: the number of articulations (" + AZStd::to_string(m_articulationsCounter) +
-                ") might not be supported by the physics engine.\n";
-        }
-
-        report += "# The following components were found and parsed:\n";
-
-        const AZStd::unordered_map<StatusMessageType, AZStd::string> names = { { StatusMessageType::Model, "Models" },
-                                                                               { StatusMessageType::Link, "Links" },
-                                                                               { StatusMessageType::Joint, "Joints" },
-                                                                               { StatusMessageType::Sensor, "Sensors" },
-                                                                               { StatusMessageType::SensorPlugin, "Sensor plugins" },
-                                                                               { StatusMessageType::ModelPlugin, "Model plugins" } };
-        auto it = m_status.begin();
-        auto end = m_status.end();
-        while (it != end)
-        {
-            const auto key = it->first;
-            report += "\n## " + names.at(key) + ":\n";
-
-            do
-            {
-                report += "- " + it->second + "\n";
-                if (++it == end)
-                {
-                    break;
-                }
-            } while (it->first == key);
-        }
-        return report;
     }
 
     bool SdfPrefabMaker::ContainsModel() const
