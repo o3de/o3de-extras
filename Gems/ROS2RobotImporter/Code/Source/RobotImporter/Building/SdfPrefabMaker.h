@@ -17,14 +17,11 @@
 #include "Makers/VisualsMaker.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Transform.h>
-#include <AzCore/std/containers/map.h>
-#include <AzCore/std/smart_ptr/make_shared.h>
-#include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <AzCore/std/optional.h>
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/Prefab/PrefabIdTypes.h>
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
-#include <RobotImporter/Assets/AssetTypes.h>
-#include <optional>
+#include <RobotImporter/StatusAggregationRequestBus.h>
 
 namespace ROS2RobotImporter
 {
@@ -35,12 +32,12 @@ namespace ROS2RobotImporter
         //! Construct PrefabMaker from arguments.
         //! @param root parsed SDF root object.
         //! @param prefabPath path to the prefab which will be created as a result of import.
-        //! @param referencedAssetMap prepared mapping of SDF meshes to Assets.
+        //! @param sessionId id of current import session, allowing communication with asset and status busses.
         //! @param useArticulations allows sdfImporter to create PhysXArticulations instead of multiple rigid bodies and joints.
         SdfPrefabMaker(
             const sdf::Root* root,
             AZStd::string prefabPath,
-            const AZStd::shared_ptr<Assets::ReferencedAssetMap> sdfAssetsMapping,
+            const ImportSessionId sessionId,
             bool useArticulations = false,
             AZStd::optional<AZ::Transform> spawnPosition = AZStd::nullopt);
 
@@ -62,10 +59,6 @@ namespace ROS2RobotImporter
         //! Get path to the prefab resulting from the import.
         //! @return path to the prefab.
         const AZStd::string& GetPrefabPath() const;
-
-        //! Get descriptive status of import.
-        //! A string with the status in Markdown format.
-        AZStd::string GetStatus();
 
     private:
         AzToolsFramework::Prefab::PrefabEntityResult CreateEntityForModel(const sdf::Model& model);
@@ -89,20 +82,7 @@ namespace ROS2RobotImporter
         ArticulationsMaker m_articulationsMaker;
         RobotControlMaker m_controlMaker;
 
-        //! Type of a status message.
-        enum class StatusMessageType
-        {
-            Model = 0,
-            Link,
-            Joint,
-            Sensor,
-            SensorPlugin,
-            ModelPlugin
-        };
-        AZStd::mutex m_statusLock;
-        AZStd::multimap<StatusMessageType, AZStd::string> m_status;
-        unsigned int m_articulationsCounter{ 0u };
-
+        const ImportSessionId m_sessionId;
         bool m_useArticulations{ false };
 
         const AZStd::optional<AZ::Transform> m_spawnPosition;

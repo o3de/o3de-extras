@@ -17,6 +17,7 @@
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <RobotImporter/Assets/AssetImporter.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Building/SdfPrefabMaker.h>
 #include <RobotImporter/Parsing/SdfParser.h>
 #include <RobotImporter/RobotImporterWidget.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
@@ -24,6 +25,7 @@
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <Tools/ImportSession.h>
 
 #include <sdf/sdf.hh>
 
@@ -235,8 +237,9 @@ namespace ROS2RobotImporter
 
         const AZ::IO::Path prefabPathRelative(AZ::IO::Path("Assets") / "Importer" / prefabName);
         const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRelative);
-        AZStd::unique_ptr<SdfPrefabMaker> prefabMaker = AZStd::make_unique<SdfPrefabMaker>(
-            &parsedSdfRoot, prefabPath.String(), AZStd::make_shared<Assets::ReferencedAssetMap>(referencedAssetMap), useArticulation);
+        ImportSession session(AZStd::move(referencedAssetMap));
+        AZStd::unique_ptr<SdfPrefabMaker> prefabMaker =
+            AZStd::make_unique<SdfPrefabMaker>(&parsedSdfRoot, prefabPath.String(), session.GetId(), useArticulation);
 
         auto prefabOutcome = prefabMaker->CreatePrefabFromUrdfOrSdf();
 

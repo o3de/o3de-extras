@@ -17,8 +17,8 @@
 #include "Pages/RobotDescriptionPage.h"
 #include "Pages/XacroParamsPage.h"
 
-#include "Building/SdfPrefabMaker.h"
 #include <AzCore/Asset/AssetCommon.h>
+#include <AzCore/std/containers/set.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/parallel/thread.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
@@ -47,9 +47,6 @@
 
 namespace ROS2RobotImporter
 {
-    class RobotImporterWidget;
-    class SdfPrefabMaker;
-
     //! Handles UI for the process of robot description importing
     class RobotImporterWidget : public QWizard
     {
@@ -84,7 +81,6 @@ namespace ROS2RobotImporter
         Assets::ReferencedAssetMap m_referencedAssetMap;
 
         AZStd::shared_ptr<AZStd::thread> m_copyReferencedAssetsThread;
-        AZStd::unique_ptr<SdfPrefabMaker> m_prefabMaker;
 
         /// Xacro params
         Utils::xacro::Params m_params;

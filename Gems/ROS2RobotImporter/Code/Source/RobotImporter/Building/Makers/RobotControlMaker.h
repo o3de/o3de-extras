@@ -11,8 +11,8 @@
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Outcome/Outcome.h>
-#include <AzCore/std/containers/set.h>
 #include <ROS2RobotImporter/SDFormatModelPluginImporterHook.h>
+#include <RobotImporter/StatusAggregationRequestBus.h>
 
 #include <sdf/sdf.hh>
 
@@ -23,18 +23,18 @@ namespace ROS2RobotImporter
     class RobotControlMaker
     {
     public:
+        //! Construct the class with given session id.
+        //! @param sessionId id of current import session, allowing communication with asset and status busses.
+        RobotControlMaker(const ImportSessionId sessionId);
+
         //! Adds model control plugins and sets it accordingly based on the SDFormat description.
         //! @param model A parsed SDF model which could hold information about a model control plugin.
         //! @param entityId A non-active entity which will be affected.
         //! @param createdEntities A map of all created entities that can be used by plugins.
         void AddControlPlugins(const sdf::Model& model, AZ::EntityId entityId, const SDFormat::CreatedEntitiesMap& createdEntities);
 
-        //! Get a reference to collection of status messages (read-only)
-        //! @return A reference to set containing status messages.
-        const AZStd::set<AZStd::string>& GetStatusMessages() const;
-
     private:
-        AZStd::set<AZStd::string> m_status;
+        const ImportSessionId m_sessionId;
 
         using ControlHookCallOutcome = AZ::Outcome<void, AZStd::string>;
         ControlHookCallOutcome AddPlugin(

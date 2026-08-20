@@ -113,23 +113,4 @@ namespace ROS2RobotImporter::PrefabMakerUtils
         return AZStd::string::format("%s_%s%s", rootName.c_str(), type.c_str(), suffix.c_str());
     }
 
-    AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
-        const Assets::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const AZStd::string& assetUri)
-    {
-        const AZStd::string modelAssetUri = (modelUri.empty()) ? assetUri : modelUri + "/" + assetUri;
-        if (!referencedAssetMap.contains(modelAssetUri))
-        {
-            AZ_Warning("GetAssetFromUri", false, "there is no asset for mesh %s in model %s", assetUri.c_str(), modelUri.c_str());
-            return AZStd::nullopt;
-        }
-
-        return referencedAssetMap.at(modelAssetUri).m_availableAssetInfo;
-    }
-
-    AZStd::optional<Assets::AvailableAsset> GetAssetFromUri(
-        const Assets::ReferencedAssetMap& referencedAssetMap, const AZStd::string& modelUri, const std::string& assetUri)
-    {
-        return GetAssetFromUri(referencedAssetMap, modelUri, AZStd::string(assetUri.c_str(), assetUri.size()));
-    }
-
 } // namespace ROS2RobotImporter::PrefabMakerUtils

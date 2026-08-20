@@ -10,6 +10,7 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/Math/Uuid.h>
 #include <AzCore/Utils/Utils.h>
+#include <AzCore/std/smart_ptr/make_shared.h>
 
 #include "RobotImporterWidget.h"
 #include <QApplication>
@@ -25,6 +26,7 @@
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <Tools/ImportSession.h>
 
 namespace ROS2RobotImporter
 {
@@ -143,7 +145,7 @@ namespace ROS2RobotImporter
             }
         }
 
-        report += "\n\n# " + tr("💡Please check the modified code and/or save it using the interface below.") + "\n";
+        report += "\n\n# " + tr("⚠️ Please check the modified code and/or save it using the interface below.") + "\n";
         m_modifiedUrdfWindow->SetUrdfData(AZStd::move(parsedSdfOutcome.m_modifiedUrdfContent));
     }
 
@@ -234,7 +236,6 @@ namespace ROS2RobotImporter
                     report += "# " + tr("The URDF/SDF was parsed and opened successfully") + "\n";
                 }
                 m_parsedSdf = AZStd::move(parsedSdfOutcome.GetRoot());
-                m_prefabMaker.reset();
                 m_referencedAssetMap = Assets::GetReferencedAssetFilenames(m_parsedSdf);
                 m_assetPage->ClearAssetsList();
             }
@@ -617,17 +618,14 @@ namespace ROS2RobotImporter
 
         const auto& sdfAssetBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
         const bool useArticulation = sdfAssetBuilderSettings.m_useArticulations;
-        m_prefabMaker = AZStd::make_unique<SdfPrefabMaker>(
-            &m_parsedSdf,
-            prefabPath.String(),
-            AZStd::make_shared<Assets::ReferencedAssetMap>(m_referencedAssetMap),
-            useArticulation,
-            m_prefabMakerPage->getSelectedSpawnPoint());
+        ImportSession session(m_referencedAssetMap);
+        SdfPrefabMaker prefabMaker(
+            &m_parsedSdf, prefabPath.String(), session.GetId(), useArticulation, m_prefabMakerPage->getSelectedSpawnPoint());
 
-        auto prefabOutcome = m_prefabMaker->CreatePrefabFromUrdfOrSdf();
+        auto prefabOutcome = prefabMaker.CreatePrefabFromUrdfOrSdf();
         if (prefabOutcome.IsSuccess())
         {
-            AZStd::string status = m_prefabMaker->GetStatus();
+            AZStd::string status = session.GetStatus();
             m_prefabMakerPage->ReportProgress(status);
             m_prefabMakerPage->SetSuccess(true);
         }
@@ -635,7 +633,7 @@ namespace ROS2RobotImporter
         {
             AZStd::string status = "# Failed to create prefab\n";
             status += prefabOutcome.GetError() + "\n";
-            status += m_prefabMaker->GetStatus();
+            status += session.GetStatus();
             m_prefabMakerPage->ReportProgress(status);
             m_prefabMakerPage->SetSuccess(false);
         }

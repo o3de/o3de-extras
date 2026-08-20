@@ -6,10 +6,10 @@
  *
  */
 
-#include "RobotImporter/Building/Makers/VisualsMaker.h"
-#include "RobotImporter/Building/PrefabMakerUtils.h"
-#include "RobotImporter/Utils/TypeConversions.h"
+#include "VisualsMaker.h"
 #include <RobotImporter/Assets/AssetLookup.h>
+#include <RobotImporter/Building/PrefabMakerUtils.h>
+#include <RobotImporter/Utils/TypeConversions.h>
 
 #include <Atom/RPI.Reflect/Material/MaterialAsset.h>
 #include <AtomLyIntegration/CommonFeatures/Material/MaterialComponentBus.h>
@@ -24,9 +24,8 @@
 
 namespace ROS2RobotImporter
 {
-    VisualsMaker::VisualsMaker() = default;
-    VisualsMaker::VisualsMaker(const AZStd::shared_ptr<Assets::ReferencedAssetMap>& referencedAssetMap)
-        : m_referencedAssetMap(referencedAssetMap)
+    VisualsMaker::VisualsMaker(const ImportSessionId sessionId)
+        : m_sessionId(sessionId)
     {
     }
 
@@ -174,15 +173,21 @@ namespace ROS2RobotImporter
                 AZ_Assert(meshGeometry, "geometry is not Mesh");
                 const AZ::Vector3 scaleVector = Utils::SDFormat::TypeConversions::ConvertVector3(meshGeometry->Scale());
 
-                const auto asset =
-                    PrefabMakerUtils::GetAssetFromUri(*m_referencedAssetMap, modelUri, AZStd::string(meshGeometry->Uri().c_str()));
-                AZ_Warning("AddVisual", asset, "There is no source asset for %s.", meshGeometry->Uri().c_str());
+                AZStd::optional<Assets::ReferencedAsset> referencedAsset;
+                ReferencedAssetsRequestBus::EventResult(
+                    referencedAsset,
+                    m_sessionId,
+                    &ReferencedAssetsRequests::FindReferencedAssets,
+                    modelUri,
+                    AZ::IO::Path(meshGeometry->Uri().c_str(), meshGeometry->Uri().size()));
+                AZ_Warning("AddVisual", referencedAsset, "There is no source asset for %s.", meshGeometry->Uri().c_str());
 
-                if (asset)
+                if (referencedAsset)
                 {
-                    assetId = Assets::GetModelProductAssetId(asset->m_sourceGuid);
+                    const Assets::AvailableAsset& asset = referencedAsset->m_availableAssetInfo;
+                    assetId = Assets::GetModelProductAssetId(asset.m_sourceGuid);
                     AZ_Warning(
-                        "AddVisual", assetId.IsValid(), "There is no product asset for %s.", asset->m_sourceAssetRelativePath.c_str());
+                        "AddVisual", assetId.IsValid(), "There is no product asset for %s.", asset.m_sourceAssetRelativePath.c_str());
                 }
 
                 AddVisualAssetToEntity(entityId, assetId, scaleVector);
@@ -281,7 +286,7 @@ namespace ROS2RobotImporter
 
     static void OverrideMaterialPbrSettings(
         const sdf::Material* material,
-        const AZStd::shared_ptr<Assets::ReferencedAssetMap>& assetMapping,
+        const ImportSessionId sessionId,
         const AZStd::string& modelUri,
         AZ::Render::MaterialAssignmentMap& overrides)
     {
@@ -308,20 +313,27 @@ namespace ROS2RobotImporter
 
             for (auto& [id, materialAssignment] : overrides)
             {
-                auto GetImageAssetIdFromPath = [&assetMapping, &modelUri](const std::string& uri) -> AZ::Data::AssetId
+                auto GetImageAssetIdFromPath = [sessionId, &modelUri](const std::string& uri) -> AZ::Data::AssetId
                 {
                     AZ::Data::AssetId assetId;
-                    const auto asset = PrefabMakerUtils::GetAssetFromUri(*assetMapping, modelUri, uri);
-                    AZ_Warning("AddVisual", asset, "There is no source image asset for %s.", uri.c_str());
+                    AZStd::optional<Assets::ReferencedAsset> referencedAsset;
+                    ReferencedAssetsRequestBus::EventResult(
+                        referencedAsset,
+                        sessionId,
+                        &ReferencedAssetsRequests::FindReferencedAssets,
+                        modelUri,
+                        AZ::IO::Path(uri.c_str(), uri.size()));
+                    AZ_Warning("AddVisual", referencedAsset, "There is no source image asset for %s.", uri.c_str());
 
-                    if (asset)
+                    if (referencedAsset)
                     {
-                        assetId = Assets::GetImageProductAssetId(asset->m_sourceGuid);
+                        const Assets::AvailableAsset& asset = referencedAsset->m_availableAssetInfo;
+                        assetId = Assets::GetImageProductAssetId(asset.m_sourceGuid);
                         AZ_Warning(
                             "AddVisual",
                             assetId.IsValid(),
                             "There is no product image asset for %s.",
-                            asset->m_sourceAssetRelativePath.c_str());
+                            asset.m_sourceAssetRelativePath.c_str());
                     }
                     return assetId;
                 };
@@ -563,7 +575,7 @@ namespace ROS2RobotImporter
         // Try to override all of the various material settings based on what's contained in the <material> and <visual> elements in the
         // source file.
         OverrideScriptMaterial(material, config.m_materials);
-        OverrideMaterialPbrSettings(material, m_referencedAssetMap, modelUri, config.m_materials);
+        OverrideMaterialPbrSettings(material, m_sessionId, modelUri, config.m_materials);
         OverrideMaterialBaseColor(material, config.m_materials);
         OverrideMaterialTransparency(visual, config.m_materials);
         OverrideMaterialEmissiveSettings(material, config.m_materials);
