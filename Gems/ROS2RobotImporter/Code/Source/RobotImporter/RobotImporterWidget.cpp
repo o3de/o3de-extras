@@ -393,8 +393,10 @@ namespace ROS2RobotImporter
                 m_copyReferencedAssetsThread = AZStd::make_shared<AZStd::thread>(
                     [this, dirSuffix]()
                     {
-                        Assets::CopyAssetsStatusCallback statusCallback =
-                            [this](Assets::CopyStatus copyStatus, AZ::IO::Path unresolvedFileName, Assets::ReferencedAsset referencedAsset)
+                        Assets::CopyAssetsStatusCallback statusCallback = [this](
+                                                                              Assets::CopyStatus copyStatus,
+                                                                              const AZ::IO::Path& unresolvedFileName,
+                                                                              const Assets::ReferencedAsset& referencedAsset)
                         {
                             if (copyStatus != Assets::CopyStatus::Copying || referencedAsset.m_copyStatus == Assets::CopyStatus::Waiting)
                             {

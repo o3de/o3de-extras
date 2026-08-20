@@ -190,10 +190,9 @@ namespace ROS2RobotImporter::Assets
         // Search for suitable mappings by comparing checksum
         for (auto& unmatchedAsset : unmatchedAssets)
         {
-            auto found_source_asset = availableAssets.find(unmatchedAsset->m_resolvedFileCRC);
-            if (found_source_asset != availableAssets.end())
+            if (auto foundSourceAsset = availableAssets.find(unmatchedAsset->m_resolvedFileCRC); foundSourceAsset != availableAssets.end())
             {
-                unmatchedAsset->m_availableAssetInfo = found_source_asset->second;
+                unmatchedAsset->m_availableAssetInfo = foundSourceAsset->second;
             }
         }
     }

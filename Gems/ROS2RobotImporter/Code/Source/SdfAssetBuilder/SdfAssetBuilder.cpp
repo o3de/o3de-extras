@@ -115,7 +115,7 @@ namespace ROS2RobotImporter
                 AZ_Warning(SdfAssetBuilderName, false, "Cannot find source asset info for '%s', skipping.", asset.m_resolvedPath.c_str());
                 continue;
             }
-            asset.m_availableAssetInfo = assetInfo;
+            asset.m_availableAssetInfo = AZStd::move(assetInfo);
 
             AZ_Info(
                 SdfAssetBuilderName,

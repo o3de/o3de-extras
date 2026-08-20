@@ -21,7 +21,8 @@ namespace ROS2RobotImporter
 namespace ROS2RobotImporter::Assets
 {
 
-    using CopyAssetsStatusCallback = AZStd::function<void(Assets::CopyStatus copyStatus, AZ::IO::Path filename, ReferencedAsset asset)>;
+    using CopyAssetsStatusCallback =
+        AZStd::function<void(Assets::CopyStatus copyStatus, const AZ::IO::Path& filename, const ReferencedAsset& asset)>;
 
     //! Copies and prepares assets that are referenced in SDF/URDF.
     //! It resolves every asset, creates a directory in Project's Asset directory, copies files, and prepares assets info.
