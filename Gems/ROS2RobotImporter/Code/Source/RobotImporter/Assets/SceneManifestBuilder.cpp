@@ -8,7 +8,6 @@
 
 #include "SceneManifestBuilder.h"
 #include <AzCore/Settings/SettingsRegistry.h>
-#include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 #include <RobotImporter/Assets/AssetLookup.h>
 #include <SceneAPI/SceneCore/Containers/Scene.h>
 #include <SceneAPI/SceneCore/Events/AssetImportRequest.h>

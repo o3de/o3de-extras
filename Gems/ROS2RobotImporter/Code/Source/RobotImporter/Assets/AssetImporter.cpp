@@ -25,7 +25,7 @@ namespace ROS2RobotImporter::Assets
     {
         if (referencedAssetMap.empty())
         {
-            return false;
+            return true;
         }
 
         auto destDirectory = PrepareImportedAssetsDest(sourceFilePath, outputDirSuffix, fileIO);

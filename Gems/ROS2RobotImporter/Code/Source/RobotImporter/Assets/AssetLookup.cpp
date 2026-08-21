@@ -218,16 +218,31 @@ namespace ROS2RobotImporter::Assets
         }
 
         const auto fullSourcePath = AZ::IO::Path(watchFolder) / AZ::IO::Path(assetInfo.m_relativePath);
+
+        // Due to the fact that the source name is stored by the asset processor as case-insensitive text,
+        // collisions may occur in the case of files whose path differs only in letter case.
+        const AZ::Crc32 requestedFileCRC = Assets::GetFileCRC(globalSourceAssetPath);
+        const AZ::Crc32 foundFileCRC = Assets::GetFileCRC(fullSourcePath);
+        if (requestedFileCRC != foundFileCRC)
+        {
+            AZ_Warning(
+                "GetAvailableAssetInfo",
+                false,
+                "Source asset found by the Asset Processor for '%s' does not match by content ('%s'), skipping.",
+                globalSourceAssetPath.c_str(),
+                fullSourcePath.c_str());
+            return foundAsset;
+        }
+
+        if (foundFileCRC == AZ::Crc32(0))
+        {
+            AZ_Warning("GetAvailableAssetInfo", false, "Zero CRC for source asset %s", fullSourcePath.c_str());
+            return foundAsset;
+        }
+
         foundAsset.m_sourceAssetRelativePath = assetInfo.m_relativePath;
         foundAsset.m_sourceAssetGlobalPath = fullSourcePath.String();
         foundAsset.m_sourceGuid = assetInfo.m_assetId.m_guid;
-
-        AZ::Crc32 crc = Assets::GetFileCRC(foundAsset.m_sourceAssetGlobalPath);
-        if (crc == AZ::Crc32(0))
-        {
-            AZ_Warning("GetInterestingSourceAssetsCRC", false, "Zero CRC for source asset %s", foundAsset.m_sourceAssetGlobalPath.c_str());
-            return foundAsset;
-        }
 
         return foundAsset;
     }
