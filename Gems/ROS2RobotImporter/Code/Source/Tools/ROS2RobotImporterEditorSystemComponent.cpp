@@ -157,10 +157,7 @@ namespace ROS2RobotImporter
         {
             Assets::ResolveAssetMap(referencedAssetMap, filePath, sdfBuilderSettings);
             bool copyResultOk = Assets::CopyReferencedAssets(referencedAssetMap, filePath);
-            if (!copyResultOk)
-            {
-                AZ_Warning("ROS2RobotImporterEditorSystemComponent", false, "Copying assets failed");
-            }
+            AZ_Warning("ROS2RobotImporterEditorSystemComponent", copyResultOk, "Copying assets failed");
         }
         bool allAssetProcessed = false;
         bool assetProcessorFailed = false;
