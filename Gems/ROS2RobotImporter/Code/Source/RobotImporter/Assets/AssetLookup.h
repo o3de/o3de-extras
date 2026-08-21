@@ -33,7 +33,7 @@ namespace ROS2RobotImporter::Assets
     //! Discover an association between meshes in input SDF/URDF and O3DE source and product assets.
     //! Requires the resolved paths to be filled in beforehand by `ResolveAssetMap`.
     //! Steps:
-    //! - Assets resolved to a path inside an Asset Processor scan folder are looked up by that path `LookupSourceAssetByPath`.
+    //! - Assets resolved to a path inside an Asset Processor scan folder are looked up by that path `GetAvailableAssetInfo`.
     //! - Files pointed by the remaining resolved paths have their checksum computed `GetFileCRC`.
     //! - Suitable mapping to the O3DE asset is found by comparing the checksum of the file pointed by the resolved path and source asset
     //! @param referencedAssetMap - list of the assets from the SDF/URDF file that are to be found as O3DE assets
