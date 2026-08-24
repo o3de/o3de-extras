@@ -92,17 +92,11 @@ namespace ROS2RobotImporter
         Assets::ReferencedAssetMap allReferencedAssets = Assets::GetReferencedAssetFilenames(root);
         Assets::ReferencedAssetMap existingReferencedAssets;
 
-        using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
+        // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
+        Assets::ResolveAssetMap(allReferencedAssets, AZ::IO::Path(sourceFilename), m_globalSettings);
 
-        auto amentPrefixPath = Assets::GetAmentPrefixPath();
-
-        for (const auto& [unresolvedUri, assetReferenceType] : allReferencedAssets)
+        for (auto& [unresolvedUri, asset] : allReferencedAssets)
         {
-            Assets::ReferencedAsset asset;
-
-            // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
-            asset.m_resolvedPath =
-                Assets::ResolveAssetPath(unresolvedUri, AZ::IO::PathView(sourceFilename), amentPrefixPath, m_globalSettings);
             if (asset.m_resolvedPath.empty())
             {
                 AZ_Warning(
@@ -113,51 +107,22 @@ namespace ROS2RobotImporter
                 continue;
             }
 
-            // Get a checksum on the resolved file that we'll use to ensure we've matched with the correct relative
-            // source asset. Ideally we'll be able to remove this check since it's not a very robust safety check and
-            // adds some amount of overhead to the processing.
-            asset.m_resolvedFileCRC = Assets::GetFileCRC(asset.m_resolvedPath);
-
-            // Given the absolute path to the asset, try to get the source asset info from the AssetProcessor.
-            bool sourceAssetFound{ false };
-            AZ::Data::AssetInfo assetInfo;
-            AZStd::string watchFolder;
-            AssetSysReqBus::BroadcastResult(
-                sourceAssetFound, &AssetSysReqBus::Events::GetSourceInfoBySourcePath, asset.m_resolvedPath.c_str(), assetInfo, watchFolder);
-
-            if (!sourceAssetFound)
+            // If the source asset has been found by the Asset Processor, save the mapping between raw uri
+            // reference and Asset Processor source asset information.
+            auto assetInfo = Assets::GetAvailableAssetInfo(asset.m_resolvedPath);
+            if (assetInfo.m_sourceGuid.IsNull())
             {
                 AZ_Warning(SdfAssetBuilderName, false, "Cannot find source asset info for '%s', skipping.", asset.m_resolvedPath.c_str());
                 continue;
             }
+            asset.m_availableAssetInfo = AZStd::move(assetInfo);
 
-            // If the source asset has been found by the Asset Processor, save the mapping between raw uri
-            // reference and Asset Processor source asset information.
-            const auto fullSourcePath = AZ::IO::Path(watchFolder) / AZ::IO::Path(assetInfo.m_relativePath);
-            asset.m_availableAssetInfo.m_sourceAssetRelativePath = assetInfo.m_relativePath;
-            asset.m_availableAssetInfo.m_sourceAssetGlobalPath = fullSourcePath.String();
-            asset.m_availableAssetInfo.m_sourceGuid = assetInfo.m_assetId.m_guid;
-
-            // We should determine if this CRC check is actually necessary for resolving URI references.
-            // Ideally, the additional overhead should be removed and the asset reference result should be trusted.
-            AZ::Crc32 crc = Assets::GetFileCRC(asset.m_availableAssetInfo.m_sourceAssetGlobalPath);
-            if (crc == asset.m_resolvedFileCRC)
-            {
-                AZ_Info(
-                    SdfAssetBuilderName,
-                    "Resolved uri '%s' to source asset '%s'.",
-                    unresolvedUri.c_str(),
-                    assetInfo.m_relativePath.c_str());
-                existingReferencedAssets.emplace(unresolvedUri, AZStd::move(asset));
-            }
-            else
-            {
-                AZ_Warning(
-                    SdfAssetBuilderName,
-                    false,
-                    "Resolved to source asset '%s' which has incorrect CRC, skipping.",
-                    assetInfo.m_relativePath.c_str());
-            }
+            AZ_Info(
+                SdfAssetBuilderName,
+                "Resolved uri '%s' to source asset '%s'.",
+                unresolvedUri.c_str(),
+                asset.m_availableAssetInfo.m_sourceAssetRelativePath.c_str());
+            existingReferencedAssets.emplace(unresolvedUri, AZStd::move(asset));
         }
 
         return existingReferencedAssets;

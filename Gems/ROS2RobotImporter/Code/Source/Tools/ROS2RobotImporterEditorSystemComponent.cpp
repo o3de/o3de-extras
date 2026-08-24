@@ -16,6 +16,7 @@
 #include <AzToolsFramework/API/ViewPaneOptions.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <RobotImporter/Assets/AssetImporter.h>
+#include <RobotImporter/Assets/AssetLookup.h>
 #include <RobotImporter/Assets/AssetPathResolver.h>
 #include <RobotImporter/Building/SdfPrefabMaker.h>
 #include <RobotImporter/Parsing/SdfParser.h>
@@ -154,7 +155,9 @@ namespace ROS2RobotImporter
         auto referencedAssetMap = Assets::GetReferencedAssetFilenames(parsedSdfRoot);
         if (importAssetWithFile)
         {
-            Assets::CopyReferencedAssetsAndCreateAssetMap(referencedAssetMap, filePath, sdfBuilderSettings);
+            Assets::ResolveAssetMap(referencedAssetMap, filePath, sdfBuilderSettings);
+            bool copyResultOk = Assets::CopyReferencedAssets(referencedAssetMap, filePath);
+            AZ_Warning("ROS2RobotImporterEditorSystemComponent", copyResultOk, "Copying assets failed");
         }
         bool allAssetProcessed = false;
         bool assetProcessorFailed = false;

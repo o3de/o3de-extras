@@ -20,18 +20,21 @@ namespace ROS2RobotImporter
 
 namespace ROS2RobotImporter::Assets
 {
+
+    using CopyAssetsStatusCallback =
+        AZStd::function<void(Assets::CopyStatus copyStatus, const AZ::IO::Path& filename, const ReferencedAsset& asset)>;
+
     //! Copies and prepares assets that are referenced in SDF/URDF.
     //! It resolves every asset, creates a directory in Project's Asset directory, copies files, and prepares assets info.
     //! Finally, it assembles its results into mapping that allows mapping the SDF/URDF mesh name to the source asset.
     //! @param referencedAssetMap - files to copy (as unresolved URIs)
     //! @param sourceFilePath - path to the SDF/URDF file (as a global path)
-    //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
     //! @param outputDirSuffix - suffix to make output directory unique, if xacro file was used
     //! @param fileIO - instance to fileIO class
-    void CopyReferencedAssetsAndCreateAssetMap(
+    bool CopyReferencedAssets(
         ReferencedAssetMap& referencedAssetMap,
         const AZ::IO::Path& sourceFilePath,
-        const SdfAssetBuilderSettings& sdfBuilderSettings,
+        CopyAssetsStatusCallback statusCallback = {},
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
