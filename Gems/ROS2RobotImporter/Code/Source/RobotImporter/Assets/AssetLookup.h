@@ -31,15 +31,13 @@ namespace ROS2RobotImporter::Assets
     AZStd::unordered_map<AZ::Crc32, AvailableAsset> GetInterestingSourceAssetsCRC();
 
     //! Discover an association between meshes in input SDF/URDF and O3DE source and product assets.
+    //! Requires the resolved paths to be filled in beforehand by `ResolveAssetMap`.
     //! Steps:
-    //! - Function scans all available O3DE assets by calling `GetInterestingSourceAssetsCRC`.
-    //! - Files pointed by resolved paths have their checksum computed `GetFileCRC`.
-    //! - Suitable mapping to the O3DE asset is found by comparing the checksum of the file pointed by the resolved path and source asset.
-    //! @param unresolvedAssetMap - list of the unresolved paths from the SDF/URDF file that are to be found as assets
-    //! @param sourceFilePath - path of the SDF/URDF file, used for resolving paths of referenced assets
-    //! @param sdfBuilderSettings - the builder settings that should be used to resolve paths
-    void FindReferencedAssets(
-        ReferencedAssetMap& unresolvedAssetMap, const AZ::IO::Path& sourceFilePath, const SdfAssetBuilderSettings& sdfBuilderSettings);
+    //! - Assets resolved to a path inside an Asset Processor scan folder are looked up by that path `GetAvailableAssetInfo`.
+    //! - Files pointed by the remaining resolved paths have their checksum computed `GetFileCRC`.
+    //! - Suitable mapping to the O3DE asset is found by comparing the checksum of the file pointed by the resolved path and source asset
+    //! @param referencedAssetMap - list of the assets from the SDF/URDF file that are to be found as O3DE assets
+    void FindReferencedAssets(ReferencedAssetMap& referencedAssetMap);
 
     //! Creates a mapping from unresolved URIs to source asset info.
     //! @param unresolvedAssetMap - list of assets discovered in the input SDF/URDF file
@@ -78,5 +76,10 @@ namespace ROS2RobotImporter::Assets
     //! @param sourceMeshAssetPath - global path to source asset used to find scene
     //! @returns list of file paths referenced in the scene
     AZStd::unordered_set<AZ::IO::Path> GetMeshTextureAssets(const AZ::IO::Path& sourceMeshAssetPath);
+
+    //! Retrieves the O3DE source asset info for an already existing source asset.
+    //! @param globalSourceAssetPath - global path to the source asset
+    //! @returns found asset info, or a default constructed one when the source asset is not known to the Asset Processor
+    AvailableAsset GetAvailableAssetInfo(const AZ::IO::Path& sourceAssetGlobalPath);
 
 } // namespace ROS2RobotImporter::Assets

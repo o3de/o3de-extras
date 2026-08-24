@@ -345,7 +345,7 @@ namespace ROS2RobotImporter
             Assets::ResolveAssetMap(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
             if (!m_copyReferencedAssets)
             {
-                Assets::FindReferencedAssets(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
+                Assets::FindReferencedAssets(m_referencedAssetMap);
                 for (const auto& [_, asset] : m_referencedAssetMap)
                 {
                     const bool visual =
@@ -393,55 +393,35 @@ namespace ROS2RobotImporter
                 m_copyReferencedAssetsThread = AZStd::make_shared<AZStd::thread>(
                     [this, dirSuffix]()
                     {
-                        auto destStatus = Assets::PrepareImportedAssetsDest(m_sourceFilePath.String(), dirSuffix);
-                        if (!destStatus.IsSuccess())
+                        Assets::CopyAssetsStatusCallback statusCallback = [this](
+                                                                              Assets::CopyStatus copyStatus,
+                                                                              const AZ::IO::Path& unresolvedFileName,
+                                                                              const Assets::ReferencedAsset& referencedAsset)
                         {
-                            AZ_Error("RobotImporterWidget", false, "Failed to create destination folder for imported assets");
-                            QWizard::button(QWizard::NextButton)->setDisabled(false);
-                            return;
-                        }
-                        AZStd::unordered_map<AZ::IO::Path, unsigned int> duplicatedFilenames;
-                        for (auto& [unresolvedFileName, referencedAsset] : m_referencedAssetMap)
-                        {
-                            if (duplicatedFilenames.contains(referencedAsset.m_assetUri))
-                            {
-                                duplicatedFilenames[referencedAsset.m_assetUri]++;
-                            }
-                            else
-                            {
-                                duplicatedFilenames[referencedAsset.m_assetUri] = 0;
-                            }
-                            if (referencedAsset.m_copyStatus == Assets::CopyStatus::Waiting)
+                            if (copyStatus != Assets::CopyStatus::Copying || referencedAsset.m_copyStatus == Assets::CopyStatus::Waiting)
                             {
                                 m_assetPage->OnAssetCopyStatusChanged(
-                                    Assets::CopyStatus::Copying, AZStd::string(unresolvedFileName.c_str()), "");
+                                    copyStatus,
+                                    AZStd::string(unresolvedFileName.c_str()),
+                                    AZStd::string(referencedAsset.m_availableAssetInfo.m_sourceAssetRelativePath.c_str()));
                             }
-
-                            auto copyStatus = Assets::CopyStatus::Unresolvable;
-                            if (referencedAsset.m_resolvedPath.empty())
-                            {
-                                AZ_Warning("CopyReferencedAsset", false, "There is no resolved path for %s", unresolvedFileName.c_str());
-                            }
-                            else
-                            {
-                                copyStatus = Assets::CopyReferencedAsset(
-                                    destStatus.GetValue(), referencedAsset, duplicatedFilenames[referencedAsset.m_assetUri]);
-                            }
-
-                            m_assetPage->OnAssetCopyStatusChanged(
-                                copyStatus,
-                                AZStd::string(unresolvedFileName.c_str()),
-                                AZStd::string(referencedAsset.m_availableAssetInfo.m_sourceAssetRelativePath.c_str()));
-
                             if (copyStatus == Assets::CopyStatus::Copied || copyStatus == Assets::CopyStatus::Exists)
                             {
                                 m_toProcessAssets.insert(unresolvedFileName);
                             }
+                            if (copyStatus != Assets::CopyStatus::Copying)
+                            {
+                                // Check all assets that are ready to be processed
+                                CheckToProcessAssets();
+                            }
+                        };
+                        bool copyResultOk = Assets::CopyReferencedAssets(m_referencedAssetMap, m_sourceFilePath.String(), statusCallback);
 
-                            // Check all assets that are ready to be processed
-                            CheckToProcessAssets();
+                        if (!copyResultOk)
+                        {
+                            QWizard::button(QWizard::NextButton)->setDisabled(false);
+                            return;
                         }
-                        Assets::RemoveTmpDir(destStatus.GetValue().importDirectoryTmp);
 
                         if (!m_toProcessAssets.empty())
                         {

@@ -8,7 +8,6 @@
 
 #include "SceneManifestBuilder.h"
 #include <AzCore/Settings/SettingsRegistry.h>
-#include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 #include <RobotImporter/Assets/AssetLookup.h>
 #include <SceneAPI/SceneCore/Containers/Scene.h>
 #include <SceneAPI/SceneCore/Events/AssetImportRequest.h>
@@ -35,44 +34,6 @@ namespace ROS2RobotImporter::Assets
             m_exportMethod = method;
         }
     };
-
-    AvailableAsset GetAvailableAssetInfo(const AZStd::string& globalSourceAssetPath)
-    {
-        using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
-        AvailableAsset foundAsset;
-
-        // get source asset info
-        bool sourceAssetFound{ false };
-        AZ::Data::AssetInfo assetInfo;
-        AZStd::string watchFolder;
-        AssetSysReqBus::BroadcastResult(
-            sourceAssetFound, &AssetSysReqBus::Events::GetSourceInfoBySourcePath, globalSourceAssetPath.c_str(), assetInfo, watchFolder);
-        if (!sourceAssetFound)
-        {
-            AZ_Trace("GetAvailableAssetInfo", "Source asset info not found for: %s", globalSourceAssetPath.c_str());
-            return foundAsset;
-        }
-
-        foundAsset.m_sourceGuid = assetInfo.m_assetId.m_guid;
-
-        foundAsset.m_sourceAssetRelativePath = assetInfo.m_relativePath;
-        foundAsset.m_sourceAssetGlobalPath = globalSourceAssetPath;
-
-        AZ::Crc32 crc = Assets::GetFileCRC(foundAsset.m_sourceAssetGlobalPath);
-        if (crc == AZ::Crc32(0))
-        {
-            AZ_Warning("GetInterestingSourceAssetsCRC", false, "Zero CRC for source asset %s", foundAsset.m_sourceAssetGlobalPath.c_str());
-            return foundAsset;
-        }
-
-        AZ_Printf("GetAvailableAssetInfo", "Found asset:");
-        AZ_Printf("GetAvailableAssetInfo", "\tm_sourceAssetRelativePath  : %s", foundAsset.m_sourceAssetRelativePath.c_str());
-        AZ_Printf("GetAvailableAssetInfo", "\tm_sourceAssetGlobalPath    : %s", foundAsset.m_sourceAssetGlobalPath.c_str());
-        AZ_Printf("GetAvailableAssetInfo", "\tm_productAssetRelativePath : %s", foundAsset.m_productAssetRelativePath.c_str());
-        AZ_Printf("GetAvailableAssetInfo", "\tm_sourceGuid               : %s", foundAsset.m_sourceGuid.ToString<AZStd::string>().c_str());
-
-        return foundAsset;
-    }
 
     bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, const bool collider, const bool visual)
     {
