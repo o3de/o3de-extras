@@ -143,7 +143,7 @@ namespace ROS2RobotImporter
                 m_sessionId,
                 &ReferencedAssetsRequests::FindReferencedAssets,
                 modelUri,
-                AZ::IO::Path(meshGeometry->Uri().c_str(), meshGeometry->Uri().size()));
+                AZ::IO::Path(meshGeometry->Uri().c_str()));
             if (!referencedAsset)
             {
                 AZ_Warning(

@@ -179,7 +179,7 @@ namespace ROS2RobotImporter
                     m_sessionId,
                     &ReferencedAssetsRequests::FindReferencedAssets,
                     modelUri,
-                    AZ::IO::Path(meshGeometry->Uri().c_str(), meshGeometry->Uri().size()));
+                    AZ::IO::Path(meshGeometry->Uri().c_str()));
                 AZ_Warning("AddVisual", referencedAsset, "There is no source asset for %s.", meshGeometry->Uri().c_str());
 
                 if (referencedAsset)
@@ -322,7 +322,7 @@ namespace ROS2RobotImporter
                         sessionId,
                         &ReferencedAssetsRequests::FindReferencedAssets,
                         modelUri,
-                        AZ::IO::Path(uri.c_str(), uri.size()));
+                        AZ::IO::Path(uri.c_str()));
                     AZ_Warning("AddVisual", referencedAsset, "There is no source image asset for %s.", uri.c_str());
 
                     if (referencedAsset)

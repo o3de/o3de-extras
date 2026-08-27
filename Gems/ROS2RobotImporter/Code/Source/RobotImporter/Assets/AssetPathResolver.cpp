@@ -38,7 +38,7 @@ namespace ROS2RobotImporter::Assets
                 {
                     if (auto mesh = geometry->MeshShape(); mesh)
                     {
-                        const AZ::IO::Path assetUri(mesh->Uri().c_str(), mesh->Uri().size());
+                        const AZ::IO::Path assetUri(mesh->Uri().c_str());
                         const AZStd::string modelAssetUri = (modelUri.empty()) ? assetUri.String() : modelUri + "/" + assetUri.String();
                         if (referencedAssetMap.contains(modelAssetUri))
                         {
@@ -81,7 +81,7 @@ namespace ROS2RobotImporter::Assets
                         ReferencedAsset asset;
                         asset.m_assetType = ReferencedAssetType::Texture;
                         asset.m_modelUri = modelUri;
-                        asset.m_assetUri = AZ::IO::Path(texturePath.data(), texturePath.size());
+                        asset.m_assetUri = AZ::IO::Path(texturePath.c_str());
 
                         const AZStd::string modelAssetUri =
                             (modelUri.empty()) ? asset.m_assetUri.String() : modelUri + "/" + asset.m_assetUri.String();
