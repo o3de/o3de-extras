@@ -8,6 +8,7 @@
 
 #include "SdfParser.h"
 
+#include <sdformat.hh>
 #include <sstream>
 
 #include <AzCore/Debug/Trace.h>
@@ -53,10 +54,12 @@ namespace ROS2RobotImporter::SdfParser
     {
         return m_root;
     }
+
     const sdf::Root& ParseResult::GetRoot() const&
     {
         return m_root;
     }
+
     sdf::Root&& ParseResult::GetRoot() &&
     {
         return AZStd::move(m_root);
@@ -97,6 +100,7 @@ namespace ROS2RobotImporter::SdfParser
     {
         return Parse(std::string(xmlString.data(), xmlString.size()), parserConfig);
     }
+
     RootObjectOutcome Parse(const std::string& xmlString, const sdf::ParserConfig& parserConfig)
     {
         ParseResult parseResult;
