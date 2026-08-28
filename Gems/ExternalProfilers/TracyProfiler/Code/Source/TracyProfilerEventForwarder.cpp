@@ -18,7 +18,7 @@ namespace TracyProfiler
     void TracyProfilerEventForwarder::Init()
     {
         AZ::Interface<AZ::Debug::Profiler>::Register(this);
-        AZ::TickBus::Handler::BusConnect();
+        AZ::RHI::RHISystemNotificationBus::Handler::BusConnect();
         m_initialized = true;
     }
 
@@ -34,8 +34,8 @@ namespace TracyProfiler
 
         // Wait for the remaining threads that might still be processing its profiling calls
         AZStd::unique_lock<AZStd::shared_mutex> shutdownLock(m_shutdownMutex);
-
-        AZ::TickBus::Handler::BusDisconnect();
+        AZ::RHI::FrameEventBus::Handler::BusDisconnect();
+        AZ::RHI::RHISystemNotificationBus::Handler::BusDisconnect();
     }
 
     void TracyProfilerEventForwarder::BeginRegion(const AZ::Debug::Budget* budget, const char* eventName, ...)
@@ -69,15 +69,15 @@ namespace TracyProfiler
         }
     }
 
-    int TracyProfilerEventForwarder::GetTickOrder()
+    void TracyProfilerEventForwarder::OnFrameEnd()
     {
-        return AZ::ComponentTickBus::TICK_LAST;
+        TracyCFrameMark;
     }
 
-    void TracyProfilerEventForwarder::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint timePoint)
+    void TracyProfilerEventForwarder::OnRHISystemInitialized()
     {
-        // From Tracy documentation about FrameMark : "Ideally, that would be right after the swap buffers command"
-        TracyCFrameMark;
+        AZ::RHI::Device* device = AZ::RHI::RHISystemInterface::Get()->GetDevice(AZ::RHI::MultiDevice::DefaultDeviceIndex);
+        AZ::RHI::FrameEventBus::Handler::BusConnect(device);
     }
 
 } // namespace TracyProfiler
