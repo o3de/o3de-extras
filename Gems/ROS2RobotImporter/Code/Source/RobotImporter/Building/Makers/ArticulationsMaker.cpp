@@ -110,6 +110,16 @@ namespace ROS2RobotImporter
             AZ_Warning(
                 "AddArticulationLink", false, "Ignoring URDF/SDF inertial origin rotation (no such field in rigid body configuration)");
         }
+
+        // Inertia tensor is symmetrical
+        auto moi = inertial.Moi();
+        auto inertiaMatrix = AZ::Matrix3x3::CreateFromRows(
+            AZ::Vector3(moi(0, 0), moi(0, 1), moi(0, 2)),
+            AZ::Vector3(moi(0, 1), moi(1, 1), moi(1, 2)),
+            AZ::Vector3(moi(0, 2), moi(1, 2), moi(2, 2)));
+        articulationLinkConfiguration.m_inertiaTensor = inertiaMatrix;
+        articulationLinkConfiguration.m_computeInertiaTensor = false;
+
         return articulationLinkConfiguration;
     }
 
