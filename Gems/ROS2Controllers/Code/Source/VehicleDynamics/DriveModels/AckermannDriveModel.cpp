@@ -88,8 +88,10 @@ namespace ROS2Controllers::VehicleDynamics
                 steeringEntity,
                 [&](PhysX::ArticulationJointRequests* joint)
                 {
-                    double currentSteeringAngle = joint->GetJointPosition(wheelData.m_axis);
-                    const double pidCommand = m_steeringPid.ComputeCommand(scaledSteering - currentSteeringAngle, deltaTimeNs);
+                    const double currentSteeringAngle = joint->GetJointPosition(wheelData.m_axis);
+                    const double currentSteeringVelocity = joint->GetJointVelocity(wheelData.m_axis);
+                    const double pidCommand = m_steeringPid.ComputeCommandWithMeasuredRate(
+                        scaledSteering - currentSteeringAngle, currentSteeringVelocity, deltaTimeNs);
                     joint->SetDriveTargetVelocity(wheelData.m_axis, pidCommand);
                 });
         }
@@ -99,8 +101,10 @@ namespace ROS2Controllers::VehicleDynamics
                 id,
                 [&](PhysX::JointRequests* joint)
                 {
-                    double currentSteeringAngle = joint->GetPosition();
-                    const double pidCommand = m_steeringPid.ComputeCommand(scaledSteering - currentSteeringAngle, deltaTimeNs);
+                    const double currentSteeringAngle = joint->GetPosition();
+                    const double currentSteeringVelocity = joint->GetVelocity();
+                    const double pidCommand = m_steeringPid.ComputeCommandWithMeasuredRate(
+                        scaledSteering - currentSteeringAngle, currentSteeringVelocity, deltaTimeNs);
                     joint->SetVelocity(pidCommand);
                 });
         }
