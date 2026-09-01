@@ -24,6 +24,9 @@ concurrency:
   group: simulation-gems-pr-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 env:
   GIT_LFS_SKIP_SMUDGE: "1"
 
@@ -42,7 +45,7 @@ jobs:
     steps:
       # base_ref names the matching engine branch; empty on manual workflow_dispatch runs.
       - name: Checkout engine ar.yml (${{ github.base_ref || inputs.engine_ref }})
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: o3de/o3de
           ref: ${{ github.base_ref || inputs.engine_ref }}
@@ -69,10 +72,34 @@ jobs:
               "ubuntu-26.04": "lyrical",
           }
 
-          with open(".github/workflows/ar.yml") as f:
-              job = yaml.safe_load(f)["jobs"]["Linux-Profile"]["with"]
+          try:
+              with open(".github/workflows/ar.yml") as f:
+                  ar_yml = yaml.safe_load(f)
+              job = ar_yml["jobs"]["Linux-Profile"]["with"]
+          except FileNotFoundError:
+              sys.exit(
+                  "::error::engine/.github/workflows/ar.yml not found. "
+                  "Unable to resolve the engine config."
+              )
+          except KeyError:
+              sys.exit(
+                  "::error::jobs.Linux-Profile.with not found in ar.yml. "
+                  "The engine's ar.yml layout may have changed - update the "
+                  "parsing logic in this workflow to match."
+              )
 
-          image = job["image"]
+          try:
+              image = job["image"]
+              clang_version = job["clang_version"]
+              gcc_version = job["gcc_version"]
+              cmake_version = job["cmake_version"]
+          except KeyError as e:
+              sys.exit(
+                  f"::error::jobs.Linux-Profile.with.{e.args[0]} not found in ar.yml. "
+                  "The engine's ar.yml layout may have changed - update the "
+                  "parsing logic in this workflow to match."
+              )
+
           ros_distro = ROS_DISTRO_BY_IMAGE.get(image)
           if ros_distro is None:
               sys.exit(
@@ -81,9 +108,9 @@ jobs:
               )
 
           print(f"image={image}")
-          print(f"clang_version={job['clang_version']}")
-          print(f"gcc_version={job['gcc_version']}")
-          print(f"cmake_version={job['cmake_version']}")
+          print(f"clang_version={clang_version}")
+          print(f"gcc_version={gcc_version}")
+          print(f"cmake_version={cmake_version}")
           print(f"ros_distro={ros_distro}")
           PY
 
@@ -98,7 +125,7 @@ jobs:
       ROS_DISTRO: ${{ needs.resolve-engine-config.outputs.ros_distro }}
     steps:
       - name: Checkout o3de-extras (PR head)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: o3de-extras
 
@@ -106,7 +133,7 @@ jobs:
       # Excludes the largest unrelated gems and most of AutomatedTesting
       # (clones only about 40% of a full engine's size without LFS content).
       - name: Checkout o3de engine (${{ needs.resolve-engine-config.outputs.engine_sha }})
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: o3de/o3de
           ref: ${{ needs.resolve-engine-config.outputs.engine_sha }}
@@ -151,7 +178,7 @@ jobs:
 
       # Keyed on engine commit + toolchain + image/ROS so a bump busts the cache.
       - name: Cache ccache and 3rdParty packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.ccache
@@ -161,7 +188,7 @@ jobs:
             simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-
 
       - name: Install CMake matching the engine's ar.yml
-        uses: lukka/get-cmake@latest
+        uses: lukka/get-cmake@fffaaafeea488556c2c12dad60690008bc1caacb # v4.4.2
         with:
           cmakeVersion: ${{ needs.resolve-engine-config.outputs.cmake_version }}
 
@@ -249,6 +276,7 @@ jobs:
       - name: Build gem modules, test targets and project assets
         timeout-minutes: 330
         run: |
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
           cmake --build "${{ env.PROJECT_PATH }}/build/linux" --config profile --target \
             LevelGeoreferencing LevelGeoreferencing.Editor \
             ROS2 ROS2.Editor \
@@ -268,16 +296,15 @@ jobs:
       - name: Run gem tests
         run: |
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
-          Xvfb :0 -screen 0 1400x1050x16 &
-          export DISPLAY=:0
-          ctest --test-dir "${{ env.PROJECT_PATH }}/build/linux" -C profile \
-            --output-on-failure \
-            --output-junit Testing/test-results.xml \
-            --tests-regex "(LevelGeoreferencing\.Tests|LevelGeoreferencing\.Editor\.Tests|ROS2\.Editor\.Tests|ROS2Controllers\.Tests|ROS2Controllers\.Editor\.Tests|ROS2RobotImporter\.Editor\.Tests|ROS2Sensors\.Tests|SimulationInterfaces\.Tests|SimulationInterfaces\.Editor\.Tests|SimulationInterfaces\.ROS2Tests)"
+          xvfb-run --auto-servernum --server-args="-screen 0 1400x1050x16" \
+            ctest --test-dir "${{ env.PROJECT_PATH }}/build/linux" -C profile \
+              --output-on-failure \
+              --output-junit Testing/test-results.xml \
+              --tests-regex "(LevelGeoreferencing\.Tests|LevelGeoreferencing\.Editor\.Tests|ROS2\.Editor\.Tests|ROS2Controllers\.Tests|ROS2Controllers\.Editor\.Tests|ROS2RobotImporter\.Editor\.Tests|ROS2Sensors\.Tests|SimulationInterfaces\.Tests|SimulationInterfaces\.Editor\.Tests|SimulationInterfaces\.ROS2Tests)"
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: simulation-gems-test-results
           path: ${{ env.PROJECT_PATH }}/build/linux/Testing/
