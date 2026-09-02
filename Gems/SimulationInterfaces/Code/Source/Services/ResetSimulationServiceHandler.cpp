@@ -33,72 +33,8 @@ namespace ROS2SimulationInterfaces
     AZStd::optional<ResetSimulationServiceHandler::Response> ResetSimulationServiceHandler::HandleServiceRequest(
         const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
-        if (request.scope == Request::SCOPE_STATE)
-        {
-            Response response;
-            AZ::Outcome<void, SimulationInterfaces::FailedResult> resetingOutcome;
-            SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
-                resetingOutcome, &SimulationInterfaces::SimulationEntityManagerRequests::ResetAllEntitiesToInitialState);
-            if (resetingOutcome.IsSuccess())
-            {
-                response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
-            }
-            else
-            {
-                response.result.result = resetingOutcome.GetError().m_errorCode;
-                response.result.error_message = resetingOutcome.GetError().m_errorString.c_str();
-            }
-            return response;
-        }
-
-        if (request.scope == Request::SCOPE_SPAWNED)
-        {
-            auto deletionCompletedCb = [this](const AZ::Outcome<void, SimulationInterfaces::FailedResult>& outcome)
-            {
-                Response response;
-                if (outcome.IsSuccess())
-                {
-                    response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
-                }
-                else
-                {
-                    const auto& failedResult = outcome.GetError();
-                    response.result.result = failedResult.m_errorCode;
-                    response.result.error_message = failedResult.m_errorString.c_str();
-                }
-                SendResponse(response);
-            };
-            SimulationInterfaces::SimulationEntityManagerRequestBus::Broadcast(
-                &SimulationInterfaces::SimulationEntityManagerRequests::DeleteAllEntities, deletionCompletedCb);
-            return AZStd::nullopt;
-        }
-
-        if (request.scope == Request::SCOPE_TIME)
-        {
-            auto* interface = ROS2::ROS2ClockInterface::Get();
-            AZ_Assert(interface, "ROS2ClockInterface is not available");
-
-            builtin_interfaces::msg::Time time;
-            time.sec = 0;
-            time.nanosec = 0;
-            auto results = interface->AdjustTime(time);
-
-            if (results.IsSuccess())
-            {
-                Response response;
-                response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
-                return response;
-            }
-            else
-            {
-                Response response;
-                response.result.result = simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
-                const auto& errorMessage = results.GetError();
-                response.result.error_message = std::string(errorMessage.c_str(), errorMessage.size());
-                return response;
-            }
-        }
-
+        // SCOPE_ALL and SCOPE_DEFAULT (0) are not part of the SCOPE_TIME / SCOPE_STATE / SCOPE_SPAWNED bit field;
+        // they request a full simulation restart (level reload) instead of resetting individual aspects.
         if (request.scope == Request::SCOPE_ALL || request.scope == Request::SCOPE_DEFAULT)
         {
             // check if we are in GameLauncher
@@ -132,10 +68,76 @@ namespace ROS2SimulationInterfaces
             return AZStd::nullopt;
         }
 
-        // no case matched, return response that request was invalid
-        Response invalidResponse;
-        invalidResponse.result.result = simulation_interfaces::msg::Result::RESULT_NOT_FOUND;
-        invalidResponse.result.error_message = "Passed unknown scope";
-        return invalidResponse;
+        // SCOPE_TIME, SCOPE_STATE and SCOPE_SPAWNED form a bit field and may be requested in any combination,
+        // e.g. scope = SCOPE_STATE | SCOPE_SPAWNED.
+        constexpr uint8_t KnownScopeMask = Request::SCOPE_TIME | Request::SCOPE_STATE | Request::SCOPE_SPAWNED;
+        if ((request.scope & ~KnownScopeMask) != 0)
+        {
+            // no known scope bit matched, return response that request was invalid
+            Response invalidResponse;
+            invalidResponse.result.result = simulation_interfaces::msg::Result::RESULT_NOT_FOUND;
+            invalidResponse.result.error_message = "Passed unknown scope";
+            return invalidResponse;
+        }
+
+        if (request.scope & Request::SCOPE_STATE)
+        {
+            AZ::Outcome<void, SimulationInterfaces::FailedResult> resetingOutcome;
+            SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
+                resetingOutcome, &SimulationInterfaces::SimulationEntityManagerRequests::ResetAllEntitiesToInitialState);
+            if (!resetingOutcome.IsSuccess())
+            {
+                Response response;
+                response.result.result = resetingOutcome.GetError().m_errorCode;
+                response.result.error_message = resetingOutcome.GetError().m_errorString.c_str();
+                return response;
+            }
+        }
+
+        if (request.scope & Request::SCOPE_TIME)
+        {
+            auto* interface = ROS2::ROS2ClockInterface::Get();
+            AZ_Assert(interface, "ROS2ClockInterface is not available");
+
+            builtin_interfaces::msg::Time time;
+            time.sec = 0;
+            time.nanosec = 0;
+            auto results = interface->AdjustTime(time);
+
+            if (!results.IsSuccess())
+            {
+                Response response;
+                response.result.result = simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
+                const auto& errorMessage = results.GetError();
+                response.result.error_message = std::string(errorMessage.c_str(), errorMessage.size());
+                return response;
+            }
+        }
+
+        if (request.scope & Request::SCOPE_SPAWNED)
+        {
+            auto deletionCompletedCb = [this](const AZ::Outcome<void, SimulationInterfaces::FailedResult>& outcome)
+            {
+                Response response;
+                if (outcome.IsSuccess())
+                {
+                    response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
+                }
+                else
+                {
+                    const auto& failedResult = outcome.GetError();
+                    response.result.result = failedResult.m_errorCode;
+                    response.result.error_message = failedResult.m_errorString.c_str();
+                }
+                SendResponse(response);
+            };
+            SimulationInterfaces::SimulationEntityManagerRequestBus::Broadcast(
+                &SimulationInterfaces::SimulationEntityManagerRequests::DeleteAllEntities, deletionCompletedCb);
+            return AZStd::nullopt;
+        }
+
+        Response response;
+        response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
+        return response;
     }
 } // namespace ROS2SimulationInterfaces

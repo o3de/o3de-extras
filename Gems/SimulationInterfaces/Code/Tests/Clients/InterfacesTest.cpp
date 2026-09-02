@@ -11,17 +11,16 @@
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/Memory/AllocatorManager.h>
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Slice/SliceAssetHandler.h>
 #include <AzCore/UserSettings/UserSettingsComponent.h>
 #include <AzCore/std/containers/array.h>
 #include <AzCore/std/string/string_view.h>
-#include <AzQtComponents/Utilities/QtPluginPaths.h>
 #include <AzTest/GemTestEnvironment.h>
-#include <AzToolsFramework/Entity/EditorEntityContextComponent.h>
-#include <AzToolsFramework/ToolsComponents/TransformComponent.h>
-#include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
+
+#include <Common/RuntimeTestApplication.h>
 
 #include <Clients/ROS2SimulationInterfacesSystemComponent.h>
 #include <ROS2/ROS2Bus.h>
@@ -41,8 +40,6 @@
 #include "Mocks/SimulationEntityManagerMock.h"
 #include "Mocks/SimulationFeaturesAggregatorRequestsHandlerMock.h"
 #include "Mocks/SimulationManagerMock.h"
-
-#include <QApplication>
 
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -65,6 +62,7 @@ namespace UnitTest
         void AddGemsAndComponents() override;
         AZ::ComponentApplication* CreateApplicationInstance() override;
         void PostSystemEntityActivate() override;
+        void PostDestroyApplication() override;
 
     public:
         SimulationInterfaceROS2TestEnvironment() = default;
@@ -84,13 +82,23 @@ namespace UnitTest
 
     AZ::ComponentApplication* SimulationInterfaceROS2TestEnvironment::CreateApplicationInstance()
     {
-        // Using ToolsTestApplication to have AzFramework and AzToolsFramework components.
-        return aznew UnitTest::ToolsTestApplication("SimulationInterfaceROS2TestEnvironment");
+        return aznew UnitTest::RuntimeTestApplication("SimulationInterfaceROS2TestEnvironment");
     }
 
     void SimulationInterfaceROS2TestEnvironment::PostSystemEntityActivate()
     {
         AZ::UserSettingsComponentRequestBus::Broadcast(&AZ::UserSettingsComponentRequests::DisableSaveOnFinalize);
+    }
+
+    void SimulationInterfaceROS2TestEnvironment::PostDestroyApplication()
+    {
+        // rclcpp maintains a global default context in a static std::shared_ptr<Context> that is only
+        // destroyed at process exit — after O3DE's allocator teardown. This causes false positive leak
+        // reports (confirmed as "still reachable" by valgrind, not truly lost). Clearing the allocation
+        // records here (after the application and all its components are fully torn down) prevents the
+        // spurious failure. All real O3DE allocations have been freed by this point.
+        AZ::AllocatorManager::Instance().SetDefaultTrackingMode(AZ::Debug::AllocationRecords::Mode::RECORD_NO_RECORDS);
+        AZ::AllocatorManager::Instance().SetTrackingMode(AZ::Debug::AllocationRecords::Mode::RECORD_NO_RECORDS);
     }
 
     class SimulationInterfaceROS2TestFixture : public ::testing::Test
@@ -207,6 +215,62 @@ namespace UnitTest
         ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
         auto response = future.get();
         EXPECT_EQ(response->result.result, simulation_interfaces::msg::Result::RESULT_OK);
+    }
+
+    //! Reset scope is a bit field. Passing a combination of scopes (SCOPE_STATE | SCOPE_SPAWNED) should trigger
+    //! both the corresponding reset actions instead of being rejected as an unknown scope.
+    TEST_F(SimulationInterfaceROS2TestFixture, ResetSimulationBitfieldScopeStateAndSpawned)
+    {
+        using ::testing::_;
+        auto node = GetRos2Node();
+        SimulationEntityManagerMockedHandler mock;
+        auto client = node->create_client<simulation_interfaces::srv::ResetSimulation>("/reset_simulation");
+        auto request = std::make_shared<simulation_interfaces::srv::ResetSimulation::Request>();
+        request->scope = simulation_interfaces::srv::ResetSimulation::Request::SCOPE_STATE |
+            simulation_interfaces::srv::ResetSimulation::Request::SCOPE_SPAWNED;
+
+        EXPECT_CALL(mock, ResetAllEntitiesToInitialState())
+            .WillOnce(
+                []()
+                {
+                    return AZ::Success();
+                });
+
+        EXPECT_CALL(mock, DeleteAllEntities(_))
+            .WillOnce(
+                [](SimulationInterfaces::DeletionCompletedCb completedCb)
+                {
+                    completedCb(AZ::Success());
+                });
+
+        auto future = client->async_send_request(request);
+        SpinAppUntilFuture(future);
+
+        ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
+        auto response = future.get();
+        EXPECT_EQ(response->result.result, simulation_interfaces::msg::Result::RESULT_OK);
+    }
+
+    //! A scope value with a bit outside of SCOPE_TIME | SCOPE_STATE | SCOPE_SPAWNED (and not SCOPE_ALL/SCOPE_DEFAULT)
+    //! is not a known scope and should be rejected without triggering any reset action.
+    TEST_F(SimulationInterfaceROS2TestFixture, ResetSimulationUnknownScopeBitReturnsError)
+    {
+        using ::testing::_;
+        auto node = GetRos2Node();
+        SimulationEntityManagerMockedHandler mock;
+        auto client = node->create_client<simulation_interfaces::srv::ResetSimulation>("/reset_simulation");
+        auto request = std::make_shared<simulation_interfaces::srv::ResetSimulation::Request>();
+        request->scope = 0x08; // not a defined scope bit
+
+        EXPECT_CALL(mock, ResetAllEntitiesToInitialState()).Times(0);
+        EXPECT_CALL(mock, DeleteAllEntities(_)).Times(0);
+
+        auto future = client->async_send_request(request);
+        SpinAppUntilFuture(future);
+
+        ASSERT_TRUE(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) << "Service call timed out.";
+        auto response = future.get();
+        EXPECT_EQ(response->result.result, simulation_interfaces::msg::Result::RESULT_NOT_FOUND);
     }
 
     //! Test if the service call fails when the entity is not found
@@ -635,12 +699,9 @@ namespace UnitTest
 
 } // namespace UnitTest
 
-// required to support running integration tests with Qt and PhysX
 AZTEST_EXPORT int AZ_UNIT_TEST_HOOK_NAME(int argc, char** argv)
 {
     ::testing::InitGoogleMock(&argc, argv);
-    AzQtComponents::PrepareQtPaths();
-    QApplication app(argc, argv);
     AZ::Test::printUnusedParametersWarning(argc, argv);
     AZ::Test::addTestEnvironments({ new UnitTest::SimulationInterfaceROS2TestEnvironment() });
     int result = RUN_ALL_TESTS();

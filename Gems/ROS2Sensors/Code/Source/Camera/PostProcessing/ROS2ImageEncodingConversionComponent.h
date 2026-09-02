@@ -7,7 +7,7 @@
  */
 
 #pragma once
-
+#include <Camera/CameraUtilities.h>
 #include <AzCore/Component/Component.h>
 #include <AzCore/RTTI/TypeInfoSimple.h>
 #include <ROS2Sensors/Camera/CameraPostProcessingRequestBus.h>
@@ -15,34 +15,47 @@
 
 namespace ROS2Sensors
 {
-    enum class ImageEncoding : AZ::u8
-    {
-        RGBA8,
-        RGB8,
-        Mono8,
-        Mono16,
-    };
+
 
     struct EncodingConversion
     {
+
         AZ_TYPE_INFO(EncodingConversion, ROS2Sensors::EncodingConversionTypeId);
         static void Reflect(AZ::ReflectContext* context);
-        AZ::Outcome<void, AZStd::string> ValidateInputEncoding(void* newValue, const AZ::Uuid& valueType);
-        AZ::Outcome<void, AZStd::string> ValidateOutputEncoding(void* newValue, const AZ::Uuid& valueType);
 
+        //! Compares the encoding pair only: the conversion table is keyed by it, whatever the scale factor.
         bool operator==(const EncodingConversion& rhs) const
         {
             return encodingIn == rhs.encodingIn && encodingOut == rhs.encodingOut;
         }
 
+        using ImageEncoding = CameraUtils::ImageEncoding;
         ImageEncoding encodingIn = ImageEncoding::RGBA8;
         ImageEncoding encodingOut = ImageEncoding::RGB8;
+        float m_scaleFactor = 1.0f;
+
+    private:
+        //! Text of the "Conversion summary" label: whether the selected pair is supported or not.
+        AZStd::string GetEncodingUiComment() const;
+
+        //! The scale factor only means anything for depth input, the one conversion that scales samples.
+        AZ::Crc32 GetScaleFactorVisibility() const;
+
+        //! Validates if conversion is valid
+        AZ::Outcome<void, AZStd::string> ValidateEncodingConversion() const;
+
     };
+
+    //! Apply an encoding conversion to an image, in place.
+    //! @param image image to rewrite; untouched unless the conversion is supported and matches its encoding.
+    //! @param conversion encoding pair to apply, carrying the scale factor used when quantizing depth.
+    //! @return whether the conversion was applied.
+    bool ApplyEncodingConversion(sensor_msgs::msg::Image& image, const EncodingConversion& conversion);
 
     //! Change image format
     class ROS2ImageEncodingConversionComponent
         : public AZ::Component
-        , public CameraPostProcessingRequestBus::Handler
+        , protected CameraPostProcessingRequestBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2ImageEncodingConversionComponent, ROS2Sensors::ROS2ImageEncodingConversionComponentTypeId, AZ::Component);

@@ -7,10 +7,50 @@
  *
  */
 
-#include "TestFixture.h"
+#include <Common/RuntimeTestApplication.h>
+#include <Common/SimulationInterfaceTestFixture.h>
+
+#include <AzCore/Component/ComponentApplication.h>
+#include <AzCore/UserSettings/UserSettingsComponent.h>
+#include <AzTest/GemTestEnvironment.h>
+#include <Clients/SimulationEntitiesManager.h>
+#include <Clients/SimulationManager.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 namespace UnitTest
 {
+    //! Runtime test environment: brings up a RuntimeTestApplication (AzFramework only, no editor/Qt
+    //! link surface) with the gems the runtime SimulationInterfaces tests need.
+    class SimulationInterfaceTestEnvironment : public AZ::Test::GemTestEnvironment
+    {
+        void AddGemsAndComponents() override
+        {
+            // ROS2 is intentionally absent from dynamic module loading: the gem's Private.Object
+            // already pulls in Gem::ROS2.Static, so libROS2.so is fully resolved in this binary at
+            // link time. dlopen()'ing it again would conflict with the already-resolved symbols.
+            constexpr AZStd::array<AZStd::string_view, 3> requiredGems = { "PhysX5", // required for PhysX Dynamic
+                                                                           "LmbrCentral", // for shapes
+                                                                           "SimulationInterfaces" };
+            AddActiveGems(requiredGems);
+            AddDynamicModulePaths({ "PhysX5.Gem" });
+            AddDynamicModulePaths({ "LmbrCentral" });
+            AddComponentDescriptors(
+                AZStd::initializer_list<AZ::ComponentDescriptor*>{ SimulationInterfaces::SimulationEntitiesManager::CreateDescriptor(),
+                                                                   SimulationInterfaces::SimulationManager::CreateDescriptor() });
+            AddRequiredComponents({ SimulationInterfaces::SimulationEntitiesManager::TYPEINFO_Uuid(),
+                                    SimulationInterfaces::SimulationManager::TYPEINFO_Uuid() });
+        }
+
+        AZ::ComponentApplication* CreateApplicationInstance() override
+        {
+            return aznew UnitTest::RuntimeTestApplication("SimulationInterfaceTestEnvironment");
+        }
+
+    protected:
+        void PostSystemEntityActivate() override
+        {
+            AZ::UserSettingsComponentRequestBus::Broadcast(&AZ::UserSettingsComponentRequests::DisableSaveOnFinalize);
+        }
+    };
 
     TEST_F(SimulationInterfaceTestFixture, EmptyScene)
     {
@@ -189,12 +229,9 @@ namespace UnitTest
     }
 } // namespace UnitTest
 
-// required to support running integration tests with Qt and PhysX
 AZTEST_EXPORT int AZ_UNIT_TEST_HOOK_NAME(int argc, char** argv)
 {
     ::testing::InitGoogleMock(&argc, argv);
-    AzQtComponents::PrepareQtPaths();
-    QApplication app(argc, argv);
     AZ::Test::printUnusedParametersWarning(argc, argv);
     AZ::Test::addTestEnvironments({ new UnitTest::SimulationInterfaceTestEnvironment() });
     int result = RUN_ALL_TESTS();
