@@ -10,19 +10,23 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/Math/Uuid.h>
 #include <AzCore/Utils/Utils.h>
+#include <AzCore/std/smart_ptr/make_shared.h>
 
-#include "FixURDF/URDFModifications.h"
 #include "RobotImporterWidget.h"
 #include <QApplication>
 #include <QScreen>
 #include <QTranslator>
-#include <RobotImporter/URDF/SdfParser.h>
-#include <RobotImporter/URDF/SdfPrefabMaker.h>
+#include <RobotImporter/Assets/AssetImporter.h>
+#include <RobotImporter/Assets/AssetLookup.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Assets/SceneManifestBuilder.h>
+#include <RobotImporter/Building/SdfPrefabMaker.h>
+#include <RobotImporter/Parsing/FixURDF/URDFModifications.h>
+#include <RobotImporter/Parsing/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <Tools/ImportSession.h>
 
 namespace ROS2RobotImporter
 {
@@ -141,8 +145,8 @@ namespace ROS2RobotImporter
             }
         }
 
-        report += "\n\n# " + tr("💡Please check the modified code and/or save it using the interface below.") + "\n";
-        m_modifiedUrdfWindow->SetUrdfData(AZStd::move(parsedSdfOutcome.m_modifiedURDFContent));
+        report += "\n\n# " + tr("⚠️ Please check the modified code and/or save it using the interface below.") + "\n";
+        m_modifiedUrdfWindow->SetUrdfData(AZStd::move(parsedSdfOutcome.m_modifiedUrdfContent));
     }
 
     void RobotImporterWidget::OpenRobotDescription()
@@ -155,7 +159,7 @@ namespace ROS2RobotImporter
             const SdfAssetBuilderSettings& sdfBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
 
             // Set the parser config settings for URDF content
-            sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(sdfBuilderSettings, m_sourceFilePath);
+            sdf::ParserConfig parserConfig = SdfParser::CreateSdfParserConfigFromSettings(sdfBuilderSettings, m_sourceFilePath);
 
             if (Utils::IsFileXacro(m_sourceFilePath))
             {
@@ -232,8 +236,7 @@ namespace ROS2RobotImporter
                     report += "# " + tr("The URDF/SDF was parsed and opened successfully") + "\n";
                 }
                 m_parsedSdf = AZStd::move(parsedSdfOutcome.GetRoot());
-                m_prefabMaker.reset();
-                m_referencedAssetMap = Utils::GetReferencedAssetFilenames(m_parsedSdf);
+                m_referencedAssetMap = Assets::GetReferencedAssetFilenames(m_parsedSdf);
                 m_assetPage->ClearAssetsList();
             }
             else
@@ -339,19 +342,19 @@ namespace ROS2RobotImporter
             // Read the SDF Settings from PrefabMakerPage
             const SdfAssetBuilderSettings& sdfBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
 
-            Utils::ResolveAssetMap(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
+            Assets::ResolveAssetMap(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
             if (!m_copyReferencedAssets)
             {
-                Utils::FindReferencedAssets(m_referencedAssetMap, m_sourceFilePath, sdfBuilderSettings);
+                Assets::FindReferencedAssets(m_referencedAssetMap);
                 for (const auto& [_, asset] : m_referencedAssetMap)
                 {
                     const bool visual =
-                        (asset.m_assetType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                        (asset.m_assetType & Assets::ReferencedAssetType::VisualMesh) == Assets::ReferencedAssetType::VisualMesh;
                     const bool collider =
-                        (asset.m_assetType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
+                        (asset.m_assetType & Assets::ReferencedAssetType::ColliderMesh) == Assets::ReferencedAssetType::ColliderMesh;
                     if (visual || collider)
                     {
-                        Utils::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
+                        Assets::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
                     }
                 }
             };
@@ -360,10 +363,11 @@ namespace ROS2RobotImporter
             {
                 QString type = tr("Unknown");
 
-                const bool visual = (asset.m_assetType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                const bool visual =
+                    (asset.m_assetType & Assets::ReferencedAssetType::VisualMesh) == Assets::ReferencedAssetType::VisualMesh;
                 const bool collider =
-                    (asset.m_assetType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
-                const bool texture = (asset.m_assetType & Utils::ReferencedAssetType::Texture) == Utils::ReferencedAssetType::Texture;
+                    (asset.m_assetType & Assets::ReferencedAssetType::ColliderMesh) == Assets::ReferencedAssetType::ColliderMesh;
+                const bool texture = (asset.m_assetType & Assets::ReferencedAssetType::Texture) == Assets::ReferencedAssetType::Texture;
                 if (visual && collider)
                 {
                     type = tr("Visual and Collider Mesh");
@@ -389,55 +393,35 @@ namespace ROS2RobotImporter
                 m_copyReferencedAssetsThread = AZStd::make_shared<AZStd::thread>(
                     [this, dirSuffix]()
                     {
-                        auto destStatus = Utils::PrepareImportedAssetsDest(m_sourceFilePath.String(), dirSuffix);
-                        if (!destStatus.IsSuccess())
+                        Assets::CopyAssetsStatusCallback statusCallback = [this](
+                                                                              Assets::CopyStatus copyStatus,
+                                                                              const AZ::IO::Path& unresolvedFileName,
+                                                                              const Assets::ReferencedAsset& referencedAsset)
                         {
-                            AZ_Error("RobotImporterWidget", false, "Failed to create destination folder for imported assets");
-                            QWizard::button(QWizard::NextButton)->setDisabled(false);
-                            return;
-                        }
-                        AZStd::unordered_map<AZ::IO::Path, unsigned int> duplicatedFilenames;
-                        for (auto& [unresolvedFileName, referencedAsset] : m_referencedAssetMap)
-                        {
-                            if (duplicatedFilenames.contains(referencedAsset.m_assetUri))
-                            {
-                                duplicatedFilenames[referencedAsset.m_assetUri]++;
-                            }
-                            else
-                            {
-                                duplicatedFilenames[referencedAsset.m_assetUri] = 0;
-                            }
-                            if (referencedAsset.m_copyStatus == Utils::CopyStatus::Waiting)
+                            if (copyStatus != Assets::CopyStatus::Copying || referencedAsset.m_copyStatus == Assets::CopyStatus::Waiting)
                             {
                                 m_assetPage->OnAssetCopyStatusChanged(
-                                    Utils::CopyStatus::Copying, AZStd::string(unresolvedFileName.c_str()), "");
+                                    copyStatus,
+                                    AZStd::string(unresolvedFileName.c_str()),
+                                    AZStd::string(referencedAsset.m_availableAssetInfo.m_sourceAssetRelativePath.c_str()));
                             }
-
-                            auto copyStatus = Utils::CopyStatus::Unresolvable;
-                            if (referencedAsset.m_resolvedPath.empty())
-                            {
-                                AZ_Warning("CopyReferencedAsset", false, "There is no resolved path for %s", unresolvedFileName.c_str());
-                            }
-                            else
-                            {
-                                copyStatus = Utils::CopyReferencedAsset(
-                                    destStatus.GetValue(), referencedAsset, duplicatedFilenames[referencedAsset.m_assetUri]);
-                            }
-
-                            m_assetPage->OnAssetCopyStatusChanged(
-                                copyStatus,
-                                AZStd::string(unresolvedFileName.c_str()),
-                                AZStd::string(referencedAsset.m_availableAssetInfo.m_sourceAssetRelativePath.c_str()));
-
-                            if (copyStatus == Utils::CopyStatus::Copied || copyStatus == Utils::CopyStatus::Exists)
+                            if (copyStatus == Assets::CopyStatus::Copied || copyStatus == Assets::CopyStatus::Exists)
                             {
                                 m_toProcessAssets.insert(unresolvedFileName);
                             }
+                            if (copyStatus != Assets::CopyStatus::Copying)
+                            {
+                                // Check all assets that are ready to be processed
+                                CheckToProcessAssets();
+                            }
+                        };
+                        bool copyResultOk = Assets::CopyReferencedAssets(m_referencedAssetMap, m_sourceFilePath.String(), statusCallback);
 
-                            // Check all assets that are ready to be processed
-                            CheckToProcessAssets();
+                        if (!copyResultOk)
+                        {
+                            QWizard::button(QWizard::NextButton)->setDisabled(false);
+                            return;
                         }
-                        Utils::RemoveTmpDir(destStatus.GetValue().importDirectoryTmp);
 
                         if (!m_toProcessAssets.empty())
                         {
@@ -614,17 +598,14 @@ namespace ROS2RobotImporter
 
         const auto& sdfAssetBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
         const bool useArticulation = sdfAssetBuilderSettings.m_useArticulations;
-        m_prefabMaker = AZStd::make_unique<SdfPrefabMaker>(
-            &m_parsedSdf,
-            prefabPath.String(),
-            AZStd::make_shared<Utils::ReferencedAssetMap>(m_referencedAssetMap),
-            useArticulation,
-            m_prefabMakerPage->getSelectedSpawnPoint());
+        ImportSession session(m_referencedAssetMap);
+        SdfPrefabMaker prefabMaker(
+            &m_parsedSdf, prefabPath.String(), session.GetId(), useArticulation, m_prefabMakerPage->getSelectedSpawnPoint());
 
-        auto prefabOutcome = m_prefabMaker->CreatePrefabFromUrdfOrSdf();
+        auto prefabOutcome = prefabMaker.CreatePrefabFromUrdfOrSdf();
         if (prefabOutcome.IsSuccess())
         {
-            AZStd::string status = m_prefabMaker->GetStatus();
+            AZStd::string status = session.GetStatus();
             m_prefabMakerPage->ReportProgress(status);
             m_prefabMakerPage->SetSuccess(true);
         }
@@ -632,7 +613,7 @@ namespace ROS2RobotImporter
         {
             AZStd::string status = "# Failed to create prefab\n";
             status += prefabOutcome.GetError() + "\n";
-            status += m_prefabMaker->GetStatus();
+            status += session.GetStatus();
             m_prefabMakerPage->ReportProgress(status);
             m_prefabMakerPage->SetSuccess(false);
         }

@@ -15,16 +15,15 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/function/function_template.h>
 #include <AzCore/std/string/string.h>
-#include <RobotImporter/URDF/SdfParser.h>
 
 #include <sdf/sdf.hh>
 
 namespace sdf
 {
-    inline namespace v13
+    inline namespace v16
     {
         class Error;
-    } // namespace v13
+    } // namespace v16
 } // namespace sdf
 
 namespace AZStd
@@ -32,26 +31,26 @@ namespace AZStd
     // Allow std::vector<sdf::Error> to meet the requirements of contiguous iterator in C++17
     // This allows constructing an AZStd::span from a std::vector
     template<>
-    struct iterator_traits<typename std::vector<sdf::v13::Error>::iterator>
+    struct iterator_traits<typename std::vector<sdf::v16::Error>::iterator>
     {
         // Use the standard library iterator traits for all traits except for the iterator_concept
-        using difference_type = typename std::iterator_traits<typename std::vector<sdf::v13::Error>::iterator>::difference_type;
-        using value_type = typename std::iterator_traits<typename std::vector<sdf::v13::Error>::iterator>::value_type;
-        using pointer = typename std::iterator_traits<typename std::vector<sdf::v13::Error>::iterator>::pointer;
-        using reference = typename std::iterator_traits<typename std::vector<sdf::v13::Error>::iterator>::reference;
-        using iterator_category = typename std::iterator_traits<typename std::vector<sdf::v13::Error>::iterator>::iterator_category;
+        using difference_type = typename std::iterator_traits<typename std::vector<sdf::v16::Error>::iterator>::difference_type;
+        using value_type = typename std::iterator_traits<typename std::vector<sdf::v16::Error>::iterator>::value_type;
+        using pointer = typename std::iterator_traits<typename std::vector<sdf::v16::Error>::iterator>::pointer;
+        using reference = typename std::iterator_traits<typename std::vector<sdf::v16::Error>::iterator>::reference;
+        using iterator_category = typename std::iterator_traits<typename std::vector<sdf::v16::Error>::iterator>::iterator_category;
         using iterator_concept = contiguous_iterator_tag;
     };
 
     template<>
-    struct iterator_traits<typename std::vector<sdf::v13::Error>::const_iterator>
+    struct iterator_traits<typename std::vector<sdf::v16::Error>::const_iterator>
     {
         // Use the standard library iterator traits for all traits except for the iterator_concept
-        using difference_type = typename std::iterator_traits<typename std::vector<sdf::v13::Error>::const_iterator>::difference_type;
-        using value_type = typename std::iterator_traits<typename std::vector<sdf::v13::Error>::const_iterator>::value_type;
-        using pointer = typename std::iterator_traits<typename std::vector<sdf::v13::Error>::const_iterator>::pointer;
-        using reference = typename std::iterator_traits<typename std::vector<sdf::v13::Error>::const_iterator>::reference;
-        using iterator_category = typename std::iterator_traits<typename std::vector<sdf::v13::Error>::const_iterator>::iterator_category;
+        using difference_type = typename std::iterator_traits<typename std::vector<sdf::v16::Error>::const_iterator>::difference_type;
+        using value_type = typename std::iterator_traits<typename std::vector<sdf::v16::Error>::const_iterator>::value_type;
+        using pointer = typename std::iterator_traits<typename std::vector<sdf::v16::Error>::const_iterator>::pointer;
+        using reference = typename std::iterator_traits<typename std::vector<sdf::v16::Error>::const_iterator>::reference;
+        using iterator_category = typename std::iterator_traits<typename std::vector<sdf::v16::Error>::const_iterator>::iterator_category;
         using iterator_concept = contiguous_iterator_tag;
     };
 } // namespace AZStd
