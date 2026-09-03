@@ -1,0 +1,311 @@
+name: Simulation Gems PR Test
+
+on:
+  pull_request:
+    branches:
+      - development
+      - 'stabilization/**'
+    paths:
+      - 'Gems/LevelGeoreferencing/**'
+      - 'Gems/ROS2/**'
+      - 'Gems/ROS2Controllers/**'
+      - 'Gems/ROS2RobotImporter/**'
+      - 'Gems/ROS2Sensors/**'
+      - 'Gems/SimulationInterfaces/**'
+      - '.github/workflows/simulation-gems-pr.yml'
+  workflow_dispatch:
+    inputs:
+      engine_ref:
+        description: 'o3de engine branch/ref to test against (manual runs only; PRs use their base branch)'
+        default: development
+        required: false
+
+concurrency:
+  group: simulation-gems-pr-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  GIT_LFS_SKIP_SMUDGE: "1"
+
+jobs:
+  # runs-on can't read a step output in its own job, so resolve it here first.
+  resolve-engine-config:
+    name: Resolve engine image, toolchain and ROS 2 distro
+    runs-on: ubuntu-latest
+    outputs:
+      engine_sha: ${{ steps.parse.outputs.sha }}
+      image: ${{ steps.parse.outputs.image }}
+      clang_version: ${{ steps.parse.outputs.clang_version }}
+      gcc_version: ${{ steps.parse.outputs.gcc_version }}
+      cmake_version: ${{ steps.parse.outputs.cmake_version }}
+      ros_distro: ${{ steps.parse.outputs.ros_distro }}
+    steps:
+      # base_ref names the matching engine branch; empty on manual workflow_dispatch runs.
+      - name: Checkout engine ar.yml (${{ github.base_ref || inputs.engine_ref }})
+        uses: actions/checkout@v5
+        with:
+          repository: o3de/o3de
+          ref: ${{ github.base_ref || inputs.engine_ref }}
+          path: engine
+          sparse-checkout: |
+            .github/workflows/ar.yml
+          sparse-checkout-cone-mode: false
+
+      # Mirrors the engine's own toolchain; ROS distro is derived since engine has no ROS concept.
+      - name: Parse engine Linux-Profile config
+        id: parse
+        working-directory: engine
+        run: |
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          sudo apt-get update
+          sudo apt-get install -y python3-yaml
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import sys
+          import yaml
+
+          ROS_DISTRO_BY_IMAGE = {
+              "ubuntu-22.04": "humble",
+              "ubuntu-24.04": "jazzy",
+              "ubuntu-26.04": "lyrical",
+          }
+
+          try:
+              with open(".github/workflows/ar.yml") as f:
+                  ar_yml = yaml.safe_load(f)
+              job = ar_yml["jobs"]["Linux-Profile"]["with"]
+          except FileNotFoundError:
+              sys.exit(
+                  "::error::engine/.github/workflows/ar.yml not found. "
+                  "Unable to resolve the engine config."
+              )
+          except KeyError:
+              sys.exit(
+                  "::error::jobs.Linux-Profile.with not found in ar.yml. "
+                  "The engine's ar.yml layout may have changed - update the "
+                  "parsing logic in this workflow to match."
+              )
+
+          try:
+              image = job["image"]
+              clang_version = job["clang_version"]
+              gcc_version = job["gcc_version"]
+              cmake_version = job["cmake_version"]
+          except KeyError as e:
+              sys.exit(
+                  f"::error::jobs.Linux-Profile.with.{e.args[0]} not found in ar.yml. "
+                  "The engine's ar.yml layout may have changed - update the "
+                  "parsing logic in this workflow to match."
+              )
+
+          ros_distro = ROS_DISTRO_BY_IMAGE.get(image)
+          if ros_distro is None:
+              sys.exit(
+                  f"::error::No ROS 2 distro mapping for engine image '{image}'. "
+                  "Add one to ROS_DISTRO_BY_IMAGE in this workflow."
+              )
+
+          print(f"image={image}")
+          print(f"clang_version={clang_version}")
+          print(f"gcc_version={gcc_version}")
+          print(f"cmake_version={cmake_version}")
+          print(f"ros_distro={ros_distro}")
+          PY
+
+  simulation-gems-test:
+    name: ${{ needs.resolve-engine-config.outputs.image }} / ROS 2 ${{ needs.resolve-engine-config.outputs.ros_distro }}
+    needs: resolve-engine-config
+    runs-on: ${{ needs.resolve-engine-config.outputs.image }}
+    env:
+      ENGINE_PATH: ${{ github.workspace }}/engine
+      EXTRAS_PATH: ${{ github.workspace }}/o3de-extras
+      PROJECT_PATH: ${{ github.workspace }}/Project
+      ROS_DISTRO: ${{ needs.resolve-engine-config.outputs.ros_distro }}
+    steps:
+      - name: Checkout o3de-extras (PR head)
+        uses: actions/checkout@v5
+        with:
+          path: o3de-extras
+
+      # Pinned to the SHA resolve-engine-config already resolved.
+      # Excludes the largest unrelated gems and most of AutomatedTesting
+      # (clones only about 40% of a full engine's size without LFS content).
+      - name: Checkout o3de engine (${{ needs.resolve-engine-config.outputs.engine_sha }})
+        uses: actions/checkout@v5
+        with:
+          repository: o3de/o3de
+          ref: ${{ needs.resolve-engine-config.outputs.engine_sha }}
+          path: engine
+          sparse-checkout: |
+            /engine.json
+            /CMakeLists.txt
+            /CMakePresets.json
+            /Assets
+            /AutomatedTesting/Gem/PythonTests/EditorPythonTestTools
+            /Code
+            /cmake
+            /scripts
+            /python
+            /Registry
+            /Templates
+            /Tools
+            /Gems/*
+            !/Gems/AtomContent
+            !/Gems/AtomLyIntegration/TechnicalArt
+            !/Gems/AtomTressFX
+            !/Gems/DevTextures
+            !/Gems/GameStateSamples
+            !/Gems/LyShineExamples
+            !/Gems/MotionMatching
+            !/Gems/ScriptCanvasTesting
+            !/Gems/Vegetation
+          sparse-checkout-cone-mode: false
+
+      - name: Drop excluded gems from external_subdirectories lists
+        working-directory: engine
+        run: |
+          jq '.external_subdirectories -= [
+            "Gems/AtomContent", "Gems/AtomTressFX", "Gems/DevTextures",
+            "Gems/GameStateSamples", "Gems/LyShineExamples", "Gems/MotionMatching",
+            "Gems/ScriptCanvasTesting", "Gems/Vegetation"
+          ]' engine.json > /tmp/engine.json
+          mv /tmp/engine.json engine.json
+          jq '.external_subdirectories -= ["TechnicalArt/DccScriptingInterface"]' \
+            Gems/AtomLyIntegration/gem.json > /tmp/atomly.json
+          mv /tmp/atomly.json Gems/AtomLyIntegration/gem.json
+
+      # Keyed on engine commit + toolchain + image/ROS so a bump busts the cache.
+      - name: Cache ccache and 3rdParty packages
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.ccache
+            ~/.o3de/3rdParty
+          key: simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-${{ needs.resolve-engine-config.outputs.engine_sha }}-clang${{ needs.resolve-engine-config.outputs.clang_version }}
+          restore-keys: |
+            simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-
+
+      - name: Install CMake matching the engine's ar.yml
+        uses: lukka/get-cmake@fffaaafeea488556c2c12dad60690008bc1caacb # v4.4.2
+        with:
+          cmakeVersion: ${{ needs.resolve-engine-config.outputs.cmake_version }}
+
+      - name: Install clang / gcc matching the engine's ar.yml
+        run: |
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install -y gcc-${{ needs.resolve-engine-config.outputs.gcc_version }} g++-${{ needs.resolve-engine-config.outputs.gcc_version }}
+          curl -fsSL https://apt.llvm.org/llvm.sh -o /tmp/llvm.sh
+          sudo bash /tmp/llvm.sh ${{ needs.resolve-engine-config.outputs.clang_version }}
+          sudo apt-get install -y lld-${{ needs.resolve-engine-config.outputs.clang_version }} clang-tools-${{ needs.resolve-engine-config.outputs.clang_version }}
+          echo "CC=$(which clang-${{ needs.resolve-engine-config.outputs.clang_version }})" >> "$GITHUB_ENV"
+          echo "CXX=$(which clang++-${{ needs.resolve-engine-config.outputs.clang_version }})" >> "$GITHUB_ENV"
+
+      # Install engine's build dependencies.
+      # Also adds the ROS 2 apt repo as a side effect.
+      - name: Install O3DE Linux build dependencies
+        working-directory: engine/scripts/build/build_node/Platform/Linux
+        run: sudo ./install-ubuntu.sh
+
+      # Install ROS 2 packages. gazebo-msgs only exists for humble/jazzy.
+      - name: Install ROS 2 ${{ env.ROS_DISTRO }} packages required by the gems
+        run: |
+          PACKAGES="ros-dev-tools \
+            ros-${ROS_DISTRO}-ros-base \
+            ros-${ROS_DISTRO}-ackermann-msgs \
+            ros-${ROS_DISTRO}-control-toolbox \
+            ros-${ROS_DISTRO}-joy \
+            ros-${ROS_DISTRO}-tf2-ros \
+            ros-${ROS_DISTRO}-urdfdom \
+            ros-${ROS_DISTRO}-rmw-cyclonedds-cpp \
+            ros-${ROS_DISTRO}-xacro \
+            ros-${ROS_DISTRO}-radar-msgs \
+            ros-${ROS_DISTRO}-depth-image-proc \
+            ros-${ROS_DISTRO}-vision-msgs \
+            ros-${ROS_DISTRO}-simulation-interfaces \
+            python3-colcon-common-extensions \
+            python3-vcstool \
+            xvfb \
+            libevdev-dev \
+            libevdev2 \
+            libxcb-cursor0"
+          if [ "$ROS_DISTRO" = "humble" ] || [ "$ROS_DISTRO" = "jazzy" ]; then
+            PACKAGES="$PACKAGES ros-${ROS_DISTRO}-gazebo-msgs"
+          fi
+          sudo apt-get update
+          sudo apt-get install -y $PACKAGES
+
+      - name: Set up O3DE's bundled Python and register engine
+        working-directory: engine
+        run: |
+          ./python/get_python.sh
+          ./scripts/o3de.sh register --this-engine
+
+      # MinimalProject's default gems (Atom/CameraFramework/ImGui) are not needed for tests.
+      - name: Create test project
+        run: |
+          "${{ env.ENGINE_PATH }}/scripts/o3de.sh" create-project \
+            --project-path "${{ env.PROJECT_PATH }}" \
+            --project-name Ros2GemsTest \
+            --template-name MinimalProject
+          jq '.gem_names -= ["Atom", "CameraFramework", "ImGui"]' \
+            "${{ env.PROJECT_PATH }}/project.json" > /tmp/project.json
+          mv /tmp/project.json "${{ env.PROJECT_PATH }}/project.json"
+
+      - name: Register and enable o3de-extras gems in the test project
+        run: |
+          "${{ env.ENGINE_PATH }}/scripts/o3de.sh" register --all-gems-path "${{ env.EXTRAS_PATH }}/Gems"
+          for gem in LevelGeoreferencing ROS2 ROS2Controllers ROS2Sensors ROS2RobotImporter SimulationInterfaces; do
+            "${{ env.ENGINE_PATH }}/scripts/o3de.sh" enable-gem \
+              --project-path "${{ env.PROJECT_PATH }}" \
+              --gem-name "$gem"
+          done
+
+      - name: Configure
+        run: |
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
+          cmake -B "${{ env.PROJECT_PATH }}/build/linux" -S "${{ env.PROJECT_PATH }}" \
+            -G "Ninja Multi-Config" \
+            -DLY_3RDPARTY_PATH="$HOME/.o3de/3rdParty" \
+            -DLY_UNITY_BUILD=OFF
+
+      # Test target names are per-gem, not uniform. Ros2GemsTest.Assets runs
+      # Asset Processor - SimulationInterfaces's tests need a processed test asset.
+      - name: Build gem modules, test targets and project assets
+        timeout-minutes: 330
+        run: |
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
+          cmake --build "${{ env.PROJECT_PATH }}/build/linux" --config profile --target \
+            LevelGeoreferencing LevelGeoreferencing.Editor \
+            ROS2 ROS2.Editor \
+            ROS2Controllers ROS2Controllers.Editor \
+            ROS2RobotImporter ROS2RobotImporter.Editor \
+            ROS2Sensors ROS2Sensors.Editor \
+            SimulationInterfaces SimulationInterfaces.Editor \
+            LevelGeoreferencing.Tests LevelGeoreferencing.Editor.Tests \
+            ROS2.Editor.Tests \
+            ROS2Controllers.Tests ROS2Controllers.Editor.Tests \
+            ROS2RobotImporter.Editor.Tests \
+            ROS2Sensors.Tests \
+            SimulationInterfaces.Tests SimulationInterfaces.Editor.Tests SimulationInterfaces.ROS2Tests \
+            Ros2GemsTest.Assets \
+            -- -j "$(nproc)"
+
+      - name: Run gem tests
+        run: |
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
+          xvfb-run --auto-servernum --server-args="-screen 0 1400x1050x16" \
+            ctest --test-dir "${{ env.PROJECT_PATH }}/build/linux" -C profile \
+              --output-on-failure \
+              --output-junit Testing/test-results.xml \
+              --tests-regex "(LevelGeoreferencing\.Tests|LevelGeoreferencing\.Editor\.Tests|ROS2\.Editor\.Tests|ROS2Controllers\.Tests|ROS2Controllers\.Editor\.Tests|ROS2RobotImporter\.Editor\.Tests|ROS2Sensors\.Tests|SimulationInterfaces\.Tests|SimulationInterfaces\.Editor\.Tests|SimulationInterfaces\.ROS2Tests)"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: simulation-gems-test-results
+          path: ${{ env.PROJECT_PATH }}/build/linux/Testing/
+          retention-days: 14
