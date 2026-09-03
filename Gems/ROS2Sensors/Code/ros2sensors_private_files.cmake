@@ -16,6 +16,12 @@ set(FILES
     Source/ROS2SensorsModuleInterface.h
     Source/Clients/ROS2SensorsSystemComponent.cpp
     Source/Clients/ROS2SensorsSystemComponent.h
+    Source/Camera/Compression/ImageCompression.cpp
+    Source/Camera/Compression/ImageCompression.h
+    Source/Camera/Compression/ImageCompressionConfiguration.cpp
+    Source/Camera/Compression/ImageCompressionConfiguration.h
+    Source/Camera/Compression/ROS2ImageCompressionComponent.cpp
+    Source/Camera/Compression/ROS2ImageCompressionComponent.h
     Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.cpp
     Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
     Source/Camera/CameraPublishers.cpp
