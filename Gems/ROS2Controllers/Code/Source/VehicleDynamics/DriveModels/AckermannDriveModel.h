@@ -8,6 +8,7 @@
 #pragma once
 
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2Controllers/Controllers/PidConfiguration.h>
 #include <ROS2Controllers/VehicleDynamics/VehicleConfiguration.h>
 #include <VehicleDynamics/ModelLimits/AckermannModelLimits.h>
@@ -37,6 +38,10 @@ namespace ROS2Controllers::VehicleDynamics
         AZStd::pair<AZ::Vector3, AZ::Vector3> GetVelocityFromModel() override;
 
     private:
+        //! Close the steering loop: sample the steering joints, run the PID and apply the resulting speed.
+        //! Runs once per physics sub-step, so the PID integrates at the fixed simulation rate.
+        void OnSceneSimulationFinish(float fixedDeltaTime);
+
         void ApplySteering(float steering, AZ::u64 deltaTimeNs);
         void ApplySpeed(float speed, AZ::u64 deltaTimeNs);
         void ApplyWheelSteering(SteeringDynamicsData& wheelData, float steering, double deltaTimeNs);
@@ -46,6 +51,8 @@ namespace ROS2Controllers::VehicleDynamics
         AZStd::vector<SteeringDynamicsData> m_steeringData;
         PidConfiguration m_steeringPid;
         float m_speedCommand = 0.0f;
+        float m_steeringCommand = 0.0f; //!< Steering angle requested by the last input state, in radians.
         AckermannModelLimits m_limits;
+        AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_sceneFinishSimHandler; //!< Handler called after every physics sub-step
     };
 } // namespace ROS2Controllers::VehicleDynamics
