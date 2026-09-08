@@ -9,10 +9,12 @@
 set(FILES
     ../Assets/Editor/Images/Icons/ROS2RobotImporter.qrc
     ../Assets/Editor/Images/Icons/ToolbarIcon.svg
+    Source/Tools/ImportSession.cpp
+    Source/Tools/ImportSession.h
     Source/Tools/ROS2RobotImporterEditorSystemComponent.cpp
     Source/Tools/ROS2RobotImporterEditorSystemComponent.h
-    Source/RobotImporter/FixURDF/FixURDF.cpp
-    Source/RobotImporter/FixURDF/FixURDF.h
+    Source/RobotImporter/Parsing/FixURDF/FixURDF.cpp
+    Source/RobotImporter/Parsing/FixURDF/FixURDF.h
     Source/RobotImporter/Pages/ModifiedURDFWindow.cpp
     Source/RobotImporter/Pages/ModifiedURDFWindow.h
     Source/RobotImporter/Pages/CheckAssetPage.cpp
@@ -27,8 +29,17 @@ set(FILES
     Source/RobotImporter/Pages/IntroPage.h
     Source/RobotImporter/Pages/XacroParamsPage.cpp
     Source/RobotImporter/Pages/XacroParamsPage.h
+    Source/RobotImporter/ImportSessionId.h
+    Source/RobotImporter/ReferencedAssetsRequestBus.h
+    Source/RobotImporter/StatusAggregationRequestBus.h
     Source/RobotImporter/RobotImporterWidget.cpp
     Source/RobotImporter/RobotImporterWidget.h
+    Source/RobotImporter/Queries/SdfPluginUtils.cpp
+    Source/RobotImporter/Queries/SdfPluginUtils.h
+    Source/RobotImporter/Queries/SdfQueries.cpp
+    Source/RobotImporter/Queries/SdfQueries.h
+    Source/RobotImporter/Queries/SdfVisitors.cpp
+    Source/RobotImporter/Queries/SdfVisitors.h
     Source/RobotImporter/SDFormat/Hooks/ROS2AckermannModelHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2CameraSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2GNSSSensorHook.cpp
@@ -41,37 +52,42 @@ set(FILES
     Source/RobotImporter/SDFormat/ROS2SDFormatHooksUtils.cpp
     Source/RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h
     Source/RobotImporter/SDFormat/ROS2SensorHooks.h
-    Source/RobotImporter/URDF/ArticulationsMaker.cpp
-    Source/RobotImporter/URDF/ArticulationsMaker.h
-    Source/RobotImporter/URDF/CollidersMaker.cpp
-    Source/RobotImporter/URDF/CollidersMaker.h
-    Source/RobotImporter/URDF/InertialsMaker.cpp
-    Source/RobotImporter/URDF/InertialsMaker.h
-    Source/RobotImporter/URDF/JointsMaker.cpp
-    Source/RobotImporter/URDF/JointsMaker.h
-    Source/RobotImporter/URDF/PrefabMakerUtils.cpp
-    Source/RobotImporter/URDF/PrefabMakerUtils.h
-    Source/RobotImporter/URDF/RobotControlMaker.cpp
-    Source/RobotImporter/URDF/RobotControlMaker.h
-    Source/RobotImporter/URDF/SensorsMaker.cpp
-    Source/RobotImporter/URDF/SensorsMaker.h
-    Source/RobotImporter/URDF/SdfParser.cpp
-    Source/RobotImporter/URDF/SdfParser.h
-    Source/RobotImporter/URDF/SdfPrefabMaker.cpp
-    Source/RobotImporter/URDF/SdfPrefabMaker.h
-    Source/RobotImporter/URDF/VisualsMaker.cpp
-    Source/RobotImporter/URDF/VisualsMaker.h
-    Source/RobotImporter/xacro/XacroUtils.cpp
-    Source/RobotImporter/xacro/XacroUtils.h
+    Source/RobotImporter/Building/Makers/ArticulationsMaker.cpp
+    Source/RobotImporter/Building/Makers/ArticulationsMaker.h
+    Source/RobotImporter/Building/Makers/CollidersMaker.cpp
+    Source/RobotImporter/Building/Makers/CollidersMaker.h
+    Source/RobotImporter/Building/Makers/InertialsMaker.cpp
+    Source/RobotImporter/Building/Makers/InertialsMaker.h
+    Source/RobotImporter/Building/Makers/JointsMaker.cpp
+    Source/RobotImporter/Building/Makers/JointsMaker.h
+    Source/RobotImporter/Building/PrefabMakerUtils.cpp
+    Source/RobotImporter/Building/PrefabMakerUtils.h
+    Source/RobotImporter/Building/Makers/RobotControlMaker.cpp
+    Source/RobotImporter/Building/Makers/RobotControlMaker.h
+    Source/RobotImporter/Building/Makers/SensorsMaker.cpp
+    Source/RobotImporter/Building/Makers/SensorsMaker.h
+    Source/RobotImporter/Parsing/SdfParser.cpp
+    Source/RobotImporter/Parsing/SdfParser.h
+    Source/RobotImporter/Building/SdfPrefabMaker.cpp
+    Source/RobotImporter/Building/SdfPrefabMaker.h
+    Source/RobotImporter/Building/Makers/VisualsMaker.cpp
+    Source/RobotImporter/Building/Makers/VisualsMaker.h
+    Source/RobotImporter/Parsing/Xacro/XacroUtils.cpp
+    Source/RobotImporter/Parsing/Xacro/XacroUtils.h
     Source/RobotImporter/Utils/DefaultSolverConfiguration.h
     Source/RobotImporter/Utils/ErrorUtils.cpp
     Source/RobotImporter/Utils/ErrorUtils.h
     Source/RobotImporter/Utils/FilePath.cpp
     Source/RobotImporter/Utils/FilePath.h
-    Source/RobotImporter/Utils/RobotImporterUtils.cpp
-    Source/RobotImporter/Utils/RobotImporterUtils.h
-    Source/RobotImporter/Utils/SourceAssetsStorage.cpp
-    Source/RobotImporter/Utils/SourceAssetsStorage.h
+    Source/RobotImporter/Assets/AssetImporter.cpp
+    Source/RobotImporter/Assets/AssetImporter.h
+    Source/RobotImporter/Assets/AssetPathResolver.cpp
+    Source/RobotImporter/Assets/AssetPathResolver.h
+    Source/RobotImporter/Assets/AssetTypes.h
+    Source/RobotImporter/Assets/AssetLookup.cpp
+    Source/RobotImporter/Assets/AssetLookup.h
+    Source/RobotImporter/Assets/SceneManifestBuilder.cpp
+    Source/RobotImporter/Assets/SceneManifestBuilder.h
     Source/RobotImporter/Utils/TypeConversions.cpp
     Source/RobotImporter/Utils/TypeConversions.h
     Source/SdfAssetBuilder/SdfAssetBuilder.cpp

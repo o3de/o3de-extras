@@ -23,7 +23,7 @@
 #include <QTimer>
 #include <QVector>
 #include <QWizardPage>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetTypes.h>
 #endif
 
 namespace ROS2RobotImporter
@@ -35,17 +35,17 @@ namespace ROS2RobotImporter
         explicit CheckAssetPage(QWizard* parent);
 
         //! Function reports assets that will be copied/processed by asset processor.
-        void ReportAsset(const AZStd::string unresolvedFileName, const Utils::ReferencedAsset& referencedAsset, const QString& type);
+        void ReportAsset(const AZStd::string unresolvedFileName, const Assets::ReferencedAsset& referencedAsset, const QString& type);
         void ClearAssetsList();
         bool IsEmpty() const;
         bool isComplete() const override;
         void initializePage() override;
 
         void OnAssetCopyStatusChanged(
-            const Utils::CopyStatus& status, const AZStd::string& unresolvedFileName, const AZStd::string assetPath);
+            const Assets::CopyStatus& status, const AZStd::string& unresolvedFileName, const AZStd::string assetPath);
 
         void OnAssetProcessStatusChanged(
-            const AZStd::string& unresolvedFileName, const Utils::ReferencedAsset& referencedAsset, bool isError);
+            const AZStd::string& unresolvedFileName, const Assets::ReferencedAsset& referencedAsset, bool isError);
 
         void SetCopyThread(AZStd::shared_ptr<AZStd::thread> copyThread);
 
@@ -57,7 +57,7 @@ namespace ROS2RobotImporter
         unsigned int m_failedCount{ 0 };
         void SetTitle();
         AZStd::unordered_map<AZStd::string, int> m_assetsToColumnIndex; //!< Map of unresolved asset to column index in the table.
-        AZStd::shared_ptr<Utils::ReferencedAssetMap> m_referencedAssetMap;
+        AZStd::shared_ptr<Assets::ReferencedAssetMap> m_referencedAssetMap;
 
         void DoubleClickRow(int row, int col);
         QIcon m_failureIcon;

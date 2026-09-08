@@ -18,12 +18,12 @@
 
 namespace sdf
 {
-    inline namespace v13
+    inline namespace v16
     {
         class Link;
         class Model;
         class Plugin;
-    } // namespace v13
+    } // namespace v16
 } // namespace sdf
 
 namespace ROS2RobotImporter::SDFormat

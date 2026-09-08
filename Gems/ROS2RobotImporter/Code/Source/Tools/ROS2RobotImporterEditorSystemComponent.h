@@ -14,7 +14,6 @@
 #include <ROS2RobotImporter/ROS2RobotImporterBus.h>
 #include <ROS2RobotImporter/SDFormatModelPluginImporterHook.h>
 #include <ROS2RobotImporter/SDFormatSensorImporterHook.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
 namespace ROS2RobotImporter
 {
 

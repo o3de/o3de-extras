@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
+
+#pragma once
+
+#include <AzCore/Asset/AssetCommon.h>
+#include <AzCore/Component/EntityId.h>
+#include <AzCore/IO/Path/Path.h>
+#include <AzCore/Math/Vector3.h>
+#include <RobotImporter/Assets/AssetTypes.h>
+#include <RobotImporter/ReferencedAssetsRequestBus.h>
+
+#include <sdf/sdf.hh>
+
+namespace ROS2RobotImporter
+{
+    //! Populates a given entity with all the contents of the <visual> tag in robot description
+    class VisualsMaker
+    {
+    public:
+        //! Construct the class with given session id.
+        //! @param sessionId id of current import session, allowing communication with asset and status busses.
+        VisualsMaker(const ImportSessionId sessionId);
+
+        //! Add zero, one or many visual elements to a given entity (depending on link content).
+        //! Note that a sub-entity will be added to hold each visual (since they can have different transforms).
+        //! @param link A parsed SDF link node which could hold information about visuals.
+        //! @param modelUri The URI of the model to use for the visual.
+        //! @param entityId A non-active entity which will be affected.
+        //! @return List containing any entities created.
+        AZStd::vector<AZ::EntityId> AddVisuals(const sdf::Link* link, const AZStd::string& modelUri, AZ::EntityId entityId) const;
+
+    private:
+        AZ::EntityId AddVisual(
+            const sdf::Visual* visual, const AZStd::string& modelUri, AZ::EntityId entityId, const AZStd::string& generatedName) const;
+        AZ::Data::AssetId AddVisualToEntity(const sdf::Visual* visual, const AZStd::string& modelUri, AZ::EntityId entityId) const;
+        void AddVisualAssetToEntity(AZ::EntityId entityId, const AZ::Data::AssetId& assetId, const AZ::Vector3& scale) const;
+        void AddMaterialForVisual(
+            const sdf::Visual* visual, const AZStd::string& modelUri, AZ::EntityId entityId, const AZ::Data::AssetId& assetId) const;
+
+        const ImportSessionId m_sessionId;
+    };
+} // namespace ROS2RobotImporter

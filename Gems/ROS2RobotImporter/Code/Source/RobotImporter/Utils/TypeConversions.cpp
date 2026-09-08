@@ -8,7 +8,7 @@
 
 #include "TypeConversions.h"
 
-namespace ROS2RobotImporter::Utils
+namespace ROS2RobotImporter::Utils::SDFormat
 {
     AZ::Vector3 TypeConversions::ConvertVector3(const gz::math::Vector3d& gzVector)
     {
@@ -27,9 +27,9 @@ namespace ROS2RobotImporter::Utils
 
     AZ::Transform TypeConversions::ConvertPose(const gz::math::Pose3d& pose)
     {
-        AZ::Quaternion azRotation = Utils::TypeConversions::ConvertQuaternion(pose.Rot());
-        AZ::Vector3 azPosition = Utils::TypeConversions::ConvertVector3(pose.Pos());
+        AZ::Quaternion azRotation = Utils::SDFormat::TypeConversions::ConvertQuaternion(pose.Rot());
+        AZ::Vector3 azPosition = Utils::SDFormat::TypeConversions::ConvertVector3(pose.Pos());
         return AZ::Transform(azPosition, azRotation, 1.0f);
     }
 
-} // namespace ROS2RobotImporter::Utils
+} // namespace ROS2RobotImporter::Utils::SDFormat

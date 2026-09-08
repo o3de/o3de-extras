@@ -17,15 +17,14 @@
 #include "Pages/RobotDescriptionPage.h"
 #include "Pages/XacroParamsPage.h"
 
-#include "URDF/SdfParser.h"
-#include "URDF/SdfPrefabMaker.h"
 #include <AzCore/Asset/AssetCommon.h>
+#include <AzCore/std/containers/set.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/parallel/thread.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
-#include <RobotImporter/FixURDF/URDFModifications.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
-#include <RobotImporter/xacro/XacroUtils.h>
+#include <RobotImporter/Parsing/FixURDF/URDFModifications.h>
+#include <RobotImporter/Parsing/SdfParser.h>
+#include <RobotImporter/Parsing/Xacro/XacroUtils.h>
 
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
 #include <AzToolsFramework/Prefab/PrefabFocusInterface.h>
@@ -48,9 +47,6 @@
 
 namespace ROS2RobotImporter
 {
-    class RobotImporterWidget;
-    class SdfPrefabMaker;
-
     //! Handles UI for the process of robot description importing
     class RobotImporterWidget : public QWizard
     {
@@ -82,10 +78,9 @@ namespace ROS2RobotImporter
         bool m_copyReferencedAssets{ false };
 
         /// mapping from unresolved URI to asset source
-        Utils::ReferencedAssetMap m_referencedAssetMap;
+        Assets::ReferencedAssetMap m_referencedAssetMap;
 
         AZStd::shared_ptr<AZStd::thread> m_copyReferencedAssetsThread;
-        AZStd::unique_ptr<SdfPrefabMaker> m_prefabMaker;
 
         /// Xacro params
         Utils::xacro::Params m_params;
