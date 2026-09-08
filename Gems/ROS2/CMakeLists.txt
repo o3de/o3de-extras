@@ -5,8 +5,6 @@
 
 o3de_gem_setup("ROS2")
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Code")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
 
 ly_add_external_target_path(${CMAKE_CURRENT_SOURCE_DIR}/3rdParty)
 

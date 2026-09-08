@@ -11,16 +11,15 @@ include(FetchContent)
 FetchContent_Declare(
     Tracy
     GIT_REPOSITORY "https://github.com/wolfpld/tracy.git"
-    GIT_TAG "05cceee0df3b8d7c6fa87e9638af311dbabc63cb" # version 0.13.1
+    GIT_TAG "30997d5ca6bb632cc10807a1da8a6d3de0aeeb3c" # version 0.14.1
 )
 
 set(TRACY_ENABLE ON)
-set(TRACY_CALLSTACK ON)
 set(TRACY_ON_DEMAND ON)
 
 FetchContent_MakeAvailable(Tracy)
 
-message(STATUS "TracyProfiler gem uses https://github.com/wolfpld/tracy version 0.13.1 (License: BSD-3-Clause)")
+message(STATUS "TracyProfiler gem uses https://github.com/wolfpld/tracy version 0.14.1 (License: BSD-3-Clause)")
 
 target_compile_options(TracyClient ${O3DE_COMPILE_OPTION_DISABLE_WARNINGS})
 
@@ -51,6 +50,7 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
+            Gem::Atom_RHI.Public
             TracyClient
 )
 

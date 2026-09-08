@@ -9,6 +9,8 @@
 set(FILES
     Source/Tools/ROS2SensorsEditorSystemComponent.cpp
     Source/Tools/ROS2SensorsEditorSystemComponent.h
+    Source/Camera/Compression/ROS2ImageCompressionEditorComponent.cpp
+    Source/Camera/Compression/ROS2ImageCompressionEditorComponent.h
     Source/Camera/ROS2CameraSensorEditorComponent.cpp
     Source/Camera/ROS2CameraSensorEditorComponent.h
     Source/Camera/ROS2EditorCameraSystemComponent.cpp
