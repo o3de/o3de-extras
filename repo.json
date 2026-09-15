@@ -66,27 +66,27 @@
                 },
                 {
                     "summary": "OpenXR Vulkan for Atom",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrvk-1.0.1-gem.zip",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/openxrvk-1.0.1-gem.zip",
                     "version": "1.0.1",
-                    "sha256": "2595eb8743b0dfc7523eaa1b891a4e8314d73cc3bbfd1a8865f6837ff273ffd1"
+                    "sha256": "51db177bc7d5621c982185ea7421dd32bde9a0420bbea052ece5aa3d6ba37724"
                 },
                 {
                     "summary": "OpenXR Vulkan for Atom",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrvk-1.1.0-gem.zip",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.0/openxrvk-1.1.0-gem.zip",
                     "version": "1.1.0",
-                    "sha256": "2a49fae6b3b3452cb52315d2131b67ec2a66afe9b031a2c025f678530e4ac673"
+                    "sha256": "8af96c3d7d19843bc93d1daf08bfa4332f86b568b0709b1cd8d40d088401b2a7"
                 },
                 {
                     "summary": "OpenXR Vulkan for Atom",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrvk-1.2.0-gem.zip",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/openxrvk-1.2.0-gem.zip",
                     "version": "1.2.0",
-                    "sha256": "874cf758b6d3b101a8fff9a0648414a75d951ff45012c2130f18e898b2519e14"
+                    "sha256": "94b375a0a4f4bf18de04e98e8b461cc56853dc7571fe18c226e2da837122df97"
                 },
                 {
                     "summary": "OpenXR Vulkan for Atom",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrvk-1.3.0-gem.zip",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/openxrvk-1.3.0-gem.zip",
                     "version": "1.3.0",
-                    "sha256": "5d0141a568166822b555e1cf18104e7caddb31a763d8573ad80d0ac472917d7f"
+                    "sha256": "c61079374cb29c13c45ba5ea89f6b36ded98bb0574eaddc54171e70301206a10"
                 }
             ]
         },
@@ -121,9 +121,9 @@
             "sha256": "ae3f973f061d1b8d52e3ced34dd9862ee48b64be4eebaebb4a585674a97e8b91",
             "versions_data": [
                 {
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.0.0-gem.zip",
                     "sha256": "45c906788ed9a83b8ff74fd1b893a54f79e4d3e0674139839afb807260efa0e6",
-                    "version": "1.0.0",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.0.0-gem.zip"
+                    "version": "1.0.0"
                 },
                 {
                     "version": "1.1.0",
@@ -134,8 +134,8 @@
                         "ROS2>=3.1.0"
                     ],
                     "compatible_engines": [
-                        "o3de-sdk>=2.3.0",
-                        "o3de>=2.3.0"
+                        "o3de-sdk>=4.1.0",
+                        "o3de>=4.1.0"
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.1.0-gem.zip",
                     "sha256": "dec32d93221e2514b59e1ac056b74c771dc4109b4599b5cf290f27a3f2486615"
@@ -152,8 +152,8 @@
                         "o3de-sdk>=2.3.0",
                         "o3de>=2.3.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-2.0.0-gem.zip",
-                    "sha256": "29eab27f4b78e43e157a9e5eb4565f5d29cecaf08b0c1f36ea40f03aa1640452"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/proteusrobot-2.0.0-gem.zip",
+                    "sha256": "508f5bf6729fa0a1d01318c816821bc203e45b70012bbb578d8d83b8d42de70d"
                 }
             ]
         },
@@ -223,8 +223,8 @@
                         "PrimitiveAssets",
                         "StartingPointInput"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.1.0-gem.zip",
-                    "sha256": "aace14afcbe3feda0be0b11cb3610d93ec8e3e55a7b2f185df51ea468e7e7554"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/ros2-3.1.0-gem.zip",
+                    "sha256": "9161be5ecdad4adcba0badd4c2e48fa2a27b48b89d409edf8a421117ac4a941e"
                 },
                 {
                     "version": "3.1.1",
@@ -244,8 +244,8 @@
                         "PrimitiveAssets",
                         "StartingPointInput"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.1.1-gem.zip",
-                    "sha256": "063fea6c2d70a778dcbd92d9b1be2fff36a058d83002f612fcbfa6526b41fcde"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/ros2-3.1.1-gem.zip",
+                    "sha256": "b3c4d2d2467d161878bc6e872a822bff5f0b6e02c549502abfa09bc08d9e19f9"
                 },
                 {
                     "version": "3.2.2",
@@ -265,8 +265,8 @@
                         "PrimitiveAssets",
                         "StartingPointInput"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.2.2-gem.zip",
-                    "sha256": "86bf6c09c2545db10210752e7749ed9d9784e32200196f8f1110bc7a4f704636"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.1/ros2-3.2.2-gem.zip",
+                    "sha256": "4847606effe9a00fb7e82de2d0919f9d75f2eba7fddc0ea9ae5f90b2cb7a38d0"
                 },
                 {
                     "version": "3.2.3",
@@ -287,8 +287,8 @@
                         "PrimitiveAssets",
                         "StartingPointInput"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.2.3-gem.zip",
-                    "sha256": "903ceef078984711d516ba9ab7466fb2165e9d3d447539cd10460c22d98563db"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.2/ros2-3.2.3-gem.zip",
+                    "sha256": "8c3258ba1762a945a69590520ad2b5747988f74dac5426146515f0f8e59725fb"
                 },
                 {
                     "version": "3.3.0",
@@ -311,8 +311,8 @@
                         "o3de>=2.4.0"
                     ],
                     "engine_api_dependencies": [],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.3.0-gem.zip",
-                    "sha256": "29735e8e634bfd6b5823a398984edd1d094cb02476d22df65a489927c5eb510b"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.0/ros2-3.3.0-gem.zip",
+                    "sha256": "17fbea9b136504fc9d53ddd752eaa01663104310ac60edd2032b7291ba15540c"
                 },
                 {
                     "version": "3.3.1",
@@ -335,8 +335,8 @@
                         "o3de>=2.4.0"
                     ],
                     "engine_api_dependencies": [],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.3.1-gem.zip",
-                    "sha256": "5f018bdf1f49a4be37f548cba452bfd166ee8438f1e39a114ab01a40917fed5e"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.1/ros2-3.3.1-gem.zip",
+                    "sha256": "1680f1ebbd72b066d26a465f8b1e6ad1593f282028ad4dd16b6a46901c6ca792"
                 },
                 {
                     "version": "3.4.0",
@@ -359,8 +359,8 @@
                         "o3de>=2.4.0"
                     ],
                     "engine_api_dependencies": [],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.4.0-gem.zip",
-                    "sha256": "2682a18e88b88134d2bb32bc9dfc53cbaf6126a8c32e96a18e84108ca7f21f9e"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/ros2-3.4.0-gem.zip",
+                    "sha256": "1ef00d791b5cf13fda2d7813998268c70936c1d679665d6cc0efcf4ee30bbde1"
                 },
                 {
                     "version": "3.5.0",
@@ -383,8 +383,8 @@
                         "o3de>=2.4.0"
                     ],
                     "engine_api_dependencies": [],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.5.0-gem.zip",
-                    "sha256": "1142a78256af12bbc1b49de0ff1aab7b9251b99ee913ea47fa2c23ae6a476512"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.1/ros2-3.5.0-gem.zip",
+                    "sha256": "de405d959ec96adc5522724cb78957dd5b093096be3d4dac35a35f23a0594636"
                 },
                 {
                     "version": "3.5.1",
@@ -407,8 +407,8 @@
                         "o3de>=2.4.0"
                     ],
                     "engine_api_dependencies": [],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.5.1-gem.zip",
-                    "sha256": "de9b58f9f50ca7fcaa60c8e8734131bd21ff390cc8cb40f660f0d358860fd6a9"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.1/ros2-3.5.1-gem.zip",
+                    "sha256": "9b343b436b5d5c4e8bab92a26d717890ac0a7bb1a196d3abb0c919aa6b144e72"
                 },
                 {
                     "version": "4.0.0",
@@ -424,8 +424,8 @@
                         "o3de>=2.4.0"
                     ],
                     "engine_api_dependencies": [],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-4.0.0-gem.zip",
-                    "sha256": "5567e47ddc1cbb3f76073201d80b463ad5fba8cdfeb36e9ba6fbd479e492681d"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/ros2-4.0.0-gem.zip",
+                    "sha256": "19e7b9381d930fe1777b8ee2eb17e8e486b30079e4cec3727593498655868fb5"
                 },
                 {
                     "version": "4.1.0",
@@ -441,8 +441,8 @@
                         "o3de>=2.4.0"
                     ],
                     "engine_api_dependencies": [],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-4.1.0-gem.zip",
-                    "sha256": "cec6909ab111828023e0907e174ea7a1f5dcb9458c6fe8c7d759902842651c42"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.1/ros2-4.1.0-gem.zip",
+                    "sha256": "d96acd8e48d1ad9f90d7e802c0c6f11ef7d1f92413ff5bdb9e66d218e37738d4"
                 },
                 {
                     "version": "4.2.0",
@@ -458,8 +458,8 @@
                         "o3de>=2.4.0"
                     ],
                     "engine_api_dependencies": [],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-4.2.0-gem.zip",
-                    "sha256": "cd6d07127620fabd70380e45f7a435974f54d338fd14ba41ac87195f31cbd0f9"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/ros2-4.2.0-gem.zip",
+                    "sha256": "1944760ac9cc154a5d66edb4c1d1ab97608180c602d1f98b8be208a3379ba2ff"
                 }
             ]
         },
@@ -494,9 +494,9 @@
             "sha256": "6df46fcd9fff1eaff025fce708a5ca89c178ea001056bae82cc30bb2f3a09a53",
             "versions_data": [
                 {
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-1.0.0-gem.zip",
                     "sha256": "be8973571f51d61bd3e56f40ab2d757bd7013c6bb466fe9f04ebb11c13eb7312",
-                    "version": "1.0.0",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-1.0.0-gem.zip"
+                    "version": "1.0.0"
                 },
                 {
                     "version": "1.1.0",
@@ -527,8 +527,8 @@
                         "o3de-sdk>=2.3.0",
                         "o3de>=2.3.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-2.0.0-gem.zip",
-                    "sha256": "92ddad5fea49a0ac615c5cea417a858f49a2a1fbed24b3b878ee3bff8f538827"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/rosrobotsample-2.0.0-gem.zip",
+                    "sha256": "713086e443bd0edffedd527f6bb39924886a2e12bac6d8bab06cdae2ac080dd1"
                 },
                 {
                     "version": "2.0.1",
@@ -543,8 +543,8 @@
                         "o3de-sdk>=2.3.0",
                         "o3de>=2.3.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-2.0.1-gem.zip",
-                    "sha256": "a4ff12f401cd24d01e68c2058da5312bc1567c72fc26389593ec2e36bdfd3858"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/rosrobotsample-2.0.1-gem.zip",
+                    "sha256": "8da9d3c8ecc8f853a4b1ff6a57bf635974d332101fe5890e4133a10553cadffe"
                 }
             ]
         },
@@ -590,8 +590,8 @@
                         "o3de-sdk>=2.3.0",
                         "o3de>=2.3.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.0-gem.zip",
-                    "sha256": "b91c685ea476523322b2864d17aafc5c6236092f950a4159fe59051d9c9449ce"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.0/warehouseassets-2.0.0-gem.zip",
+                    "sha256": "389de93704ff61f57854aa9cfe8ea7e44667b62f025786926109720a79fd0e1d"
                 },
                 {
                     "version": "2.0.1",
@@ -601,8 +601,8 @@
                         "o3de-sdk>=2.3.0",
                         "o3de>=2.3.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.1-gem.zip",
-                    "sha256": "940963d056a9d10ed15788503ff5b7cddc69a3585ad4265da9ed149e699ea98a"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.1/warehouseassets-2.0.1-gem.zip",
+                    "sha256": "8592da3f8bf4accf363ac698ac86e18a10b7b2fa77c404f987bb36cdd9404de0"
                 },
                 {
                     "version": "2.0.2",
@@ -612,8 +612,8 @@
                         "o3de-sdk>=2.3.0",
                         "o3de>=2.3.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.2-gem.zip",
-                    "sha256": "6e9b80a1babb6427e8dd29b30ef48bf3edf362d13ed7525a07104438a6f21445"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/warehouseassets-2.0.2-gem.zip",
+                    "sha256": "175895b8dfbcd28cd6eb585d814e661a3659cf9dfa31678633466d24b0034244"
                 },
                 {
                     "version": "2.0.3",
@@ -623,8 +623,8 @@
                         "o3de-sdk>=2.3.0",
                         "o3de>=2.3.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.3-gem.zip",
-                    "sha256": "74615e5be45fbacf6b278dabfdc42551ae9d52283f5539a975fb05b38ede57c4"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.1/warehouseassets-2.0.3-gem.zip",
+                    "sha256": "fa4fbcd6f0b49e59bddd6564a950608f0750d780f273e096f6362da4add738ce"
                 },
                 {
                     "version": "2.0.4",
@@ -634,8 +634,8 @@
                         "o3de-sdk>=2.5.0",
                         "o3de>=2.5.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-2.0.4-gem.zip",
-                    "sha256": "098fc5d5d93c4247419dd52c9e8fce29e7d28566e349ef16a2a6257ef88ee356"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/warehouseassets-2.0.4-gem.zip",
+                    "sha256": "16d1693bc27b130291a610b85b727045b56ea3604308a4d0b863686d7fa46f48"
                 }
             ]
         },
@@ -698,27 +698,27 @@
                     "version": "1.0.0"
                 },
                 {
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/xr-1.0.1-gem.zip",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/xr-1.0.1-gem.zip",
                     "version": "1.0.1",
-                    "sha256": "325a826e513611b37155c2eaa8b5b5578fdca8d96f3ef4faf34bf49c7d39a2f0"
+                    "sha256": "15b1e5932afeab4a4169c0f3c5d318bf654a64a0102d948ac1342ed7ae7ecf50"
                 },
                 {
                     "compatible_engines": [
                         "o3de-sdk>=2.4.0",
                         "o3de>=2.4.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/xr-1.1.0-gem.zip",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.0/xr-1.1.0-gem.zip",
                     "version": "1.1.0",
-                    "sha256": "fdef00fd5a9aeb4d98a3664d134358d9645f2c75034bf043284644fc158bc904"
+                    "sha256": "3873c618dd24293e49b03960dde1c02fe4ab28ca17471f08a58268c68518c463"
                 },
                 {
                     "compatible_engines": [
                         "o3de-sdk>=2.4.0",
                         "o3de>=2.4.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/xr-1.2.0-gem.zip",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/xr-1.2.0-gem.zip",
                     "version": "1.2.0",
-                    "sha256": "1b614b498d71343659ac9adcb3099f3926ed6901df30c6c8dd8f6de2fef1f8b7"
+                    "sha256": "6a546bc5ec6c6d997bb87361a6fe1a1e45db70f1620e379f0ee4e9b7be48732e"
                 }
             ]
         },
@@ -791,8 +791,8 @@
                     "dependencies": [
                         "ROS2>=3.1.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseautomation-2.0.0-gem.zip",
-                    "sha256": "8cccbe7fa40300683d210d70fc9867c0713ae2e1fd05656c84992a31123098f4",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/warehouseautomation-2.0.0-gem.zip",
+                    "sha256": "1d2d59414c396d9d6fd38c046f0c80690a5711cba3f30646b5b34502c2bfe3df",
                     "version": "2.0.0"
                 },
                 {
@@ -804,8 +804,8 @@
                     "dependencies": [
                         "ROS2>=3.1.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseautomation-2.0.1-gem.zip",
-                    "sha256": "729664cb582494e6d8dcf9206784810920349a29d1b40800b38afafa8522a5f0"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/warehouseautomation-2.0.1-gem.zip",
+                    "sha256": "27cd06924187a0174583e962f3603464722da2962d30d5a8ed392fd7ffcd7ed8"
                 }
             ]
         },
@@ -838,8 +838,8 @@
             "engine_api_dependencies": [],
             "restricted": "LevelGeoreferencing",
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/levelgeoreferencing-1.0.0-gem.zip",
-            "sha256": "3e77d7708dfbb6d383d7aadd77e98e4def4c2e3f14171c098840d4761dc6da50"
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.0/levelgeoreferencing-1.0.0-gem.zip",
+            "sha256": "1797b8d3425b2c2c53914225114cf19069d834cacd71bc4d6c12499e6cea0430"
         },
         {
             "gem_name": "MachineLearning",
@@ -868,8 +868,8 @@
             "compatible_engines": [],
             "engine_api_dependencies": [],
             "restricted": "MachineLearning",
-            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/machinelearning-1.0.1-gem.zip",
-            "sha256": "af7c7eac3f95379677660eee826b4bce6f8232fa18cfec3572978ed374a92717"
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.0/machinelearning-1.0.1-gem.zip",
+            "sha256": "3b0d1fc7ac0a18d843b7fb752542c14b5c8be8184a7cd0792201bee8d6b7d310"
         },
         {
             "gem_name": "ROS2SampleRobots",
@@ -903,13 +903,13 @@
             ],
             "engine_api_dependencies": [],
             "restricted": "ROS2SampleRobots",
-            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2samplerobots-1.0.0-gem.zip",
-            "sha256": "f1dbabfd0f51969c4d105285e67113d4bd8d3d43d6294b5dc68bfde656c9b274",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.0/ros2samplerobots-1.0.0-gem.zip",
+            "sha256": "d2d9e4d2bcdb10a94b46cb4b336c072bf2e255ebfaba2d0ca6cf1279d1b83fb5",
             "versions_data": [
                 {
                     "version": "1.0.1",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2samplerobots-1.0.1-gem.zip",
-                    "sha256": "4f157579587958c335d8435e1f2e36458b29fd88104663fdf05519e62f68aaaa"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.1/ros2samplerobots-1.0.1-gem.zip",
+                    "sha256": "acdf1c4b43ba86287184b6b73803a6f63f77abb8e6944a639c936306e2978588"
                 },
                 {
                     "version": "1.1.0",
@@ -918,8 +918,8 @@
                         "ROS2Controllers>=1.0.0",
                         "ROS2Sensors>=1.0.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2samplerobots-1.1.0-gem.zip",
-                    "sha256": "f9ffbde2621479c463797b7a785717ec1356dc4dc7ccfeffcdac8780c4dac770"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/ros2samplerobots-1.1.0-gem.zip",
+                    "sha256": "f40d881d103c3f2f76dbe0cd44c7a202927ff8692c347cd805d9fa235815575c"
                 },
                 {
                     "version": "1.2.0",
@@ -928,8 +928,8 @@
                         "ROS2Controllers>=1.0.0",
                         "ROS2Sensors>=1.0.0"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2samplerobots-1.2.0-gem.zip",
-                    "sha256": "df86d10085761d90de2b25ac266698930d93fe7438b10c0b5be72b0ddfcdab13"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/ros2samplerobots-1.2.0-gem.zip",
+                    "sha256": "b65b4914d051f2900f1301b9f28b8d68adc2e83579923ef4c5e574250a3b8dfb"
                 }
             ]
         },
@@ -965,13 +965,13 @@
             "engine_api_dependencies": [],
             "restricted": "SimulationInterfaces",
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-1.0.0-gem.zip",
-            "sha256": "d13ecb0e22aa50b74abb241a615d9026cad739c1522fe94e456ea5b94d9bbd06",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.0/simulationinterfaces-1.0.0-gem.zip",
+            "sha256": "ec1648e5957fa68fd56973f13f1114dce34277ec1ef63220dd93c30061cc4d44",
             "versions_data": [
                 {
                     "version": "2.0.0",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.0.0-gem.zip",
-                    "sha256": "bca9402d455062ae3d715d14cfcbad35ff6a558f246d127cd9d7cb5a272d6bd4"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/simulationinterfaces-2.0.0-gem.zip",
+                    "sha256": "4bfab758acef10757c532b8df06697d66d5474ab77a6d31ccd289e2494bdffdc"
                 },
                 {
                     "version": "2.0.1",
@@ -979,8 +979,8 @@
                         "ROS2>=3.5.0",
                         "DebugDraw"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.0.1-gem.zip",
-                    "sha256": "e1c6a8b0d34b50886b2cb0a11523941d879ec0ed7582785bd7ec229ceba4a17d"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.1/simulationinterfaces-2.0.1-gem.zip",
+                    "sha256": "9373665909c9e702c288518e090059c51c582a15b4fcdef28efaa5e39f50cfd4"
                 },
                 {
                     "version": "2.0.2",
@@ -988,8 +988,8 @@
                         "ROS2>=3.5.0",
                         "DebugDraw"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.0.2-gem.zip",
-                    "sha256": "09456bcc95787d3ab54c662c2819555e876ad62877f04d9e6f9d0f045c0bb019"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.1/simulationinterfaces-2.0.2-gem.zip",
+                    "sha256": "9d9b362d0390aa215090826375a55eb6c8a477d6a8a990470289933caf0968e4"
                 },
                 {
                     "version": "2.1.0",
@@ -997,8 +997,8 @@
                         "ROS2>=4.0.0",
                         "DebugDraw"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.1.0-gem.zip",
-                    "sha256": "570a1f83372441b93f7201a72df3fb76a8a430338ff303c010db2c4fa644dbcf"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/simulationinterfaces-2.1.0-gem.zip",
+                    "sha256": "546a1f77e3629cc9da4276212570a7b1441e46b003ecee775457f0983ed52fc3"
                 },
                 {
                     "version": "2.1.1",
@@ -1006,8 +1006,8 @@
                         "ROS2>=4.1.0",
                         "DebugDraw"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.1.1-gem.zip",
-                    "sha256": "b0f130d21acc7d8a9785f62b128c8743280418112fe5883090f86205853d8805"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.1/simulationinterfaces-2.1.1-gem.zip",
+                    "sha256": "e54fa5450e802a0d7d7ed2299279c8740e757d075bc4828b11c19eaa8b5a80a0"
                 },
                 {
                     "version": "2.2.0",
@@ -1015,8 +1015,8 @@
                         "ROS2>=4.1.0",
                         "DebugDraw"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/simulationinterfaces-2.2.0-gem.zip",
-                    "sha256": "3005f757e3c38b1b445db73e74f6661aa68037761b2d43e0c7df40d9085e18cc"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/simulationinterfaces-2.2.0-gem.zip",
+                    "sha256": "885e9ef058c339254611a59a31d4692e430571b85dbe59a5cbfab8c643f91d79"
                 }
             ]
         },
@@ -1048,22 +1048,22 @@
             ],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
             "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Controllers",
-            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2controllers-1.0.0-gem.zip",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/ros2controllers-1.0.0-gem.zip",
             "compatible_engines": [],
             "engine_api_dependencies": [],
             "restricted": "ROS2Controllers",
-            "sha256": "b6029ff58c0da1561d9a8585147516fe9dcf0330783630df013d5f712e61574b",
+            "sha256": "c6c0b2edd42ad9c978258c462816757f948cdcc0e21cd3c046ca7d5fa7e1f947",
             "versions_data": [
                 {
                     "version": "1.0.1",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2controllers-1.0.1-gem.zip",
-                    "sha256": "f8feb52d7dc31c2dd2e4a7dc8b0f0129b5f571594e788c9d954dcad3f66a0010",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.1/ros2controllers-1.0.1-gem.zip",
+                    "sha256": "c95b245faad69e6a2aea1644b41407702249b806ea7423fb9b993a128d4adb8e",
                     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Controllers"
                 },
                 {
                     "version": "1.1.0",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2controllers-1.1.0-gem.zip",
-                    "sha256": "a290ccbe8f1930d7237428794049875a717a2d4ba085c3ad28bc3ee4feedc353",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/ros2controllers-1.1.0-gem.zip",
+                    "sha256": "f8b15c5000103377cc2b24906eec6121f933eb7a53a9336edb58ee1032c14c11",
                     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Controllers"
                 }
             ]
@@ -1097,17 +1097,17 @@
             ],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
             "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2RobotImporter",
-            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2robotimporter-1.0.0-gem.zip",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/ros2robotimporter-1.0.0-gem.zip",
             "compatible_engines": [],
             "engine_api_dependencies": [],
             "restricted": "ROS2RobotImporter",
-            "sha256": "8b668fe7a0f88c9cca2a02a77827de1c68131a75b559323ce29714ad116fc1ae",
+            "sha256": "972c453cb94c740d8d3b7106dd178a90076c13f1d3b0e8ad6779fae6fa4cd485",
             "versions_data": [
                 {
                     "version": "1.1.0",
                     "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2robotimporter/",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2robotimporter-1.1.0-gem.zip",
-                    "sha256": "45b35920d807c9d604dc5e826c562dd62ab0b861b30b9bb7311d6f3dd2b0a425",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/ros2robotimporter-1.1.0-gem.zip",
+                    "sha256": "c5eb0a1564810be445b627adbe71773307a2c7eb447ae8f603578f59a0127314",
                     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2RobotImporter"
                 }
             ]
@@ -1141,16 +1141,16 @@
             ],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
             "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Sensors",
-            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2sensors-1.0.0-gem.zip",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/ros2sensors-1.0.0-gem.zip",
             "compatible_engines": [],
             "engine_api_dependencies": [],
             "restricted": "ROS2Sensors",
-            "sha256": "ee3a5ed1c4913ca5be2bb756983f08192afd8aaca0f3ad8ce9beaa94f679468b",
+            "sha256": "5c4b2da75d09854a156ece9115bf32e7c7d8e5ceb07ac56022f34ce1bc0059b1",
             "versions_data": [
                 {
                     "version": "1.0.1",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2sensors-1.0.1-gem.zip",
-                    "sha256": "478d03c12fbfc765c202cc7ff5d91510ebe1c4c871b915cde08982d67cfc1b66",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.1/ros2sensors-1.0.1-gem.zip",
+                    "sha256": "52ac5d23a36ea95dc25fb5c199c32de13641ff6a3f19aaafbca4e46b08678893",
                     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Sensors"
                 }
             ]
@@ -1175,10 +1175,10 @@
             "icon_path": "preview.png",
             "requirements": "Users will need to download Optick GUI from the <a href='https://github.com/bombomby/optick/releases'>Github release</a>.",
             "dependencies": [],
-            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/optickprofiler-1.0.0-gem.zip",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/optickprofiler-1.0.0-gem.zip",
             "provided_unique_service": "Profiler",
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-            "sha256": "6667773aeff03319cfe20cd382b8af7280f5d2f5263ff344f37d1073c7da88c0"
+            "sha256": "ca8b5fc56c0404545cc07f7d893047306a058d138bde3cb78c890046758f065e"
         },
         {
             "gem_name": "SuperluminalProfiler",
@@ -1201,10 +1201,10 @@
             "requirements": "Users will need to download Superluminal from the <a href='https://superluminal.eu/'>Superluminal Web Site</a>.",
             "documentation_url": "https://www.superluminal.eu/docs/documentation.html",
             "dependencies": [],
-            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/superluminalprofiler-1.0.0-gem.zip",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/superluminalprofiler-1.0.0-gem.zip",
             "provided_unique_service": "Profiler",
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-            "sha256": "533fd5d1bab4c68538e53d39f8d4cc4f939a49c917dc5d43428494c354ac4815"
+            "sha256": "b16062d7088b3dca74bd3321b6097dbbacd6536de0ffb08ca7aa2143694fef51"
         },
         {
             "gem_name": "TracyProfiler",
@@ -1227,10 +1227,10 @@
             "requirements": "Users will need to download Tracy from the <a href='https://github.com/wolfpld/tracy/releases'>Github release</a>.",
             "documentation_url": "https://github.com/wolfpld/tracy",
             "dependencies": [],
-            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/tracyprofiler-1.0.0-gem.zip",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/tracyprofiler-1.0.0-gem.zip",
             "provided_unique_service": "Profiler",
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-            "sha256": "fdf610b96ad8c008b5cc05dd0adbefb281d44162a644ec036c265458ef224e07"
+            "sha256": "8e712e53a12d23163fa43151d288a73ae07a4f2c5f77a278fca309810f3112f4"
         }
     ],
     "templates": [
@@ -2717,18 +2717,18 @@
                 }
             ],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/multiplayer-2.0.0-template.zip",
-            "sha256": "f6eaa01c0a66fef0a9fa55e00637ae087f11287f30540ccd479c2988f9e41ab4",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/multiplayer-2.0.0-template.zip",
+            "sha256": "03620ef9909781bea800499c422b07369a1b0795b75c583ec4648feebd760000",
             "versions_data": [
                 {
                     "version": "2.0.1",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/multiplayer-2.0.1-template.zip",
-                    "sha256": "2280b6682adeb9886d061c84de1d7aed0df0e84ed621bacda96de34d387a9ed8"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.0/multiplayer-2.0.1-template.zip",
+                    "sha256": "ac8b649829d8cb6f988a19b75c2693c3e3480f8b615e85864b3be9e0f7c53576"
                 },
                 {
                     "version": "2.1.0",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/multiplayer-2.1.0-template.zip",
-                    "sha256": "4020f7cbbca61acdddb71ec0054798aa6ea6bd47d3b56547754bd8e1f3562420"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/multiplayer-2.1.0-template.zip",
+                    "sha256": "124b0b8e27d3480c30aea8e19aa4ad3bf0ffb6765b492200bc6220242ab60dc2"
                 },
                 {
                     "version": "2.1.1",
@@ -3139,9 +3139,9 @@
             "sha256": "1c9d48b064881c41a98315839fe079eb58bd414445dfaa0b695a00109d5bab02",
             "versions_data": [
                 {
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-1.0.0-template.zip",
                     "sha256": "5617f52c2da6c8f869c2073d3b10b8941d71af8696d3593e90431b8df7be2497",
-                    "version": "1.0.0",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-1.0.0-template.zip"
+                    "version": "1.0.0"
                 },
                 {
                     "version": "1.2.0",
@@ -3419,11 +3419,11 @@
                             "isTemplated": false
                         },
                         {
-                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_multirobot_params.yaml",
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_multirobot_params.yaml",
                             "isTemplated": false
                         },
                         {
-                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_params.yaml",
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_params.yaml",
                             "isTemplated": false
                         },
                         {
@@ -3620,8 +3620,8 @@
                             "dir": "Examples/ros2_ws/src/o3de_fleet_nav/test"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-1.2.0-template.zip",
-                    "sha256": "15976b73a541146d48c13026986259161b0304e89501775bde7deab7518aadf1"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/ros2fleetrobottemplate-1.2.0-template.zip",
+                    "sha256": "7af3a066f8ae98e6fe8dc716c3ef2fb457720f917cd95b87614fd669da715f96"
                 },
                 {
                     "version": "2.0.0",
@@ -3899,11 +3899,11 @@
                             "isTemplated": false
                         },
                         {
-                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_multirobot_params.yaml",
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_multirobot_params.yaml",
                             "isTemplated": false
                         },
                         {
-                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_params.yaml",
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_params.yaml",
                             "isTemplated": false
                         },
                         {
@@ -4100,8 +4100,8 @@
                             "dir": "Examples/ros2_ws/src/o3de_fleet_nav/test"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.0.0-template.zip",
-                    "sha256": "a788901be9a503165050345be940dcbd5a02d6eea9cd0b6a4cb1a92ae12b2170"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/ros2fleetrobottemplate-2.0.0-template.zip",
+                    "sha256": "deab3101814b3d5587900db36b41a212ee52f5c78ac89572295f62b2f8e0ee67"
                 },
                 {
                     "version": "2.0.1",
@@ -4580,8 +4580,8 @@
                             "dir": "Examples/ros2_ws/src/o3de_fleet_nav/test"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.0.1-template.zip",
-                    "sha256": "33023262e18e7b72e2cd78e96982fd90df9f9095a78bead6d2afb74c2ed390c4"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/ros2fleetrobottemplate-2.0.1-template.zip",
+                    "sha256": "e7438c459360f8446eb30d75f61986648aa17b0bc1d6339bb3c316a4780142eb"
                 },
                 {
                     "version": "2.0.2",
@@ -5064,8 +5064,8 @@
                             "dir": "Examples/ros2_ws/src/o3de_fleet_nav/test"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.0.2-template.zip",
-                    "sha256": "7ac04e30e179f36884424049c777502d08a6518f5d4306bc1834177a7927b770"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.1/ros2fleetrobottemplate-2.0.2-template.zip",
+                    "sha256": "ae4eba3646f85c773511391c1c07828d7035154c53b8c5408f866b4bfee262a5"
                 },
                 {
                     "version": "2.0.3",
@@ -5548,8 +5548,8 @@
                             "dir": "Examples/ros2_ws/src/o3de_fleet_nav/test"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.0.3-template.zip",
-                    "sha256": "1fdb529bb39cbe1248b3af2ef6531cf1e95b8aadaf6db6aace0a2e221da67fd4"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.2/ros2fleetrobottemplate-2.0.3-template.zip",
+                    "sha256": "4f9c55666621347e48b69e03458b246299a83a90ec741b57c60b71336608f2f0"
                 },
                 {
                     "version": "2.1.0",
@@ -6012,8 +6012,8 @@
                             "dir": "cmake"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.1.0-template.zip",
-                    "sha256": "351fa25b6fafb7fa0f6f65ed8c2a6fb7cb4f3957021609292956cee813f27ad7"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.0/ros2fleetrobottemplate-2.1.0-template.zip",
+                    "sha256": "cd7f15eae511b7282ff219e79f6ff3d2304a3be75d11a6d1c92c5e8870efe02a"
                 },
                 {
                     "version": "2.1.1",
@@ -6476,8 +6476,8 @@
                             "dir": "cmake"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.1.1-template.zip",
-                    "sha256": "746ad78167c053d6362119eb71bd3a56e4fd661599aacca639e3085f7be3e8e7"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/ros2fleetrobottemplate-2.1.1-template.zip",
+                    "sha256": "8ff3edecfc056b21830a2bf669f03a2f91591c6483bbe4e9cf5f058a73f7d9c6"
                 },
                 {
                     "version": "2.2.0",
@@ -6944,8 +6944,8 @@
                             "dir": "cmake"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.2.0-template.zip",
-                    "sha256": "f2acf1c4ff3176f4e292f8de7d5d4593334a09f6becb21073609e2daffd23469"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/ros2fleetrobottemplate-2.2.0-template.zip",
+                    "sha256": "1fe4f6ca8c026739a19e9ee40dc050047747bd07df2569614cb84bd20cf42c0a"
                 }
             ]
         },
@@ -7480,9 +7480,403 @@
             "sha256": "c7da8b04237c224e5377ae91625cf9a11e7b27479d9f6344c103905791a9b60f",
             "versions_data": [
                 {
+                    "copyFiles": [
+                        {
+                            "file": ".gitattributes",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": ".gitignore",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "CMakeLists.txt",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "cmake/EngineFinder.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Config/default_aws_resource_mappings.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Config/shader_global_build_options.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/${NameLower}_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/${NameLower}_shared_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/CMakeLists.txt",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Include/${Name}/${Name}Bus.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Android/${NameLower}_android_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Android/${NameLower}_shared_android_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Android/PAL_android.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/${NameLower}_linux_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/${NameLower}_shared_linux_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/PAL_linux.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/${NameLower}_mac_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/${NameLower}_shared_mac_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/PAL_mac.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/${NameLower}_shared_windows_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/${NameLower}_windows_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/PAL_windows.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/iOS/${NameLower}_ios_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/iOS/${NameLower}_shared_ios_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/iOS/PAL_ios.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Registry/assetprocessor_settings.setreg",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}Module.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}SystemComponent.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}SystemComponent.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/enabled_gems.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/gem.json",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Levels/DemoLevel/DemoLevel.prefab",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Android/android_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Android/android_project.json",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Platform/Linux/linux_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Linux/linux_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Mac/mac_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Mac/mac_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Windows/windows_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Windows/windows_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/iOS/ios_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/iOS/ios_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/assetprocessor_settings.setreg",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Registry/awscoreconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/editorpreferences.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/physxsystemconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/sceneassetimporter.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/GameSDK.ico",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/LegacyLogoLauncher.bmp",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Info.plist",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1024x768.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1536x2048.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage2048x1536.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage768x1024.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x1136.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x960.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadAppIcon152x152.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadAppIcon76x76.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadProAppIcon167x167.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSettingsIcon29x29.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSettingsIcon58x58.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSpotlightIcon40x40.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSpotlightIcon80x80.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneAppIcon120x120.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneAppIcon180x180.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSettingsIcon58x58.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSettingsIcon87x87.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSpotlightIcon120x120.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSpotlightIcon80x80.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Info.plist",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "ShaderLib/README.md",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "ShaderLib/scenesrg.srgi",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "ShaderLib/viewsrg.srgi",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "autoexec.cfg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "game.cfg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "preview.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "project.json",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Examples/slam_navigation/launch/config/config.rviz",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/slam_navigation/README.md",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/slam_navigation/launch/config/navigation_params.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/slam_navigation/launch/config/slam_params.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/slam_navigation/launch/navigation.launch.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/slam_navigation/launch/slam.launch.py",
+                            "isTemplated": false
+                        }
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-1.0.0-template.zip",
                     "sha256": "62405080293d0be734398b3a338b2a9fce4dd50cba35d993f95d1d30e8e93e1b",
-                    "version": "1.0.0",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-1.0.0-template.zip"
+                    "version": "1.0.0"
                 },
                 {
                     "version": "1.1.0",
@@ -8330,11 +8724,7 @@
                             "isTemplated": false
                         },
                         {
-                            "file": "Examples/slam_navigation/launch/config/navigation_params_humble.yaml",
-                            "isTemplated": false
-                        },
-                        {
-                            "file": "Examples/slam_navigation/launch/config/navigation_params_jazzy.yaml",
+                            "file": "Examples/slam_navigation/launch/config/navigation_params.yaml",
                             "isTemplated": false
                         },
                         {
@@ -8350,8 +8740,8 @@
                             "isTemplated": false
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.0.0-template.zip",
-                    "sha256": "9d10edb8e3c51358ffcfc7a255af0db34981dafa3a37dd36ba68dda2c56e6866"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/ros2projecttemplate-2.0.0-template.zip",
+                    "sha256": "496a2ec15a14738a25b51c512e5b0753681b669be04089afff5933e55c13c71f"
                 },
                 {
                     "version": "2.0.1",
@@ -8577,10 +8967,6 @@
                             "isTemplated": false
                         },
                         {
-                            "file": "Registry/ros2.setreg",
-                            "isTemplated": false
-                        },
-                        {
                             "file": "Resources/GameSDK.ico",
                             "isTemplated": false
                         },
@@ -8789,8 +9175,8 @@
                             "isTemplated": false
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.0.1-template.zip",
-                    "sha256": "c7367b98bd6ee5305eb63e0a256899aa57ee299cb553f4ab2555b8e9fef2100b"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/ros2projecttemplate-2.0.1-template.zip",
+                    "sha256": "bf9d2cea6744dfcabc7f9d40ea49b21e1d0d9c6e9ca4ff6306050e52fbd2c5db"
                 },
                 {
                     "version": "2.0.2",
@@ -9228,8 +9614,8 @@
                             "isTemplated": false
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.0.2-template.zip",
-                    "sha256": "47192251cb1035ff041831e82f6062c8d3e6ed19f67a1b8dc34e46f8ce9dc8f0"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.1/ros2projecttemplate-2.0.2-template.zip",
+                    "sha256": "6ad135ab4fe3dc2af1fe62f74251fe957ddb0c61490e9a9c978620f871c2b9d5"
                 },
                 {
                     "version": "2.0.3",
@@ -9663,8 +10049,8 @@
                             "isTemplated": false
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.0.3-template.zip",
-                    "sha256": "8ac02c3c0341804653a5a41b300f0bf9edff33f75076b5853f91a45e10b3826a"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.2/ros2projecttemplate-2.0.3-template.zip",
+                    "sha256": "00c5e3fdf5afe827ea8af7bb7a7964f7d867b450670f1c3485d9fd927646dfaf"
                 },
                 {
                     "version": "3.0.0",
@@ -10233,8 +10619,8 @@
                             "dir": "cmake"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-3.0.0-template.zip",
-                    "sha256": "3eef15b3e66138a6bfc62f6fe732bdbe0525f494766e3f2771a17a86d934e237"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.0/ros2projecttemplate-3.0.0-template.zip",
+                    "sha256": "d8d49fd0765b6954e86583e82df654654b2196490c06a1aa9f3da40d286c4e71"
                 },
                 {
                     "version": "3.0.1",
@@ -10803,8 +11189,8 @@
                             "dir": "cmake"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-3.0.1-template.zip",
-                    "sha256": "e65e4f73d4feb0ea8df2a7ecb835573457760d85f01fccca3b9f91fc1c06c7e9"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/ros2projecttemplate-3.0.1-template.zip",
+                    "sha256": "b097d540a4de04c07d5909fd4611d4755ae4ec68185b9746c0b07841efd1bf2f"
                 }
             ]
         },
@@ -11645,8 +12031,8 @@
             "versions_data": [
                 {
                     "version": "2.0.0",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-2.0.0-template.zip",
-                    "sha256": "0534490ddee493b0744a76493c1551879fb803890ed123c786e1699c5ddd1e13"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.0/ros2roboticmanipulationtemplate-2.0.0-template.zip",
+                    "sha256": "fb81c53a2676559abf00e9495da532a8d9c57c1112b1d2f2d7f9512a596616a2"
                 },
                 {
                     "version": "2.0.1",
@@ -12360,8 +12746,8 @@
                             "isTemplated": true
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-2.0.1-template.zip",
-                    "sha256": "a78b0915bbf915c3470c95da234e49a21e6b67236ff66560a6e7ddc942c5ecd1"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.1/ros2roboticmanipulationtemplate-2.0.1-template.zip",
+                    "sha256": "4582146dfd80be7bf65b3583d110ef3c3cea3bcdebeb799725c83644250f53dc"
                 },
                 {
                     "version": "2.0.2",
@@ -13075,8 +13461,8 @@
                             "isTemplated": true
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-2.0.2-template.zip",
-                    "sha256": "718e6e95914fee3b84ba7bdabbba150672a624f3cc62c1671c1b40b9db5d9178"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2409.2/ros2roboticmanipulationtemplate-2.0.2-template.zip",
+                    "sha256": "701c823b963b299ec0bd3924aefea18eda3ede4b8b16f49cdbeadc77b1d00459"
                 },
                 {
                     "version": "2.1.0",
@@ -13600,8 +13986,8 @@
                             "dir": "cmake"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-2.1.0-template.zip",
-                    "sha256": "7f19a41dbfa17c40d59f38a7a355a1da27ef93797f1f039ea83f4adb70c108c5"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2505.0/ros2roboticmanipulationtemplate-2.1.0-template.zip",
+                    "sha256": "d83c4ee4fe26effd7d1db9690c1de8811ba1a414fda57080fa724f9939eace48"
                 },
                 {
                     "version": "2.1.1",
@@ -14133,8 +14519,8 @@
                             "dir": "cmake"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-2.1.1-template.zip",
-                    "sha256": "a4088bede93eda4333b196ca3f1841b2b3e085e5a9d987565ca398486cdf5ce2"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/ros2roboticmanipulationtemplate-2.1.1-template.zip",
+                    "sha256": "5dde3b4935115b185b59ca93dd039ed0fb217cb2968c7af7f87b7f3e29d967d7"
                 },
                 {
                     "version": "2.1.2",
@@ -14666,8 +15052,8 @@
                             "dir": "cmake"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-2.1.2-template.zip",
-                    "sha256": "995d905b4b2e5df56fe3155167cf647812664e00c63f58f115dfe1c30527afff"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/ros2roboticmanipulationtemplate-2.1.2-template.zip",
+                    "sha256": "8da63ce786b92df1a8aa6011ff0f5be144931c53aaa7051422df080b610b6dfc"
                 }
             ]
         }
