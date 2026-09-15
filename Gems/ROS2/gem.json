@@ -1,6 +1,6 @@
 {
     "gem_name": "ROS2",
-    "version": "4.2.0",
+    "version": "4.3.0",
     "display_name": "ROS2",
     "license": "Apache-2.0",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
@@ -19,7 +19,7 @@
         "Linux"
     ],
     "icon_path": "preview.png",
-    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem.",
+    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy, Lyrical). Source your workspace before building the Gem.",
     "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
     "dependencies": [
         "LevelGeoreferencing"
@@ -31,5 +31,5 @@
     "engine_api_dependencies": [],
     "restricted": "ROS2",
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-4.2.0-gem.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-4.3.0-gem.zip"
 }
