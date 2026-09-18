@@ -35,9 +35,10 @@ namespace ROS2
             if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
             {
                 serializeContext->Class<QoS>()
-                    ->Version(1)
+                    ->Version(2)
                     ->Field("Reliability", &QoS::m_reliabilityPolicy)
                     ->Field("Durability", &QoS::m_durabilityPolicy)
+                    ->Field("History", &QoS::m_historyPolicy)
                     ->Field("Depth", &QoS::m_depth);
 
                 if (AZ::EditContext* ec = serializeContext->GetEditContext())
@@ -60,7 +61,16 @@ namespace ROS2
                         ->Attribute(AZ::Edit::Attributes::ChangeNotify, &QoS::OnQoSSelected)
                         ->EnumAttribute(rclcpp::DurabilityPolicy::Volatile, "Volatile")
                         ->EnumAttribute(rclcpp::DurabilityPolicy::TransientLocal, "Transient Local")
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &QoS::m_depth, "History depth", "Determines DDS publisher queue size");
+                        ->DataElement(
+                            AZ::Edit::UIHandlers::ComboBox,
+                            &QoS::m_historyPolicy,
+                            "History policy",
+                            "Determines DDS history policy for the publisher")
+                        ->Attribute(AZ::Edit::Attributes::ChangeNotify, &QoS::OnQoSSelected)
+                        ->EnumAttribute(rclcpp::HistoryPolicy::KeepLast, "Keep Last")
+                        ->EnumAttribute(rclcpp::HistoryPolicy::KeepAll, "Keep All")
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &QoS::m_depth, "History depth", "Determines DDS publisher queue size")
+                        ->Attribute(AZ::Edit::Attributes::Visibility, &QoS::ShowHistoryDepth);
                 }
             }
         }
@@ -70,7 +80,7 @@ namespace ROS2
         rclcpp::QoS GetQoS() const
         {
             rclcpp::QoS qos(m_depth);
-            return qos.reliability(m_reliabilityPolicy).durability(m_durabilityPolicy);
+            return qos.history(m_historyPolicy).reliability(m_reliabilityPolicy).durability(m_durabilityPolicy);
         }
 
     private:
@@ -80,8 +90,16 @@ namespace ROS2
             return AZ::Edit::PropertyRefreshLevels::AttributesAndValues;
         }
 
+        //! Helper to define if history depth should be visible to user
+        AZ::Crc32 ShowHistoryDepth() const
+        {
+            return m_historyPolicy == rclcpp::HistoryPolicy::KeepLast ? AZ::Edit::PropertyVisibility::Show
+                                                                      : AZ::Edit::PropertyVisibility::Hide;
+        }
+
         rclcpp::ReliabilityPolicy m_reliabilityPolicy;
         rclcpp::DurabilityPolicy m_durabilityPolicy;
+        rclcpp::HistoryPolicy m_historyPolicy{ rclcpp::HistoryPolicy::KeepLast }; // to keep old behaviour
         uint32_t m_depth;
     };
 } // namespace ROS2
