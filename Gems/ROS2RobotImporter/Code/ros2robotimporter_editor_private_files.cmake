@@ -19,6 +19,8 @@ set(FILES
     Source/RobotImporter/Pages/ModifiedURDFWindow.h
     Source/RobotImporter/Pages/CheckAssetPage.cpp
     Source/RobotImporter/Pages/CheckAssetPage.h
+    Source/RobotImporter/Pages/WarningBanner.cpp
+    Source/RobotImporter/Pages/WarningBanner.h
     Source/RobotImporter/Pages/RobotDescriptionPage.cpp
     Source/RobotImporter/Pages/RobotDescriptionPage.h
     Source/RobotImporter/Pages/FileSelectionPage.cpp
