@@ -26,6 +26,7 @@ namespace ROS2
         QoS(const rclcpp::QoS& qos = rclcpp::QoS(rmw_qos_profile_default.depth))
             : m_reliabilityPolicy(qos.reliability())
             , m_durabilityPolicy(qos.durability())
+            , m_historyPolicy(qos.history())
             , m_depth(qos.depth())
         {
         }
@@ -87,7 +88,7 @@ namespace ROS2
         //! Helper function for the UI to refresh attributes and values when QoS is selected.
         AZ::Crc32 OnQoSSelected() const
         {
-            return AZ::Edit::PropertyRefreshLevels::AttributesAndValues;
+            return AZ::Edit::PropertyRefreshLevels::EntireTree;
         }
 
         //! Helper to define if history depth should be visible to user
