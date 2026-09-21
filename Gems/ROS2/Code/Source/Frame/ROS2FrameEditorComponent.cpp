@@ -203,4 +203,13 @@ namespace ROS2
         return m_configuration.m_frameName;
     }
 
+    AZ::Transform ROS2FrameEditorComponent::GetFrameTransform() const
+    {
+        AZ_Warning(
+            "ROS2FrameEditorComponent",
+            false,
+            "GetFrameComponent should only be used on the game component. Returning identity transform.");
+        return AZ::Transform::CreateIdentity();
+    }
+
 } // namespace ROS2

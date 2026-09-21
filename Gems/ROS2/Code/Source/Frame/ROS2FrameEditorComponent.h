@@ -66,6 +66,7 @@ namespace ROS2
         AZ::EntityId GetFrameParent() const override;
         AZStd::set<AZ::EntityId> GetFrameDescendants() const override;
         void SetJointName(const AZStd::string& frameId) override;
+        AZ::Transform GetFrameTransform() const override;
 
         // AZ::EntityBus::Handler override.
         void OnEntityNameChanged(const AZStd::string& name) override;

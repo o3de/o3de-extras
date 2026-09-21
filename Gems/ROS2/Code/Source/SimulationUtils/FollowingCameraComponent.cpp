@@ -10,6 +10,7 @@
 #include <AtomBridge/FlyCameraInputBus.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/std/containers/fixed_unordered_map.h>
 #include <AzFramework/Input/Devices/Keyboard/InputDeviceKeyboard.h>
 #include <MathConversion.h>
 
@@ -17,7 +18,9 @@ namespace ROS2
 {
 
     // Default keyboard mapping for predefined views.
-    const AZStd::unordered_map<AzFramework::InputChannelId, int> KeysToView{
+    // fixed (vs regular unordered_map) keeps storage in-place so this static does not
+    // hold SystemAllocator nodes that outlive test teardown and trip the leak detector.
+    const AZStd::fixed_unordered_map<AzFramework::InputChannelId, int, 11, 10> KeysToView{
         { AzFramework::InputDeviceKeyboard::Key::Alphanumeric1, 0 }, { AzFramework::InputDeviceKeyboard::Key::Alphanumeric2, 1 },
         { AzFramework::InputDeviceKeyboard::Key::Alphanumeric3, 2 }, { AzFramework::InputDeviceKeyboard::Key::Alphanumeric4, 3 },
         { AzFramework::InputDeviceKeyboard::Key::Alphanumeric5, 4 }, { AzFramework::InputDeviceKeyboard::Key::Alphanumeric6, 5 },

@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <AzCore/Component/TickBus.h>
 #include <AzCore/Debug/Profiler.h>
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Name/Name.h>
@@ -16,6 +15,8 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/parallel/mutex.h>
 #include <AzCore/std/parallel/shared_mutex.h>
+#include <Atom/RHI/FrameEventBus.h>
+#include <Atom/RHI/RHISystemInterface.h>
 #include <tracy/TracyC.h>
 
 namespace TracyProfiler
@@ -23,7 +24,8 @@ namespace TracyProfiler
     //! Listen to 03DE frame/profiling events and forward them to the Tracy profiling library
     class TracyProfilerEventForwarder final
         : public AZ::Debug::Profiler
-        , public AZ::TickBus::Handler
+        , public AZ::RHI::FrameEventBus::Handler
+        , public AZ::RHI::RHISystemNotificationBus::Handler
     {
     public:
         AZ_RTTI(TracyProfilerEventForwarder, "{9467E3F6-0581-4E46-A98A-F3C249FD7B24}", AZ::Debug::Profiler);
@@ -40,10 +42,11 @@ namespace TracyProfiler
         void BeginRegion(const AZ::Debug::Budget* budget, const char* eventName, ...) final override;
         void EndRegion(const AZ::Debug::Budget* budget) final override;
 
-        //! AZ::TickBus::Handler overrides
-        int GetTickOrder() override;
-        void OnTick(float deltaTime, AZ::ScriptTimePoint timePoint) override;
+        //! AZ::RHI::FrameEventInterface
+        void OnFrameEnd() override;
 
+        //! AZ::RHI::RHISystemNotificiationInterface
+        void OnRHISystemInitialized() override;
     private:
         using EventIdStack = AZStd::vector<TracyCZoneCtx>;
         static thread_local EventIdStack ms_threadLocalStorage;

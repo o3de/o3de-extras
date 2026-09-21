@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) Contributors to the Open 3D Engine Project.
  * For complete copyright and license terms please see the LICENSE at the root of this distribution.
@@ -8,55 +7,20 @@
  */
 #pragma once
 
-#include <AzCore/Asset/AssetManagerComponent.h>
 #include <AzCore/Component/ComponentApplication.h>
-#include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityId.h>
-#include <AzCore/RTTI/RTTIMacros.h>
-#include <AzCore/Serialization/SerializeContext.h>
-#include <AzCore/Slice/SliceAssetHandler.h>
-#include <AzCore/UserSettings/UserSettingsComponent.h>
-#include <AzCore/std/containers/array.h>
-#include <AzCore/std/string/string_view.h>
-#include <AzQtComponents/Utilities/QtPluginPaths.h>
-#include <AzTest/GemTestEnvironment.h>
-#include <AzToolsFramework/Entity/EditorEntityContextComponent.h>
-#include <AzToolsFramework/ToolsComponents/TransformComponent.h>
-#include <AzToolsFramework/UnitTest/AzToolsFrameworkTestHelpers.h>
-#include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
+#include <AzFramework/Physics/PhysicsSystem.h>
+#include <AzFramework/Physics/SystemBus.h>
 
-#include <QApplication>
 #include <gtest/gtest.h>
 #include <memory>
-#include <string>
-#include <string_view>
-#include <vector>
-
-#include <AzCore/Utils/Utils.h>
-#include <AzFramework/Asset/AssetCatalog.h>
-#include <AzFramework/Physics/Configuration/SystemConfiguration.h>
-#include <AzFramework/Physics/PhysicsSystem.h>
-#include <AzFramework/Physics/RigidBodyBus.h>
-#include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
-#include <AzFramework/Physics/SystemBus.h>
 
 namespace UnitTest
 {
-    class SimulationInterfaceTestEnvironment : public AZ::Test::GemTestEnvironment
-    {
-        // AZ::Test::GemTestEnvironment overrides ...
-        void AddGemsAndComponents() override;
-        AZ::ComponentApplication* CreateApplicationInstance() override;
-
-    protected:
-        void PostSystemEntityActivate() override;
-
-    public:
-        SimulationInterfaceTestEnvironment() = default;
-        ~SimulationInterfaceTestEnvironment() override = default;
-    };
-
+    //! Application-agnostic test fixture shared by the runtime and editor SimulationInterfaces test
+    //! targets. It reaches the running application through ComponentApplicationBus, so it does not
+    //! depend on the concrete application type; the target-specific GemTestEnvironment selects that.
     class SimulationInterfaceTestFixture
         : public ::testing::Test
         , protected Physics::DefaultWorldBus::Handler

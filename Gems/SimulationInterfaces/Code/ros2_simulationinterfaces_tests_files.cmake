@@ -5,8 +5,10 @@
 #
 
 set(FILES
-    Tests/Tools/Mocks/SimulationManagerMock.h
-    Tests/Tools/Mocks/SimulationEntityManagerMock.h
-    Tests/Tools/Mocks/SimulationFeaturesAggregatorRequestsHandlerMock.h
-    Tests/Tools/InterfacesTest.cpp
+    Tests/Common/RuntimeTestApplication.cpp
+    Tests/Common/RuntimeTestApplication.h
+    Tests/Clients/Mocks/SimulationManagerMock.h
+    Tests/Clients/Mocks/SimulationEntityManagerMock.h
+    Tests/Clients/Mocks/SimulationFeaturesAggregatorRequestsHandlerMock.h
+    Tests/Clients/InterfacesTest.cpp
 )

@@ -8,10 +8,33 @@
 #pragma once
 
 #include <AzCore/Math/Matrix3x3.h>
+#include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/string/string.h>
 
 //! Namespace contains utility functions for camera.
 namespace ROS2Sensors::CameraUtils
 {
+    //! Available image encodings
+    //! @note Append new entries; the values are serialized by EncodingConversion.
+    enum class ImageEncoding : AZ::u8
+    {
+        RGBA8,
+        RGB8,
+        Mono8,
+        Mono16,
+        Depth32FC1,
+    };
+
+    inline const AZStd::unordered_map<ImageEncoding, const char*> ImageEncodingNames = {
+        { ImageEncoding::RGBA8, "rgba8" },   { ImageEncoding::RGB8, "rgb8" },     { ImageEncoding::Mono8, "mono8" },
+        { ImageEncoding::Mono16, "mono16" }, { ImageEncoding::Depth32FC1, "32FC1" },
+    };
+
+    inline const AZStd::unordered_map<AZStd::string, ImageEncoding> ImageEncodingFromName = {
+        { "rgba8", ImageEncoding::RGBA8 },   { "rgb8", ImageEncoding::RGB8 },     { "mono8", ImageEncoding::Mono8 },
+        { "mono16", ImageEncoding::Mono16 }, { "32FC1", ImageEncoding::Depth32FC1 },
+    };
+
     //! Function computes aspect ratio of the image.
     //! @param width Width of the image in pixels
     //! @param height Height of the image in pixels.

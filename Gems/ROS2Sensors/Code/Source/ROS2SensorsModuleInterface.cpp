@@ -12,6 +12,7 @@
 #include <Clients/ROS2SensorsSystemComponent.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
+#include <Camera/Compression/ROS2ImageCompressionComponent.h>
 #include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <Camera/ROS2CameraSystemComponent.h>
@@ -41,6 +42,7 @@ namespace ROS2Sensors
                 ROS2CameraSensorComponent::CreateDescriptor(),
                 ROS2SystemCameraComponent::CreateDescriptor(),
                 ROS2ImageEncodingConversionComponent::CreateDescriptor(),
+                ROS2ImageCompressionComponent::CreateDescriptor(),
 #ifdef WITH_GAZEBO_MSGS
                 ROS2ContactSensorComponent::CreateDescriptor(),
 #endif

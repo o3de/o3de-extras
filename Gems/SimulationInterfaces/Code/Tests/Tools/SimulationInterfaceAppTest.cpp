@@ -7,11 +7,66 @@
  *
  */
 
-#include "TestFixture.h"
+#include <Common/SimulationInterfaceTestFixture.h>
+
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <ROS2/Frame/ROS2FrameComponentBus.h>
+#include <AzCore/Asset/AssetManager.h>
+#include <AzCore/Component/ComponentApplication.h>
+#include <AzCore/IO/FileIO.h>
+#include <AzCore/IO/Path/Path.h>
+#include <AzCore/UserSettings/UserSettingsComponent.h>
+#include <AzCore/Utils/Utils.h>
+#include <AzFramework/Spawnable/Spawnable.h>
+#include <AzQtComponents/Utilities/QtPluginPaths.h>
+#include <AzTest/GemTestEnvironment.h>
+#include <AzToolsFramework/Entity/EditorEntityContextComponent.h>
+#include <AzToolsFramework/ToolsComponents/TransformComponent.h>
+#include <AzToolsFramework/UnitTest/AzToolsFrameworkTestHelpers.h>
+#include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
+#include <Clients/SimulationEntitiesManager.h>
+#include <Clients/SimulationManager.h>
+
+#include <QApplication>
+
 namespace UnitTest
 {
+    //! Editor test environment: brings up a ToolsTestApplication (AzFramework + AzToolsFramework) so
+    //! the editor SimulationInterfaces tests can exercise tools/editor APIs.
+    class SimulationInterfaceTestEnvironment : public AZ::Test::GemTestEnvironment
+    {
+        void AddGemsAndComponents() override
+        {
+            constexpr AZStd::array<AZStd::string_view, 4> requiredGems = { "PhysX5", // required for PhysX Dynamic
+                                                                           "LmbrCentral", // for shapes
+                                                                           "ROS2", // For frame component
+                                                                           "SimulationInterfaces" };
+            AddActiveGems(requiredGems);
+            AddDynamicModulePaths({ "PhysX5.Gem" });
+            AddDynamicModulePaths({ "LmbrCentral" });
+            AddDynamicModulePaths({ "ROS2" });
+            AddComponentDescriptors(
+                AZStd::initializer_list<AZ::ComponentDescriptor*>{ SimulationInterfaces::SimulationEntitiesManager::CreateDescriptor(),
+                                                                   SimulationInterfaces::SimulationManager::CreateDescriptor() });
+            AddRequiredComponents({ SimulationInterfaces::SimulationEntitiesManager::TYPEINFO_Uuid(),
+                                    SimulationInterfaces::SimulationManager::TYPEINFO_Uuid() });
+        }
+
+        AZ::ComponentApplication* CreateApplicationInstance() override
+        {
+            // Using ToolsTestApplication to have AzFramework and AzToolsFramework components.
+            return aznew UnitTest::ToolsTestApplication("SimulationInterfaceTestEnvironment");
+        }
+
+    protected:
+        void PostSystemEntityActivate() override
+        {
+            AZ::UserSettingsComponentRequestBus::Broadcast(&AZ::UserSettingsComponentRequests::DisableSaveOnFinalize);
+        }
+    };
+
+    //! Extends the editor test environment to load the asset catalog and preload the test spawnable
+    //! during PostSystemEntityActivate, so SpawnEntity-based tests have a ready asset to spawn from.
     class SimulationInterfaceTestEnvironmentWithAssets : public SimulationInterfaceTestEnvironment
     {
     protected:
@@ -47,6 +102,15 @@ namespace UnitTest
             AZ::Data::s_invalidAssetType,
             false);
         AZ_Assert(assetId.IsValid(), "Failed to get asset id for %s", TestSpawnable.c_str());
+
+        // Block until the spawnable is fully loaded so the first SpawnEntity call doesn't race the
+        // async asset I/O job. SpawnableEntitiesManager requeues SpawnAllEntitiesCommand until
+        // m_spawnable.IsReady(), so a not-yet-loaded asset would silently stall the test.
+        AZ_Assert(AZ::Data::AssetManager::IsReady(), "AssetManager is not ready");
+        auto preloadedAsset = AZ::Data::AssetManager::Instance().GetAsset<AzFramework::Spawnable>(
+            assetId, AZ::Data::AssetLoadBehavior::PreLoad);
+        AZ::Data::AssetManager::Instance().BlockUntilLoadComplete(preloadedAsset);
+        AZ_Assert(preloadedAsset.IsReady(), "Test spawnable %s did not finish loading", TestSpawnable.c_str());
     }
 
     int getNumberOfEntities()

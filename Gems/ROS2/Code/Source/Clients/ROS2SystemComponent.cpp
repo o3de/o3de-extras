@@ -30,6 +30,7 @@
 #include <AzCore/std/string/string_view.h>
 #include <AzFramework/API/ApplicationAPI.h>
 #include <rcl/validate_topic_name.h>
+#include <rclcpp/version.h>
 #include <rmw/validate_namespace.h>
 
 namespace ROS2
@@ -159,8 +160,17 @@ namespace ROS2
         m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
         m_executor->add_node(m_ros2Node);
 
+#if RCLCPP_VERSION_GTE(32, 0, 0)
+        // Lyrical+ (rclcpp >= 32): node-taking constructor deprecated; use NodeInterfaces.
+        auto tfInterfaces = tf2_ros::StaticTransformBroadcaster::RequiredInterfaces(
+            m_ros2Node->get_node_parameters_interface(), m_ros2Node->get_node_topics_interface());
+        m_staticTFBroadcaster = AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(tfInterfaces);
+        m_dynamicTFBroadcaster = AZStd::make_unique<tf2_ros::TransformBroadcaster>(tfInterfaces);
+#else
+        // Humble / Iron / Jazzy / Kilted (rclcpp < 32): pass the node directly.
         m_staticTFBroadcaster = AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(m_ros2Node);
         m_dynamicTFBroadcaster = AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Node);
+#endif
 
         // setup tf2 buffer and listener
         m_tfBuffer = AZStd::make_shared<tf2_ros::Buffer>(m_ros2Node->get_clock());

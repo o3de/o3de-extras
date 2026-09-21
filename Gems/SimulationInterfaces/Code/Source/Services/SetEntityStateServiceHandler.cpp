@@ -13,6 +13,22 @@
 #include <SimulationInterfaces/RegistryUtils.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
+namespace detail
+{
+    template<typename ResponseT>
+    auto InvalidPoseResultCode()
+    {
+        if constexpr (requires { ResponseT::INVALID_POSE; })
+        {
+            return ResponseT::INVALID_POSE;
+        }
+        else
+        {
+            return simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
+        }
+    }
+} // namespace detail
+
 namespace ROS2SimulationInterfaces
 {
 
@@ -73,7 +89,7 @@ namespace ROS2SimulationInterfaces
             if (const auto poseValidation = SpawnServiceUtils::ValidateTransformNormalized(requestedPose); !poseValidation.IsSuccess())
             {
                 Response response;
-                response.result.result = simulation_interfaces::srv::SetEntityState::Response::INVALID_POSE;
+                response.result.result = detail::InvalidPoseResultCode<Response>();
                 response.result.error_message = poseValidation.GetError().c_str();
                 return response;
             }
@@ -91,7 +107,9 @@ namespace ROS2SimulationInterfaces
         if (const auto poseValidation = SpawnServiceUtils::ValidateTransformNormalized(requestedPose); !poseValidation.IsSuccess())
         {
             Response response;
-            response.result.result = simulation_interfaces::srv::SetEntityState::Response::INVALID_POSE;
+
+            response.result.result = detail::InvalidPoseResultCode<Response>();
+
             response.result.error_message = poseValidation.GetError().c_str();
             return response;
         }
