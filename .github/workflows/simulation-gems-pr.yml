@@ -271,9 +271,8 @@ jobs:
             -DLY_3RDPARTY_PATH="$HOME/.o3de/3rdParty" \
             -DLY_UNITY_BUILD=OFF
 
-      # Test target names are per-gem, not uniform. Ros2GemsTest.Assets runs
-      # Asset Processor - SimulationInterfaces's tests need a processed test asset.
-      - name: Build gem modules, test targets and project assets
+      # Test target names are per-gem, not uniform.
+      - name: Build gem modules and test targets
         timeout-minutes: 330
         run: |
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
@@ -290,7 +289,6 @@ jobs:
             ROS2RobotImporter.Editor.Tests \
             ROS2Sensors.Tests \
             SimulationInterfaces.Tests SimulationInterfaces.Editor.Tests SimulationInterfaces.ROS2Tests \
-            Ros2GemsTest.Assets \
             -- -j "$(nproc)"
 
       - name: Run gem tests

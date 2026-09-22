@@ -282,7 +282,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 RUNTIME_DEPENDENCIES
                     Gem::PhysX5
                     Gem::LmbrCentral
-                    ${PROJECT_NAME}.Assets
+                    Gem::ROS2
             )
 
             # Add ${gem_name}.Editor.Tests to googletest
