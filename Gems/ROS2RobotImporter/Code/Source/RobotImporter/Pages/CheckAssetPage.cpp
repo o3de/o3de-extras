@@ -7,7 +7,9 @@
  */
 
 #include "CheckAssetPage.h"
+#include <AzCore/Debug/Trace.h>
 #include <AzCore/Math/MathStringConversions.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 #include <AzFramework/Asset/AssetSystemBus.h>
 #include <QHeaderView>
 #include <QPushButton>
@@ -25,6 +27,12 @@ namespace ROS2RobotImporter
         constexpr int Type{ 4 };
     } // namespace Columns
 
+    namespace
+    {
+        //! Scene import setting that makes AssImp take mesh scale and orientation from the source file's root transform.
+        constexpr const char* ReadRootTransformKey = "/O3DE/Preferences/SceneAPI/AssImpReadRootTransform";
+    } // namespace
+
     CheckAssetPage::CheckAssetPage(QWizard* parent)
         : QWizardPage(parent)
         , m_success(true)
@@ -35,7 +43,11 @@ namespace ROS2RobotImporter
     {
         m_table = new QTableWidget(parent);
         SetTitle();
+
+        m_importSettingWarning = new WarningBanner(this);
+
         QVBoxLayout* layout = new QVBoxLayout;
+        layout->addWidget(m_importSettingWarning);
         layout->addWidget(m_table);
         m_table->setEnabled(true);
         m_table->setAlternatingRowColors(true);
@@ -94,10 +106,36 @@ namespace ROS2RobotImporter
 
     void CheckAssetPage::initializePage()
     {
+        UpdateImportSettingWarning();
         if (m_copyReferencedAssetsThread)
         {
             m_copyReferencedAssetsThread->join();
         }
+    }
+
+    void CheckAssetPage::UpdateImportSettingWarning()
+    {
+        bool readRootTransform = false;
+        if (AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get(); settingsRegistry)
+        {
+            settingsRegistry->Get(readRootTransform, ReadRootTransformKey);
+        }
+
+        if (!readRootTransform)
+        {
+            m_importSettingWarning->ClearWarning();
+            return;
+        }
+
+        m_importSettingWarning->SetWarning(
+            tr("<b>Mesh scale and orientation are affected by a project setting.</b>"
+               "<p>This project sets <code>%1</code> to <code>true</code>, which makes the scene pipeline take mesh scale and "
+               "orientation from the source file's root transform.</p>"
+               "<p><code>.dae</code> files might result at the wrong scale and <code>.stl</code> files with the "
+               "wrong orientation.</p>")
+                .arg(QString::fromUtf8(ReadRootTransformKey)));
+
+        AZ_Warning("RobotImporter", false, "%s is true. .dae scale and .stl orientation may be incorrect.", ReadRootTransformKey);
     }
 
     void CheckAssetPage::SetCopyThread(AZStd::shared_ptr<AZStd::thread> copyThread)
