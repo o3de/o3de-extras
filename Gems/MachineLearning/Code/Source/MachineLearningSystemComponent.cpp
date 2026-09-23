@@ -17,9 +17,6 @@
 #include <Assets/MnistDataLoader.h>
 #include <Models/Layer.h>
 #include <Models/MultilayerPerceptron.h>
-#include <AutoGenNodeableRegistry.generated.h>
-
-static ScriptCanvas::MachineLearningPrivateObjectNodeableRegistry s_MachineLearningPrivateObjectNodeableRegistry;
 
 namespace AZ
 {
