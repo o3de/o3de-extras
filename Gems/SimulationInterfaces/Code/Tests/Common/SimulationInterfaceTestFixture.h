@@ -18,6 +18,13 @@
 
 namespace UnitTest
 {
+    //! Type ids of the runtime components the tests build entities from.
+    constexpr auto PhysXRigidBodyComponentTypeId = "{D4E52A70-BDE1-4819-BD3C-93AB3F4F3BE3}"; // From PhysX
+    constexpr auto PhysXStaticBodyComponentTypeId = "{A2CCCD3D-FB31-4D65-8DCD-2CD7E1D09538}"; // From PhysX
+    constexpr auto PhysXShapeColliderComponentTypeId = "{30CC9E77-378C-49DF-9617-6BF191901FE0}"; // From PhysX
+    constexpr auto PhysXSphereColliderComponentTypeId = "{108CD341-E5C3-4AE1-B712-21E81ED6C277}"; // From PhysX
+    constexpr auto SphereShapeComponentTypeId = "{E24CBFF0-2531-4F8D-A8AB-47AF4D54BCD2}"; // From LmbrCentral
+
     //! Application-agnostic test fixture shared by the runtime and editor SimulationInterfaces test
     //! targets. It reaches the running application through ComponentApplicationBus, so it does not
     //! depend on the concrete application type; the target-specific GemTestEnvironment selects that.
@@ -26,12 +33,6 @@ namespace UnitTest
         , protected Physics::DefaultWorldBus::Handler
     {
     protected:
-        constexpr static auto PhysXRigidBodyComponentTypeId = "{D4E52A70-BDE1-4819-BD3C-93AB3F4F3BE3}"; // From PhysX
-        constexpr static auto PhysXStaticBodyComponentTypeId = "{A2CCCD3D-FB31-4D65-8DCD-2CD7E1D09538}"; // From PhysX
-        constexpr static auto PhysXShapeColliderComponentTypeId = "{30CC9E77-378C-49DF-9617-6BF191901FE0}"; // From PhysX
-        constexpr static auto PhysXSphereColliderComponentTypeId = "{108CD341-E5C3-4AE1-B712-21E81ED6C277}"; // From PhysX
-        constexpr static auto SphereShapeComponentTypeId = "{E24CBFF0-2531-4F8D-A8AB-47AF4D54BCD2}"; // From LmbrCentral
-
         void SetUp() override;
         void TearDown() override;
 
