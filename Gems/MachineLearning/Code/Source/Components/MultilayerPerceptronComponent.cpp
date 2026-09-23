@@ -6,8 +6,6 @@
  *
  */
 
-#pragma once
-
 #include <Components/MultilayerPerceptronComponent.h>
 #include <MachineLearning/IMachineLearning.h>
 #include <AzCore/RTTI/RTTI.h>

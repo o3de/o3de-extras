@@ -6,8 +6,6 @@
  *
  */
 
-#pragma once
-
 #include <Assets/MnistDataLoader.h>
 #include <Algorithms/Activations.h>
 #include <AzCore/IO/FileReader.h>

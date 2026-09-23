@@ -9,9 +9,9 @@
 #include <Source/Debug/MachineLearningDebugSystemComponent.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Interface/Interface.h>
+#include <AzCore/Serialization/SerializeContext.h>
 #include <Atom/Feature/ImGui/SystemBus.h>
 #include <ImGuiContextScope.h>
-#include <ImGui/ImGuiPass.h>
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 
@@ -81,12 +81,11 @@ namespace MachineLearning
             ImGui::TableSetupColumn("Parameters", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 12.0f);
             ImGui::TableHeadersRow();
 
-            AZStd::size_t index = 0;
             for (auto& neuralNetwork : modelSet)
             {
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
-                ImGui::Text(neuralNetwork->GetName().c_str());
+                ImGui::Text("%s", neuralNetwork->GetName().c_str());
                 ImGui::TableNextColumn();
                 ImGui::Text("%lld", aznumeric_cast<AZ::s64>(neuralNetwork->GetInputDimensionality()));
                 ImGui::TableNextColumn();
@@ -94,8 +93,7 @@ namespace MachineLearning
                 ImGui::TableNextColumn();
                 ImGui::Text("%lld", aznumeric_cast<AZ::s64>(neuralNetwork->GetLayerCount()));
                 ImGui::TableNextColumn();
-                ImGui::Text("%llu", neuralNetwork->GetParameterCount());
-                ++index;
+                ImGui::Text("%llu", aznumeric_cast<AZ::u64>(neuralNetwork->GetParameterCount()));
             }
             ImGui::EndTable();
             ImGui::NewLine();

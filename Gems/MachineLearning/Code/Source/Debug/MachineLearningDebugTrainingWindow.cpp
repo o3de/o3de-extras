@@ -11,10 +11,10 @@
 #include <Source/Algorithms/Activations.h>
 #include <AzCore/Console/IConsole.h>
 #include <AzCore/Console/ILogger.h>
+#include <AzCore/std/smart_ptr/make_shared.h>
 
 #ifdef IMGUI_ENABLED
 #   include <ImGuiContextScope.h>
-#   include <ImGui/ImGuiPass.h>
 #   include <imgui/imgui.h>
 #   include <imgui/imgui_internal.h>
 #endif
@@ -93,7 +93,7 @@ namespace MachineLearning
         {
             vectorString += AZStd::string::format(" %.02f", value.GetElement(iter));
         }
-        AZLOG_INFO(vectorString.c_str());
+        AZLOG_INFO("%s", vectorString.c_str());
     }
 
     void MachineLearningDebugTrainingWindow::RecalculateAccuracy(TrainingInstance* trainingInstance, ILabeledTrainingData& data)

@@ -29,7 +29,7 @@ namespace MachineLearning
         {
             vectorString += AZStd::string::format(" %.02f", value.GetElement(iter));
         }
-        AZLOG_INFO(vectorString.c_str());
+        AZLOG_INFO("%s", vectorString.c_str());
     }
 
     void DumpMatrixGradients(const AZ::MatrixMxN& value, const char* label)
@@ -42,7 +42,7 @@ namespace MachineLearning
             {
                 rowString += AZStd::string::format(" %.02f", value.GetElement(i, j));
             }
-            AZLOG_INFO(rowString.c_str());
+            AZLOG_INFO("%s", rowString.c_str());
         }
     }
 
