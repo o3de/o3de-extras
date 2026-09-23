@@ -6,8 +6,6 @@
  *
  */
 
-#pragma once
-
 #include <Assets/TrainingDataView.h>
 #include <numeric>
 #include <random>

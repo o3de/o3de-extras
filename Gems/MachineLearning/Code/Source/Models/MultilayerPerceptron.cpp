@@ -277,7 +277,7 @@ namespace MachineLearning
     {
         // This is not thread safe, this should only be used during model configuration
         const AZStd::size_t lastLayerDimensionality = GetOutputDimensionality();
-        m_layers.push_back(AZStd::move(Layer(activationFunction, lastLayerDimensionality, layerDimensionality)));
+        m_layers.push_back(Layer(activationFunction, lastLayerDimensionality, layerDimensionality));
     }
 
     Layer* MultilayerPerceptron::GetLayer(AZStd::size_t layerIndex)

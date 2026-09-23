@@ -18,6 +18,16 @@
 #include <Models/Layer.h>
 #include <Models/MultilayerPerceptron.h>
 
+// Including the node headers registers the ScriptCanvas nodes and keeps their objects linked into the module
+#include <Nodes/ArgMax.h>
+#include <Nodes/ComputeCost.h>
+#include <Nodes/FeedForward.h>
+#include <Nodes/LoadModel.h>
+#include <Nodes/LoadTrainingData.h>
+#include <Nodes/OneHot.h>
+#include <Nodes/SaveModel.h>
+#include <Nodes/SupervisedLearning.h>
+
 namespace AZ
 {
     AZ_TYPE_INFO_SPECIALIZE(MachineLearning::ActivationFunctions, "{2ABF758E-CA69-41AC-BC95-B47AD7DEA31B}");
