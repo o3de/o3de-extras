@@ -21,6 +21,7 @@
 #include <QString>
 #include <QTextEdit>
 #include <QWizardPage>
+#include <RobotImporter/Pages/WarningBanner.h>
 #endif
 
 namespace ROS2RobotImporter
@@ -34,6 +35,11 @@ namespace ROS2RobotImporter
         void SetProposedPrefabName(const AZStd::string prefabName);
         AZStd::string GetPrefabName() const;
         void ReportProgress(const AZStd::string& progressForUser);
+
+        //! Warns when the model holds more links than a single PhysX articulation supports.
+        //! @param linkCount number of links the importer creates for this model
+        //! @param useArticulations whether the import uses articulations, which is the only case the limit applies to
+        void ReportArticulationLinkCount(size_t linkCount, bool useArticulations);
         void SetSuccess(bool success);
         bool isComplete() const override;
         AZStd::optional<AZ::Transform> getSelectedSpawnPoint() const;
@@ -50,6 +56,7 @@ namespace ROS2RobotImporter
         QPushButton* m_createButton;
         QTextEdit* m_log;
         QComboBox* m_spawnPointsComboBox;
+        WarningBanner* m_articulationWarning{};
         ROS2::SpawnPointInfoMap m_spawnPointsInfos;
     };
 } // namespace ROS2RobotImporter

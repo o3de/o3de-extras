@@ -24,6 +24,7 @@
 #include <QVector>
 #include <QWizardPage>
 #include <RobotImporter/Assets/AssetTypes.h>
+#include <RobotImporter/Pages/WarningBanner.h>
 #endif
 
 namespace ROS2RobotImporter
@@ -50,6 +51,10 @@ namespace ROS2RobotImporter
         void SetCopyThread(AZStd::shared_ptr<AZStd::thread> copyThread);
 
     private:
+        //! Shows or hides the banner warning about scene import settings that distort URDF/SDF meshes.
+        void UpdateImportSettingWarning();
+        WarningBanner* m_importSettingWarning{};
+
         bool m_success;
         QTableWidget* m_table{};
         QTableWidgetItem* createCell(bool isOk, const QString& text);
