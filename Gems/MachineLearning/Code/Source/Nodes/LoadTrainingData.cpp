@@ -8,6 +8,7 @@
 
 #include <Nodes/LoadTrainingData.h>
 #include <Assets/MnistDataLoader.h>
+#include <AzCore/std/smart_ptr/make_shared.h>
 
 namespace MachineLearning
 {

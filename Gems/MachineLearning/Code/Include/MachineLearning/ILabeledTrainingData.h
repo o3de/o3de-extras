@@ -9,6 +9,8 @@
 #pragma once
 
 #include <MachineLearning/Types.h>
+#include <AzCore/IO/Path/Path.h>
+#include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
 
 namespace MachineLearning
