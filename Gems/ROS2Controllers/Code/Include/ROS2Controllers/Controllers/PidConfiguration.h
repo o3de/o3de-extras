@@ -56,7 +56,17 @@ namespace ROS2Controllers
         //! @returns Value of computed command.
         double ComputeCommand(double error, uint64_t deltaTimeNanoseconds);
 
+        //! Compute the value of PID command using a directly-measured rate for the derivative
+        //! term instead of numerically differencing successive error values.
+        //! @param error Value of difference between target and state since last call.
+        //! @param measuredRate Directly-measured rate of change of the process variable.
+        //! @param deltaTimeNanoseconds change in time since last call (nanoseconds).
+        //! @returns Value of computed command.
+        double ComputeCommandWithMeasuredRate(double error, double measuredRate, uint64_t deltaTimeNanoseconds);
+
     private:
+        double ComputeCommandInternal(double error, double dt, double derivativeTerm);
+
         double m_p = 1.0; //!< proportional gain.
         double m_i = 0.0; //!< integral gain.
         double m_d = 0.0; //!< derivative gain.

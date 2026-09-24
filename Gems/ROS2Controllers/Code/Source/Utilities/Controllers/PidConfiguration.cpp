@@ -80,6 +80,35 @@ namespace ROS2Controllers
             return 0.0;
         }
 
+        const double derivative = (error - m_previousError) / dt;
+        const double output = ComputeCommandInternal(error, dt, m_d * derivative);
+        m_previousError = error;
+        return output;
+    }
+
+    double PidConfiguration::ComputeCommandWithMeasuredRate(double error, double measuredRate, uint64_t deltaTimeNanoseconds)
+    {
+        const double dt = aznumeric_cast<double>(deltaTimeNanoseconds) / 1.e9;
+
+        if (!m_initialized)
+        {
+            AZ_Error("PidConfiguration", false, "PID not initialized, ignoring.");
+            return 0.0;
+        }
+
+        if (dt <= 0.0 || !azisfinite(error) || !azisfinite(measuredRate))
+        {
+            AZ_Warning("PidConfiguration", false, "Invalid PID conditions.");
+            return 0.0;
+        }
+
+        // Derivative-on-measurement: damp against the process variable's own measured rate of
+        // change rather than differencing successive error values.
+        return ComputeCommandInternal(error, dt, -m_d * measuredRate);
+    }
+
+    double PidConfiguration::ComputeCommandInternal(double error, double dt, double derivativeTerm)
+    {
         const double proportionalTerm = m_p * error;
 
         m_integral += error * dt;
@@ -96,11 +125,6 @@ namespace ROS2Controllers
         {
             integralTerm = AZStd::clamp<double>(integralTerm, m_iMin, m_iMax);
         }
-
-        const double derivative = (error - m_previousError) / dt;
-        const double derivativeTerm = m_d * derivative;
-
-        m_previousError = error;
 
         double output = proportionalTerm + integralTerm + derivativeTerm;
 
