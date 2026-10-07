@@ -1,0 +1,33 @@
+{
+    "gem_name": "UniversalCharacter",
+    "version": "1.0.0",
+    "display_name": "Universal Character and Animations",
+    "license": "CC-0 granted by Quaternius",
+    "license_url": "https://creativecommons.org/public-domain/cc0/",
+    "origin": "Quaternius - Itch.com",
+    "origin_url": "https://quaternius.com/index.html",
+    "type": "Asset",
+    "summary": "A masculine and feminine mannequin model with over 80~ compatible animations. All broken into individual files for proper O3DE importation. Visit Quaternius.com to get the full animation set totalling over 270 animations, character models, and modular equipment sets.",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "Character",
+        "Animation",
+        "UniversalCharacter"
+    ],
+    "platforms": [
+        "Windows",
+        "Android",
+        "iOS",
+        "Linux"
+    ],
+    "icon_path": "",
+    "requirements": "",
+    "documentation_url": "https://quaternius.itch.io/universal-animation-library",
+    "dependencies": [],
+    "repo_uri": "",
+    "compatible_engines": [],
+    "engine_api_dependencies": [],
+    "restricted": "UniversalCharacter"
+}
