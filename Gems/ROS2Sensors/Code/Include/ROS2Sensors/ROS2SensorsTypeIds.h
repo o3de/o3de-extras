@@ -39,6 +39,7 @@ namespace ROS2Sensors
 
     // Sensor Configurations TypeIds
     inline constexpr const char* CameraSensorConfigurationTypeId = "{386A2640-442B-473D-BC2A-665D049D7EF5}";
+    inline constexpr const char* GnssSensorConfigurationTypeId = "{BA60B3C1-5712-4031-B48D-5EB9D62E1F98}";
     inline constexpr const char* ImuSensorConfigurationTypeId = "{6788E84F-B985-4413-8E2B-46FBFB667C95}";
     inline constexpr const char* LidarSensorConfigurationTypeId = "{E46E75F4-1E0E-48CA-A22F-43AFD8F25101}";
     inline constexpr const char* LidarTemplateTypeId = "{9E9EF583-733D-4450-BBA0-ADD4D1BEFBF2}";

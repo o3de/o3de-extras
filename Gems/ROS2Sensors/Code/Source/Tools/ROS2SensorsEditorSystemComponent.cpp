@@ -81,9 +81,9 @@ namespace ROS2Sensors
     }
 
     AZ::Component* ROS2SensorsEditorSystemComponent::CreateROS2GnssSensorComponent(
-        AZ::Entity& entity, const ROS2::SensorConfiguration& sensorConfiguration)
+        AZ::Entity& entity, const ROS2::SensorConfiguration& sensorConfiguration, const GnssSensorConfiguration& gnssConfiguration)
     {
-        return CreateComponent<ROS2GNSSSensorComponent>(entity, sensorConfiguration);
+        return CreateComponent<ROS2GNSSSensorComponent>(entity, sensorConfiguration, gnssConfiguration);
     };
 
     AZ::Component* ROS2SensorsEditorSystemComponent::CreateROS2CameraSensorComponent(
