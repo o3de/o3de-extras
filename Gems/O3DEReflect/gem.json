@@ -1,0 +1,26 @@
+{
+    "gem_name": "O3DEReflect",
+    "display_name": "O3DE Reflect",
+    "license": "Apache-2.0 OR MIT",
+    "license_url": "https://opensource.org/licenses/Apache-2.0",
+    "origin": "WD Studios Corp.",
+    "origin_url": "https://wdstudios.tech",
+    "type": "Code",
+    "summary": "Unreal-style reflection system for O3DE. Simplifies component, struct, and enum creation",
+    "canonical_tags": [
+        "Gem",
+        "Code Generation",
+        "Reflection"
+    ],
+    "user_tags": [
+        "O3DEReflect",
+        "CodeGen",
+        "Reflection"
+    ],
+    "icon_path": "preview.png",
+    "requirements": "",
+    "documentation_url": "",
+    "dependencies": [],
+    "version": "1.0.0",
+    "compatible_engines": []
+}

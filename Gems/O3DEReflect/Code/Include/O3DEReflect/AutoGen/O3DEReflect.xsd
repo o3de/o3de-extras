@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) Contributors to the Open 3D Engine Project.
+    For complete copyright and license terms please see the LICENSE at the root of this distribution.
+
+    SPDX-License-Identifier: Apache-2.0 OR MIT
+    
+    O3DE Reflect XML Schema
+    
+    This schema defines the structure for O3DEReflect XML files that describe
+    components, structs, and enums for automatic code generation.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Root element can be Component, Struct, or Enum -->
+    <xs:element name="O3DEReflect">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="Component"/>
+                <xs:element ref="Struct"/>
+                <xs:element ref="Enum"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Component definition (like UCLASS for Actors) -->
+    <xs:element name="Component">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Include" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="BaseClass" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="Service" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="Property" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="Function" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="Name" type="xs:string" use="required"/>
+            <xs:attribute name="Namespace" type="xs:string"/>
+            <xs:attribute name="Uuid" type="xs:string"/>
+            <xs:attribute name="Category" type="xs:string"/>
+            <xs:attribute name="Description" type="xs:string"/>
+            <xs:attribute name="Icon" type="xs:string"/>
+            <xs:attribute name="HideInEditor" type="xs:boolean" default="false"/>
+            <xs:attribute name="Abstract" type="xs:boolean" default="false"/>
+            <xs:attribute name="AppearsInAddComponentMenu" type="xs:string" default="Game"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Struct definition (like USTRUCT) -->
+    <xs:element name="Struct">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Include" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="Property" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="Name" type="xs:string" use="required"/>
+            <xs:attribute name="Namespace" type="xs:string"/>
+            <xs:attribute name="Uuid" type="xs:string"/>
+            <xs:attribute name="Category" type="xs:string"/>
+            <xs:attribute name="Description" type="xs:string"/>
+            <xs:attribute name="ScriptType" type="xs:boolean" default="true"/>
+            <xs:attribute name="Atomic" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Enum definition (like UENUM) -->
+    <xs:element name="Enum">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="EnumValue" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="Name" type="xs:string" use="required"/>
+            <xs:attribute name="Namespace" type="xs:string"/>
+            <xs:attribute name="Uuid" type="xs:string"/>
+            <xs:attribute name="Category" type="xs:string"/>
+            <xs:attribute name="Description" type="xs:string"/>
+            <xs:attribute name="ScriptType" type="xs:boolean" default="true"/>
+            <xs:attribute name="Flags" type="xs:boolean" default="false"/>
+            <xs:attribute name="UnderlyingType" type="xs:string" default="int32_t"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Include directive for additional headers -->
+    <xs:element name="Include">
+        <xs:complexType>
+            <xs:attribute name="File" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Base class specification -->
+    <xs:element name="BaseClass">
+        <xs:complexType>
+            <xs:attribute name="Name" type="xs:string" use="required"/>
+            <xs:attribute name="Namespace" type="xs:string"/>
+            <xs:attribute name="Include" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Service declaration for components -->
+    <xs:element name="Service">
+        <xs:complexType>
+            <xs:attribute name="Name" type="xs:string" use="required"/>
+            <xs:attribute name="Type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="Provides"/>
+                        <xs:enumeration value="Requires"/>
+                        <xs:enumeration value="Incompatible"/>
+                        <xs:enumeration value="Dependent"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Property definition (like UPROPERTY) -->
+    <xs:element name="Property">
+        <xs:complexType>
+            <xs:attribute name="Name" type="xs:string" use="required"/>
+            <xs:attribute name="Type" type="xs:string" use="required"/>
+            <xs:attribute name="Default" type="xs:string"/>
+            <xs:attribute name="DisplayName" type="xs:string"/>
+            <xs:attribute name="Category" type="xs:string"/>
+            <xs:attribute name="Tooltip" type="xs:string"/>
+            <xs:attribute name="Suffix" type="xs:string"/>
+            
+            <!-- Editor visibility -->
+            <xs:attribute name="EditAnywhere" type="xs:boolean" default="true"/>
+            <xs:attribute name="EditDefaultsOnly" type="xs:boolean" default="false"/>
+            <xs:attribute name="EditInstanceOnly" type="xs:boolean" default="false"/>
+            <xs:attribute name="VisibleAnywhere" type="xs:boolean" default="false"/>
+            <xs:attribute name="ReadOnly" type="xs:boolean" default="false"/>
+            
+            <!-- Script visibility -->
+            <xs:attribute name="ScriptReadWrite" type="xs:boolean" default="true"/>
+            <xs:attribute name="ScriptReadOnly" type="xs:boolean" default="false"/>
+            <xs:attribute name="ExposeToScript" type="xs:boolean" default="true"/>
+            
+            <!-- Numeric constraints -->
+            <xs:attribute name="Min" type="xs:float"/>
+            <xs:attribute name="Max" type="xs:float"/>
+            <xs:attribute name="UIMin" type="xs:float"/>
+            <xs:attribute name="UIMax" type="xs:float"/>
+            <xs:attribute name="Step" type="xs:float"/>
+            
+            <!-- Advanced -->
+            <xs:attribute name="ChangeNotify" type="xs:string"/>
+            <xs:attribute name="Visibility" type="xs:string"/>
+            <xs:attribute name="Order" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Function definition (like UFUNCTION) -->
+    <xs:element name="Function">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Param" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="Return" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="Name" type="xs:string" use="required"/>
+            <xs:attribute name="DisplayName" type="xs:string"/>
+            <xs:attribute name="Category" type="xs:string"/>
+            <xs:attribute name="Tooltip" type="xs:string"/>
+            
+            <!-- Script visibility -->
+            <xs:attribute name="ScriptCallable" type="xs:boolean" default="true"/>
+            <xs:attribute name="ScriptPure" type="xs:boolean" default="false"/>
+            <xs:attribute name="CallInEditor" type="xs:boolean" default="false"/>
+            
+            <!-- Network -->
+            <xs:attribute name="Server" type="xs:boolean" default="false"/>
+            <xs:attribute name="Client" type="xs:boolean" default="false"/>
+            <xs:attribute name="NetMulticast" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Function parameter -->
+    <xs:element name="Param">
+        <xs:complexType>
+            <xs:attribute name="Name" type="xs:string" use="required"/>
+            <xs:attribute name="Type" type="xs:string" use="required"/>
+            <xs:attribute name="Default" type="xs:string"/>
+            <xs:attribute name="DisplayName" type="xs:string"/>
+            <xs:attribute name="Tooltip" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Function return type -->
+    <xs:element name="Return">
+        <xs:complexType>
+            <xs:attribute name="Type" type="xs:string" use="required"/>
+            <xs:attribute name="DisplayName" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Enum value -->
+    <xs:element name="EnumValue">
+        <xs:complexType>
+            <xs:attribute name="Name" type="xs:string" use="required"/>
+            <xs:attribute name="Value" type="xs:integer"/>
+            <xs:attribute name="DisplayName" type="xs:string"/>
+            <xs:attribute name="Tooltip" type="xs:string"/>
+            <xs:attribute name="Hidden" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
