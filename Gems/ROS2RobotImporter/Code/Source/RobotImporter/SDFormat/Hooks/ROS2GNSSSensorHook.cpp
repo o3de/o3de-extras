@@ -55,8 +55,12 @@ namespace ROS2RobotImporter::SDFormat
             AZ_Assert(sensorsInterface, "ROS2SensorsEditorInterface not available in ROS2GNSSSensorHook");
             if (ros2interface && sensorsInterface)
             {
+                ROS2Sensors::GnssSensorConfiguration gnssConfiguration;
+                gnssConfiguration.m_useNavSat = true;
+                gnssConfiguration.m_useGpsFix = gnssConfiguration.m_useQuaternion = false;
+
                 auto* ros2FrameComponent = ros2interface->CreateROS2FrameEditorComponent(entity, frameConfiguration);
-                auto* sensor = sensorsInterface->CreateROS2GnssSensorComponent(entity, sensorConfiguration);
+                auto* sensor = sensorsInterface->CreateROS2GnssSensorComponent(entity, sensorConfiguration, gnssConfiguration);
                 if (ros2FrameComponent && sensor)
                 {
                     return AZ::Success();
