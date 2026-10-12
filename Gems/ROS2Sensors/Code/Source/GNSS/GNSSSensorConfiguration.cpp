@@ -18,21 +18,21 @@ namespace ROS2Sensors
         {
             serializeContext->Class<GnssSensorConfiguration>()
                 ->Version(1)
-                ->Field(GnssSensorConstants::GpsFixConfigName, &GnssSensorConfiguration::m_useGpsFix)
                 ->Field(GnssSensorConstants::QuaternionConfigName, &GnssSensorConfiguration::m_useQuaternion)
+                ->Field(GnssSensorConstants::GpsFixConfigName, &GnssSensorConfiguration::m_useGpsFix)
                 ->Field(GnssSensorConstants::NavSatConfigName, &GnssSensorConfiguration::m_useNavSat);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
-                ec->Class<GnssSensorConfiguration>("GNSS Sensor Configuration", "Configure one or more Topic-Types that may contain orientation")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &GnssSensorConfiguration::m_useGpsFix,
-                                                                  GnssSensorConstants::GpsFixConfigName,
-                                                                  GnssSensorConstants::GpsFixMessageType)
+                ec->Class<GnssSensorConfiguration>("GNSS Sensor Configuration", "Configure one or more Topic-Types that contain GNSS positiona and/or orientation")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &GnssSensorConfiguration::m_useQuaternion,
-                                                                  GnssSensorConstants::QuaternionConfigName,
+                                                                  "Publish Orientation",
                                                                   GnssSensorConstants::QuaternionMessageType)
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &GnssSensorConfiguration::m_useGpsFix,
+                                                                  "Publish GPSFix",
+                                                                  GnssSensorConstants::GpsFixMessageType)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &GnssSensorConfiguration::m_useNavSat,
-                                                                  GnssSensorConstants::NavSatConfigName,
+                                                                  "Publish NavSatFix",
                                                                   GnssSensorConstants::NavSatMessageType);
             }
         }
