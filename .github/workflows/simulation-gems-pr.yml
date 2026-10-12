@@ -194,10 +194,10 @@ jobs:
           path: |
             ${{ github.workspace }}/.ccache
             ~/.o3de/3rdParty
-          key: simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-${{ needs.resolve-engine-config.outputs.engine_sha }}-clang${{ needs.resolve-engine-config.outputs.clang_version }}-${{ github.run_id }}
+          key: simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-clang${{ needs.resolve-engine-config.outputs.clang_version }}-${{ needs.resolve-engine-config.outputs.engine_sha }}-${{ github.sha }}
           restore-keys: |
-            simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-${{ needs.resolve-engine-config.outputs.engine_sha }}-clang${{ needs.resolve-engine-config.outputs.clang_version }}-
-            simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-
+            simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-clang${{ needs.resolve-engine-config.outputs.clang_version }}-${{ needs.resolve-engine-config.outputs.engine_sha }}-
+            simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-clang${{ needs.resolve-engine-config.outputs.clang_version }}-
 
       - name: Install CMake matching the engine's ar.yml
         uses: lukka/get-cmake@fffaaafeea488556c2c12dad60690008bc1caacb # v4.4.2
