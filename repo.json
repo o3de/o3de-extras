@@ -460,6 +460,23 @@
                     "engine_api_dependencies": [],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/ros2-4.2.0-gem.zip",
                     "sha256": "1944760ac9cc154a5d66edb4c1d1ab97608180c602d1f98b8be208a3379ba2ff"
+                },
+                {
+                    "version": "4.3.0",
+                    "origin_url": "https://robotec.ai",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
+                    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy, Lyrical). Source your workspace before building the Gem.",
+                    "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+                    "dependencies": [
+                        "LevelGeoreferencing"
+                    ],
+                    "compatible_engines": [
+                        "o3de-sdk>=2.4.0",
+                        "o3de>=2.4.0"
+                    ],
+                    "engine_api_dependencies": [],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/ros2-4.3.0-gem.zip",
+                    "sha256": "a37162c7103ebae73c17d8d0c7b6533d1bd3bdeff48553bb549668ec517d59c2"
                 }
             ]
         },
@@ -1017,6 +1034,15 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/simulationinterfaces-2.2.0-gem.zip",
                     "sha256": "885e9ef058c339254611a59a31d4692e430571b85dbe59a5cbfab8c643f91d79"
+                },
+                {
+                    "version": "2.2.1",
+                    "dependencies": [
+                        "ROS2>=4.1.0",
+                        "DebugDraw"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/simulationinterfaces-2.2.1-gem.zip",
+                    "sha256": "64087772d5e4afc63959fb1868306eab80841c73b3d39528285ae58533cf9055"
                 }
             ]
         },
@@ -1152,6 +1178,12 @@
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.1/ros2sensors-1.0.1-gem.zip",
                     "sha256": "52ac5d23a36ea95dc25fb5c199c32de13641ff6a3f19aaafbca4e46b08678893",
                     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Sensors"
+                },
+                {
+                    "version": "1.1.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/ros2sensors-1.1.0-gem.zip",
+                    "sha256": "2b0861ed0c4075702df8a95b2405d7dd51f56247b06fc223cf61202d2a562267",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2Sensors"
                 }
             ]
         },
@@ -1230,7 +1262,14 @@
             "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2510.0/tracyprofiler-1.0.0-gem.zip",
             "provided_unique_service": "Profiler",
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-            "sha256": "8e712e53a12d23163fa43151d288a73ae07a4f2c5f77a278fca309810f3112f4"
+            "sha256": "8e712e53a12d23163fa43151d288a73ae07a4f2c5f77a278fca309810f3112f4",
+            "versions_data": [
+                {
+                    "version": "1.1.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2605.0/tracyprofiler-1.1.0-gem.zip",
+                    "sha256": "a97fd01f756d626ed59cb05f27cded6e1077f3f0f9ebd7ac965c7a650ae2a0dc"
+                }
+            ]
         }
     ],
     "templates": [
