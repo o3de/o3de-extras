@@ -21,9 +21,9 @@ namespace ROS2Sensors
         // keep original config name for backwards compatibility with existing prefabs
         inline constexpr char NavSatConfigName[] = "sensor_msgs::msg::NavSatFix";
         inline constexpr char GpsFixMessageType[] = "gps_msgs::msg::GPSFix";
-        inline constexpr char GpsFixConfigName[] = "publish GPSFix";
+        inline constexpr char GpsFixConfigName[] = "gps_msgs::msg::GPSFix";
         inline constexpr char QuaternionMessageType[] = "geometry_msgs::msg::QuaternionStamped";
-        inline constexpr char QuaternionConfigName[] = "publish Orientation";
+        inline constexpr char QuaternionConfigName[] = "Orientation";
     } // namespace GnssSensorConstants
 
     //! A structure capturing configuration of an GNSS sensor.
