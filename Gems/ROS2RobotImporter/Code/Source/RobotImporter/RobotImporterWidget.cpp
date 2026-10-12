@@ -23,6 +23,8 @@
 #include <RobotImporter/Building/SdfPrefabMaker.h>
 #include <RobotImporter/Parsing/FixURDF/URDFModifications.h>
 #include <RobotImporter/Parsing/SdfParser.h>
+#include <RobotImporter/Queries/SdfQueries.h>
+#include <RobotImporter/Queries/SdfVisitors.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
@@ -479,6 +481,26 @@ namespace ROS2RobotImporter
         }
     }
 
+    namespace
+    {
+        //! Counts the links the importer turns into articulation links, including the ones in nested models.
+        size_t CountLinks(const sdf::Root& sdfRoot)
+        {
+            size_t linkCount = 0;
+            auto countLinksInModel = [&linkCount](const sdf::Model& model, const SDFormat::ModelStack&) -> SDFormat::VisitModelResponse
+            {
+                // VisitModels descends into nested models, so each model contributes only the links it declares itself.
+                constexpr bool gatherNestedModelLinks = false;
+                linkCount += SDFormat::GetAllLinks(model, gatherNestedModelLinks).size();
+                return SDFormat::VisitModelResponse::VisitNestedAndSiblings;
+            };
+
+            constexpr bool visitNestedModels = true;
+            SDFormat::VisitModels(sdfRoot, countLinksInModel, visitNestedModels);
+            return linkCount;
+        }
+    } // namespace
+
     void RobotImporterWidget::FillPrefabMakerPage()
     {
         // Use the URDF/SDF file name stem the prefab name
@@ -486,6 +508,9 @@ namespace ROS2RobotImporter
         m_prefabMakerPage->SetProposedPrefabName(robotName);
         QWizard::button(PrefabCreationButtonId)->setText(tr("Create Prefab"));
         QWizard::setOption(HavePrefabCreationButton, true);
+
+        const bool useArticulations = m_fileSelectPage->GetSdfAssetBuilderSettings().m_useArticulations;
+        m_prefabMakerPage->ReportArticulationLinkCount(CountLinks(m_parsedSdf), useArticulations);
     }
 
     bool RobotImporterWidget::validateCurrentPage()
