@@ -125,7 +125,7 @@ jobs:
       ROS_DISTRO: ${{ needs.resolve-engine-config.outputs.ros_distro }}
     steps:
       - name: Checkout o3de-extras (PR head)
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           path: o3de-extras
 
@@ -164,7 +164,7 @@ jobs:
           sparse-checkout-cone-mode: false
 
       - name: Drop excluded gems from external_subdirectories lists
-        working-directory: engine
+        working-directory: ${{ env.ENGINE_PATH }}
         run: |
           jq '.external_subdirectories -= [
             "Gems/AtomContent", "Gems/AtomTressFX", "Gems/DevTextures",
@@ -218,7 +218,7 @@ jobs:
       # Install engine's build dependencies.
       # Also adds the ROS 2 apt repo as a side effect.
       - name: Install O3DE Linux build dependencies
-        working-directory: engine/scripts/build/build_node/Platform/Linux
+        working-directory: ${{ env.ENGINE_PATH }}/scripts/build/build_node/Platform/Linux
         run: sudo ./install-ubuntu.sh
 
       # Install ROS 2 packages. gazebo-msgs only exists for humble/jazzy.
@@ -250,7 +250,7 @@ jobs:
           sudo apt-get install -y $PACKAGES
 
       - name: Set up O3DE's bundled Python and register engine
-        working-directory: engine
+        working-directory: ${{ env.ENGINE_PATH }}
         run: |
           ./python/get_python.sh
           ./scripts/o3de.sh register --this-engine
