@@ -204,10 +204,21 @@ jobs:
           echo "CXX=$(which clang++-${{ needs.resolve-engine-config.outputs.clang_version }})" >> "$GITHUB_ENV"
 
       # Install engine's build dependencies.
-      # Also adds the ROS 2 apt repo as a side effect.
       - name: Install O3DE Linux build dependencies
         working-directory: engine/scripts/build/build_node/Platform/Linux
         run: sudo ./install-ubuntu.sh
+
+      # Add the ROS 2 apt repo using the ros2-apt-source package.
+      # Ref: https://github.com/ros-infrastructure/ros-apt-source
+      - name: Add ROS 2 apt repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ROS_APT_SOURCE_VERSION=$(gh release view --repo ros-infrastructure/ros-apt-source --json tagName --jq .tagName)
+          UBUNTU_CODENAME=$(. /etc/os-release && echo "$UBUNTU_CODENAME")
+          curl -fsSL -o /tmp/ros2-apt-source.deb \
+            "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.${UBUNTU_CODENAME}_all.deb"
+          sudo dpkg -i /tmp/ros2-apt-source.deb
 
       # Install ROS 2 packages. gazebo-msgs only exists for humble/jazzy.
       - name: Install ROS 2 ${{ env.ROS_DISTRO }} packages required by the gems
