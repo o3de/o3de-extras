@@ -21,6 +21,10 @@
         "EditorPythonBindings"
     ],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/azqtcomponentsforpython-1.0.0-gem.zip",
-    "version": "1.0.0"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2610.0/azqtcomponentsforpython-2.0.0-gem.zip",
+    "version": "2.0.0",
+    "compatible_engines": [
+        "o3de-sdk>=2.7.0",
+        "o3de>=2.7.0"
+    ]
 }
