@@ -216,8 +216,9 @@ jobs:
         run: |
           ROS_APT_SOURCE_VERSION=$(gh release view --repo ros-infrastructure/ros-apt-source --json tagName --jq .tagName)
           UBUNTU_CODENAME=$(. /etc/os-release && echo "$UBUNTU_CODENAME")
-          curl -fsSL -o /tmp/ros2-apt-source.deb \
-            "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.${UBUNTU_CODENAME}_all.deb"
+          gh release download "${ROS_APT_SOURCE_VERSION}" --repo ros-infrastructure/ros-apt-source \
+            --pattern "ros2-apt-source_${ROS_APT_SOURCE_VERSION}.${UBUNTU_CODENAME}_all.deb" \
+            --output /tmp/ros2-apt-source.deb --clobber
           sudo dpkg -i /tmp/ros2-apt-source.deb
 
       # Install ROS 2 packages. gazebo-msgs only exists for humble/jazzy.
