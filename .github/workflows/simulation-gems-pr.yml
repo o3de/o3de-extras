@@ -45,7 +45,7 @@ jobs:
     steps:
       # base_ref names the matching engine branch; empty on manual workflow_dispatch runs.
       - name: Checkout engine ar.yml (${{ github.base_ref || inputs.engine_ref }})
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: o3de/o3de
           ref: ${{ github.base_ref || inputs.engine_ref }}
@@ -125,7 +125,7 @@ jobs:
       ROS_DISTRO: ${{ needs.resolve-engine-config.outputs.ros_distro }}
     steps:
       - name: Checkout o3de-extras (PR head)
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           path: o3de-extras
 
@@ -133,11 +133,11 @@ jobs:
       # Excludes the largest unrelated gems and most of AutomatedTesting
       # (clones only about 40% of a full engine's size without LFS content).
       - name: Checkout o3de engine (${{ needs.resolve-engine-config.outputs.engine_sha }})
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: o3de/o3de
           ref: ${{ needs.resolve-engine-config.outputs.engine_sha }}
-          path: engine
+          path: ${{ env.ENGINE_PATH }}
           sparse-checkout: |
             /engine.json
             /CMakeLists.txt
@@ -164,7 +164,7 @@ jobs:
           sparse-checkout-cone-mode: false
 
       - name: Drop excluded gems from external_subdirectories lists
-        working-directory: engine
+        working-directory: ${{ env.ENGINE_PATH }}
         run: |
           jq '.external_subdirectories -= [
             "Gems/AtomContent", "Gems/AtomTressFX", "Gems/DevTextures",
@@ -176,16 +176,28 @@ jobs:
             Gems/AtomLyIntegration/gem.json > /tmp/atomly.json
           mv /tmp/atomly.json Gems/AtomLyIntegration/gem.json
 
+      - name: Setup ccache
+        uses: chocobo1/setup-ccache-action@a4d08616f5b614053bce228ddf881592f69d61d4 # v1.5.9
+        with:
+          prepend_symlinks_to_path: false
+          store_cache: false
+          restore_cache: false
+          ccache_options: |
+            cache_dir=${{ github.workspace }}/.ccache
+            hash_dir=false
+            max_size=10G
+
       # Keyed on engine commit + toolchain + image/ROS so a bump busts the cache.
       - name: Cache ccache and 3rdParty packages
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
-            ~/.ccache
+            ${{ github.workspace }}/.ccache
             ~/.o3de/3rdParty
-          key: simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-${{ needs.resolve-engine-config.outputs.engine_sha }}-clang${{ needs.resolve-engine-config.outputs.clang_version }}
+          key: simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-clang${{ needs.resolve-engine-config.outputs.clang_version }}-${{ needs.resolve-engine-config.outputs.engine_sha }}-${{ github.sha }}
           restore-keys: |
-            simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-
+            simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-clang${{ needs.resolve-engine-config.outputs.clang_version }}-${{ needs.resolve-engine-config.outputs.engine_sha }}-
+            simulation-gems-${{ needs.resolve-engine-config.outputs.image }}-${{ env.ROS_DISTRO }}-clang${{ needs.resolve-engine-config.outputs.clang_version }}-
 
       - name: Install CMake matching the engine's ar.yml
         uses: lukka/get-cmake@fffaaafeea488556c2c12dad60690008bc1caacb # v4.4.2
@@ -206,7 +218,7 @@ jobs:
       # Install engine's build dependencies.
       # Also adds the ROS 2 apt repo as a side effect.
       - name: Install O3DE Linux build dependencies
-        working-directory: engine/scripts/build/build_node/Platform/Linux
+        working-directory: ${{ env.ENGINE_PATH }}/scripts/build/build_node/Platform/Linux
         run: sudo ./install-ubuntu.sh
 
       # Install ROS 2 packages. gazebo-msgs only exists for humble/jazzy.
@@ -238,7 +250,7 @@ jobs:
           sudo apt-get install -y $PACKAGES
 
       - name: Set up O3DE's bundled Python and register engine
-        working-directory: engine
+        working-directory: ${{ env.ENGINE_PATH }}
         run: |
           ./python/get_python.sh
           ./scripts/o3de.sh register --this-engine
@@ -269,7 +281,9 @@ jobs:
           cmake -B "${{ env.PROJECT_PATH }}/build/linux" -S "${{ env.PROJECT_PATH }}" \
             -G "Ninja Multi-Config" \
             -DLY_3RDPARTY_PATH="$HOME/.o3de/3rdParty" \
-            -DLY_UNITY_BUILD=OFF
+            -DLY_UNITY_BUILD=OFF \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
       # Test target names are per-gem, not uniform.
       - name: Build gem modules and test targets
@@ -302,7 +316,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: simulation-gems-test-results
           path: ${{ env.PROJECT_PATH }}/build/linux/Testing/
