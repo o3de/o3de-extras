@@ -37,6 +37,7 @@ set(FILES
     Source/Camera/ROS2CameraSensorComponent.h
     Source/Camera/ROS2CameraSystemComponent.cpp
     Source/Camera/ROS2CameraSystemComponent.h
+    Source/GNSS/GNSSSensorConfiguration.cpp
     Source/GNSS/ROS2GNSSSensorComponent.cpp
     Source/GNSS/ROS2GNSSSensorComponent.h
     Source/Imu/ImuSensorConfiguration.cpp

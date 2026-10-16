@@ -37,7 +37,10 @@ namespace ROS2Sensors
     protected:
         ////////////////////////////////////////////////////////////////////////
         // ROS2SensorsEditorRequestBus interface implementation
-        AZ::Component* CreateROS2GnssSensorComponent(AZ::Entity& entity, const ROS2::SensorConfiguration& sensorConfiguration) override;
+        AZ::Component* CreateROS2GnssSensorComponent(
+            AZ::Entity& entity,
+            const ROS2::SensorConfiguration& sensorConfiguration,
+            const GnssSensorConfiguration& gnssConfiguration) override;
         AZ::Component* CreateROS2CameraSensorComponent(
             AZ::Entity& entity,
             const ROS2::SensorConfiguration& sensorConfiguration,
