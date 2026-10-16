@@ -9,6 +9,7 @@
 
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Entity/EntityDebugDisplayBus.h>
+#include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2Controllers/Controllers/PidConfiguration.h>
 #include <ROS2Controllers/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
 #include <ROS2Controllers/Manipulation/MotorizedJoints/PidMotorControllerBus.h>
@@ -37,10 +38,15 @@ namespace ROS2Controllers
         float GetError() override;
 
     private:
+        //! Close the position loop: sample the joint, run the PID and apply the resulting speed.
+        //! Runs once per physics sub-step, so the PID integrates at the fixed simulation rate.
+        void OnSceneSimulationFinish(float fixedDeltaTime);
+
         PidConfiguration m_pidPos; //!< PID controller for position.
         float m_zeroOffset{ 0.0f }; //!< Offset added to setpoint.
         float m_setPoint{ 0.0f }; //!< Desired local position.
         float m_error{ 0.0f }; //!< Current error (difference between control value and measurement).
+        AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_sceneFinishSimHandler; //!< Handler called after every physics sub-step
 
         // JointMotorControllerComponent overrides
         float CalculateMotorSpeed([[maybe_unused]] float deltaTime) override;
