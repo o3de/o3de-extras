@@ -132,7 +132,10 @@ namespace ROS2
         // Some ROS 2 libraries (e.g. rmw_implementation and rcl_logging_implementation in ROS 2 Lyrical) unload
         // their plugin libraries during process exit. When the gem is unloaded, that unload can unmap the calling
         // library while its code is still running, and the process crashes with SIGSEGV on exit.
-        dlopen("librclcpp.so", RTLD_LAZY | RTLD_NOLOAD | RTLD_NODELETE);
+        // TODO: remove once the fix is released in all supported ROS 2 distributions:
+        // https://github.com/ros2/rmw_implementation/issues/301
+        [[maybe_unused]] const void* rclcppHandle = dlopen("librclcpp.so", RTLD_LAZY | RTLD_NOLOAD | RTLD_NODELETE);
+        AZ_Assert(rclcppHandle, "Failed to keep librclcpp.so loaded until process exit: %s", dlerror());
 
         rclcpp::init(0, 0);
 
