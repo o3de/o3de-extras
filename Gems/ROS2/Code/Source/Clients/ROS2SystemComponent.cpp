@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+#include <dlfcn.h>
 #include <signal.h>
 
 #include "ROS2SystemComponent.h"
@@ -127,6 +128,12 @@ namespace ROS2
 
     void ROS2SystemComponent::Init()
     {
+        // Keep librclcpp.so and its dependencies loaded until the process ends, even after this gem is unloaded.
+        // Some ROS 2 libraries (e.g. rmw_implementation and rcl_logging_implementation in ROS 2 Lyrical) unload
+        // their plugin libraries during process exit. When the gem is unloaded, that unload can unmap the calling
+        // library while its code is still running, and the process crashes with SIGSEGV on exit.
+        dlopen("librclcpp.so", RTLD_LAZY | RTLD_NOLOAD | RTLD_NODELETE);
+
         rclcpp::init(0, 0);
 
         // handle signals, e.g. via `Ctrl+C` hotkey or `kill` command
