@@ -6,8 +6,6 @@
  *
  */
 
-#pragma once
-
 #include <Tools/MultilayerPerceptronEditorComponent.h>
 #include <Components/MultilayerPerceptronComponent.h>
 #include <MachineLearning/IMachineLearning.h>

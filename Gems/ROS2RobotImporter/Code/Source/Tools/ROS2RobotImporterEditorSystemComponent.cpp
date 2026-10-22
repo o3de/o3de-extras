@@ -15,13 +15,18 @@
 #include <AzCore/std/utility/move.h>
 #include <AzToolsFramework/API/ViewPaneOptions.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
+#include <RobotImporter/Assets/AssetImporter.h>
+#include <RobotImporter/Assets/AssetLookup.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Building/SdfPrefabMaker.h>
+#include <RobotImporter/Parsing/SdfParser.h>
 #include <RobotImporter/RobotImporterWidget.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
-#include <RobotImporter/URDF/UrdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <Tools/ImportSession.h>
 
 #include <sdf/sdf.hh>
 
@@ -44,6 +49,8 @@ namespace ROS2RobotImporter
                 ->Attribute(AZ::Script::Attributes::Category, "Robotics")
                 ->Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Automation)
                 ->Attribute(AZ::Script::Attributes::Module, "ROS2")
+                ->Event("ImportRobotDescription", &RobotImporterRequestBus::Events::GeneratePrefabFromFile)
+                // The "ImportURDF" event name kept for backwards compatibility with existing Python scripts.
                 ->Event("ImportURDF", &RobotImporterRequestBus::Events::GeneratePrefabFromFile);
         }
     }
@@ -114,7 +121,7 @@ namespace ROS2RobotImporter
     }
 
     bool ROS2RobotImporterEditorSystemComponent::GeneratePrefabFromFile(
-        const AZStd::string_view filePath, bool importAssetWithUrdf, bool useArticulation)
+        const AZStd::string_view filePath, bool importAssetWithFile, bool useArticulation)
     {
         if (filePath.empty())
         {
@@ -130,10 +137,10 @@ namespace ROS2RobotImporter
         // Read the SDF Settings from the Settings Registry into a local struct
         SdfAssetBuilderSettings sdfBuilderSettings;
         sdfBuilderSettings.LoadSettings();
-        // Set the parser config settings for URDF content
-        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(sdfBuilderSettings, filePath);
+        // Set the parser config settings for the source file content
+        sdf::ParserConfig parserConfig = SdfParser::CreateSdfParserConfigFromSettings(sdfBuilderSettings, filePath);
 
-        auto parsedSdfOutcome = UrdfParser::ParseFromFile(filePath, parserConfig, sdfBuilderSettings);
+        auto parsedSdfOutcome = SdfParser::ParseFromFile(filePath, parserConfig, sdfBuilderSettings);
         if (!parsedSdfOutcome)
         {
             const AZStd::string log = Utils::JoinSdfErrorsToString(parsedSdfOutcome.GetSdfErrors());
@@ -142,13 +149,15 @@ namespace ROS2RobotImporter
             return false;
         }
 
-        // Urdf Root has been parsed successfully retrieve it from the Outcome
+        // SDF Root has been parsed successfully retrieve it from the Outcome
         const sdf::Root& parsedSdfRoot = parsedSdfOutcome.GetRoot();
 
-        auto urdfAssetsMapping = Utils::GetReferencedAssetFilenames(parsedSdfRoot);
-        if (importAssetWithUrdf)
+        auto referencedAssetMap = Assets::GetReferencedAssetFilenames(parsedSdfRoot);
+        if (importAssetWithFile)
         {
-            Utils::CopyReferencedAssetsAndCreateAssetMap(urdfAssetsMapping, filePath, sdfBuilderSettings);
+            Assets::ResolveAssetMap(referencedAssetMap, filePath, sdfBuilderSettings);
+            bool copyResultOk = Assets::CopyReferencedAssets(referencedAssetMap, filePath);
+            AZ_Warning("ROS2RobotImporterEditorSystemComponent", copyResultOk, "Copying assets failed");
         }
         bool allAssetProcessed = false;
         bool assetProcessorFailed = false;
@@ -156,7 +165,7 @@ namespace ROS2RobotImporter
         auto loopStartTime = AZStd::chrono::system_clock::now();
 
         /* This loop waits until all of the assets are processed.
-           The urdf prefab cannot be created before all assets are processed.
+           The prefab cannot be created before all assets are processed.
            There are three stop conditions: allAssetProcessed, assetProcessorFailed and a timeout.
            After all asset are processed the allAssetProcessed will be set to true.
            assetProcessorFailed will be set to true if the asset processor does not respond.
@@ -172,7 +181,7 @@ namespace ROS2RobotImporter
             }
 
             allAssetProcessed = true;
-            for (const auto& [name, asset] : urdfAssetsMapping)
+            for (const auto& [name, asset] : referencedAssetMap)
             {
                 auto sourceAssetFullPath = asset.m_availableAssetInfo.m_sourceAssetGlobalPath;
                 if (sourceAssetFullPath.empty())
@@ -231,8 +240,9 @@ namespace ROS2RobotImporter
 
         const AZ::IO::Path prefabPathRelative(AZ::IO::Path("Assets") / "Importer" / prefabName);
         const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRelative);
-        AZStd::unique_ptr<URDFPrefabMaker> prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
-            &parsedSdfRoot, prefabPath.String(), AZStd::make_shared<Utils::UrdfAssetMap>(urdfAssetsMapping), useArticulation);
+        ImportSession session(AZStd::move(referencedAssetMap));
+        AZStd::unique_ptr<SdfPrefabMaker> prefabMaker =
+            AZStd::make_unique<SdfPrefabMaker>(&parsedSdfRoot, prefabPath.String(), session.GetId(), useArticulation);
 
         auto prefabOutcome = prefabMaker->CreatePrefabFromUrdfOrSdf();
 

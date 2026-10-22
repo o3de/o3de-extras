@@ -59,9 +59,6 @@ set(GENERATED_FILES
     azqtcomponents_titlebar_config_title_wrapper.cpp
     azqtcomponents_titlebar_config_buttons_wrapper.cpp
     
-    azqtcomponents_titlebaroverdrawhandler_wrapper.cpp
-#    azqtcomponents_toastnotification_wrapper.cpp
-#    azqtcomponents_toastconfiguration_wrapper.cpp  
     azqtcomponents_toolbararea_wrapper.cpp
     azqtcomponents_toolbuttoncombobox_wrapper.cpp
     azqtcomponents_toolbuttonlineedit_wrapper.cpp
@@ -69,7 +66,6 @@ set(GENERATED_FILES
     azqtcomponents_vectoredit_wrapper.cpp
     azqtcomponents_windowdecorationwrapper_wrapper.cpp   
     
- #   azqtcomponents_assetfolderlistview_wrapper.cpp
     azqtcomponents_assetfolderthumbnailview_wrapper.cpp
     azqtcomponents_assetfolderthumbnailview_config_wrapper.cpp
     azqtcomponents_assetfolderthumbnailview_config_thumbnail_wrapper.cpp
@@ -84,7 +80,6 @@ set(GENERATED_FILES
     azqtcomponents_cardnotification_wrapper.cpp
     azqtcomponents_checkbox_wrapper.cpp
     azqtcomponents_checkbox_config_wrapper.cpp
- #   azqtcomponents_colorlabel_wrapper.cpp
     azqtcomponents_comboboxvalidator_wrapper.cpp
     azqtcomponents_combobox_wrapper.cpp
     azqtcomponents_combobox_config_wrapper.cpp
@@ -146,10 +141,6 @@ set(GENERATED_FILES
     azqtcomponents_spinbox_config_wrapper.cpp
     azqtcomponents_statusbar_wrapper.cpp
     azqtcomponents_statusbar_config_wrapper.cpp
- #   azqtcomponents_tableview_wrapper.cpp
- #   azqtcomponents_tableview_config_wrapper.cpp
-  #  azqtcomponents_tableviewmodel_wrapper.cpp
- #   azqtcomponents_tableviewitemdelegate_wrapper.cpp
     azqtcomponents_tabwidgetactiontoolbarcontainer_wrapper.cpp
     azqtcomponents_tabwidget_wrapper.cpp
     azqtcomponents_tabwidget_config_wrapper.cpp
@@ -164,11 +155,6 @@ set(GENERATED_FILES
     
     azqtcomponents_toolbutton_wrapper.cpp
     azqtcomponents_toolbutton_config_wrapper.cpp
- #   azqtcomponents_treeview_wrapper.cpp
- #   azqtcomponents_treeview_config_wrapper.cpp
- #   azqtcomponents_branchdelegate_wrapper.cpp
- #   azqtcomponents_styledtreeview_wrapper.cpp
- #   azqtcomponents_styledtreewidget_wrapper.cpp
     azqtcomponents_vectoreditelement_wrapper.cpp
     azqtcomponents_vectorelement_wrapper.cpp
     azqtcomponents_vectorinput_wrapper.cpp
