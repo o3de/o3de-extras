@@ -750,6 +750,20 @@ namespace SimulationInterfaces
         PreInsertionCb preinsertionCb,
         SpawnCompletedCb completedCb)
     {
+        // Callers can pass empty callbacks; no-op callbacks are called in their place.
+        if (!preinsertionCb)
+        {
+            preinsertionCb = [](const AZ::Outcome<AzFramework::SpawnableEntityContainerView, FailedResult>&)
+            {
+            };
+        }
+        if (!completedCb)
+        {
+            completedCb = [](const AZ::Outcome<AZStd::string, FailedResult>&)
+            {
+            };
+        }
+
         if (auto outcome = IsWorldLoaded(); !outcome.IsSuccess())
         {
             completedCb(AZ::Failure(outcome.GetError()));
@@ -904,9 +918,8 @@ namespace SimulationInterfaces
         spawner->SpawnAllEntities(ticket, optionalArgs);
         auto ticketId = ticket.GetId();
         SpawnCompletedCbData data;
-        // to ensure that callbacks are valid
-        data.m_completedCb = completedCb ? completedCb : SpawnCompletedCb{};
-        data.m_preInsertionCb = preinsertionCb ? preinsertionCb : PreInsertionCb{};
+        data.m_completedCb = completedCb;
+        data.m_preInsertionCb = preinsertionCb;
         data.m_userProposedName = name;
         m_spawnCompletedCallbacks[ticketId] = data;
         m_spawnedTickets[ticketId] = ticket;
