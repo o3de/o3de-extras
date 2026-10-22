@@ -107,16 +107,16 @@ namespace ROS2RobotImporter
 
     void FileSelectionPage::onFileSelected(const QString& file)
     {
-        QFileInfo urdfFile(file);
+        QFileInfo selectedFile(file);
         m_textEdit->setText(file);
-        m_fileExists = urdfFile.exists() && urdfFile.isFile();
+        m_fileExists = selectedFile.exists() && selectedFile.isFile();
         emit completeChanged();
     }
 
     void FileSelectionPage::onEditingFinished()
     {
-        QFileInfo urdfFile(m_textEdit->text());
-        m_fileExists = urdfFile.exists() && urdfFile.isFile();
+        QFileInfo selectedFile(m_textEdit->text());
+        m_fileExists = selectedFile.exists() && selectedFile.isFile();
         emit completeChanged();
     }
 

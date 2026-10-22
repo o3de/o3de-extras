@@ -56,10 +56,6 @@ namespace MachineLearning
         AZ::IO::SystemFile m_imageFile;
         AZ::IO::SystemFile m_labelFile;
 
-        AZStd::size_t m_imageDataStart = 0;
-        AZStd::size_t m_labelDataStart = 0;
-
-        AZStd::size_t m_currentIndex = 0xFFFFFFFF;
         AZStd::vector<uint8_t> m_imageBuffer;
         AZStd::vector<uint8_t> m_labelBuffer;
 

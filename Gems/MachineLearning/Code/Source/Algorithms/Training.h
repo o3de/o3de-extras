@@ -11,6 +11,7 @@
 #include <AzCore/Math/VectorN.h>
 #include <AzCore/Jobs/JobManager.h>
 #include <AzCore/Jobs/JobContext.h>
+#include <AzCore/std/parallel/scoped_lock.h>
 #include <AzCore/Threading/ThreadSafeDeque.h>
 #include <MachineLearning/INeuralNetwork.h>
 #include <Assets/TrainingDataView.h>

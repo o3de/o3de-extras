@@ -14,7 +14,6 @@
 #include <ROS2RobotImporter/ROS2RobotImporterBus.h>
 #include <ROS2RobotImporter/SDFormatModelPluginImporterHook.h>
 #include <ROS2RobotImporter/SDFormatSensorImporterHook.h>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
 namespace ROS2RobotImporter
 {
 
@@ -43,7 +42,7 @@ namespace ROS2RobotImporter
         void NotifyRegisterViews() override;
 
         // RobotImporterRequestsBus::Handler overrides ..
-        bool GeneratePrefabFromFile(const AZStd::string_view filePath, bool importAssetWithUrdf, bool useArticulation) override;
+        bool GeneratePrefabFromFile(const AZStd::string_view filePath, bool importAssetWithFile, bool useArticulation) override;
         const SDFormat::SensorImporterHooksStorage& GetSensorHooks() const override;
         const SDFormat::ModelPluginImporterHooksStorage& GetModelPluginHooks() const override;
 
