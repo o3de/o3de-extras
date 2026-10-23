@@ -28,4 +28,6 @@ namespace Georeferencing
 
     inline constexpr const char* GeoReferenceLevelConfigTypeId = "{6C51A9EC-49E8-4344-9E3E-D2627C245FE1}";
 
+    inline constexpr const char* GeoreferenceNotificationsTypeId = "{153F6D04-2C49-4782-A417-0FA80408DE71}";
+    
 } // namespace Georeferencing
