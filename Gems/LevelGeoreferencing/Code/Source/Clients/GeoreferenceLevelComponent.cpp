@@ -101,9 +101,9 @@ namespace Georeferencing
     void GeoReferenceLevelController::OnEntityActivated(const AZ::EntityId& entityId)
     {
         AZ_Assert(entityId == m_config.m_enuOriginLocationEntityId, "Entity activated is not the origin entity");
-        m_enuOriginTransform = AZ::Transform::CreateIdentity();
-        AZ::TransformBus::EventResult(m_enuOriginTransform, m_config.m_enuOriginLocationEntityId, &AZ::TransformBus::Events::GetWorldTM);
-        m_enuOriginTransform.Invert();
+        AZ::Transform transform = AZ::Transform::CreateIdentity();
+        AZ::TransformBus::EventResult(transform, m_config.m_enuOriginLocationEntityId, &AZ::TransformBus::Events::GetWorldTM);
+        ApplyOriginTransform(transform);
         AZ::TransformNotificationBus::Handler::BusConnect(m_config.m_enuOriginLocationEntityId);
         AZ::EntityBus::Handler::BusDisconnect();
     }
@@ -116,6 +116,7 @@ namespace Georeferencing
     void GeoReferenceLevelController::ApplyOriginTransform(const AZ::Transform& worldTransform)
     {
         m_enuOriginTransform = worldTransform.GetInverse();
+        GeoreferenceNotificationsBus::Broadcast(&GeoreferenceNotifications::OnOriginPoseChanged, worldTransform);
     }
 
     WGS::WGS84Coordinate GeoReferenceLevelController::ConvertFromLevelToWGS84(const AZ::Vector3& xyz)
@@ -143,6 +144,7 @@ namespace Georeferencing
     {
         m_config = config;
         SetOriginEntity(m_config.m_enuOriginLocationEntityId);
+        GeoreferenceNotificationsBus::Broadcast(&GeoreferenceNotifications::OnGeoreferenceChanged, m_config.m_originLocation);
     }
 
     void GeoReferenceLevelController::SetOriginEntity(const AZ::EntityId& entityId)
@@ -161,11 +163,13 @@ namespace Georeferencing
         }
         AZ::EntityBus::Handler::BusConnect(m_config.m_enuOriginLocationEntityId);
         AZ::TransformNotificationBus::Handler::BusConnect(m_config.m_enuOriginLocationEntityId);
+        GeoreferenceNotificationsBus::Broadcast(&GeoreferenceNotifications::OnOriginEntitychanged, entityId);
     }
 
     void GeoReferenceLevelController::SetOriginCoordinates(const WGS::WGS84Coordinate& origin)
     {
         m_config.m_originLocation = origin;
+        GeoreferenceNotificationsBus::Broadcast(&GeoreferenceNotifications::OnGeoreferenceChanged, origin);
     }
 
     AZ::EntityId GeoReferenceLevelController::GetOriginEntity()

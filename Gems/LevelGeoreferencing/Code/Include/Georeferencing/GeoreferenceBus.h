@@ -12,6 +12,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Math/Quaternion.h>
+#include <AzCore/Math/Transform.h>
 #include <AzCore/Math/Vector3.h>
 
 namespace Georeferencing
@@ -77,4 +78,41 @@ namespace Georeferencing
     };
 
     using GeoreferenceRequestsBus = AZ::EBus<GeoreferenceRequests, GeoreferenceRequestsTraits>;
+
+    class GeoreferenceNotifications
+    {
+    public:
+        AZ_RTTI(GeoreferenceNotifications, GeoreferenceNotificationsTypeId);
+        virtual ~GeoreferenceNotifications() = default;
+
+        //! Notify when level georeference config changed
+        //! @param newCoords newly set level geo pose
+        virtual void OnGeoreferenceChanged(const WGS::WGS84Coordinate& newCoords)
+        {
+        }
+
+        //! Notify when origin entity pose changed
+        //! @param newOriginPose pose of moved origin entity 
+        virtual void OnOriginPoseChanged(const AZ::Transform& newOriginPose)
+        {
+        }
+
+        //! Notify when origin entity changed
+        //! @param newOriginEntityId id of new entity 
+        virtual void OnOriginEntitychanged(const AZ::EntityId& newOriginEntityId)
+        {
+        }
+    };
+
+    class GeoreferenceNotificationsBusTraits : public AZ::EBusTraits
+    {
+    public:
+        //////////////////////////////////////////////////////////////////////////
+        // EBusTraits overrides
+        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
+        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
+        //////////////////////////////////////////////////////////////////////////
+    };
+
+    using GeoreferenceNotificationsBus = AZ::EBus<GeoreferenceNotifications, GeoreferenceNotificationsBusTraits>;
 } // namespace Georeferencing
