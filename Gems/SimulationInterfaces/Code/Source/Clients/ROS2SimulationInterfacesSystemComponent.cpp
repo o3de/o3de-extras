@@ -87,6 +87,12 @@ namespace ROS2SimulationInterfaces
         rclcpp::Node::SharedPtr ros2Node = rclcpp::Node::SharedPtr(ROS2::ROS2Interface::Get()->GetNode());
         AZ_Assert(ros2Node, "ROS2 node is not available.");
 
+        if (!ros2Node)
+        {
+            AZ_Warning("ROS2SimulationInterfaces", false, "ROS 2 Node unavailable, ROS 2 handlers won't be created");
+            return;
+        }
+
         RegisterInterface<DeleteEntityServiceHandler>(ros2Node);
         RegisterInterface<GetEntitiesServiceHandler>(ros2Node);
         RegisterInterface<GetEntitiesStatesServiceHandler>(ros2Node);

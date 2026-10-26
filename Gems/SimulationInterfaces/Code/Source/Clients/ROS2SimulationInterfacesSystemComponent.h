@@ -54,6 +54,12 @@ namespace ROS2SimulationInterfaces
         void RegisterInterface(rclcpp::Node::SharedPtr ros2Node)
         {
             AZStd::shared_ptr handler = AZStd::make_shared<T>();
+            if (!ros2Node)
+            {
+                AZ_Warning("ROS2SimulationInterfaces", false, "Failed to create handler %s, ROS 2 node not available", handler->GetTypeName().data());
+                return;
+            }
+
             handler->Initialize(ros2Node);
             if (handler->IsValid())
             {
