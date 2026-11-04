@@ -55,6 +55,36 @@ namespace ROS2Controllers::VehicleDynamics
         m_steeringData.clear();
         m_vehicleConfiguration = vehicleConfig;
         m_steeringPid.InitializePid();
+
+        // The steering PID reads the steering joints and writes their target velocity, so it has to
+        // close its loop on the physics step rather than on the render tick.
+        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        AZ_Assert(sceneInterface, "No scene interface");
+        const AzPhysics::SceneHandle defaultSceneHandle =
+            sceneInterface ? sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName) : AzPhysics::InvalidSceneHandle;
+        AZ_Assert(defaultSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid default physics scene handle");
+        if (defaultSceneHandle == AzPhysics::InvalidSceneHandle)
+        {
+            return;
+        }
+
+        m_sceneFinishSimHandler = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
+            [this]([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float fixedDeltaTime)
+            {
+                OnSceneSimulationFinish(fixedDeltaTime);
+            },
+            aznumeric_cast<int32_t>(AzPhysics::SceneEvents::PhysicsStartFinishSimulationPriority::Components));
+        sceneInterface->RegisterSceneSimulationFinishHandler(defaultSceneHandle, m_sceneFinishSimHandler);
+    }
+
+    void AckermannDriveModel::OnSceneSimulationFinish(float fixedDeltaTime)
+    {
+        if (m_steeringData.empty())
+        {
+            // Steering elements are discovered on the first ApplyState call.
+            return;
+        }
+        ApplySteering(m_steeringCommand, aznumeric_cast<AZ::u64>(fixedDeltaTime * 1'000'000'000.0));
     }
 
     void AckermannDriveModel::ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs)
@@ -67,10 +97,12 @@ namespace ROS2Controllers::VehicleDynamics
         if (m_steeringData.empty())
         {
             m_steeringData = VehicleDynamics::Utilities::GetAllSteeringEntitiesData(m_vehicleConfiguration);
+            AZ_Warning(
+                "ApplySteering", !m_steeringData.empty(), "Cannot apply steering since no steering elements are defined in the model");
         }
         const auto jointPositions = inputs.m_jointRequestedPosition;
-        const float steering = jointPositions.empty() ? 0 : jointPositions.front();
-        ApplySteering(steering, deltaTimeNs);
+        // The steering PID consumes this on the physics step; only the target is latched here.
+        m_steeringCommand = jointPositions.empty() ? 0 : jointPositions.front();
         ApplySpeed(inputs.m_speed.GetX(), deltaTimeNs);
     }
 
@@ -110,11 +142,6 @@ namespace ROS2Controllers::VehicleDynamics
     {
         if (m_disabled)
         {
-            return;
-        }
-        if (m_steeringData.empty())
-        {
-            AZ_Warning("ApplySteering", false, "Cannot apply steering since no steering elements are defined in the model");
             return;
         }
 

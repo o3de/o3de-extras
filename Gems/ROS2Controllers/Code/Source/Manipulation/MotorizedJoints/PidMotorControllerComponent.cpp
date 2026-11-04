@@ -57,12 +57,47 @@ namespace ROS2Controllers
         m_pidPos.InitializePid();
         PidMotorControllerRequestBus::Handler::BusConnect(GetEntityId());
         JointMotorControllerComponent::Activate();
+
+        // This controller closes its own loop on the physics step, so the base class' tick-driven
+        // update is not used.
+        AZ::TickBus::Handler::BusDisconnect();
+
+        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        AZ_Assert(sceneInterface, "No scene interface");
+        const AzPhysics::SceneHandle defaultSceneHandle =
+            sceneInterface ? sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName) : AzPhysics::InvalidSceneHandle;
+        AZ_Assert(defaultSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid default physics scene handle");
+        if (defaultSceneHandle == AzPhysics::InvalidSceneHandle)
+        {
+            return;
+        }
+
+        m_sceneFinishSimHandler = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
+            [this]([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float fixedDeltaTime)
+            {
+                OnSceneSimulationFinish(fixedDeltaTime);
+            },
+            aznumeric_cast<int32_t>(AzPhysics::SceneEvents::PhysicsStartFinishSimulationPriority::Components));
+        sceneInterface->RegisterSceneSimulationFinishHandler(defaultSceneHandle, m_sceneFinishSimHandler);
     }
 
     void PidMotorControllerComponent::Deactivate()
     {
+        m_sceneFinishSimHandler.Disconnect();
         JointMotorControllerComponent::Deactivate();
         PidMotorControllerRequestBus::Handler::BusDisconnect();
+    }
+
+    void PidMotorControllerComponent::OnSceneSimulationFinish(float fixedDeltaTime)
+    {
+        if (!m_jointComponentIdPair.GetEntityId().IsValid())
+        {
+            return;
+        }
+
+        PhysX::JointRequestBus::EventResult(m_currentPosition, m_jointComponentIdPair, &PhysX::JointRequests::GetPosition);
+        const float setSpeed = CalculateMotorSpeed(fixedDeltaTime);
+        PhysX::JointRequestBus::Event(m_jointComponentIdPair, &PhysX::JointRequests::SetVelocity, setSpeed);
     }
 
     void PidMotorControllerComponent::SetSetpoint(float setpoint)
