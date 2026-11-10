@@ -51,6 +51,15 @@ namespace Georeferencing
                 ->Event("ConvertFromLevelToWGS84", &GeoreferenceRequests::ConvertFromLevelToWGS84)
                 ->Event("ConvertFromWGS84ToLevel", &GeoreferenceRequests::ConvertFromWGS84ToLevel)
                 ->Event("GetRotationFromLevelToENU", &GeoreferenceRequests::GetRotationFromLevelToENU);
+
+            behaviorContext->EBus<GeoreferenceConfigurationRequestsBus>("GeoreferenceConfigurationRequestsBus")
+                ->Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Common)
+                ->Attribute(AZ::Script::Attributes::Category, "Georeferencing")
+                ->Attribute(AZ::Script::Attributes::Module, "Georeferencing")
+                ->Event("SetOriginEntity", &GeoreferenceConfigurationRequests::SetOriginEntity)
+                ->Event("SetOriginCoordinates", &GeoreferenceConfigurationRequests::SetOriginCoordinates)
+                ->Event("GetOriginEntity", &GeoreferenceConfigurationRequests::GetOriginEntity)
+                ->Event("GetOriginCoordinates", &GeoreferenceConfigurationRequests::GetOriginCoordinates);
         }
     }
 
