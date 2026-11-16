@@ -273,7 +273,7 @@ namespace ROS2
         }
 
         const AZStd::string stringToReplaceViolations(1, underscore);
-        const AZStd::regex ros2Disallowedlist("[^0-9|a-z|A-Z|_]");
+        const AZStd::regex ros2Disallowedlist("[^0-9a-zA-Z_]");
         rosified = AZStd::regex_replace(rosified, ros2Disallowedlist, stringToReplaceViolations);
 
         if (AZStd::isdigit(rosified[0]) || (input[0] != underscore && rosified[0] == underscore))
@@ -357,6 +357,30 @@ namespace ROS2
 
         const AZStd::string& topic(*reinterpret_cast<const AZStd::string*>(newValue));
         return ValidateTopic(topic);
+    }
+
+    AZ::Outcome<void, AZStd::string> ROS2SystemComponent::ValidateNameToken(const AZStd::string& token)
+    {
+        if (token.empty())
+        {
+            return AZ::Failure(AZStd::string("name token must not be empty"));
+        }
+
+        if (AZStd::isdigit(token[0]))
+        {
+            return AZ::Failure(AZStd::string("name token must not start with a number"));
+        }
+
+        for (const char character : token)
+        {
+            if (!AZStd::isalnum(character) && character != '_')
+            {
+                return AZ::Failure(AZStd::string::format(
+                    "name token must not contain characters other than alphanumerics or '_', found '%c'", character));
+            }
+        }
+
+        return AZ::Success();
     }
 
     AZ::Outcome<AZ::Transform, AZStd::string> ROS2SystemComponent::GetTransform(
