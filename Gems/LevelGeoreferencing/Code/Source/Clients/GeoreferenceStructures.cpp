@@ -44,9 +44,11 @@ namespace Georeferencing::WGS
         if (auto* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
         {
             behaviorContext->Class<WGS84Coordinate>("WGS84Coordinate")
+                ->Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Common)
+                ->Attribute(AZ::Script::Attributes::Module, "Georeferencing")
+                ->Attribute(AZ::Script::Attributes::Category, "Georeferencing")
                 ->Constructor<>()
                 ->Constructor<double, double, double>()
-                ->Attribute(AZ::Script::Attributes::Category, "Georeferencing")
                 ->Method("ToVector3f", &WGS84Coordinate::ToVector3f)
                 ->Method("FromVector3f", &WGS84Coordinate::FromVector3f)
                 ->Method("SetLatitude", &WGS84Coordinate::SetLatitude)
