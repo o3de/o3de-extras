@@ -166,25 +166,22 @@ namespace ROS2
         }
 
     private:
-        //! Uses:
-        //!  - internal tick counter,
-        //!  - last delta time of event source and
-        //!  - frequency set for adapter
-        //! to support managing calls from event source. In other words, uses delta time of event source to calculate average number of
-        //! source event calls per adapted event call.
+        //! Paces the adapted event on the source's delta time: it accumulates the time since the last adapted event, keeps the remainder
+        //! past each deadline, and signals on the source event closest to the deadline. The average adapted frequency is then the set
+        //! frequency whatever the source frequency, also when the source is not an integer multiple of it, and when its delta times vary
+        //! or are quantized (for example frame times measured with an external /clock). After a stall longer than two periods, the
+        //! backlog is dropped instead of signalling in a burst.
         //! @param sourceDeltaTime Delta time of event source.
         //! @return Whether it is time to signal adapted event.
         [[nodiscard]] bool IsPublicationDeadline(float sourceDeltaTime)
         {
-            if (--m_tickCounter > 0)
+            const float period = m_adaptedFrequency > 0.0f ? 1.0f / m_adaptedFrequency : 1.0f;
+            m_timeSinceDeadline += sourceDeltaTime;
+            if (m_timeSinceDeadline + 0.5f * sourceDeltaTime < period)
             {
                 return false;
             }
-
-            const float sourceFrequencyEstimation = 1.0f / sourceDeltaTime;
-            const float numberOfFrames =
-                m_adaptedFrequency <= sourceFrequencyEstimation ? (sourceFrequencyEstimation / m_adaptedFrequency) : 1.0f;
-            m_tickCounter = aznumeric_cast<int>(AZStd::round(numberOfFrames));
+            m_timeSinceDeadline = m_timeSinceDeadline < 2.0f * period ? m_timeSinceDeadline - period : 0.0f;
             return true;
         }
 
@@ -199,7 +196,7 @@ namespace ROS2
         float m_adaptedFrequency{ 30.0f }; ///< Adapted frequency value.
         float m_lastDeltaTime{ 0.0f }; ///< Last difference in time between adapted events, used to compute effective frequency value.
         float m_adaptedDeltaTime{ 0.0f }; ///< Accumulator for calculating adapted delta time.
-        int m_tickCounter{ 0 }; ///< Internal counter for controlling adapter frequency.
+        float m_timeSinceDeadline{ 0.0f }; ///< Source time since the last publication deadline, for pacing the adapted event.
     };
 
     AZ_TYPE_INFO_TEMPLATE(EventSourceAdapter, EventSourceAdapterTypeId, AZ_TYPE_INFO_CLASS)

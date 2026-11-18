@@ -24,6 +24,7 @@ namespace ROS2
 
     void TickBasedSource::Start()
     {
+        m_lastTickTimestamp = builtin_interfaces::msg::Time();
         AZ::TickBus::Handler::BusConnect();
     }
 
@@ -41,11 +42,23 @@ namespace ROS2
     {
         AZ_UNUSED(time);
         AZ_UNUSED(deltaTime);
-        float expectedSimulationLoopTime = -1.f;
-        // query time ROS2 system
-        ROS2ClockRequestBus::BroadcastResult(
-            expectedSimulationLoopTime, &ROS2ClockRequestBus::Events::GetExpectedLoopTime);
-        AZ_Warning("TickBasedSource", expectedSimulationLoopTime >= 0.f, "Did not receive expected simulation loop time from ROS2ClockRequestBus");
-        m_sourceEvent.Signal(expectedSimulationLoopTime);
+        // Signal the ROS time that passed since the last tick, so that adapters pace sensors on simulation time. The first tick has
+        // no previous time; it uses the expected loop time, as the median frame time is used when nothing else is known.
+        builtin_interfaces::msg::Time now;
+        ROS2ClockRequestBus::BroadcastResult(now, &ROS2ClockRequestBus::Events::GetROSTimestamp);
+        float simulationDeltaTime = -1.f;
+        if (m_lastTickTimestamp.sec != 0 || m_lastTickTimestamp.nanosec != 0)
+        {
+            simulationDeltaTime = AZStd::max(0.f, ROS2Conversions::GetTimeDifference(m_lastTickTimestamp, now));
+        }
+        else
+        {
+            ROS2ClockRequestBus::BroadcastResult(simulationDeltaTime, &ROS2ClockRequestBus::Events::GetExpectedLoopTime);
+            AZ_Warning(
+                "TickBasedSource", simulationDeltaTime >= 0.f, "Did not receive expected simulation loop time from ROS2ClockRequestBus");
+            simulationDeltaTime = AZStd::max(0.f, simulationDeltaTime);
+        }
+        m_lastTickTimestamp = now;
+        m_sourceEvent.Signal(simulationDeltaTime);
     }
 } // namespace ROS2
