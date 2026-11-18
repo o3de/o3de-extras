@@ -86,8 +86,6 @@ namespace ROS2
     AZ_FORCE_INLINE float ROS2Conversions::GetTimeDifference(
         const builtin_interfaces::msg::Time& start, const builtin_interfaces::msg::Time& end)
     {
-        // Signed 64-bit nanoseconds: nanosec is unsigned, so end.nanosec - start.nanosec wrapped to about 4.29 s whenever the
-        // interval crossed a whole second.
         const int64_t nanoseconds = (static_cast<int64_t>(end.sec) - static_cast<int64_t>(start.sec)) * 1'000'000'000LL +
             (static_cast<int64_t>(end.nanosec) - static_cast<int64_t>(start.nanosec));
         return static_cast<float>(static_cast<double>(nanoseconds) / 1e9);
