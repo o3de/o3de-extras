@@ -86,7 +86,9 @@ namespace ROS2
     AZ_FORCE_INLINE float ROS2Conversions::GetTimeDifference(
         const builtin_interfaces::msg::Time& start, const builtin_interfaces::msg::Time& end)
     {
-        return static_cast<float>(end.sec - start.sec) + static_cast<float>(end.nanosec - start.nanosec) / 1e9;
+        const int64_t nanoseconds = (static_cast<int64_t>(end.sec) - static_cast<int64_t>(start.sec)) * 1'000'000'000LL +
+            (static_cast<int64_t>(end.nanosec) - static_cast<int64_t>(start.nanosec));
+        return static_cast<float>(static_cast<double>(nanoseconds) / 1e9);
     }
 
 } // namespace ROS2
