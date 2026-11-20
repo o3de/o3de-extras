@@ -7,12 +7,14 @@
  */
 
 #include "CheckAssetPage.h"
+#include <AzCore/Debug/Trace.h>
 #include <AzCore/Math/MathStringConversions.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 #include <AzFramework/Asset/AssetSystemBus.h>
 #include <QHeaderView>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <RobotImporter/Assets/AssetLookup.h>
 
 namespace ROS2RobotImporter
 {
@@ -25,6 +27,12 @@ namespace ROS2RobotImporter
         constexpr int Type{ 4 };
     } // namespace Columns
 
+    namespace
+    {
+        //! Scene import setting that makes AssImp take mesh scale and orientation from the source file's root transform.
+        constexpr const char* ReadRootTransformKey = "/O3DE/Preferences/SceneAPI/AssImpReadRootTransform";
+    } // namespace
+
     CheckAssetPage::CheckAssetPage(QWizard* parent)
         : QWizardPage(parent)
         , m_success(true)
@@ -35,7 +43,11 @@ namespace ROS2RobotImporter
     {
         m_table = new QTableWidget(parent);
         SetTitle();
+
+        m_importSettingWarning = new WarningBanner(this);
+
         QVBoxLayout* layout = new QVBoxLayout;
+        layout->addWidget(m_importSettingWarning);
         layout->addWidget(m_table);
         m_table->setEnabled(true);
         m_table->setAlternatingRowColors(true);
@@ -94,10 +106,36 @@ namespace ROS2RobotImporter
 
     void CheckAssetPage::initializePage()
     {
+        UpdateImportSettingWarning();
         if (m_copyReferencedAssetsThread)
         {
             m_copyReferencedAssetsThread->join();
         }
+    }
+
+    void CheckAssetPage::UpdateImportSettingWarning()
+    {
+        bool readRootTransform = false;
+        if (AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get(); settingsRegistry)
+        {
+            settingsRegistry->Get(readRootTransform, ReadRootTransformKey);
+        }
+
+        if (!readRootTransform)
+        {
+            m_importSettingWarning->ClearWarning();
+            return;
+        }
+
+        m_importSettingWarning->SetWarning(
+            tr("<b>Mesh scale and orientation are affected by a project setting.</b>"
+               "<p>This project sets <code>%1</code> to <code>true</code>, which makes the scene pipeline take mesh scale and "
+               "orientation from the source file's root transform.</p>"
+               "<p><code>.dae</code> files might result at the wrong scale and <code>.stl</code> files with the "
+               "wrong orientation.</p>")
+                .arg(QString::fromUtf8(ReadRootTransformKey)));
+
+        AZ_Warning("RobotImporter", false, "%s is true. .dae scale and .stl orientation may be incorrect.", ReadRootTransformKey);
     }
 
     void CheckAssetPage::SetCopyThread(AZStd::shared_ptr<AZStd::thread> copyThread)
@@ -105,29 +143,31 @@ namespace ROS2RobotImporter
         m_copyReferencedAssetsThread = copyThread;
     }
 
-    void CheckAssetPage::ReportAsset(const AZStd::string unresolvedFileName, const Utils::UrdfAsset& urdfAsset, const QString& type)
+    void CheckAssetPage::ReportAsset(
+        const AZStd::string unresolvedFileName, const Assets::ReferencedAsset& referencedAsset, const QString& type)
     {
         int rowId = m_table->rowCount();
         m_table->setRowCount(rowId + 1);
 
         SetTitle();
-        const AZStd::string crcStr = AZStd::to_string(urdfAsset.m_urdfFileCRC);
+        const AZStd::string crcStr = AZStd::to_string(referencedAsset.m_resolvedFileCRC);
 
         QTableWidgetItem* p =
-            createCell(true, QString::fromUtf8(urdfAsset.m_assetUri.String().data(), urdfAsset.m_assetUri.String().size()));
-        if (urdfAsset.m_urdfFileCRC != AZ::Crc32())
+            createCell(true, QString::fromUtf8(referencedAsset.m_assetUri.String().data(), referencedAsset.m_assetUri.String().size()));
+        if (referencedAsset.m_resolvedFileCRC != AZ::Crc32())
         {
             p->setToolTip(tr("CRC for file : ") + QString::fromUtf8(crcStr.data(), crcStr.size()));
         }
         m_table->setItem(rowId, Columns::SdfMeshPath, p);
 
-        if (!urdfAsset.m_resolvedUrdfPath.empty())
+        if (!referencedAsset.m_resolvedPath.empty())
         {
             m_table->setItem(
                 rowId,
                 Columns::ResolvedMeshPath,
                 createCell(
-                    true, QString::fromUtf8(urdfAsset.m_resolvedUrdfPath.String().data(), urdfAsset.m_resolvedUrdfPath.String().size())));
+                    true,
+                    QString::fromUtf8(referencedAsset.m_resolvedPath.String().data(), referencedAsset.m_resolvedPath.String().size())));
             m_table->item(rowId, Columns::ResolvedMeshPath)->setIcon(m_okIcon);
         }
         else
@@ -177,7 +217,7 @@ namespace ROS2RobotImporter
     }
 
     void CheckAssetPage::OnAssetCopyStatusChanged(
-        const Utils::CopyStatus& status, const AZStd::string& unresolvedFileName, const AZStd::string assetPath)
+        const Assets::CopyStatus& status, const AZStd::string& unresolvedFileName, const AZStd::string assetPath)
     {
         int rowId = GetRowIndex(unresolvedFileName);
         if (rowId == -1)
@@ -187,27 +227,27 @@ namespace ROS2RobotImporter
 
         switch (status)
         {
-        case Utils::CopyStatus::Unresolvable:
+        case Assets::CopyStatus::Unresolvable:
             m_table->setItem(rowId, Columns::ResolvedMeshPath, createCell(false, tr("Unable to resolve mesh path")));
             m_table->item(rowId, Columns::ResolvedMeshPath)->setIcon(m_failureIcon);
             m_table->setItem(rowId, Columns::ProductAsset, createCell(true, ""));
             m_missingCount++;
             break;
-        case Utils::CopyStatus::Failed:
+        case Assets::CopyStatus::Failed:
             m_table->setItem(rowId, Columns::ProductAsset, createCell(false, tr("Failed to copy mesh")));
             m_table->item(rowId, Columns::ProductAsset)->setIcon(m_failureIcon);
             m_failedCount++;
             break;
-        case Utils::CopyStatus::Copying:
+        case Assets::CopyStatus::Copying:
             m_table->setItem(rowId, Columns::ProductAsset, createCell(true, tr("Copying")));
             m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
             break;
-        case Utils::CopyStatus::Copied:
+        case Assets::CopyStatus::Copied:
             m_table->setItem(rowId, Columns::ProductAsset, createCell(true, tr("Copied, waiting to be processed")));
             m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
             m_table->setItem(rowId, Columns::SourceAsset, createCell(true, assetPath.c_str()));
             break;
-        case Utils::CopyStatus::Exists:
+        case Assets::CopyStatus::Exists:
             m_table->setItem(rowId, Columns::ProductAsset, createCell(true, tr("Found file, waiting to be processed")));
             m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
 
@@ -217,7 +257,7 @@ namespace ROS2RobotImporter
     }
 
     void CheckAssetPage::OnAssetProcessStatusChanged(
-        const AZStd::string& unresolvedFileName, const Utils::UrdfAsset& urdfAsset, bool isError)
+        const AZStd::string& unresolvedFileName, const Assets::ReferencedAsset& referencedAsset, bool isError)
     {
         int rowId = GetRowIndex(unresolvedFileName);
         if (rowId == -1)
@@ -227,7 +267,7 @@ namespace ROS2RobotImporter
 
         if (!isError)
         {
-            const AZStd::vector<AZStd::string> productPaths = Utils::GetProductAssets(urdfAsset.m_availableAssetInfo.m_sourceGuid);
+            const AZStd::vector<AZStd::string> productPaths = Assets::GetProductAssets(referencedAsset.m_availableAssetInfo.m_sourceGuid);
             QString text;
             for (const auto& productPath : productPaths)
             {
@@ -245,15 +285,15 @@ namespace ROS2RobotImporter
 
     void CheckAssetPage::DoubleClickRow(int row, [[maybe_unused]] int col)
     {
-        if (!m_urdfAssetMap)
+        if (!m_referencedAssetMap)
         {
             return;
         }
         for (const auto& [assetPath, columnId] : m_assetsToColumnIndex)
         {
-            if (columnId == row && (*m_urdfAssetMap).contains(assetPath))
+            if (columnId == row && (*m_referencedAssetMap).contains(assetPath))
             {
-                auto productAssetRelativePath = (*m_urdfAssetMap)[assetPath].m_availableAssetInfo.m_productAssetRelativePath;
+                auto productAssetRelativePath = (*m_referencedAssetMap)[assetPath].m_availableAssetInfo.m_productAssetRelativePath;
                 if (productAssetRelativePath.empty())
                 {
                     return;

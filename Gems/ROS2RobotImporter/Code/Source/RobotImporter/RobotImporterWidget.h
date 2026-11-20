@@ -17,15 +17,14 @@
 #include "Pages/RobotDescriptionPage.h"
 #include "Pages/XacroParamsPage.h"
 
-#include "URDF/URDFPrefabMaker.h"
-#include "URDF/UrdfParser.h"
 #include <AzCore/Asset/AssetCommon.h>
+#include <AzCore/std/containers/set.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/parallel/thread.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
-#include <RobotImporter/FixURDF/URDFModifications.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
-#include <RobotImporter/xacro/XacroUtils.h>
+#include <RobotImporter/Parsing/FixURDF/URDFModifications.h>
+#include <RobotImporter/Parsing/SdfParser.h>
+#include <RobotImporter/Parsing/Xacro/XacroUtils.h>
 
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
 #include <AzToolsFramework/Prefab/PrefabFocusInterface.h>
@@ -48,10 +47,7 @@
 
 namespace ROS2RobotImporter
 {
-    class RobotImporterWidget;
-    class URDFPrefabMaker;
-
-    //! Handles UI for the process of URDF importing
+    //! Handles UI for the process of robot description importing
     class RobotImporterWidget : public QWizard
     {
         Q_OBJECT
@@ -62,8 +58,8 @@ namespace ROS2RobotImporter
     private:
         int nextId() const override;
         bool validateCurrentPage() override;
-        void OpenUrdf();
-        void OnUrdfCreated();
+        void OpenRobotDescription();
+        void OnPrefabCreated();
         void onCreateButtonPressed();
         void onSaveModifiedUrdfPressed();
         void onShowModifiedUrdfPressed();
@@ -75,17 +71,16 @@ namespace ROS2RobotImporter
         PrefabMakerPage* m_prefabMakerPage;
         XacroParamsPage* m_xacroParamsPage;
         ModifiedURDFWindow* m_modifiedUrdfWindow;
-        AZ::IO::Path m_urdfPath;
+        AZ::IO::Path m_sourceFilePath;
         sdf::Root m_parsedSdf{};
 
-        //! User's choice to copy meshes during urdf import
+        //! User's choice to copy meshes during import
         bool m_copyReferencedAssets{ false };
 
-        /// mapping from urdf path to asset source
-        Utils::UrdfAssetMap m_urdfAssetsMapping;
+        /// mapping from unresolved URI to asset source
+        Assets::ReferencedAssetMap m_referencedAssetMap;
 
         AZStd::shared_ptr<AZStd::thread> m_copyReferencedAssetsThread;
-        AZStd::unique_ptr<URDFPrefabMaker> m_prefabMaker;
 
         /// Xacro params
         Utils::xacro::Params m_params;
@@ -122,7 +117,7 @@ namespace ROS2RobotImporter
         //! @param errorMessage error message to display to the user
         void ReportError(const QString& errorMessage);
 
-        void AddModificationWarningsToReportString(QString& report, const UrdfParser::RootObjectOutcome& parsedSdfOutcome);
+        void AddModificationWarningsToReportString(QString& report, const SdfParser::RootObjectOutcome& parsedSdfOutcome);
 
         static constexpr QWizard::WizardButton PrefabCreationButtonId{ QWizard::CustomButton1 };
         static constexpr QWizard::WizardOption HavePrefabCreationButton{ QWizard::HaveCustomButton1 };

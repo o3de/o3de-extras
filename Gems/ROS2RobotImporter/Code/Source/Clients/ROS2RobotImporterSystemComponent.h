@@ -12,7 +12,7 @@
 
 namespace ROS2RobotImporter
 {
-    //! A Component for importing robot definition from standard formats such as URDF.
+    //! A Component for importing robot definition from standard formats such as URDF, SDF or XACRO.
     //! Sometimes, user decisions will be involved in the process.
     class ROS2RobotImporterSystemComponent : public AZ::Component
     {
@@ -29,9 +29,9 @@ namespace ROS2RobotImporter
     protected:
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
-        void Init() override{};
-        void Activate() override{};
-        void Deactivate() override{};
+        void Init() override {};
+        void Activate() override {};
+        void Deactivate() override {};
         //////////////////////////////////////////////////////////////////////////
     };
 } // namespace ROS2RobotImporter

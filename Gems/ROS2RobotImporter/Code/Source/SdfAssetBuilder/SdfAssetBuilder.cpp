@@ -22,11 +22,13 @@
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 #include <AssetBuilderSDK/SerializationDependencies.h>
 
-#include <RobotImporter/URDF/URDFPrefabMaker.h>
-#include <RobotImporter/URDF/UrdfParser.h>
+#include <RobotImporter/Assets/AssetLookup.h>
+#include <RobotImporter/Assets/AssetPathResolver.h>
+#include <RobotImporter/Building/SdfPrefabMaker.h>
+#include <RobotImporter/Parsing/SdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <Tools/ImportSession.h>
 
 namespace ROS2RobotImporter
 {
@@ -83,25 +85,19 @@ namespace ROS2RobotImporter
         // The AssetBuilderSDK doesn't support deregistration, so there's nothing more to do here.
     }
 
-    Utils::UrdfAssetMap SdfAssetBuilder::FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const
+    Assets::ReferencedAssetMap SdfAssetBuilder::FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const
     {
         AZ_Info(SdfAssetBuilderName, "Parsing mesh and collider names");
 
-        Utils::UrdfAssetMap allReferencedAssets = Utils::GetReferencedAssetFilenames(root);
-        Utils::UrdfAssetMap existingReferencedAssets;
+        Assets::ReferencedAssetMap allReferencedAssets = Assets::GetReferencedAssetFilenames(root);
+        Assets::ReferencedAssetMap existingReferencedAssets;
 
-        using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
+        // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
+        Assets::ResolveAssetMap(allReferencedAssets, AZ::IO::Path(sourceFilename), m_globalSettings);
 
-        auto amentPrefixPath = Utils::GetAmentPrefixPath();
-
-        for (const auto& [unresolvedUri, assetReferenceType] : allReferencedAssets)
+        for (auto& [unresolvedUri, asset] : allReferencedAssets)
         {
-            Utils::UrdfAsset asset;
-
-            // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
-            asset.m_resolvedUrdfPath =
-                Utils::ResolveAssetPath(unresolvedUri, AZ::IO::PathView(sourceFilename), amentPrefixPath, m_globalSettings);
-            if (asset.m_resolvedUrdfPath.empty())
+            if (asset.m_resolvedPath.empty())
             {
                 AZ_Warning(
                     SdfAssetBuilderName,
@@ -111,56 +107,22 @@ namespace ROS2RobotImporter
                 continue;
             }
 
-            // Get a checksum on the resolved file that we'll use to ensure we've matched with the correct relative
-            // source asset. Ideally we'll be able to remove this check since it's not a very robust safety check and
-            // adds some amount of overhead to the processing.
-            asset.m_urdfFileCRC = Utils::GetFileCRC(asset.m_resolvedUrdfPath);
-
-            // Given the absolute path to the asset, try to get the source asset info from the AssetProcessor.
-            bool sourceAssetFound{ false };
-            AZ::Data::AssetInfo assetInfo;
-            AZStd::string watchFolder;
-            AssetSysReqBus::BroadcastResult(
-                sourceAssetFound,
-                &AssetSysReqBus::Events::GetSourceInfoBySourcePath,
-                asset.m_resolvedUrdfPath.c_str(),
-                assetInfo,
-                watchFolder);
-
-            if (!sourceAssetFound)
-            {
-                AZ_Warning(
-                    SdfAssetBuilderName, false, "Cannot find source asset info for '%s', skipping.", asset.m_resolvedUrdfPath.c_str());
-                continue;
-            }
-
             // If the source asset has been found by the Asset Processor, save the mapping between raw uri
             // reference and Asset Processor source asset information.
-            const auto fullSourcePath = AZ::IO::Path(watchFolder) / AZ::IO::Path(assetInfo.m_relativePath);
-            asset.m_availableAssetInfo.m_sourceAssetRelativePath = assetInfo.m_relativePath;
-            asset.m_availableAssetInfo.m_sourceAssetGlobalPath = fullSourcePath.String();
-            asset.m_availableAssetInfo.m_sourceGuid = assetInfo.m_assetId.m_guid;
+            auto assetInfo = Assets::GetAvailableAssetInfo(asset.m_resolvedPath);
+            if (assetInfo.m_sourceGuid.IsNull())
+            {
+                AZ_Warning(SdfAssetBuilderName, false, "Cannot find source asset info for '%s', skipping.", asset.m_resolvedPath.c_str());
+                continue;
+            }
+            asset.m_availableAssetInfo = AZStd::move(assetInfo);
 
-            // We should determine if this CRC check is actually necessary for resolving URI references.
-            // Ideally, the additional overhead should be removed and the asset reference result should be trusted.
-            AZ::Crc32 crc = Utils::GetFileCRC(asset.m_availableAssetInfo.m_sourceAssetGlobalPath);
-            if (crc == asset.m_urdfFileCRC)
-            {
-                AZ_Info(
-                    SdfAssetBuilderName,
-                    "Resolved uri '%s' to source asset '%s'.",
-                    unresolvedUri.c_str(),
-                    assetInfo.m_relativePath.c_str());
-                existingReferencedAssets.emplace(unresolvedUri, AZStd::move(asset));
-            }
-            else
-            {
-                AZ_Warning(
-                    SdfAssetBuilderName,
-                    false,
-                    "Resolved to source asset '%s' which has incorrect CRC, skipping.",
-                    assetInfo.m_relativePath.c_str());
-            }
+            AZ_Info(
+                SdfAssetBuilderName,
+                "Resolved uri '%s' to source asset '%s'.",
+                unresolvedUri.c_str(),
+                asset.m_availableAssetInfo.m_sourceAssetRelativePath.c_str());
+            existingReferencedAssets.emplace(unresolvedUri, AZStd::move(asset));
         }
 
         return existingReferencedAssets;
@@ -198,11 +160,11 @@ namespace ROS2RobotImporter
 
         const auto fullSourcePath = AZ::IO::Path(request.m_watchFolder) / AZ::IO::Path(request.m_sourceFile);
 
-        // Set the parser config settings for parsing URDF content through the libsdformat parser
-        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(m_globalSettings, fullSourcePath);
+        // Set the parser config settings for parsing the source file content through the libsdformat parser
+        sdf::ParserConfig parserConfig = SdfParser::CreateSdfParserConfigFromSettings(m_globalSettings, fullSourcePath);
 
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", fullSourcePath.c_str());
-        auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(fullSourcePath, parserConfig, m_globalSettings);
+        auto parsedSdfRootOutcome = SdfParser::ParseFromFile(fullSourcePath, parserConfig, m_globalSettings);
         if (!parsedSdfRootOutcome)
         {
             const AZStd::string sdfParseErrors = Utils::JoinSdfErrorsToString(parsedSdfRootOutcome.GetSdfErrors());
@@ -261,13 +223,13 @@ namespace ROS2RobotImporter
         auto tempAssetOutputPath = AZ::IO::Path(request.m_tempDirPath) / request.m_sourceFile;
         tempAssetOutputPath.ReplaceExtension("procprefab");
 
-        // Set the parser config settings for parsing URDF content through the libsdformat parser
+        // Set the parser config settings for parsing the source file content through the libsdformat parser
         sdf::ParserConfig parserConfig =
-            Utils::SDFormat::CreateSdfParserConfigFromSettings(m_globalSettings, AZ::IO::PathView(request.m_sourceFile));
+            SdfParser::CreateSdfParserConfigFromSettings(m_globalSettings, AZ::IO::PathView(request.m_sourceFile));
 
         // Read in and parse the source SDF file.
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", request.m_fullPath.c_str());
-        auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(AZ::IO::PathView(request.m_fullPath), parserConfig, m_globalSettings);
+        auto parsedSdfRootOutcome = SdfParser::ParseFromFile(AZ::IO::PathView(request.m_fullPath), parserConfig, m_globalSettings);
         if (!parsedSdfRootOutcome)
         {
             const AZStd::string sdfParseErrors = Utils::JoinSdfErrorsToString(parsedSdfRootOutcome.GetSdfErrors());
@@ -285,11 +247,11 @@ namespace ROS2RobotImporter
 
         // Resolve all the URI references into source asset GUIDs.
         AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
-        auto assetMap = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(sdfRoot, request.m_fullPath));
+        ImportSession session(FindAssets(sdfRoot, request.m_fullPath));
 
         // Given the parsed source file and asset mappings, generate an in-memory prefab.
         AZ_Info(SdfAssetBuilderName, "Creating prefab from source file.");
-        auto prefabMaker = AZStd::make_unique<URDFPrefabMaker>(&sdfRoot, tempAssetOutputPath.String(), assetMap, useArticulation);
+        auto prefabMaker = AZStd::make_unique<SdfPrefabMaker>(&sdfRoot, tempAssetOutputPath.String(), session.GetId(), useArticulation);
         auto prefabResult = prefabMaker->CreatePrefabTemplateFromUrdfOrSdf();
         if (!prefabResult.IsSuccess())
         {

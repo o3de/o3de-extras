@@ -1,6 +1,6 @@
 {
     "gem_name": "MachineLearning",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "display_name": "MachineLearning",
     "license": "License used i.e. Apache-2.0 or MIT",
     "license_url": "Link to the license web site i.e. https://opensource.org/licenses/Apache-2.0",
@@ -22,8 +22,11 @@
     "documentation_url": "Link to any documentation of your Gem",
     "dependencies": [],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "compatible_engines": [],
+    "compatible_engines": [
+        "o3de-sdk>=2.7.0",
+        "o3de>=2.7.0"
+    ],
     "engine_api_dependencies": [],
     "restricted": "MachineLearning",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/machinelearning-1.0.1-gem.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2610.0/machinelearning-1.0.2-gem.zip"
 }

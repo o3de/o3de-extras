@@ -14,6 +14,8 @@
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/string/string.h>
 
+#include <Source/Articulation.h>
+
 #include <ROS2/Spawner/SpawnerBus.h>
 #include <ROS2/Spawner/SpawnerInfo.h>
 #include <RobotImporter/RobotImporterWidget.h>
@@ -49,8 +51,11 @@ namespace ROS2RobotImporter
         m_log->acceptRichText();
         m_log->setReadOnly(true);
 
+        m_articulationWarning = new WarningBanner(this);
+
         setTitle(tr("Prefab creation"));
         QVBoxLayout* layout = new QVBoxLayout;
+        layout->addWidget(m_articulationWarning);
         QHBoxLayout* layoutInner = new QHBoxLayout;
         layoutInner->addWidget(m_prefabName);
         layoutInner->addWidget(m_createButton);
@@ -84,6 +89,28 @@ namespace ROS2RobotImporter
     void PrefabMakerPage::ReportProgress(const AZStd::string& progressForUser)
     {
         m_log->setMarkdown(QString::fromUtf8(progressForUser.data(), int(progressForUser.size())));
+    }
+
+    void PrefabMakerPage::ReportArticulationLinkCount(size_t linkCount, bool useArticulations)
+    {
+        if (!useArticulations || linkCount <= PhysX::MaxArticulationLinks)
+        {
+            m_articulationWarning->ClearWarning();
+            return;
+        }
+
+        m_articulationWarning->SetWarning(tr("<b>This robot has more links than a PhysX articulation holds.</b>"
+                                             "<p>The model has %1 links and the PhysX limit is %2. The system might be unstable.</p>"
+                                             "<p>Import with articulations turned off, or split the robot into several articulations.</p>")
+                                              .arg(linkCount)
+                                              .arg(PhysX::MaxArticulationLinks));
+
+        AZ_Warning(
+            "RobotImporter",
+            false,
+            "Model has %zu links, which is over the PhysX articulation limit of %zu.",
+            linkCount,
+            PhysX::MaxArticulationLinks);
     }
 
     void PrefabMakerPage::SetSuccess(bool success)

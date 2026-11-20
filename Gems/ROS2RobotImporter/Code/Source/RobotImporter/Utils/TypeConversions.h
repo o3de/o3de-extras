@@ -12,16 +12,19 @@
 #include <AzCore/Math/Quaternion.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Math/Vector3.h>
-#include <RobotImporter/URDF/UrdfParser.h>
+#include <gz/math/Color.hh>
+#include <gz/math/Pose3.hh>
+#include <gz/math/Quaternion.hh>
+#include <gz/math/Vector3.hh>
 
-namespace ROS2RobotImporter::URDF
+namespace ROS2RobotImporter::Utils::SDFormat
 {
-    //! Common types conversion between urdf and AZ formats
+    //! Common types conversion between gz::math (libsdformat) and AZ formats
     namespace TypeConversions
     {
-        AZ::Vector3 ConvertVector3(const gz::math::Vector3d& urdfVector);
-        AZ::Quaternion ConvertQuaternion(const gz::math::Quaterniond& urdfQuaternion);
+        AZ::Vector3 ConvertVector3(const gz::math::Vector3d& gzVector);
+        AZ::Quaternion ConvertQuaternion(const gz::math::Quaterniond& gzQuaternion);
         AZ::Color ConvertColor(const gz::math::Color& color);
         AZ::Transform ConvertPose(const gz::math::Pose3d& pose);
     }; // namespace TypeConversions
-} // namespace ROS2RobotImporter::URDF
+} // namespace ROS2RobotImporter::Utils::SDFormat

@@ -9,14 +9,13 @@
 
 #include <Common/SimulationInterfaceTestFixture.h>
 
-#include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <ROS2/Frame/ROS2FrameComponentBus.h>
-#include <AzCore/Asset/AssetManager.h>
+#include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/Component/ComponentApplication.h>
-#include <AzCore/IO/FileIO.h>
-#include <AzCore/IO/Path/Path.h>
+#include <AzCore/Component/Entity.h>
 #include <AzCore/UserSettings/UserSettingsComponent.h>
-#include <AzCore/Utils/Utils.h>
+#include <AzCore/std/smart_ptr/unique_ptr.h>
+#include <AzFramework/Components/TransformComponent.h>
+#include <AzFramework/Spawnable/InMemorySpawnableAssetContainer.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzQtComponents/Utilities/QtPluginPaths.h>
 #include <AzTest/GemTestEnvironment.h>
@@ -26,6 +25,9 @@
 #include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
 #include <Clients/SimulationEntitiesManager.h>
 #include <Clients/SimulationManager.h>
+#include <ROS2/Frame/ROS2FrameComponentBus.h>
+#include <ROS2/ROS2TypeIds.h>
+#include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
 #include <QApplication>
 
@@ -65,52 +67,68 @@ namespace UnitTest
         }
     };
 
-    //! Extends the editor test environment to load the asset catalog and preload the test spawnable
-    //! during PostSystemEntityActivate, so SpawnEntity-based tests have a ready asset to spawn from.
+    //! Extends the editor test environment by assembling spawnable in memory, so SpawnEntity-based tests have a ready asset to spawn from.
     class SimulationInterfaceTestEnvironmentWithAssets : public SimulationInterfaceTestEnvironment
     {
     protected:
-        void PostSystemEntityActivate();
+        void PostSystemEntityActivate() override;
+        void PreDestroyApplication() override;
+
+    private:
+        //! Plus ".spawnable", this is the product path the tests' product_asset URI resolves to.
+        static constexpr const char* TestSpawnableName = "sampleasset/testsimulationentity";
+
+        static constexpr const char* TestSpawnableAssetId = "{6E0E1C39-2C6F-4C3E-9C31-1D0D6D9B5A77}:0";
+
+        //! PreDestroyApplication needs to destroy the spawnable before GemTestEnvironment gets deleted
+        AZStd::unique_ptr<AzFramework::InMemorySpawnableAssetContainer> m_spawnableAssets;
     };
 
     void SimulationInterfaceTestEnvironmentWithAssets::PostSystemEntityActivate()
     {
-        // Prepare the asset catalog and ensure that our test asset (testsimulationentity.spawnable) is loaded and
-        // ready to be used in test scenarios.
-        AZ::UserSettingsComponentRequestBus::Broadcast(&AZ::UserSettingsComponentRequests::DisableSaveOnFinalize);
+        SimulationInterfaceTestEnvironment::PostSystemEntityActivate();
 
-        AZ::ComponentApplication* app = nullptr;
-        AZ::ComponentApplicationBus::BroadcastResult(app, &AZ::ComponentApplicationBus::Events::GetApplication);
-        AZ_Assert(app, "Failed to get application");
-        auto products = AZ::Utils::GetProjectProductPathForPlatform().c_str();
-        AZ::IO::Path assetCatalogPath = AZ::IO::Path(products) / "assetcatalog.xml";
-        bool catalogExists = AZ::IO::FileIOBase::GetInstance()->Exists(assetCatalogPath.c_str());
-        AZ_Assert(catalogExists, "Asset Catalog in %s does not exist", assetCatalogPath.c_str());
+        // Ownership passes to the asset registered below.
+        auto* spawnable =
+            aznew AzFramework::Spawnable(AZ::Data::AssetId::CreateString(TestSpawnableAssetId), AZ::Data::AssetData::AssetStatus::Ready);
+        AzFramework::Spawnable::EntityList& entities = spawnable->GetEntities();
 
-        AZ::Data::AssetCatalogRequestBus::Broadcast(&AZ::Data::AssetCatalogRequestBus::Events::LoadCatalog, assetCatalogPath.c_str());
+        auto root = AZStd::make_unique<AZ::Entity>("TestSimulationEntity");
+        root->CreateComponent<AzFramework::TransformComponent>();
 
-        const AZ::IO::Path TestSpawnable = "sampleasset/testsimulationentity.spawnable";
-        const AZ::IO::Path TestSpawnableGlobalPath = AZ::IO::Path(products) / TestSpawnable;
-        bool spawnableExists = AZ::IO::FileIOBase::GetInstance()->Exists(assetCatalogPath.c_str());
-        AZ_Assert(spawnableExists, "%s does not exist", TestSpawnableGlobalPath.c_str());
+        auto body = AZStd::make_unique<AZ::Entity>("TestSimulationEntityBody");
+        body->CreateComponent<AzFramework::TransformComponent>()->SetParent(root->GetId());
+        body->CreateComponent(AZ::Uuid(PhysXRigidBodyComponentTypeId));
+        body->CreateComponent(AZ::Uuid(PhysXShapeColliderComponentTypeId));
+        body->CreateComponent(AZ::Uuid(SphereShapeComponentTypeId));
+        body->CreateComponent(AZ::Uuid(ROS2::ROS2FrameComponentTypeId));
 
-        AZ::Data::AssetId assetId;
-        AZ::Data::AssetCatalogRequestBus::BroadcastResult(
-            assetId,
-            &AZ::Data::AssetCatalogRequestBus::Events::GetAssetIdByPath,
-            TestSpawnable.c_str(),
-            AZ::Data::s_invalidAssetType,
-            false);
-        AZ_Assert(assetId.IsValid(), "Failed to get asset id for %s", TestSpawnable.c_str());
+        entities.push_back(AZStd::move(root));
+        entities.push_back(AZStd::move(body));
 
-        // Block until the spawnable is fully loaded so the first SpawnEntity call doesn't race the
-        // async asset I/O job. SpawnableEntitiesManager requeues SpawnAllEntitiesCommand until
-        // m_spawnable.IsReady(), so a not-yet-loaded asset would silently stall the test.
-        AZ_Assert(AZ::Data::AssetManager::IsReady(), "AssetManager is not ready");
-        auto preloadedAsset = AZ::Data::AssetManager::Instance().GetAsset<AzFramework::Spawnable>(
-            assetId, AZ::Data::AssetLoadBehavior::PreLoad);
-        AZ::Data::AssetManager::Instance().BlockUntilLoadComplete(preloadedAsset);
-        AZ_Assert(preloadedAsset.IsReady(), "Test spawnable %s did not finish loading", TestSpawnable.c_str());
+        AZ::Data::AssetInfo assetInfo;
+        assetInfo.m_assetId = spawnable->GetId();
+        assetInfo.m_assetType = azrtti_typeid<AzFramework::Spawnable>();
+        assetInfo.m_relativePath = AZStd::string(TestSpawnableName) + AzFramework::Spawnable::DotFileExtension;
+
+        AzFramework::InMemorySpawnableAssetContainer::AssetDataInfoContainer products;
+        products.emplace_back(spawnable, assetInfo);
+
+        m_spawnableAssets = AZStd::make_unique<AzFramework::InMemorySpawnableAssetContainer>();
+        constexpr bool loadReferencedAssets = false;
+        [[maybe_unused]] const auto result =
+            m_spawnableAssets->CreateInMemorySpawnableAsset(products, loadReferencedAssets, TestSpawnableName);
+        AZ_Assert(result.IsSuccess(), "Failed to register the test spawnable: %s", result.IsSuccess() ? "" : result.GetError().c_str());
+    }
+
+    void SimulationInterfaceTestEnvironmentWithAssets::PreDestroyApplication()
+    {
+        // The container's destructor does not unregister, so clear it while the catalog is still up.
+        if (m_spawnableAssets)
+        {
+            m_spawnableAssets->ClearAllInMemorySpawnableAssets();
+        }
+        m_spawnableAssets.reset();
     }
 
     int getNumberOfEntities()
@@ -126,7 +144,7 @@ namespace UnitTest
     TEST_F(SimulationInterfaceTestFixture, SpawnAppTest)
     {
         // This is an integration test that runs the test application with the SimulationInterfaces gem enabled.
-        // It has prepared asset catalog, and we are able to spawn entities with the test asset.
+        // The test environment registers the test spawnable, so entities can be spawned from it by URI.
 
         using namespace SimulationInterfaces;
         constexpr AZStd::string_view entityName = "MySuperDuperEntity";
@@ -193,7 +211,7 @@ namespace UnitTest
         SimulationEntityManagerRequestBus::BroadcastResult(
             entityIdResult, &SimulationEntityManagerRequestBus::Events::GetEntityId, spawnedEntityName);
 
-        ASSERT_TRUE(entityIdResult.IsSuccess()) <<  "Failed to get entity id";
+        ASSERT_TRUE(entityIdResult.IsSuccess()) << "Failed to get entity id";
         const AZ::EntityId entityId = entityIdResult.GetValue();
         // check namespace
         AZStd::string entityNamespaceOut;

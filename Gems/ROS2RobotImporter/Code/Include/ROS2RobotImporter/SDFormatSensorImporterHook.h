@@ -16,11 +16,11 @@
 
 namespace sdf
 {
-    inline namespace v13
+    inline namespace v16
     {
         enum class SensorType;
         class Sensor;
-    } // namespace v13
+    } // namespace v16
 } // namespace sdf
 
 namespace ROS2RobotImporter::SDFormat
