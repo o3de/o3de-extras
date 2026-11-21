@@ -18,6 +18,7 @@
 #include <AzCore/UserSettings/UserSettingsComponent.h>
 #include <AzCore/std/containers/array.h>
 #include <AzCore/std/string/string_view.h>
+#include <AzTest/AzTest.h>
 #include <AzTest/GemTestEnvironment.h>
 
 #include <Common/RuntimeTestApplication.h>
@@ -48,7 +49,6 @@
 #include <simulation_interfaces/msg/simulator_features.hpp>
 #include <std_msgs/msg/string.hpp>
 
-#include <gtest/gtest.h>
 #include <memory>
 #include <string>
 #include <string_view>
