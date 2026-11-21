@@ -5,4 +5,5 @@
 
 set(FILES
     Tests/Frame/ROS2FrameComponentTest.cpp
+    Tests/Sensor/EventSourceAdapterTest.cpp
 )

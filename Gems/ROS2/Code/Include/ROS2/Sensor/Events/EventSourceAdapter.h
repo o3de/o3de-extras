@@ -11,7 +11,9 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2TypeIds.h>
+#include <AzCore/std/optional.h>
 #include <ROS2/Sensor/Events/SensorEventSource.h>
+#include <ROS2/Sensor/Events/SensorPacing.h>
 
 namespace ROS2
 {
@@ -93,9 +95,16 @@ namespace ROS2
         }
 
         //! Starts event source adapter - assigns internal adapted event handler and starts managed event source. Adapted frequency can be
-        //! set using ROS2::EventSourceAdapter::SetFrequency method.
+        //! set using ROS2::EventSourceAdapter::SetFrequency method. The pacing comes from the registry (ROS2::SensorPacingRegistryKey)
+        //! unless ROS2::EventSourceAdapter::SetPacing set it; event sources with a SetPacing method get the same pacing.
         void Start()
         {
+            m_pacing = m_pacingOverride.value_or(GetSensorPacingSetting());
+            if constexpr (requires(EventSourceT& source, SensorPacing pacing) { source.SetPacing(pacing); })
+            {
+                m_eventSource.SetPacing(m_pacing);
+            }
+            m_timeSinceDeadline = 0.0f;
             m_sourceAdaptingEventHandler = typename EventSourceT::SourceEventHandlerType(
                 [this](auto&&... args)
                 {
@@ -135,6 +144,12 @@ namespace ROS2
             m_adaptedFrequency = adaptedFrequency;
         }
 
+        //! Sets how the adapted event is paced (see ROS2::SensorPacing), instead of the registry setting. Takes effect on Start.
+        void SetPacing(SensorPacing pacing)
+        {
+            m_pacingOverride = pacing;
+        }
+
         //! Gets adapter working frequency, based on the last obtained delta time between adapted events.
         //! If the adapter has not been started yet, the frequency will be zero.
         [[nodiscard]] float GetEffectiveFrequency() const
@@ -166,15 +181,22 @@ namespace ROS2
         }
 
     private:
-        //! Uses:
+        //! Decides whether the adapted event is due, according to the pacing (see ROS2::SensorPacing).
+        //! @param sourceDeltaTime Delta time of event source.
+        //! @return Whether it is time to signal adapted event.
+        [[nodiscard]] bool IsPublicationDeadline(float sourceDeltaTime)
+        {
+            return m_pacing == SensorPacing::SimulationTime ? IsSimulationTimeDeadline(sourceDeltaTime)
+                                                            : IsFrameCountDeadline(sourceDeltaTime);
+        }
+
+        //! SensorPacing::Frames. Uses:
         //!  - internal tick counter,
         //!  - last delta time of event source and
         //!  - frequency set for adapter
         //! to support managing calls from event source. In other words, uses delta time of event source to calculate average number of
         //! source event calls per adapted event call.
-        //! @param sourceDeltaTime Delta time of event source.
-        //! @return Whether it is time to signal adapted event.
-        [[nodiscard]] bool IsPublicationDeadline(float sourceDeltaTime)
+        [[nodiscard]] bool IsFrameCountDeadline(float sourceDeltaTime)
         {
             if (--m_tickCounter > 0)
             {
@@ -185,6 +207,21 @@ namespace ROS2
             const float numberOfFrames =
                 m_adaptedFrequency <= sourceFrequencyEstimation ? (sourceFrequencyEstimation / m_adaptedFrequency) : 1.0f;
             m_tickCounter = aznumeric_cast<int>(AZStd::round(numberOfFrames));
+            return true;
+        }
+
+        //! SensorPacing::SimulationTime: accumulates the time since the last deadline, keeps the remainder past each deadline, and
+        //! signals on the source event closest to it. After a stall longer than two periods, the backlog is dropped instead of
+        //! signalling in a burst.
+        [[nodiscard]] bool IsSimulationTimeDeadline(float sourceDeltaTime)
+        {
+            const float period = m_adaptedFrequency > 0.0f ? 1.0f / m_adaptedFrequency : 1.0f;
+            m_timeSinceDeadline += sourceDeltaTime;
+            if (m_timeSinceDeadline + 0.5f * sourceDeltaTime < period)
+            {
+                return false;
+            }
+            m_timeSinceDeadline = m_timeSinceDeadline < 2.0f * period ? m_timeSinceDeadline - period : 0.0f;
             return true;
         }
 
@@ -199,7 +236,10 @@ namespace ROS2
         float m_adaptedFrequency{ 30.0f }; ///< Adapted frequency value.
         float m_lastDeltaTime{ 0.0f }; ///< Last difference in time between adapted events, used to compute effective frequency value.
         float m_adaptedDeltaTime{ 0.0f }; ///< Accumulator for calculating adapted delta time.
-        int m_tickCounter{ 0 }; ///< Internal counter for controlling adapter frequency.
+        SensorPacing m_pacing{ SensorPacing::Frames }; ///< Pacing in use, set on Start.
+        AZStd::optional<SensorPacing> m_pacingOverride; ///< Pacing set with SetPacing, which replaces the registry setting.
+        int m_tickCounter{ 0 }; ///< SensorPacing::Frames: source events until the next adapted event.
+        float m_timeSinceDeadline{ 0.0f }; ///< SensorPacing::SimulationTime: source time since the last deadline.
     };
 
     AZ_TYPE_INFO_TEMPLATE(EventSourceAdapter, EventSourceAdapterTypeId, AZ_TYPE_INFO_CLASS)

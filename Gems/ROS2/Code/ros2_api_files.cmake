@@ -21,6 +21,7 @@ set(FILES
     Include/ROS2/Sensor/ROS2SensorComponentBase.h
     Include/ROS2/Sensor/Events/EventSourceAdapter.h
     Include/ROS2/Sensor/Events/SensorEventSource.h
+    Include/ROS2/Sensor/Events/SensorPacing.h
     Include/ROS2/Sensor/Events/PhysicsBasedSource.h
     Include/ROS2/Sensor/Events/TickBasedSource.h
     Include/ROS2/Spawner/SpawnerBus.h
