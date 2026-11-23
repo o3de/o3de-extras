@@ -91,7 +91,7 @@ namespace Georeferencing
     {
     }
 
-    void GeoReferenceLevelController::Activate(AZ::EntityId /*entityId*/)
+    void GeoReferenceLevelController::Activate([[maybe_unused]] AZ::EntityId entityId)
     {
         AZ::EntityBus::Handler::BusConnect(m_config.m_enuOriginLocationEntityId);
         AZ::TransformNotificationBus::Handler::BusConnect(m_config.m_enuOriginLocationEntityId);
