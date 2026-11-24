@@ -1,0 +1,31 @@
+{
+    "gem_name": "Meshlets",
+    "version": "1.0.0",
+    "display_name": "Meshlets",
+    "license": "Code, text, data files: Apache-2.0 Or MIT, assets/content/images: CC BY 4.0",
+    "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
+    "origin": "O3DE Extras",
+    "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/Meshlets",
+    "type": "Code",
+    "summary": "A proof of concept for rendering meshes solely on the GPU using meshlets / mesh clusters.",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "Meshlets"
+    ],
+    "platforms": [
+        ""
+    ],
+    "icon_path": "preview.png",
+    "requirements": "Compiled library for meshlets generation is required to be linked. The open source library meshoptimizer is required for that: https://github.com/zeux/meshoptimizer",
+    "documentation_url": "",
+    "dependencies": [],
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "compatible_engines": [
+        "o3de-sdk>=3.0.0",
+        "o3de>=4.0.0"
+    ],
+    "engine_api_dependencies": [],
+    "restricted": "Meshlets"
+}
