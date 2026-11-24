@@ -8,6 +8,8 @@
 
 #include "GNSSFormatConversions.h"
 
+#include <numbers>
+
 constexpr double earthSemimajorAxis = 6378137.0;
 constexpr double reciprocalFlattening = 1.0 / 298.257223563;
 constexpr double earthSemiminorAxis = earthSemimajorAxis * (1.0 - reciprocalFlattening);
@@ -20,12 +22,12 @@ namespace Georeferencing::Utils::GeodeticConversions
 {
     inline double DegToRad(double degrees)
     {
-        return degrees * M_PI / 180.0;
+        return degrees * (std::numbers::pi / 180.0);
     }
 
     inline double RadToDeg(double radians)
     {
-        return radians * 180.0 / M_PI;
+        return radians * (180.0 / std::numbers::pi);
     }
 
     WGS::Vector3d WGS84ToECEF(const WGS::WGS84Coordinate& latitudeLongitudeAltitude)
