@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) Contributors to the Open 3D Engine Project.
+    For complete copyright and license terms please see the LICENSE at the root of this distribution.
+
+    SPDX-License-Identifier: Apache-2.0 OR MIT
+    
+    Example O3DEReflect Flags Enum - Damage Flags
+    
+    This demonstrates how to define a bitfield/flags enum using O3DEReflect XML.
+    Setting Flags="true" automatically generates bitwise operators and flag values.
+-->
+<Enum
+    Name="DamageFlags"
+    Namespace="Example"
+    Category="Combat"
+    Description="Flags that modify damage behavior"
+    ScriptType="true"
+    Flags="true"
+    UnderlyingType="uint32_t">
+
+    <EnumValue Name="None" Value="0"
+        DisplayName="No Flags"
+        Tooltip="No special damage flags"/>
+
+    <EnumValue Name="IgnoreArmor"
+        DisplayName="Ignore Armor"
+        Tooltip="Damage bypasses armor/shields"/>
+
+    <EnumValue Name="CanCrit"
+        DisplayName="Can Critical Hit"
+        Tooltip="Damage has a chance to be a critical hit"/>
+
+    <EnumValue Name="ApplyKnockback"
+        DisplayName="Apply Knockback"
+        Tooltip="Damage applies knockback force"/>
+
+    <EnumValue Name="ApplyStun"
+        DisplayName="Apply Stun"
+        Tooltip="Damage has a chance to stun the target"/>
+
+    <EnumValue Name="ApplyBurn"
+        DisplayName="Apply Burn"
+        Tooltip="Damage applies a burning damage-over-time effect"/>
+
+    <EnumValue Name="ApplyFreeze"
+        DisplayName="Apply Freeze"
+        Tooltip="Damage has a chance to freeze the target"/>
+
+    <EnumValue Name="Unblockable"
+        DisplayName="Unblockable"
+        Tooltip="Damage cannot be blocked or parried"/>
+
+    <EnumValue Name="FriendlyFire"
+        DisplayName="Friendly Fire"
+        Tooltip="Damage affects allies as well as enemies"/>
+
+</Enum>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) Contributors to the Open 3D Engine Project.
+    For complete copyright and license terms please see the LICENSE at the root of this distribution.
+
+    SPDX-License-Identifier: Apache-2.0 OR MIT
+    
+    Example O3DEReflect Struct - Damage Info
+    
+    This demonstrates how to define a data struct using O3DEReflect XML.
+    Like Unreal's USTRUCT, this creates a serializable, scriptable data type.
+-->
+<Struct
+    Name="DamageInfo"
+    Namespace="Example"
+    Category="Combat"
+    Description="Information about damage dealt to an entity"
+    ScriptType="true">
+
+    <Include File="AzCore/Component/EntityId.h"/>
+    <Include File="AzCore/Math/Vector3.h"/>
+
+    <Property Name="damageAmount" Type="float" Default="0.0f"
+        Tooltip="Amount of damage dealt"
+        Min="0.0"
+        EditAnywhere="true"
+        ScriptReadWrite="true"/>
+
+    <Property Name="damageType" Type="AZ::Crc32" Default="AZ_CRC_CE(&quot;Physical&quot;)"
+        Tooltip="Type of damage (Physical, Fire, Ice, etc.)"
+        EditAnywhere="true"
+        ScriptReadWrite="true"/>
+
+    <Property Name="instigator" Type="AZ::EntityId" Default="AZ::EntityId()"
+        Tooltip="Entity that caused the damage"
+        EditAnywhere="true"
+        ScriptReadWrite="true"/>
+
+    <Property Name="hitLocation" Type="AZ::Vector3" Default="AZ::Vector3::CreateZero()"
+        Tooltip="World position where damage was applied"
+        EditAnywhere="true"
+        ScriptReadWrite="true"/>
+
+    <Property Name="hitNormal" Type="AZ::Vector3" Default="AZ::Vector3::CreateAxisZ()"
+        Tooltip="Surface normal at hit point"
+        EditAnywhere="true"
+        ScriptReadWrite="true"/>
+
+    <Property Name="isCritical" Type="bool" Default="false"
+        Tooltip="Whether this was a critical hit"
+        EditAnywhere="true"
+        ScriptReadWrite="true"/>
+
+    <Property Name="criticalMultiplier" Type="float" Default="2.0f"
+        Tooltip="Damage multiplier for critical hits"
+        Min="1.0" Max="10.0"
+        EditAnywhere="true"
+        ScriptReadWrite="true"/>
+
+</Struct>
