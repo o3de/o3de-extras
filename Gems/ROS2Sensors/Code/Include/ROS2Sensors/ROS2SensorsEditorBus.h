@@ -10,6 +10,7 @@
 
 #include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2Sensors/Camera/CameraSensorConfiguration.h>
+#include <ROS2Sensors/GNSS/GNSSSensorConfiguration.h>
 #include <ROS2Sensors/Imu/ImuSensorConfiguration.h>
 #include <ROS2Sensors/Lidar/LidarSensorConfiguration.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
@@ -34,7 +35,10 @@ namespace ROS2Sensors
         //! @param sensorConfiguration The general configuration for the sensor.
         //! @param gnssConfiguration The specific configuration parameters for the GNSS sensor.
         //! @return A pointer to the newly created AZ::Component representing the GNSS sensor (or nullptr if failed).
-        virtual AZ::Component* CreateROS2GnssSensorComponent(AZ::Entity& entity, const ROS2::SensorConfiguration& sensorConfiguration) = 0;
+        virtual AZ::Component* CreateROS2GnssSensorComponent(
+            AZ::Entity& entity,
+            const ROS2::SensorConfiguration& sensorConfiguration,
+            const GnssSensorConfiguration& gnssConfiguration) = 0;
 
         //! Create a new ROS2 Camera sensor component.
         //! @param entity The entity to which the sensor component will be added.

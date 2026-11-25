@@ -99,7 +99,7 @@ ly_add_target(
             3rdParty::PNG
 )
 
-target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp sensor_msgs nav_msgs vision_msgs)
+target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp sensor_msgs nav_msgs gps_msgs vision_msgs)
 
 # WITH_GAZEBO_MSGS is set in ROS 2 Gem, which is a dependency of this gem.
 # If WITH_GAZEBO_MSGS is set, legacy sensors will be compiled in.
