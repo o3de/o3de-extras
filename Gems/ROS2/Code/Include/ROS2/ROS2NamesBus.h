@@ -56,6 +56,12 @@ namespace ROS2
         //! @param valueType Type of the value to validate.
         //! @return AZ::Success if topic field is valid, AZ::Failure with error message
         virtual AZ::Outcome<void, AZStd::string> ValidateTopicField(void* newValue, const AZ::Uuid& valueType) = 0;
+
+        //! Validate a single name token, i.e. a part of a topic, namespace or parameter name between separators.
+        //! A valid token is not empty, contains only alphanumerics and underscores, and does not start with a number.
+        //! @param token Token to validate.
+        //! @return AZ::Success if token is valid, AZ::Failure with error message otherwise
+        virtual AZ::Outcome<void, AZStd::string> ValidateNameToken(const AZStd::string& token) = 0;
     };
 
     using ROS2NamesRequestBus = AZ::EBus<ROS2NamesRequests>;

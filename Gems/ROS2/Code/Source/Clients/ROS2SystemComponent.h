@@ -77,6 +77,7 @@ namespace ROS2
         AZ::Outcome<void, AZStd::string> ValidateNamespaceField(void* newValue, const AZ::Uuid& valueType) override;
         AZ::Outcome<void, AZStd::string> ValidateTopic(const AZStd::string& topic) override;
         AZ::Outcome<void, AZStd::string> ValidateTopicField(void* newValue, const AZ::Uuid& valueType) override;
+        AZ::Outcome<void, AZStd::string> ValidateNameToken(const AZStd::string& token) override;
         ////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////
