@@ -40,23 +40,14 @@ namespace SimulationInterfaces
 
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
-            // add system components only if application is editor. In other case editor system components break other tools like material
-            // Canvas, material editor etc.
-            AZ::ApplicationTypeQuery appType;
-            AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
-            if (appType.IsEditor())
-            {
-                return AZ::ComponentTypeList{
-                    azrtti_typeid<SimulationEntitiesManagerEditor>(),
-                    azrtti_typeid<SimulationManagerEditor>(),
-                    azrtti_typeid<SimulationFeaturesAggregatorEditor>(),
-                    azrtti_typeid<NamedPoseManagerEditor>(),
-                    azrtti_typeid<LevelManagerEditor>(),
-                    azrtti_typeid<ROS2SimulationInterfaces::ROS2SimulationInterfacesEditorSystemComponent>(),
-                };
-            }
-
-            return AZ::ComponentTypeList{};
+            return AZ::ComponentTypeList{
+                azrtti_typeid<SimulationEntitiesManagerEditor>(),
+                azrtti_typeid<SimulationManagerEditor>(),
+                azrtti_typeid<SimulationFeaturesAggregatorEditor>(),
+                azrtti_typeid<NamedPoseManagerEditor>(),
+                azrtti_typeid<LevelManagerEditor>(),
+                azrtti_typeid<ROS2SimulationInterfaces::ROS2SimulationInterfacesEditorSystemComponent>(),
+            };
         }
     };
 } // namespace SimulationInterfaces

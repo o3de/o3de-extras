@@ -155,13 +155,13 @@ namespace SimulationInterfaces
 
     void SimulationManager::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
-        required.push_back(AZ_CRC_CE("PhysicsService"));
         required.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
         required.push_back(AZ_CRC_CE("LevelManagerService"));
     }
 
     void SimulationManager::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
+        dependent.push_back(AZ_CRC_CE("PhysicsService"));
         dependent.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
         dependent.push_back(AZ_CRC_CE("LevelManagerService"));
         dependent.push_back(AZ_CRC_CE("DebugDrawTextService"));
@@ -313,12 +313,13 @@ namespace SimulationInterfaces
 
     void SimulationManager::SetSimulationPaused(bool paused)
     {
-        // get az physics system
         auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
-        AZ_Assert(physicsSystem, "Physics system is not available");
+        if (!physicsSystem)
+        {
+            AZ_Warning("SimulationManager", false, "Physics system is not available, cannot change simulation pause state");
+            return;
+        }
         const auto& sceneHandlers = physicsSystem->GetAllScenes();
-        [[maybe_unused]] auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-        AZ_Assert(sceneInterface, "Physics scene interface is not available");
         for (auto& scene : sceneHandlers)
         {
             AZ_Assert(scene, "Physics scene is not available");
@@ -333,6 +334,20 @@ namespace SimulationInterfaces
         {
             return;
         }
+
+        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        if (!AZ::Interface<AzPhysics::SystemInterface>::Get() || !sceneInterface)
+        {
+            AZ_Warning("SimulationManager", false, "Physics system is not available, cannot step simulation");
+            return;
+        }
+        auto scene = sceneInterface->GetScene(sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName));
+        if (!scene)
+        {
+            AZ_Warning("SimulationManager", false, "Default physics scene is not available, cannot step simulation");
+            return;
+        }
+
         m_numberOfPhysicsSteps = steps;
 
         // install handler
@@ -350,16 +365,6 @@ namespace SimulationInterfaces
                     m_simulationFinishEvent.Disconnect();
                 }
             });
-
-        // get default scene
-        [[maybe_unused]] auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
-        AZ_Assert(physicsSystem, "Physics system is not available");
-        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-        AZ_Assert(sceneInterface, "Physics scene interface is not available");
-        AzPhysics::SceneHandle defaultScene = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
-
-        auto scene = sceneInterface->GetScene(defaultScene);
-        AZ_Assert(scene, "Default physics scene is not available");
 
         // install handler
         scene->RegisterSceneSimulationFinishHandler(m_simulationFinishEvent);
