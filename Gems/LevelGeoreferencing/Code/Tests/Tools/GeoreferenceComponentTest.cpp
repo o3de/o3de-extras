@@ -19,6 +19,7 @@
 #include <AzCore/std/containers/array.h>
 #include <AzCore/std/string/string_view.h>
 #include <AzQtComponents/Utilities/QtPluginPaths.h>
+#include <AzTest/AzTest.h>
 #include <AzTest/GemTestEnvironment.h>
 #include <AzToolsFramework/Entity/EditorEntityContextComponent.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
@@ -26,7 +27,6 @@
 #include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
 
 #include <QApplication>
-#include <gtest/gtest.h>
 #include <memory>
 #include <string>
 #include <string_view>

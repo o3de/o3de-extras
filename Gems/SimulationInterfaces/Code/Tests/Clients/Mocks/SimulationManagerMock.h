@@ -1,8 +1,7 @@
 #pragma once
 
+#include <AzTest/AzTest.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
 namespace UnitTest
 {
     using namespace SimulationInterfaces;

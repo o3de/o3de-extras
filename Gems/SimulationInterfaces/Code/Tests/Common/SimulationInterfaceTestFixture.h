@@ -12,8 +12,8 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/SystemBus.h>
+#include <AzTest/AzTest.h>
 
-#include <gtest/gtest.h>
 #include <memory>
 
 namespace UnitTest

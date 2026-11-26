@@ -11,8 +11,8 @@
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Component/TransformBus.h>
+#include <AzTest/AzTest.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <gtest/gtest.h>
 
 namespace UnitTest
 {

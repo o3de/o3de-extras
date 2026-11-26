@@ -1,8 +1,7 @@
 #pragma once
+#include <AzTest/AzTest.h>
 #include <SimulationInterfaces/Bounds.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
 namespace UnitTest
 {
     using namespace SimulationInterfaces;
