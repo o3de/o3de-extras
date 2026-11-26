@@ -24,6 +24,7 @@ namespace ROS2
 
     void TickBasedSource::Start()
     {
+        m_lastTickTimestamp = builtin_interfaces::msg::Time();
         AZ::TickBus::Handler::BusConnect();
     }
 
@@ -37,6 +38,11 @@ namespace ROS2
         return deltaTime;
     }
 
+    void TickBasedSource::SetPacing(SensorPacing pacing)
+    {
+        m_pacing = pacing;
+    }
+
     void TickBasedSource::OnTick(float deltaTime, AZ::ScriptTimePoint time)
     {
         AZ_UNUSED(time);
@@ -46,6 +52,20 @@ namespace ROS2
         ROS2ClockRequestBus::BroadcastResult(
             expectedSimulationLoopTime, &ROS2ClockRequestBus::Events::GetExpectedLoopTime);
         AZ_Warning("TickBasedSource", expectedSimulationLoopTime >= 0.f, "Did not receive expected simulation loop time from ROS2ClockRequestBus");
-        m_sourceEvent.Signal(expectedSimulationLoopTime);
+        if (m_pacing == SensorPacing::Frames)
+        {
+            m_sourceEvent.Signal(expectedSimulationLoopTime);
+            return;
+        }
+
+        // SensorPacing::SimulationTime: the ROS time since the previous tick. The first tick has no previous time and uses the expected
+        // loop time.
+        builtin_interfaces::msg::Time now;
+        ROS2ClockRequestBus::BroadcastResult(now, &ROS2ClockRequestBus::Events::GetROSTimestamp);
+        const bool hasPreviousTick = m_lastTickTimestamp.sec != 0 || m_lastTickTimestamp.nanosec != 0;
+        const float simulationDeltaTime = hasPreviousTick ? ROS2Conversions::GetTimeDifference(m_lastTickTimestamp, now)
+                                                          : expectedSimulationLoopTime;
+        m_lastTickTimestamp = now;
+        m_sourceEvent.Signal(AZStd::max(0.f, simulationDeltaTime));
     }
 } // namespace ROS2

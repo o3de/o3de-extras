@@ -13,6 +13,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2TypeIds.h>
 #include <ROS2/Sensor/Events/SensorEventSource.h>
+#include <ROS2/Sensor/Events/SensorPacing.h>
 
 namespace ROS2
 {
@@ -32,10 +33,15 @@ namespace ROS2
         void Stop() override;
         [[nodiscard]] float GetDeltaTime(float deltaTime) const override;
 
+        //! SensorPacing::Frames (default): signal the expected simulation loop time, the median frame time.
+        //! SensorPacing::SimulationTime: signal the ROS time since the previous tick. ROS2::EventSourceAdapter sets it on Start.
+        void SetPacing(SensorPacing pacing);
+
     private:
         // Override of AZ::TickBus::Handler.
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
+        SensorPacing m_pacing{ SensorPacing::Frames };
         builtin_interfaces::msg::Time m_lastTickTimestamp;
         AZStd::deque<float> m_deltaTimes;
         constexpr static size_t m_maxDeltaTimes = 100;
