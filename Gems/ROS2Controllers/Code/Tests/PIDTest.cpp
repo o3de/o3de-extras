@@ -9,6 +9,8 @@
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzTest/AzTest.h>
 
+#include <limits>
+
 #include <ROS2Controllers/Controllers/PidConfiguration.h>
 
 namespace UnitTest
@@ -191,5 +193,46 @@ namespace UnitTest
 
         output = pid.ComputeCommand(-1.0, 1 * secToNanosec);
         EXPECT_EQ(-3.5, output);
+    }
+
+    TEST_F(PIDTest, measuredRateDOnly)
+    {
+        ROS2Controllers::PidConfiguration pid(0.0, 0.0, 1.0, 0.0, 0.0, false, 0.0);
+        pid.InitializePid();
+
+        double output = 0.0;
+
+        // Derivative-on-measurement uses -m_d * measuredRate directly, independent of error history.
+        output = pid.ComputeCommandWithMeasuredRate(-0.5, 2.0, 1 * secToNanosec);
+        EXPECT_EQ(-2.0, output);
+
+        output = pid.ComputeCommandWithMeasuredRate(-0.5, -3.0, 1 * secToNanosec);
+        EXPECT_EQ(3.0, output);
+
+        output = pid.ComputeCommandWithMeasuredRate(-0.5, 0.0, 1 * secToNanosec);
+        EXPECT_EQ(0.0, output);
+    }
+
+    TEST_F(PIDTest, measuredRateCompletePID)
+    {
+        ROS2Controllers::PidConfiguration pid(1.0, 1.0, 1.0, 5.0, -5.0, false, 0.0);
+        pid.InitializePid();
+
+        double output = 0.0;
+
+        // proportional(-0.5) + integral(-0.5) + derivative(-1.0 * 2.0)
+        output = pid.ComputeCommandWithMeasuredRate(-0.5, 2.0, 1 * secToNanosec);
+        EXPECT_EQ(-3.0, output);
+    }
+
+    TEST_F(PIDTest, measuredRateInvalidConditions)
+    {
+        ROS2Controllers::PidConfiguration pid(1.0, 0.0, 1.0, 0.0, 0.0, false, 0.0);
+        pid.InitializePid();
+
+        const double nan = std::numeric_limits<double>::quiet_NaN();
+        EXPECT_EQ(0.0, pid.ComputeCommandWithMeasuredRate(-0.5, nan, 1 * secToNanosec));
+        EXPECT_EQ(0.0, pid.ComputeCommandWithMeasuredRate(nan, 1.0, 1 * secToNanosec));
+        EXPECT_EQ(0.0, pid.ComputeCommandWithMeasuredRate(-0.5, 1.0, 0 * secToNanosec));
     }
 } // namespace UnitTest
