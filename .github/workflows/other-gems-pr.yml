@@ -1,0 +1,30 @@
+name: Other Gems PR Test
+
+on:
+  pull_request:
+    branches:
+      - development
+      - 'stabilization/**'
+    paths:
+      - 'Gems/AzQtComponentsForPython/**'
+      - 'Gems/ExternalProfilers/OptickProfiler/**'
+      - 'Gems/ExternalProfilers/TracyProfiler/**'
+      - 'Gems/MachineLearning/**'
+      - 'Gems/OpenXRVk/**'
+      - 'Gems/XR/**'
+      - '.github/workflows/other-gems-pr.yml'
+      - '.github/workflows/gems-build.yml'
+
+concurrency:
+  group: other-gems-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Other gems (build only)
+    uses: ./.github/workflows/gems-build.yml
+    with:
+      other: true

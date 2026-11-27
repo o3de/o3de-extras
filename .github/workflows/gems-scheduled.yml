@@ -1,0 +1,42 @@
+name: Gems Scheduled Build
+
+# Scheduled runs only fire on the default branch (development). Their caches are restorable
+# by every PR targeting it, so the nightly run is what keeps PR builds warm.
+# Simulation gems get more code changes and require fewer resources, so the builds are triggered nightly.
+on:
+  schedule:
+    - cron: '0 2 * * 0-5'  # nightly, Sun-Fri: simulation gems
+    - cron: '0 2 * * 6'    # weekly, Sat: all gems (also covers that night's simulation run)
+  workflow_dispatch:
+    inputs:
+      engine_ref:
+        description: 'o3de engine branch/ref to test against'
+        default: development
+        required: false
+      gem_groups:
+        description: 'Gem groups to build'
+        type: choice
+        options:
+          - all
+          - simulation
+          - other
+        default: all
+
+concurrency:
+  group: gems-scheduled-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Both groups build in one job on weekly and manual "all" runs, so the engine compiles once.
+  build:
+    name: ${{ github.event_name == 'workflow_dispatch' && 'Manual' || (github.event.schedule == '0 2 * * 6' && 'Weekly' || 'Nightly') }}
+    uses: ./.github/workflows/gems-build.yml
+    with:
+      simulation: ${{ github.event_name == 'schedule' || inputs.gem_groups != 'other' }}
+      # Keep the cron string in sync with the weekly schedule above.
+      other: ${{ github.event.schedule == '0 2 * * 6' || (github.event_name == 'workflow_dispatch' && inputs.gem_groups != 'simulation') }}
+      engine_ref: ${{ inputs.engine_ref }}
+      skip_if_cached: ${{ github.event_name == 'schedule' }}
